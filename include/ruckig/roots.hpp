@@ -8,20 +8,21 @@
 
 namespace Roots {
 
-inline double polyEval(double *p, int len, double x) {
+template<size_t N>
+inline double polyEval(std::array<double, N> p, double x) {
     double retVal = 0.0;
 
-    if (len > 0) {
-        if (fabs(x) < DBL_EPSILON) {
-            retVal = p[len - 1];
+    if constexpr (N > 0) {
+        if (std::abs(x) < DBL_EPSILON) {
+            retVal = p[N - 1];
         } else if (x == 1.0) {
-            for (int i = len - 1; i >= 0; i--) {
+            for (int i = N - 1; i >= 0; i--) {
                 retVal += p[i];
             }
         } else {
             double xn = 1.0;
 
-            for (int i = len - 1; i >= 0; i--) {
+            for (int i = N - 1; i >= 0; i--) {
                 retVal += p[i] * xn;
                 xn *= x;
             }
@@ -38,7 +39,7 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;
 
-    if (fabs(d) < DBL_EPSILON) {
+    if (std::abs(d) < DBL_EPSILON) {
         // First solution is x = 0
         roots.insert(0.0);
 
@@ -49,10 +50,10 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
         a = 0.0;
     }
 
-    if (fabs(a) < DBL_EPSILON) {
-        if (fabs(b) < DBL_EPSILON) {
+    if (std::abs(a) < DBL_EPSILON) {
+        if (std::abs(b) < DBL_EPSILON) {
             // Linear equation
-            if (fabs(c) > DBL_EPSILON) {
+            if (std::abs(c) > DBL_EPSILON) {
                 roots.insert(-d / c);
             }
         
@@ -61,7 +62,7 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
             double discriminant = c * c - 4.0 * b * d;
             if (discriminant >= 0) {
                 double inv2b = 1.0 / (2.0 * b);
-                double y = sqrt(discriminant);
+                double y = std::sqrt(discriminant);
                 roots.insert((-c + y) * inv2b);
                 roots.insert((-c - y) * inv2b);
             }
@@ -79,24 +80,24 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
 
         if (yy > DBL_EPSILON) {
             // Sqrt is positive: one real solution
-            double y = sqrt(yy);
+            double y = std::sqrt(yy);
             double uuu = -halfq + y;
             double vvv = -halfq - y;
-            double www = fabs(uuu) > fabs(vvv) ? uuu : vvv;
-            double w = (www < 0) ? -pow(fabs(www), 1.0 / 3.0) : pow(www, 1.0 / 3.0);
+            double www = std::abs(uuu) > std::abs(vvv) ? uuu : vvv;
+            double w = std::cbrt(www);
             roots.insert(w - p / (3.0 * w) - bover3a);
         } else if (yy < -DBL_EPSILON) {
             // Sqrt is negative: three real solutions
             double x = -halfq;
-            double y = sqrt(-yy);
+            double y = std::sqrt(-yy);
             double theta;
             double r;
             double ux;
             double uyi;
             // Convert to polar form
-            if (fabs(x) > DBL_EPSILON) {
-                theta = (x > 0.0) ? atan(y / x) : (atan(y / x) + M_PI);
-                r = sqrt(x * x - yy);
+            if (std::abs(x) > DBL_EPSILON) {
+                theta = (x > 0.0) ? std::atan(y / x) : (std::atan(y / x) + M_PI);
+                r = std::sqrt(x * x - yy);
             } else {
                 // Vertical line
                 theta = M_PI / 2.0;
@@ -104,10 +105,10 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
             }
             // Calculate cube root
             theta /= 3.0;
-            r = pow(r, 1.0 / 3.0);
+            r = std::pow(r, 1.0 / 3.0);
             // Convert to complex coordinate
-            ux = cos(theta) * r;
-            uyi = sin(theta) * r;
+            ux = std::cos(theta) * r;
+            uyi = std::sin(theta) * r;
             // First solution
             roots.insert(ux + ux - bover3a);
             // Second solution, rotate +120 degrees
@@ -117,7 +118,7 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
         } else {
             // Sqrt is zero: two real solutions
             double www = -halfq;
-            double w = (www < 0.0) ? -pow(fabs(www), 1.0 / 3.0) : pow(www, 1.0 / 3.0);
+            double w = std::cbrt(www);
             // First solution
             roots.insert(w + w - bover3a);
             // Second solution, rotate +120 degrees
@@ -138,22 +139,22 @@ inline int solveResolvent(double *x, double a, double b, double c) {
     double q3 = q * q * q;
     double A, B;
     if (r2 < q3) {
-        double t = r / sqrt(q3);
+        double t = r / std::sqrt(q3);
         if (t < -1.0) {
             t = -1.0;
         }
         if (t > 1.0) {
             t = 1.0;
         }
-        t = acos(t);
+        t = std::acos(t);
         a /= 3.0;
-        q = -2.0 * sqrt(q);
-        x[0] = q * cos(t / 3.0) - a;
-        x[1] = q * cos((t + M_PI * 2.0) / 3.0) - a;
-        x[2] = q * cos((t - M_PI * 2.0) / 3.0) - a;
+        q = -2.0 * std::sqrt(q);
+        x[0] = q * std::cos(t / 3.0) - a;
+        x[1] = q * std::cos((t + M_PI * 2.0) / 3.0) - a;
+        x[2] = q * std::cos((t - M_PI * 2.0) / 3.0) - a;
         return 3;
     } else {
-        A = -pow(fabs(r) + sqrt(r2 - q3), 1.0 / 3.0);
+        A = -std::cbrt(std::abs(r) + std::sqrt(r2 - q3));
         if (r < 0.0) {
             A = -A;
         }
@@ -162,8 +163,8 @@ inline int solveResolvent(double *x, double a, double b, double c) {
         a /= 3.0;
         x[0] = (A + B) - a;
         x[1] = -0.5 * (A + B) - a;
-        x[2] = 0.5 * sqrt(3.0) * (A - B);
-        if (fabs(x[2]) < DBL_EPSILON) {
+        x[2] = 0.5 * std::sqrt(3.0) * (A - B);
+        if (std::abs(x[2]) < DBL_EPSILON) {
             x[2] = x[1];
             return 2;
         }
@@ -190,10 +191,10 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     y = x3[0];
     // Choosing Y with maximal absolute value.
     if (iZeroes != 1) {
-        if (fabs(x3[1]) > fabs(y)) {
+        if (std::abs(x3[1]) > std::abs(y)) {
             y = x3[1];
         }
-        if (fabs(x3[2]) > fabs(y)) {
+        if (std::abs(x3[2]) > std::abs(y)) {
             y = x3[2];
         }
     }
@@ -201,19 +202,19 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     // h1 + h2 = y && h1*h2 = d  <=>  h^2 - y*h + d = 0    (h === q)
 
     D = y * y - 4.0 * d;
-    if (fabs(D) < DBL_EPSILON) { //In other words: D == 0
+    if (std::abs(D) < DBL_EPSILON) { //In other words: D == 0
         q1 = q2 = y * 0.5;
         // g1 + g2 = a && g1 + g2 = b - y   <=>   g^2 - a*g + b - y = 0    (p === g)
         D = a * a - 4.0 * (b - y);
-        if (fabs(D) < DBL_EPSILON) { //In other words: D == 0
+        if (std::abs(D) < DBL_EPSILON) { //In other words: D == 0
             p1 = p2 = a * 0.5;
         } else {
-            sqrtD = sqrt(D);
+            sqrtD = std::sqrt(D);
             p1 = (a + sqrtD) * 0.5;
             p2 = (a - sqrtD) * 0.5;
         }
     } else {
-        sqrtD = sqrt(D);
+        sqrtD = std::sqrt(D);
         q1 = (y + sqrtD) * 0.5;
         q2 = (y - sqrtD) * 0.5;
         // g1 + g2 = a && g1*h2 + g2*h1 = c   ( && g === p )  Krammer
@@ -223,20 +224,20 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
 
     // Solve the quadratic equation: x^2 + p1*x + q1 = 0
     D = p1 * p1 - 4.0 * q1;
-    if (fabs(D) < DBL_EPSILON) {
+    if (std::abs(D) < DBL_EPSILON) {
         roots.insert(-p1 * 0.5);
     } else if (D > 0.0) {
-        sqrtD = sqrt(D);
+        sqrtD = std::sqrt(D);
         roots.insert((-p1 + sqrtD) * 0.5);
         roots.insert((-p1 - sqrtD) * 0.5);
     }
 
     // Solve the quadratic equation: x^2 + p2*x + q2 = 0
     D = p2 * p2 - 4.0 * q2;
-    if (fabs(D) < DBL_EPSILON) {
+    if (std::abs(D) < DBL_EPSILON) {
         roots.insert(-p2 * 0.5);
     } else if (D > 0.0) {
-        sqrtD = sqrt(D);
+        sqrtD = std::sqrt(D);
         roots.insert((-p2 + sqrtD) * 0.5);
         roots.insert((-p2 - sqrtD) * 0.5);
     }
@@ -247,7 +248,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
 // Calculate the quartic equation: a*x^4 + b*x^3 + c*x^2 + d*x + e = 0
 // All coefficients can be zero
 inline std::set<double> solveQuart(double a, double b, double c, double d, double e) {
-    if (fabs(a) < DBL_EPSILON) {
+    if (std::abs(a) < DBL_EPSILON) {
         return solveCub(b, c, d, e);
     }
     return solveQuartMonic(b / a, c / a, d / a, e / a);
@@ -258,18 +259,20 @@ inline std::set<double> solveQuart(const std::array<double, 5>& polynom) {
 }
 
 // Calculate the derivative poly coefficients of a given poly
-inline void polyDeri(double *coeffs, double *dcoeffs, int len) {
-    int horder = len - 1;
+template<size_t N>
+inline std::array<double, N-1> polyDeri(const std::array<double, N>& coeffs) {
+    std::array<double, N-1> deriv;
+    int horder = N - 1;
     for (int i = 0; i < horder; i++) {
-        dcoeffs[i] = (horder - i) * coeffs[i];
+        deriv[i] = (horder - i) * coeffs[i];
     }
-    return;
+    return deriv;
 }
 
 // Safe Newton Method
 // Requirements: f(l)*f(h)<=0
 template <typename F, typename DF>
-inline double safeNewton(const F &func, const DF &dfunc, const double &l, const double &h, const double &tol, const int &maxIts) {
+inline double safeNewton(const F& func, const DF& dfunc, const double &l, const double &h, const double &tol, const int &maxIts) {
     double xh, xl;
     double fl = func(l);
     double fh = func(h);
@@ -288,14 +291,13 @@ inline double safeNewton(const F &func, const DF &dfunc, const double &l, const 
     }
 
     double rts = 0.5 * (xl + xh);
-    double dxold = fabs(xh - xl);
+    double dxold = std::abs(xh - xl);
     double dx = dxold;
     double f = func(rts);
     double df = dfunc(rts);
     double temp;
-    for (int j = 0; j < maxIts; j++) {
-        if ((((rts - xh) * df - f) * ((rts - xl) * df - f) > 0.0) ||
-            (fabs(2.0 * f) > fabs(dxold * df))) {
+    for (size_t j = 0; j < maxIts; j++) {
+        if ((((rts - xh) * df - f) * ((rts - xl) * df - f) > 0.0) || (std::abs(2.0 * f) > std::abs(dxold * df))) {
             dxold = dx;
             dx = 0.5 * (xh - xl);
             rts = xl + dx;
@@ -312,7 +314,7 @@ inline double safeNewton(const F &func, const DF &dfunc, const double &l, const 
             }
         }
 
-        if (fabs(dx) < tol) {
+        if (std::abs(dx) < tol) {
             break;
         }
 
@@ -330,15 +332,12 @@ inline double safeNewton(const F &func, const DF &dfunc, const double &l, const 
 
 // Calculate a single zero of poly coeffs(x) inside [lbound, ubound]
 // Requirements: coeffs(lbound)*coeffs(ubound) < 0, lbound < ubound
-inline double shrinkInterval(double *coeffs, int numCoeffs, double lbound, double ubound, double tol) {
-    double *dcoeffs = new double[numCoeffs - 1];
-    polyDeri(coeffs, dcoeffs, numCoeffs);
-    auto func = [&coeffs, &numCoeffs](double x) { return polyEval(coeffs, numCoeffs, x); };
-    auto dfunc = [&dcoeffs, &numCoeffs](double x) { return polyEval(dcoeffs, numCoeffs - 1, x); };
-    constexpr int maxDblIts = 128;
-    double rts = safeNewton(func, dfunc, lbound, ubound, tol, maxDblIts);
-    delete[] dcoeffs;
-    return rts;
+template<size_t N, size_t maxDblIts = 128>
+inline double shrinkInterval(const std::array<double, N>& p, double lbound, double ubound, double tol) {
+    auto deriv = polyDeri(p);
+    auto func = [&p](double x) { return polyEval(p, x); };
+    auto dfunc = [&deriv](double x) { return polyEval(deriv, x); };
+    return safeNewton(func, dfunc, lbound, ubound, tol, maxDblIts);
 }
 
 } // namespace Roots

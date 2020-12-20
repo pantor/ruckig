@@ -95,15 +95,15 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.683145]
-    inp.current_velocity = [-0.38827]
-    inp.current_acceleration = [0.0]
-    inp.target_position = [0.349339]
-    inp.target_velocity = [-0.654017]
+    inp.current_position = [0.4302334438]
+    inp.current_velocity = [-0.9753702702]
+    inp.current_acceleration = [-0.1235689899]
+    inp.target_position = [-0.4163674523]
+    inp.target_velocity = [0]
     inp.target_acceleration = [0]
-    inp.max_velocity = [1.30722]
-    inp.max_acceleration = [1.66874]
-    inp.max_jerk = [5.89685]
+    inp.max_velocity = [9.116814474]
+    inp.max_acceleration = [3.847313271]
+    inp.max_jerk = [7.100001947]
     inp.minimum_duration = None
 
     # print_input_for_mathematica(inp, 0)
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 
-    print(f'Calculation duration: {out_list[1].calculation_duration:0.1f} [µs]')
+    print(f'Calculation duration: {out_list[0].calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {out_list[0].duration:0.3f} [s]')
 
     plot_trajectory(t_list, out_list)

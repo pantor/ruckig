@@ -73,12 +73,4 @@ inline std::complex<long double> PowerComplexLong(std::complex<long double> v, d
     return std::pow(v, e);
 }
 
-inline double eval(std::array<double, 6> polynom, double t) {
-    return polynom[5] + t * (polynom[4] + t * (polynom[3] + t * (polynom[2] + t * (polynom[1] + t * polynom[0]))));
-}
-
-inline double eval(std::array<double, 7> polynom, double t) {
-    return polynom[6] + t * (polynom[5] + t * (polynom[4] + t * (polynom[3] + t * (polynom[2] + t * (polynom[1] + t * polynom[0])))));
-}
-
 } // namespace ruckig

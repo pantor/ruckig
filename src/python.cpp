@@ -6,12 +6,13 @@
 #include <pybind11/eigen.h>
 #include <pybind11/operators.h>
 
-#include <ruckig/quintic.hpp>
 #include <ruckig/ruckig.hpp>
-#include <ruckig/smoothie.hpp>
+
+#include <ruckig/alternative/quintic.hpp>
+#include <ruckig/alternative/smoothie.hpp>
 
 #ifdef WITH_REFLEXXES
-    #include <ruckig/reflexxes.hpp>
+    #include <ruckig/alternative/reflexxes.hpp>
 #endif
 
 
@@ -41,6 +42,7 @@ PYBIND11_MODULE(_ruckig, m) {
 
     py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
         .def(py::init<>())
+        .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
         .def_readwrite("new_position", &OutputParameter<DOFs>::new_position)
         .def_readwrite("new_velocity", &OutputParameter<DOFs>::new_velocity)
         .def_readwrite("new_acceleration", &OutputParameter<DOFs>::new_acceleration)

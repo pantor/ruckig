@@ -28,7 +28,7 @@ struct Profile {
     std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
 
     void set(double p0, double v0, double a0, const std::array<double, 7>& j);
-    bool check(double pf, double vf, double vMax, double aMax) const;
+    bool check(double pf, double vf, double af, double vMax, double aMax) const;
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j);
@@ -36,50 +36,50 @@ struct Profile {
 
 
 struct RuckigStep1 {
-    static bool time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
-    static bool time_down_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
-    static bool get_profile(Profile& profile, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool get_profile(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
     static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
 };
 
 
 struct RuckigStep2 {
-    static bool time_up_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_acc0(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_up_none(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc0_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_acc0(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_up_none(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
-    static bool time_down_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_acc0(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
-    static bool time_down_none(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc0_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc1(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_acc0(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    static bool time_down_none(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
-    static bool get_profile(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double vMax, double aMax, double jMax);
+    static bool get_profile(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 };
 
 
@@ -156,7 +156,7 @@ class Ruckig {
                 }
             }
 
-            bool found_profile = RuckigStep1::get_profile(profiles[dof], p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+            bool found_profile = RuckigStep1::get_profile(profiles[dof], p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
             if (!found_profile) {
                 throw std::runtime_error("[ruckig] error in step 1: " + input.to_string(dof) + " all: " + input.to_string());
             }
@@ -175,7 +175,7 @@ class Ruckig {
 
                 double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
 
-                bool found_time_synchronization = RuckigStep2::get_profile(profiles[dof], t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+                bool found_time_synchronization = RuckigStep2::get_profile(profiles[dof], t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
                 if (!found_time_synchronization) {
                     throw std::runtime_error("[ruckig] error in step 2: " + input.to_string(dof) + " all: " + input.to_string());
                 }

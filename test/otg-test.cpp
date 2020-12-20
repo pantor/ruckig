@@ -5,11 +5,12 @@
 #include <Eigen/Core>
 
 #include <ruckig/parameter.hpp>
-#include <ruckig/quintic.hpp>
 #include <ruckig/ruckig.hpp>
 
+#include <ruckig/alternative/quintic.hpp>
+
 #ifdef WITH_REFLEXXES
-#include <ruckig/reflexxes.hpp>
+#include <ruckig/alternative/reflexxes.hpp>
 #endif
 
 
@@ -235,7 +236,7 @@ TEST_CASE("Ruckig") {
             check_comparison(otg, input, rflx);
         }
 
-        for (size_t i = 0; i < 720; i += 1) {
+        for (size_t i = 0; i < 512; i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
@@ -249,7 +250,7 @@ TEST_CASE("Ruckig") {
         }
     }
 
-    /* SECTION("Comparison with Reflexxes with 2 DoF") {
+    SECTION("Comparison with Reflexxes with 2 DoF") {
         Ruckig<2> otg {0.005};
         Reflexxes<2> rflx {0.005};
         InputParameter<2> input;
@@ -271,7 +272,7 @@ TEST_CASE("Ruckig") {
         }
     }
 
-    SECTION("Comparison with Reflexxes with 3 DoF") {
+    /* SECTION("Comparison with Reflexxes with 3 DoF") {
         Ruckig<3> otg {0.005};
         Reflexxes<3> rflx {0.005};
         InputParameter<3> input;
