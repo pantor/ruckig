@@ -8,12 +8,15 @@
 namespace ruckig {
 
 bool RuckigStep1::time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+    double a0a0 = a0 * a0;
+    double aMaxaMax = aMax * aMax;
+
     profile.t[0] = (-a0 + aMax)/jMax;
-    profile.t[1] = (Power(a0,2)/2 - Power(aMax,2) - jMax*(v0 - vMax))/(aMax*jMax);
+    profile.t[1] = (a0a0/2 - aMaxaMax - jMax*(v0 - vMax))/(aMax*jMax);
     profile.t[2] = aMax/jMax;
-    profile.t[3] = (3*Power(a0,4) + 3*Power(af,4) - 8*Power(a0,3)*aMax + 8*Power(af,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) - 24*af*aMax*jMax*vf + 6*Power(af,2)*(Power(aMax,2) - 2*jMax*vf) - 12*jMax*(2*aMax*jMax*(p0 - pf) + Power(aMax,2)*(v0 + vf + 2*vMax) - jMax*(Power(v0,2) + Power(vf,2) - 2*Power(vMax,2))))/(24.*aMax*Power(jMax,2)*vMax);
+    profile.t[3] = (3*a0a0*a0a0 + 3*Power(af,4) - 8*Power(a0,3)*aMax + 8*Power(af,3)*aMax + 24*a0*aMax*jMax*v0 + 6*a0a0*(aMaxaMax - 2*jMax*v0) - 24*af*aMax*jMax*vf + 6*Power(af,2)*(aMaxaMax - 2*jMax*vf) - 12*jMax*(2*aMax*jMax*(p0 - pf) + aMaxaMax*(v0 + vf + 2*vMax) - jMax*(Power(v0,2) + Power(vf,2) - 2*Power(vMax,2))))/(24.*aMax*Power(jMax,2)*vMax);
     profile.t[4] = profile.t[2];
-    profile.t[5] = (Power(af,2)/2 - Power(aMax,2) - jMax*vf + jMax*vMax)/(aMax*jMax);
+    profile.t[5] = (Power(af,2)/2 - aMaxaMax - jMax*vf + jMax*vMax)/(aMax*jMax);
     profile.t[6] = (af + aMax)/jMax;
 
     profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});

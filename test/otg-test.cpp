@@ -236,7 +236,7 @@ TEST_CASE("Ruckig") {
             check_comparison(otg, input, rflx);
         }
 
-        for (size_t i = 0; i < 512; i += 1) {
+        for (size_t i = 0; i < 620; i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();

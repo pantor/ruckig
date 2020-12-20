@@ -99,36 +99,25 @@ bool RuckigStep2::time_up_acc1_vel(Profile& profile, double tf, double p0, doubl
     return false;
 }
 
-bool RuckigStep2::time_up_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    const double h1 = Power(a0,2) - 2*a0*aMax + Power(aMax,2) - 2*aMax*jMax*tf + 2*jMax*(-v0 + vf);
-    const double h2 = 3*Power(a0,4) - 8*Power(a0,3)*aMax + 24*a0*aMax*jMax*(v0 - vf) + 6*Power(a0,2)*(Power(aMax,2) + 2*jMax*(-v0 + vf)) - 12*jMax*(Power(aMax,2)*(v0 - vf) - jMax*Power(v0 - vf,2) + 2*aMax*jMax*(p0 - pf + tf*vf));
-    const double h3 = 144*(Power(h1,2) + h2)*Power(jMax,4);
-        
+bool RuckigStep2::time_up_acc0_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {   
     // Profile UDDU
     {
-        const double h4 = 1728*(2*Power(h1,3) + 9*Power(aMax,2)*h2 - 6*h1*h2)*Power(jMax,6);
-        const auto h5 = PowerComplex(h4 + SqrtComplex(-4*Power(h3,3) + Power(h4,2)),1./3);
-        const auto h6 = SqrtComplex((2*Power(2,1./3)*h3 + h5*(Power(2,2./3)*h5 + 24*(3*Power(aMax,2) - 2*h1)*Power(jMax,2)))/(h5*Power(jMax,4)))/(6.*Sqrt(2));
-        const auto h7 = (-2*(Power(aMax,3) - aMax*h1))/(h6*Power(jMax,3));
-        const auto h8 = -(2*Power(2,1./3)*h3 + h5*(Power(2,2./3)*h5 + 48*(-3*Power(aMax,2) + 2*h1)*Power(jMax,2)))/(72.*h5*Power(jMax,4));
+        std::array<double, 5> polynom;
+        polynom[0] = 1.0;
+        polynom[1] = (2*aMax)/jMax;
+        polynom[2] = (Power(a0,2) - Power(af,2) - 2*a0*aMax + 2*af*aMax + Power(aMax,2) - 2*aMax*jMax*tf - 2*jMax*v0 + 2*jMax*vf)/Power(jMax,2);
+        polynom[3] = 0;
+        polynom[4] = -(-3*Power(a0,4) - 3*Power(af,4) + 8*Power(a0,3)*aMax + 4*Power(af,3)*aMax - 12*a0*aMax*(Power(af,2) + 2*jMax*(v0 - vf)) + 6*Power(a0,2)*(Power(af,2) - Power(aMax,2) + 2*jMax*v0 - 2*jMax*vf) + 6*Power(af,2)*(Power(aMax,2) - 2*aMax*jMax*tf + 2*jMax*(-v0 + vf)) + 12*jMax*(Power(aMax,2)*(v0 - vf) - jMax*Power(v0 - vf,2) + 2*aMax*jMax*(p0 - pf + tf*vf)))/(12.*Power(jMax,4));
 
-        // Solution 3
-        {
+        auto roots = Roots::solveQuart(polynom);
+        for (double t: roots) {
             profile.t[0] = (-a0 + aMax)/jMax;
-            profile.t[1] = ((Power(a0,2)*aMax - 2*a0*aMax*(aMax - h6*jMax) - jMax*(PowerComplex(h6,2)*SqrtComplex(h7 + h8)*Power(jMax,2) + Power(aMax,2)*(h6 + 2*tf) + aMax*(PowerComplex(h6,2)*jMax - h6*jMax*(SqrtComplex(h7 + h8) + 2*tf) + 2*(v0 - vf))))/(2.*aMax*h6*Power(jMax,2))).real();
+            profile.t[1] = (Power(a0,2) - Power(af,2) - 2*Power(aMax,2) + 2*jMax*(jMax*Power(t,2) - v0 + vf))/(2.*aMax*jMax);
             profile.t[2] = aMax/jMax;
-            profile.t[3] = ((-(Power(a0,2)*aMax) + 2*a0*Power(aMax,2) + PowerComplex(h6,2)*SqrtComplex(h7 + h8)*Power(jMax,3) - Power(aMax,2)*jMax*(h6 - 2*tf) + aMax*jMax*(-(PowerComplex(h6,2)*jMax) + h6*SqrtComplex(h7 + h8)*jMax + 2*v0 - 2*vf))/(2.*aMax*h6*Power(jMax,2))).real();
-            profile.t[4] = -(aMax - h6*jMax + SqrtComplex(h7 + h8)*jMax).real()/(2.*jMax);
+            profile.t[3] = (-Power(a0,2) + Power(af,2) + 2*a0*aMax - 2*(af*aMax + Power(aMax,2) + aMax*jMax*(2*t - tf) + jMax*(jMax*Power(t,2) - v0 + vf)))/(2.*aMax*jMax);
+            profile.t[4] = t;
             profile.t[5] = 0;
-            profile.t[6] = profile.t[4];
-
-            // std::cout << profile.t[0] << std::endl;
-            // std::cout << profile.t[1] << std::endl;
-            // std::cout << profile.t[2] << std::endl;
-            // std::cout << profile.t[3] << std::endl;
-            // std::cout << profile.t[4] << std::endl;
-            // std::cout << profile.t[5] << std::endl;
-            // std::cout << profile.t[6] << std::endl;
+            profile.t[6] = af/jMax + t;
             
             profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
             if (profile.check(pf, vf, af, vMax, aMax)) {
@@ -139,30 +128,22 @@ bool RuckigStep2::time_up_acc0_vel(Profile& profile, double tf, double p0, doubl
 
     // Profile UDUD
     {
-        const double h4 = 1728*(-2*Power(h1,3) + 9*Power(aMax,2)*h2 + 6*h1*h2)*Power(jMax,6);
-        const auto h5 = PowerComplex(h4 + SqrtComplex(-4*Power(h3,3) + Power(h4,2)),1./3);
-        const auto h6 = SqrtComplex((2*Power(2,0.3333333333333333)*h3 + h5*(Power(2,0.6666666666666666)*h5 + 24*(3*Power(aMax,2) + 2*h1)*Power(jMax,2)))/(h5*Power(jMax,4)))/(6.*Sqrt(2));
-        const auto h7 = (2*aMax*(Power(aMax,2) + h1))/(h6*Power(jMax,3));
-        const auto h8 = (-2*Power(2,0.3333333333333333)*h3 + h5*(-(Power(2,0.6666666666666666)*h5) + 48*(3*Power(aMax,2) + 2*h1)*Power(jMax,2)))/(72.*h5*Power(jMax,4));
+        std::array<double, 5> polynom;
+        polynom[0] = 1.0;
+        polynom[1] = (-2*aMax)/jMax;
+        polynom[2] = -((Power(a0,2) + Power(af,2) - 2*a0*aMax - 2*af*aMax + Power(aMax,2) - 2*aMax*jMax*tf - 2*jMax*v0 + 2*jMax*vf)/Power(jMax,2));
+        polynom[3] = 0;
+        polynom[4] = (3*Power(a0,4) + 3*Power(af,4) - 8*Power(a0,3)*aMax - 4*Power(af,3)*aMax + 6*Power(a0,2)*(Power(af,2) + Power(aMax,2) - 2*jMax*v0 + 2*jMax*vf) - 12*a0*aMax*(Power(af,2) + 2*jMax*(-v0 + vf)) + 6*Power(af,2)*(Power(aMax,2) - 2*aMax*jMax*tf + 2*jMax*(-v0 + vf)) - 12*jMax*(Power(aMax,2)*(v0 - vf) - jMax*Power(v0 - vf,2) + 2*aMax*jMax*(p0 - pf + tf*vf)))/(12.*Power(jMax,4));
 
-        // Solution 2
-        {
+        auto roots = Roots::solveQuart(polynom);
+        for (double t: roots) {
             profile.t[0] = (-a0 + aMax)/jMax;
-            profile.t[1] = ((Power(a0,2)*aMax + 2*Power(aMax,3) + PowerComplex(h6,2)*SqrtComplex(-h7 + h8)*Power(jMax,3) - 2*a0*aMax*(aMax - h6*jMax) - Power(aMax,2)*jMax*(5.*h6 + 2*tf) + aMax*jMax*(PowerComplex(h6,2)*jMax - h6*SqrtComplex(-h7 + h8)*jMax + 2.*h6*jMax*tf - 2*v0 + 2*vf))/(2.*aMax*h6*Power(jMax,2))).real();
+            profile.t[1] = (Power(a0,2) + Power(af,2) - 2*(Power(aMax,2) + jMax*(jMax*Power(t,2) + v0 - vf)))/(2.*aMax*jMax);
             profile.t[2] = aMax/jMax;
-            profile.t[3] = (-(Power(a0,2)*aMax - 2*a0*Power(aMax,2) + 2*Power(aMax,3) + PowerComplex(h6,2)*SqrtComplex(-h7 + h8)*Power(jMax,3) + Power(aMax,2)*jMax*(h6 - 2*tf) + aMax*jMax*(-(PowerComplex(h6,2)*jMax) + h6*SqrtComplex(-h7 + h8)*jMax - 2*v0 + 2*vf))/(2.*aMax*h6*Power(jMax,2))).real();
-            profile.t[4] = (aMax - h6*jMax + SqrtComplex(-h7 + h8)*jMax).real()/(2.*jMax);
+            profile.t[3] = -(Power(a0,2) + Power(af,2) - 2*a0*aMax - 2*(af*aMax - Power(aMax,2) + aMax*jMax*(-2*t + tf) + jMax*(jMax*Power(t,2) + v0 - vf)))/(2.*aMax*jMax);
+            profile.t[4] = t;
             profile.t[5] = 0;
-            profile.t[6] = profile.t[4];
-
-            // std::cout << profile.t[0] << std::endl;
-            // std::cout << profile.t[1] << std::endl;
-            // std::cout << profile.t[2] << std::endl;
-            // std::cout << profile.t[3] << std::endl;
-            // std::cout << profile.t[4] << std::endl;
-            // std::cout << profile.t[5] << std::endl;
-            // std::cout << profile.t[6] << std::endl;
-            // std::cout << "---" << std::endl;
+            profile.t[6] = -(af/jMax) + t;
             
             profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, jMax, 0, -jMax});
             if (profile.check(pf, vf, af, vMax, aMax)) {
@@ -358,7 +339,6 @@ bool RuckigStep2::time_up_acc0_acc1(Profile& profile, double tf, double p0, doub
     double h2 = -12*(Power(aMax,2)*Power(tf,2) - Power(v0 - vf,2) + 2*aMax*(2*p0 - 2*pf + tf*(v0 + vf)));
     double h3 = 3*Power(a0,3) - 4*Power(a0,2)*aMax - 12*a0*Power(aMax,2) + 24*Power(aMax,3);
     double h4 = h1 - Sqrt(Power(h1,2) - 4*a0*h2*h3);
-    double h5 = h1 + Sqrt(Power(h1,2) - 4*a0*h2*h3);
     double h6 = 2*aMax*h4*(2*p0 - 2*pf + tf*(v0 + vf));
     double h7 = 2*a0*aMax*h2*(a0*tf + 2*v0 - 2*vf);
 
@@ -370,14 +350,7 @@ bool RuckigStep2::time_up_acc0_acc1(Profile& profile, double tf, double p0, doub
     profile.t[5] = (24*Power(aMax,2)*(-h6 + 4*Power(aMax,3)*h2*tf - Power(aMax,2)*h4*Power(tf,2) + h4*Power(v0 - vf,2)) - 6*a0*aMax*(-h6 + 16*Power(aMax,3)*h2*tf - Power(aMax,2)*(h4*Power(tf,2) + 20*h2*(v0 - vf)) + h4*Power(v0 - vf,2)) + 3*Power(a0,2)*(-h6 + 24*Power(aMax,3)*h2*tf - Power(aMax,2)*(h4*Power(tf,2) + 28*h2*(v0 - vf)) + h4*Power(v0 - vf,2)) + 3*Power(a0,4)*h2*(3*aMax*tf - v0 + vf) - 4*Power(a0,3)*aMax*h2*(7*aMax*tf - 5*v0 + 5*vf))/(2.*a0*aMax*h2*h3);
     profile.t[6] = profile.t[2];
 
-    jMax = h4/(2.*h2);
-
-    // std::cout << profile.t[0] << std::endl;
-    // std::cout << profile.t[1] << std::endl;
-    // std::cout << profile.t[2] << std::endl;
-    // std::cout << profile.t[4] << std::endl;
-    // std::cout << profile.t[5] << std::endl;
-    // std::cout << jMax << std::endl;
+    jMax = h4/(2*h2);
 
     profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
     return profile.check(pf, vf, af, vMax, aMax);
@@ -604,21 +577,6 @@ bool RuckigStep2::time_up_none(Profile& profile, double tf, double p0, double v0
         }
     }
     
-    double h1 = 8*p0 - 8*pf + a0*Power(tf,2) + 4*tf*v0 + 4*tf*vf;
-    double h2 = -16*a0*p0 + 16*a0*pf + Power(a0,2)*Power(tf,2) + 8*Power(v0,2) - 16*a0*tf*vf - 16*v0*vf + 8*Power(vf,2);
-    double h3 = 432*Power(h2,3) + 3888*Power(a0,4)*Power(h1,2)*Power(tf,2) + 2592*Power(a0,3)*h1*h2*Power(tf,2) + 1296*Power(a0,4)*h2*Power(tf,4) - 1296*Power(a0,6)*Power(tf,6);
-    double h4 = 36*Power(h2,2) + 144*Power(a0,3)*h1*Power(tf,2) - 36*Power(a0,4)*Power(tf,4);
-    auto h5 = PowerComplex(h3 + SqrtComplex(Power(h3,2) - 4*Power(h4,3)),1./3);
-    auto h6 = SqrtComplex((4*Power(h1,2))/Power(tf,6) + (4*h2)/(3.*Power(tf,4)) - (Power(2,1./3)*h4)/(9.*h5*Power(tf,4)) - h5/(9.*Power(2,1./3)*Power(tf,4)));
-    auto h7 = (8*Power(h1,2))/Power(tf,6) + (8*h2)/(3.*Power(tf,4)) + (Power(2,1./3)*h4)/(9.*h5*Power(tf,4)) + h5/(9.*Power(2,1./3)*Power(tf,4));
-    auto h8 = ((-64*Power(h1,3))/Power(tf,9) - (32*h1*h2)/Power(tf,7) + (32*Power(a0,3))/(3.*Power(tf,3)))/(4.*h6);
-    auto h9 = -h6/2. - SqrtComplex(h7 + h8)/2. - h1/Power(tf,3);
-    auto h10 = -h6/2. + SqrtComplex(h7 + h8)/2. - h1/Power(tf,3);
-    auto h11 = h6/2. - SqrtComplex(h7 + h8)/2. - h1/Power(tf,3);
-    auto h12 = h6/2. + SqrtComplex(h7 + h8)/2. - h1/Power(tf,3);
-
-    // std::cout << h9 << " " << h10 << " " << h11 << " " << h12 << std::endl;
-
     return false;
 }
 
