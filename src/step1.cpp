@@ -7,11 +7,11 @@
 
 namespace ruckig {
 
-RuckigStep1::RuckigStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+RuckigStep1::RuckigStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax): p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af) {
 
 }
 
-bool RuckigStep1::time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
     double a0_a0 = a0 * a0;
     double aMax_aMax = aMax * aMax;
 
@@ -27,7 +27,7 @@ bool RuckigStep1::time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, 
     return profile.check(pf, vf, af, vMax, aMax);
 }
 
-bool RuckigStep1::time_up_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
     profile.t[0] = (-2*a0*jMax + Sqrt(2)*Sqrt(Power(a0,2) + 2*jMax*(-v0 + vMax))*Abs(jMax))/(2*Power(jMax,2));
     profile.t[1] = 0;
     profile.t[2] = Sqrt(Power(a0,2)/2 + jMax*(-v0 + vMax))/Abs(jMax);
@@ -40,7 +40,7 @@ bool RuckigStep1::time_up_acc1_vel(Profile& profile, double p0, double v0, doubl
     return profile.check(pf, vf, af, vMax, aMax);
 }
 
-bool RuckigStep1::time_up_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_acc0_vel(Profile& profile, double vMax, double aMax, double jMax) {
     // Solution 2
     if (jMax > 0) {
         profile.t[0] = (-a0 + aMax)/jMax;
@@ -68,7 +68,7 @@ bool RuckigStep1::time_up_acc0_vel(Profile& profile, double p0, double v0, doubl
     return profile.check(pf, vf, af, vMax, aMax);
 }
 
-bool RuckigStep1::time_up_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_vel(Profile& profile, double vMax, double aMax, double jMax) {
     // Solution 4
     if (jMax > 0) {
         profile.t[0] = ((-2*a0*jMax + Sqrt(2)*Sqrt(Power(a0,2) + 2*jMax*(-v0 + vMax))*Abs(jMax))/(2*Power(jMax,2)));
@@ -96,7 +96,7 @@ bool RuckigStep1::time_up_vel(Profile& profile, double p0, double v0, double a0,
     return profile.check(pf, vf, af, vMax, aMax);
 }
 
-bool RuckigStep1::time_up_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax) {
     const double h1 = Sqrt(6)*Sqrt(Power(aMax,2)*(3*Power(a0,4) + 3*Power(af,4) - 8*Power(a0,3)*aMax + 8*Power(af,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) - 24*af*aMax*jMax*vf + 6*Power(af,2)*(Power(aMax,2) - 2*jMax*vf) + 6*(Power(aMax,4) + 4*aMax*Power(jMax,2)*(-p0 + pf) - 2*Power(aMax,2)*jMax*(v0 + vf) + 2*Power(jMax,2)*(Power(v0,2) + Power(vf,2)))))*Abs(jMax);
 
     profile.t[0] = (-a0 + aMax)/jMax;
@@ -111,7 +111,7 @@ bool RuckigStep1::time_up_acc0_acc1(Profile& profile, double p0, double v0, doub
     return profile.check(pf, vf, af, vMax, aMax);
 }
 
-bool RuckigStep1::time_up_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax) {
     std::array<double, 5> polynom;
     polynom[0] = 1.0;
     polynom[1] = (2*(2*a0 + aMax))/jMax;
@@ -144,7 +144,7 @@ bool RuckigStep1::time_up_acc1(Profile& profile, double p0, double v0, double a0
     return false;
 }
 
-bool RuckigStep1::time_up_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax) {
     std::array<double, 5> polynom;
     polynom[0] = 1.0;
     polynom[1] = (2*aMax)/jMax;
@@ -177,7 +177,7 @@ bool RuckigStep1::time_up_acc0(Profile& profile, double p0, double v0, double a0
     return false;
 }
 
-bool RuckigStep1::time_up_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::time_up_none(Profile& profile, double vMax, double aMax, double jMax) {
     if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         profile.t[0] = std::cbrt((pf - p0)/(2*jMax));
         profile.t[1] = 0;
@@ -205,7 +205,7 @@ bool RuckigStep1::time_up_none(Profile& profile, double p0, double v0, double a0
         }
 
         // Refine root
-        if (std::abs(Roots::polyEval(polynom, t)) > 1e-7) {
+        if (std::abs(Roots::polyEval(polynom, t)) > 1e-9) {
             t = Roots::shrinkInterval(polynom, t - 1e-5, t + 1e-5, 1e-14);
         }
 
@@ -228,87 +228,87 @@ bool RuckigStep1::time_up_none(Profile& profile, double p0, double v0, double a0
     return false;
 }
 
-bool RuckigStep1::time_down_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_acc0_acc1_vel(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_acc0_acc1_vel(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::time_down_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_acc1_vel(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_acc1_vel(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::time_down_acc0_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_acc0_vel(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_acc0_vel(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_acc0_vel(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::time_down_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_vel(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_vel(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_vel(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::time_down_acc0_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_acc0_acc1(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_acc0_acc1(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::time_down_acc1(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_acc1(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_acc1(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_acc1(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::time_down_acc0(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_acc0(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_acc0(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_acc0(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::time_down_none(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    return time_up_none(profile, p0, v0, a0, pf, vf, af, -vMax, -aMax, -jMax);
+bool RuckigStep1::time_down_none(Profile& profile, double vMax, double aMax, double jMax) {
+    return time_up_none(profile, -vMax, -aMax, -jMax);
 }
 
-bool RuckigStep1::get_profile(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool RuckigStep1::get_profile(Profile& profile, double vMax, double aMax, double jMax) {
     // Test all cases to get ones that match
     if (pf > p0) {
-        if (time_up_acc0_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        if (time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0_ACC1_VEL;
 
-        } else if (time_down_acc0_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0_ACC1_VEL;
 
-        } else if (time_up_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC1_VEL;
 
-        } else if (time_down_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC1_VEL;
 
-        } else if (time_up_acc0_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc0_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0_VEL;
 
-        } else if (time_down_acc0_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0_VEL;
 
-        } else if (time_up_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_VEL;
 
-        } else if (time_down_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_VEL;
 
-        } else if (time_up_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_none(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_NONE;
 
-        } else if (time_up_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc0(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0;
 
-        } else if (time_up_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC1;
 
-        } else if (time_up_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc0_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0_ACC1;
 
-        } else if (time_down_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_none(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_NONE;
 
-        } else if (time_down_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc0(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0;
 
-        } else if (time_down_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC1;
 
-        } else if (time_down_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0_ACC1;
 
         } else {
@@ -316,52 +316,52 @@ bool RuckigStep1::get_profile(Profile& profile, double p0, double v0, double a0,
         }
 
     } else {
-        if (time_down_acc0_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        if (time_down_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0_ACC1_VEL;
 
-        } else if (time_up_acc0_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0_ACC1_VEL;
 
-        } else if (time_down_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC1_VEL;
 
-        } else if (time_up_acc1_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc1_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC1_VEL;
 
-        } else if (time_down_acc0_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0_VEL;
 
-        } else if (time_up_acc0_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc0_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0_VEL;
 
-        } else if (time_down_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_VEL;
 
-        } else if (time_up_vel(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_vel(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_VEL;
 
-        } else if (time_down_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_none(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_NONE;
 
-        } else if (time_down_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc0(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0;
 
-        } else if (time_down_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC1;
 
-        } else if (time_down_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0_ACC1;
 
-        } else if (time_up_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_none(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_NONE;
 
-        } else if (time_up_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc0(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0;
 
-        } else if (time_up_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC1;
 
-        } else if (time_up_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+        } else if (time_up_acc0_acc1(profile, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0_ACC1;
 
         } else {

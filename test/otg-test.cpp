@@ -45,12 +45,10 @@ void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
     auto result = otg.update(input, output);
 
     CHECK( result == Result::Working );
-    CHECK_FALSE( std::isnan(output.duration) );
+    CHECK( output.duration > 0.0 );
 
     for (size_t dof = 0; dof < DOFs; dof += 1) {
-        CHECK_FALSE( std::isnan(output.new_position[dof]) );
-        CHECK_FALSE( std::isnan(output.new_velocity[dof]) );
-        CHECK_FALSE( std::isnan(output.new_acceleration[dof]) );
+        CHECK_FALSE( (std::isnan(output.new_position[dof]) || std::isnan(output.new_velocity[dof]) || std::isnan(output.new_acceleration[dof])) );
     }
 }
 
@@ -76,15 +74,7 @@ void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& ot
         otg_comparison.atTime(half_duration, output_comparison);
 
         for (size_t dof = 0; dof < DOFs; dof += 1) {
-            CHECK_FALSE( std::isnan(output.new_position[dof]) );
-            CHECK_FALSE( std::isnan(output.new_velocity[dof]) );
-            CHECK_FALSE( std::isnan(output.new_acceleration[dof]) );
-
-            if constexpr (DOFs <= 2) {
-                CHECK( output.new_position[dof] == Approx(output_comparison.new_position[dof]).margin(1e-7) );
-                // CHECK( output.new_velocity[dof] == Approx(output_comparison.new_velocity[dof]).margin(1e-7) );
-                // CHECK( output.new_acceleration[dof] == Approx(output_comparison.new_acceleration[dof]).margin(1e-7) );
-            }
+            CHECK( output.new_position[dof] == Approx(output_comparison.new_position[dof]).margin(1e-7) );
         }
     } else {
         WARN("Ruckig and Reflexxes differ! Maybe Reflexxes error...");
@@ -195,12 +185,12 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 32*1024; i += 1) {
+        for (size_t i = 0; i < 64*1024; i += 1) {
             input.current_position = Vec::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.target_position = Vec::Random();
-            input.max_velocity = 10 * Vec::Random().array().abs() + 0.1;
+            input.max_velocity = 10 * Vec::Random().array().abs() + input.target_velocity.array().abs() + 0.1;
             input.max_acceleration = 10 * Vec::Random().array().abs() + 0.1;
             input.max_jerk = 10 * Vec::Random().array().abs() + 0.1;
 
@@ -218,24 +208,12 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 32*1024; i += 1) {
-            input.current_position = Vec1::Random();
-            input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
-            input.current_acceleration = dist(gen) < 0.85 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
-            input.target_position = Vec1::Random();
-            input.max_velocity = 10 * Vec1::Random().array().abs() + 0.1;
-            input.max_acceleration = 10 * Vec1::Random().array().abs() + 0.1;
-            input.max_jerk = 10 * Vec1::Random().array().abs() + 0.1;
-
-            check_comparison(otg, input, rflx);
-        }
-
-        for (size_t i = 0; i < 32*1024; i += 1) {
+        for (size_t i = 0; i < 64*1024; i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.target_position = Vec1::Random();
-            input.target_velocity = Vec1::Random();
+            input.target_velocity = dist(gen) < 0.6 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.max_velocity = 10 * Vec1::Random().array().abs() + input.target_velocity.array().abs(); // Target velocity needs to be smaller than max velocity
             input.max_acceleration = 10 * Vec1::Random().array().abs() + 0.1;
             input.max_jerk = 10 * Vec1::Random().array().abs() + 0.1;
@@ -253,7 +231,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 0; i += 1) {
+        for (size_t i = 0; i < 96; i += 1) {
             input.current_position = Vec2::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();

@@ -41,15 +41,13 @@ void RuckigStep1::get_brake_trajectory(double v0, double a0, double vMax, double
             double t_to_v_max = -(-a0 - std::sqrt(std::pow(a0,2) + 2 * jMax * v0 - 2 * jMax * vMax))/jMax;
             double t_to_v_max_brake_for_other = (2 * a0 + std::sqrt(2) * std::sqrt(std::pow(a0, 2) + 2 * jMax * (v0 + vMax)))/(2 * jMax);
 
-            // std::cout << t_to_other_a_max << " " << t_to_v_max << " " << t_to_v_max_brake_for_other << std::endl;
-
             if (t_to_v_max_brake_for_other < t_to_other_a_max && t_to_v_max_brake_for_other < t_to_v_max) {
                 t_brake[0] = t_to_v_max_brake_for_other - 2e-15;
 
             } else if (t_to_other_a_max < t_to_v_max) {
                 double v_at_a_other_a_max = v_at_t(v0, a0, -jMax, t_to_other_a_max);
                 double t_to_v_max_while_a_max = (v_at_a_other_a_max - vMax)/aMax;
-                double t_to_v_max_brake_for_other_a_max = -(std::pow(aMax, 2) - 2 * jMax * (v_at_a_max + vMax))/(2 * aMax * jMax);
+                double t_to_v_max_brake_for_other_a_max = -(std::pow(aMax, 2) - 2 * jMax * (v_at_a_other_a_max + vMax))/(2 * aMax * jMax);
 
                 t_brake[0] = t_to_other_a_max;
                 t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_brake_for_other_a_max);
@@ -78,7 +76,6 @@ void RuckigStep1::get_brake_trajectory(double v0, double a0, double vMax, double
             double t_to_v_max_while_a_max = (v_at_a_max - vMax)/aMax;
             double t_to_v_max_in_reverse_j_direction = (-std::pow(aMax, 2) + 2 * jMax * v_at_a_max + 2 * jMax * vMax)/(2*aMax*jMax);
             t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction);
-            // {a1 == -aMax, v1 == v0 - aMax * t1, -vMax == v1 + a1 * t2 + jMax / 2 * t2^2, 0 == a1 + jMax t2}, {t1, t2, a1, v1}
 
         } else if (v_at_a_max < -vMax) {
             double t_to_other_a_max = -(a0 - aMax) / jMax - 2e-15;
@@ -87,7 +84,7 @@ void RuckigStep1::get_brake_trajectory(double v0, double a0, double vMax, double
             if (t_to_other_a_max < t_to_v_max) {
                 double v_at_a_other_a_max = v_at_t(v0, a0, jMax, t_to_other_a_max);
                 double t_to_v_max_while_a_max = -(v_at_a_other_a_max + vMax)/aMax;
-                double t_to_v_max_brake_for_other_a_max = -(std::pow(aMax, 2) + 2 * jMax * (v_at_a_max - vMax))/(2 * aMax * jMax);
+                double t_to_v_max_brake_for_other_a_max = -(std::pow(aMax, 2) + 2 * jMax * (v_at_a_other_a_max - vMax))/(2 * aMax * jMax);
                 
                 t_brake[0] = t_to_other_a_max;
                 t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_brake_for_other_a_max);
