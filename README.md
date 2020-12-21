@@ -9,15 +9,15 @@
     <img src="https://github.com/pantor/ruckig/workflows/CI/badge.svg" alt="CI">
   </a>
 
-  <a href="https://github.com/pantor/frankx/issues">
-    <img src="https://img.shields.io/github/issues/pantor/frankx.svg" alt="Issues">
+  <a href="https://github.com/pantor/ruckig/issues">
+    <img src="https://img.shields.io/github/issues/pantor/ruckig.svg" alt="Issues">
   </a>
 
-  <a href="https://github.com/pantor/frankx/releases">
-    <img src="https://img.shields.io/github/v/release/pantor/frankx.svg?include_prereleases&sort=semver" alt="Releases">
+  <a href="https://github.com/pantor/ruckig/releases">
+    <img src="https://img.shields.io/github/v/release/pantor/ruckig.svg?include_prereleases&sort=semver" alt="Releases">
   </a>
 
-  <a href="https://github.com/pantor/frankx/blob/master/LICENSE">
+  <a href="https://github.com/pantor/ruckig/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="LGPL">
   </a>
 </p>
@@ -35,7 +35,7 @@ make install
 
 ## Development
 
-Frankx is written in C++17. It is currently tested against following versions
+Ruckig is written in C++17. It is currently tested against following versions
 
 - Eigen v3.3.9
 - Catch2 v2.13.3 (only for testing)
