@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     43223,       1137]
-NotebookOptionsPosition[     40648,       1089]
-NotebookOutlinePosition[     41070,       1106]
-CellTagsIndexPosition[     41027,       1103]
+NotebookDataLength[     43288,       1139]
+NotebookOptionsPosition[     40713,       1091]
+NotebookOutlinePosition[     41135,       1108]
+CellTagsIndexPosition[     41092,       1105]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1045,25 +1045,27 @@ Cell[BoxData["\<\"-Power(a0,6) + 6*Power(a0,5)*jMax*tf + \
 Cell[CellGroupData[{
 
 Cell[BoxData[{
- RowBox[{"ToString", "[", 
+ RowBox[{"tmp", "=", 
   RowBox[{
-   RowBox[{"Simplify", "[", 
+   RowBox[{"resultTa", "[", 
+    RowBox[{"[", 
+     RowBox[{"2", ",", "2", ",", "7", ",", "2"}], "]"}], "]"}], "//.", 
+   RowBox[{"{", 
     RowBox[{
      RowBox[{"resultTa", "[", 
       RowBox[{"[", 
-       RowBox[{"2", ",", "2", ",", "7", ",", "2"}], "]"}], "]"}], "//.", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"resultTa", "[", 
-        RowBox[{"[", 
-         RowBox[{"2", ",", "2", ",", "3", ",", "2"}], "]"}], "]"}], "\[Rule]",
-        "t"}], "}"}]}], "]"}], ",", "CForm"}], "]"}], "\[IndentingNewLine]", 
+       RowBox[{"2", ",", "2", ",", "3", ",", "2"}], "]"}], "]"}], "\[Rule]", 
+     "t"}], "}"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{"ToString", "[", 
+  RowBox[{
+   RowBox[{"Simplify", "[", "tmp", "]"}], ",", "CForm"}], 
+  "]"}], "\[IndentingNewLine]", 
  RowBox[{"CopyToClipboard", "[", "%", "]"}]}], "Input",
  CellChangeTimes->{
   3.817202615037848*^9, {3.817202703455277*^9, 3.8172028329768457`*^9}, {
-   3.817268093411096*^9, 3.817268131227783*^9}},
- CellLabel->
-  "In[601]:=",ExpressionUUID->"27add3ed-17eb-49e9-9b82-a98025fa047d"],
+   3.817268093411096*^9, 3.817268131227783*^9}, {3.8175248932620068`*^9, 
+   3.8175248979557743`*^9}},ExpressionUUID->"27add3ed-17eb-49e9-9b82-\
+a98025fa047d"],
 
 Cell[BoxData["\<\"(Power(a0,5) - Power(a0,4)*jMax*(3*t + 4*tf) + \
 Power(a0,3)*jMax*(jMax*(3*Power(t,2) + 12*t*tf + 5*Power(tf,2)) - 2*v0 + \
@@ -1088,7 +1090,7 @@ vf)))))\"\>"], "Output",
 }, Open  ]]
 },
 WindowSize->{904, 920},
-WindowMargins->{{49, Automatic}, {Automatic, 8}},
+WindowMargins->{{62, Automatic}, {Automatic, 8}},
 Magnification:>0.9 Inherited,
 FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (June 19, 2020)",
 StyleDefinitions->"Default.nb",
@@ -1136,8 +1138,8 @@ Cell[36855, 1003, 952, 24, 66, "Input",ExpressionUUID->"c24549d5-e55a-4ad4-a91d-
 Cell[37810, 1029, 781, 12, 108, "Output",ExpressionUUID->"8a1b58c3-1441-4fe3-bbe7-d56171dd7cae"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[38628, 1046, 747, 19, 47, "Input",ExpressionUUID->"27add3ed-17eb-49e9-9b82-a98025fa047d"],
-Cell[39378, 1067, 1254, 19, 203, "Output",ExpressionUUID->"9edd45ed-0ce4-41cc-9909-2527fddc394d"]
+Cell[38628, 1046, 812, 21, 66, "Input",ExpressionUUID->"27add3ed-17eb-49e9-9b82-a98025fa047d"],
+Cell[39443, 1069, 1254, 19, 203, "Output",ExpressionUUID->"9edd45ed-0ce4-41cc-9909-2527fddc394d"]
 }, Open  ]]
 }
 ]

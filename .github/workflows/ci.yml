@@ -1,0 +1,43 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: install apt dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install build-essential cmake git
+    
+    - name: install Eigen3
+      run: |
+        git clone https://github.com/eigenteam/eigen-git-mirror.git
+        cd eigen-git-mirror
+        git checkout 3.3.9
+        mkdir build && cd build
+        cmake ..
+        sudo make install
+    
+    - name: install Catch2
+      run: |
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        git checkout v2.13.3
+        mkdir build && cd build
+        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
+        sudo make install
+    
+    - name: configure & make
+      run: |
+        mkdir build && cd build
+        cmake -DBUILD_PYTHON_MODULE=OFF ..
+        make
+    
+    - name: test
+      run: make test
+  

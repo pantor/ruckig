@@ -7,6 +7,10 @@
 
 namespace ruckig {
 
+RuckigStep2::RuckigStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+    
+}
+
 bool RuckigStep2::time_up_acc0_acc1_vel(Profile& profile, double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
     // Profile UDDU
     {

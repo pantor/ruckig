@@ -17,8 +17,8 @@ void Profile::set(double p0, double v0, double a0, const std::array<double, 7>& 
     }
     for (size_t i = 0; i < 7; i += 1) {
         a[i+1] = a[i] + t[i] * j[i];
-        v[i+1] = v[i] + t[i] * a[i] + std::pow(t[i], 2) * j[i] / 2;
-        p[i+1] = p[i] + t[i] * v[i] + std::pow(t[i], 2) * a[i] / 2 + std::pow(t[i], 3) * j[i] / 6;
+        v[i+1] = v[i] + t[i] * (a[i] + t[i] * j[i] / 2);
+        p[i+1] = p[i] + t[i] * (v[i] + t[i] * (a[i] / 2 + t[i] * j[i] / 6));
     }
 }
 
@@ -28,7 +28,7 @@ bool Profile::check(double pf, double vf, double af, double vMax, double aMax) c
     return std::all_of(t.begin(), t.end(), [](double tm){ return tm >= 0; })
         && std::all_of(v.begin() + 3, v.end(), [vMax](double vm){ return std::abs(vm) < std::abs(vMax) + 1e-9; })
         && std::all_of(a.begin() + 2, a.end(), [aMax](double am){ return std::abs(am) < std::abs(aMax) + 1e-9; })
-        && std::abs(p[7] - pf) < 2e-7 && std::abs(v[7] - vf) < 2e-7;
+        && std::abs(p[7] - pf) < 1e-8 && std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-8;
 }
 
 std::tuple<double, double, double> Profile::integrate(double t, double p0, double v0, double a0, double j) {

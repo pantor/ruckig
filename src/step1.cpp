@@ -7,16 +7,20 @@
 
 namespace ruckig {
 
+RuckigStep1::RuckigStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+
+}
+
 bool RuckigStep1::time_up_acc0_acc1_vel(Profile& profile, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax) {
-    double a0a0 = a0 * a0;
-    double aMaxaMax = aMax * aMax;
+    double a0_a0 = a0 * a0;
+    double aMax_aMax = aMax * aMax;
 
     profile.t[0] = (-a0 + aMax)/jMax;
-    profile.t[1] = (a0a0/2 - aMaxaMax - jMax*(v0 - vMax))/(aMax*jMax);
+    profile.t[1] = (a0_a0/2 - aMax_aMax - jMax*(v0 - vMax))/(aMax*jMax);
     profile.t[2] = aMax/jMax;
-    profile.t[3] = (3*a0a0*a0a0 + 3*Power(af,4) - 8*Power(a0,3)*aMax + 8*Power(af,3)*aMax + 24*a0*aMax*jMax*v0 + 6*a0a0*(aMaxaMax - 2*jMax*v0) - 24*af*aMax*jMax*vf + 6*Power(af,2)*(aMaxaMax - 2*jMax*vf) - 12*jMax*(2*aMax*jMax*(p0 - pf) + aMaxaMax*(v0 + vf + 2*vMax) - jMax*(Power(v0,2) + Power(vf,2) - 2*Power(vMax,2))))/(24.*aMax*Power(jMax,2)*vMax);
+    profile.t[3] = (3*a0_a0*a0_a0 + 3*Power(af,4) - 8*Power(a0,3)*aMax + 8*Power(af,3)*aMax + 24*a0*aMax*jMax*v0 + 6*a0_a0*(aMax_aMax - 2*jMax*v0) - 24*af*aMax*jMax*vf + 6*Power(af,2)*(aMax_aMax - 2*jMax*vf) - 12*jMax*(2*aMax*jMax*(p0 - pf) + aMax_aMax*(v0 + vf + 2*vMax) - jMax*(Power(v0,2) + Power(vf,2) - 2*Power(vMax,2))))/(24.*aMax*Power(jMax,2)*vMax);
     profile.t[4] = profile.t[2];
-    profile.t[5] = (Power(af,2)/2 - aMaxaMax - jMax*vf + jMax*vMax)/(aMax*jMax);
+    profile.t[5] = (Power(af,2)/2 - aMax_aMax - jMax*vf + jMax*vMax)/(aMax*jMax);
     profile.t[6] = (af + aMax)/jMax;
 
     profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
@@ -286,23 +290,23 @@ bool RuckigStep1::get_profile(Profile& profile, double p0, double v0, double a0,
         } else if (time_up_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_NONE;
 
-        } else if (time_down_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::DOWN_NONE;
+        } else if (time_up_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::UP_ACC0;
 
         } else if (time_up_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC1;
 
-        } else if (time_down_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::DOWN_ACC1;
+        } else if (time_up_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::UP_ACC0_ACC1;
 
-        } else if (time_up_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::UP_ACC0;
+        } else if (time_down_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::DOWN_NONE;
 
         } else if (time_down_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0;
 
-        } else if (time_up_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::UP_ACC0_ACC1;
+        } else if (time_down_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::DOWN_ACC1;
 
         } else if (time_down_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC0_ACC1;
@@ -339,23 +343,23 @@ bool RuckigStep1::get_profile(Profile& profile, double p0, double v0, double a0,
         } else if (time_down_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_NONE;
 
-        } else if (time_up_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::UP_NONE;
+        } else if (time_down_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::DOWN_ACC0;
 
         } else if (time_down_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::DOWN_ACC1;
 
-        } else if (time_up_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::UP_ACC1;
+        } else if (time_down_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::DOWN_ACC0_ACC1;
 
-        } else if (time_down_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::DOWN_ACC0;
+        } else if (time_up_none(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::UP_NONE;
 
         } else if (time_up_acc0(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0;
 
-        } else if (time_down_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
-            profile.type = Profile::Type::DOWN_ACC0_ACC1;
+        } else if (time_up_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
+            profile.type = Profile::Type::UP_ACC1;
 
         } else if (time_up_acc0_acc1(profile, p0, v0, a0, pf, vf, af, vMax, aMax, jMax)) {
             profile.type = Profile::Type::UP_ACC0_ACC1;
