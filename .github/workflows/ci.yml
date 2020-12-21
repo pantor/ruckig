@@ -17,7 +17,7 @@ jobs:
     - name: install Eigen3
       run: |
         git clone https://gitlab.com/libeigen/eigen.git
-        cd eigen-git-mirror
+        cd eigen
         git checkout 3.3.9
         mkdir build && cd build
         cmake ..
