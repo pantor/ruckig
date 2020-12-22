@@ -2,10 +2,10 @@ import copy
 from pathlib import Path
 import sys
 
-sys.path.insert(0, '../build')
-
 import matplotlib.pyplot as plt
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
 from _ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
 from _ruckig import Reflexxes
@@ -95,15 +95,15 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-0.9579634331]
-    inp.current_velocity = [-0.491420063]
-    inp.current_acceleration = [0.7030019433]
-    inp.target_position = [-0.6463393167]
-    inp.target_velocity = [0.9751044297]
-    inp.target_acceleration = [0.5401507661]
-    inp.max_velocity = [6.914363305]
-    inp.max_acceleration = [1.804067883]
-    inp.max_jerk = [9.774990577]
+    inp.current_position = [0.2808092513]
+    inp.current_velocity = [-0.4389141292]
+    inp.current_acceleration = [-0.8297702921]
+    inp.target_position = [0.05070107572]
+    inp.target_velocity = [0.1329796729]
+    inp.target_acceleration = [0.9893629299 - 0.62]
+    inp.max_velocity = [2.360615146]
+    inp.max_acceleration = [1.21996622]
+    inp.max_jerk = [5.050501209]
     inp.minimum_duration = None
 
     print_input_for_mathematica(inp, 0)

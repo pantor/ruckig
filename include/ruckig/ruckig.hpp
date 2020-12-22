@@ -1,8 +1,10 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <numeric>
 #include <optional>
 
 #include <ruckig/parameter.hpp>
@@ -36,9 +38,27 @@ struct Profile {
 };
 
 
+//! Which times are possible for synchronization?
+struct Block {
+    struct Interval {
+        double left, right; // [s]
+    };
+
+    double t_min; // [s]
+    std::optional<Interval> a, b; // Max. two intervals can be blocked
+
+    bool is_blocked(double t) {
+        return t < t_min || (a.has_value() && a.value().left < t && t < a.value().right) || b.has_value() && b.value().left < t && t < b.value().right;
+    }
+};
+
+
 struct RuckigStep1 {
     double p0, v0, a0;
     double pf, vf, af;
+
+    Block block;
+    Profile fastest;
 
     explicit RuckigStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
@@ -60,7 +80,7 @@ struct RuckigStep1 {
     bool time_down_acc0(Profile& profile, double vMax, double aMax, double jMax);
     bool time_down_none(Profile& profile, double vMax, double aMax, double jMax);
 
-    bool get_profile(Profile& profile, double vMax, double aMax, double jMax);
+    bool get_profile(const Profile& input, double vMax, double aMax, double jMax);
 
     static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
 };
@@ -102,6 +122,35 @@ class Ruckig {
     double t, tf;
     std::array<Profile, DOFs> profiles;
 
+    bool synchronize(const std::array<Block, DOFs>& blocks, double& t_sync, size_t& limiting_dof) {
+        std::array<double, 5*DOFs> possible_t_syncs;
+        for (size_t dof = 0; dof < DOFs; dof += 1) {
+            auto& block = blocks[dof];
+            possible_t_syncs[0 + 5 * dof] = block.t_min;
+            possible_t_syncs[1 + 5 * dof] = block.a.has_value() ? block.a.value().left : std::numeric_limits<double>::infinity();
+            possible_t_syncs[2 + 5 * dof] = block.a.has_value() ? block.a.value().right : std::numeric_limits<double>::infinity();
+            possible_t_syncs[3 + 5 * dof] = block.b.has_value() ? block.b.value().left : std::numeric_limits<double>::infinity();
+            possible_t_syncs[4 + 5 * dof] = block.b.has_value() ? block.b.value().right : std::numeric_limits<double>::infinity();
+        }
+
+        std::array<size_t, 5*DOFs> idx;
+        std::iota(idx.begin(), idx.end(), 0);
+        std::stable_sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i1, size_t i2) {return possible_t_syncs[i1] < possible_t_syncs[i2];});
+
+        for (size_t i: idx) {
+            double possible_t_sync = possible_t_syncs[i];
+            if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](auto block){ return block.is_blocked(possible_t_sync); })) {
+                continue;
+            }
+
+            t_sync = possible_t_sync;
+            limiting_dof = std::ceil((i + 1.0) / 5) - 1;
+            return true;
+        }
+
+        return false;
+    }
+
     bool calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         current_input = input;
 
@@ -136,11 +185,11 @@ class Ruckig {
             profiles[dof].t_brake = profiles[dof].t_brakes[0] + profiles[dof].t_brakes[1];
         }
 
-        std::array<double, DOFs> tfs; // Profile duration
+        std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
         for (size_t dof = 0; dof < DOFs; dof += 1) {
             if (!input.enabled[dof]) {
-                tfs[dof] = 0.0;
+                blocks[dof] = Block { 0.0 };
                 continue;
             }
 
@@ -167,12 +216,13 @@ class Ruckig {
             if (!found_profile) {
                 throw std::runtime_error("[ruckig] error in step 1: " + input.to_string(dof) + " all: " + input.to_string());
             }
-            tfs[dof] = profiles[dof].t_sum[6] + profiles[dof].t_brake.value_or(0.0);
+
+            profiles[dof] = step1.fastest;
+            blocks[dof] = step1.block;
         }
 
-        auto tf_max_pointer = std::max_element(tfs.begin(), tfs.end());
-        size_t limiting_dof = std::distance(tfs.begin(), tf_max_pointer);
-        tf = *tf_max_pointer;
+        size_t limiting_dof;
+        synchronize(blocks, tf, limiting_dof);
 
         if (tf > 0.0) {
             for (size_t dof = 0; dof < DOFs; dof += 1) {

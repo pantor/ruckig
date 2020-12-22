@@ -2647,8 +2647,8 @@ Cell[BoxData[
   "Out[916]=",ExpressionUUID->"3d5e1dff-06d5-4a78-8211-d677f7d95c06"]
 }, Open  ]]
 },
-WindowSize->{904, 920},
-WindowMargins->{{83, Automatic}, {Automatic, 8}},
+WindowSize->{734, 981},
+WindowMargins->{{1, Automatic}, {21, Automatic}},
 Magnification:>0.9 Inherited,
 FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (June 19, 2020)",
 StyleDefinitions->"Default.nb",
@@ -2667,12 +2667,12 @@ CellTagsIndex->{}
 Notebook[{
 Cell[558, 20, 230, 4, 31, "Text",ExpressionUUID->"039b787c-64fd-4dfb-8011-578c383c402e"],
 Cell[791, 26, 7746, 237, 822, "Input",ExpressionUUID->"9382707b-2876-460d-b0fb-ca70e05b1e9a"],
-Cell[8540, 265, 13311, 343, 446, "Input",ExpressionUUID->"93a49805-7b39-4e71-a5ce-78f2b77ae9c0"],
+Cell[8540, 265, 13311, 343, 522, "Input",ExpressionUUID->"93a49805-7b39-4e71-a5ce-78f2b77ae9c0"],
 Cell[21854, 610, 1309, 26, 238, "Text",ExpressionUUID->"0616ae41-3a02-473a-878f-96412e2fc8c5"],
 Cell[23166, 638, 284, 7, 52, "Text",ExpressionUUID->"407acd61-eed1-4280-b150-0da33c32906a"],
 Cell[CellGroupData[{
 Cell[23475, 649, 935, 22, 66, "Input",ExpressionUUID->"f08feb2e-6079-473b-b866-92670dea0a56"],
-Cell[24413, 673, 5903, 142, 154, "Output",ExpressionUUID->"faa343c3-02f2-4fc4-b2b0-2208fa60cf35"]
+Cell[24413, 673, 5903, 142, 198, "Output",ExpressionUUID->"faa343c3-02f2-4fc4-b2b0-2208fa60cf35"]
 }, Open  ]],
 Cell[30331, 818, 247, 4, 31, "Text",ExpressionUUID->"f1684154-b22e-4827-98da-4e4dad150835"],
 Cell[CellGroupData[{
