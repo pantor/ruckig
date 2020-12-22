@@ -105,6 +105,8 @@ TEST_CASE("Quintic") {
 }
 
 TEST_CASE("Ruckig") {
+    bool full {true};
+
     SECTION("Known examples") {
         Ruckig<3> otg {0.005};
 
@@ -185,11 +187,34 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 64*1024; i += 1) {
+        for (size_t i = 0; i < (full ? 64*1024 : 1024); i += 1) {
             input.current_position = Vec::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.target_position = Vec::Random();
+            input.max_velocity = 10 * Vec::Random().array().abs() + input.target_velocity.array().abs() + 0.1;
+            input.max_acceleration = 10 * Vec::Random().array().abs() + 0.1;
+            input.max_jerk = 10 * Vec::Random().array().abs() + 0.1;
+
+            check_calculation(otg, input);
+        }
+    }
+
+    SECTION("Random input with 3 DoF, target velocity") {
+        Ruckig<3> otg {0.005};
+        InputParameter<3> input;
+
+        // Eigen returns uniform random floats between -1 and 1
+        srand(39);
+        std::default_random_engine gen;
+        std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+        for (size_t i = 0; i < 64; i += 1) {
+            input.current_position = Vec::Random();
+            input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
+            input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
+            input.target_position = Vec::Random();
+            input.target_velocity = dist(gen) < 0.6 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.max_velocity = 10 * Vec::Random().array().abs() + input.target_velocity.array().abs() + 0.1;
             input.max_acceleration = 10 * Vec::Random().array().abs() + 0.1;
             input.max_jerk = 10 * Vec::Random().array().abs() + 0.1;
@@ -206,7 +231,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 12*1024; i += 1) {
+        for (size_t i = 0; i < (full ? 12*1024 : 1024); i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
@@ -236,7 +261,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 64*1024; i += 1) {
+        for (size_t i = 0; i < (full ? 64*1024 : 1024); i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
@@ -281,7 +306,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 32*1024; i += 1) {
+        for (size_t i = 0; i < 16; i += 1) {
             input.current_position = Vec::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();

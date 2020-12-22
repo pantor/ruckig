@@ -24,7 +24,7 @@ using namespace ruckig;
 PYBIND11_MODULE(_ruckig, m) {
     m.doc() = "Online Trajectory Generation";
 
-    constexpr size_t DOFs {1};
+    constexpr size_t DOFs {3};
 
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())

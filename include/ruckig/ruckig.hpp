@@ -6,6 +6,7 @@
 #include <iostream>
 #include <numeric>
 #include <optional>
+#include <vector>
 
 #include <ruckig/parameter.hpp>
 
@@ -13,13 +14,9 @@
 namespace ruckig {
 
 struct Profile {
-    //! Profile names indicate which limits are reached.
-    enum class Type {
-        UP_ACC0_ACC1_VEL, UP_VEL, UP_ACC0, UP_ACC1, UP_ACC0_ACC1, UP_ACC0_VEL, UP_ACC1_VEL, UP_NONE,
-        DOWN_ACC0_ACC1_VEL, DOWN_VEL, DOWN_ACC0, DOWN_ACC1, DOWN_ACC0_ACC1, DOWN_ACC0_VEL, DOWN_ACC1_VEL, DOWN_NONE
-    };
+    enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
+    enum class Direction { UP, DOWN } direction;
 
-    Type type;
     std::array<double, 7> t, t_sum, j;
     std::array<double, 8> a, v, p;
 
@@ -35,6 +32,26 @@ struct Profile {
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j);
+
+    std::string to_string() const {
+        std::string result;
+        switch (direction) {
+            case Direction::UP: result += "UP"; break;
+            case Direction::DOWN: result += "DOWN"; break;
+        }
+        result += "_";
+        switch (limits) {
+            case Limits::ACC0_ACC1_VEL: result += "ACC0_ACC1_VEL"; break;
+            case Limits::VEL: result += "VEL"; break;
+            case Limits::ACC0: result += "ACC0"; break;
+            case Limits::ACC1: result += "ACC1"; break;
+            case Limits::ACC0_ACC1: result += "ACC0_ACC1"; break;
+            case Limits::ACC0_VEL: result += "ACC0_VEL"; break;
+            case Limits::ACC1_VEL: result += "ACC1_VEL"; break;
+            case Limits::NONE: result += "NONE"; break;
+        }
+        return result; 
+    }
 };
 
 
@@ -48,37 +65,42 @@ struct Block {
     std::optional<Interval> a, b; // Max. two intervals can be blocked
 
     bool is_blocked(double t) {
-        return t < t_min || (a.has_value() && a.value().left < t && t < a.value().right) || b.has_value() && b.value().left < t && t < b.value().right;
+        return (t < t_min) || (a.has_value() && a.value().left < t && t < a.value().right) || (b.has_value() && b.value().left < t && t < b.value().right);
     }
 };
 
 
 struct RuckigStep1 {
+    using Limits = Profile::Limits;
+
     double p0, v0, a0;
     double pf, vf, af;
 
     Block block;
     Profile fastest;
+    std::vector<Profile> valid_profiles;
 
     explicit RuckigStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
-    bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_none(Profile& profile, double vMax, double aMax, double jMax);
+    void add_profile(Profile profile, Profile::Limits limits, double jMax);
 
-    bool time_down_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc0(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_none(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_acc1(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
+    void time_up_none(Profile& profile, double vMax, double aMax, double jMax);
+
+    void time_down_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_vel(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_acc1(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_acc0(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_none(Profile& profile, double vMax, double aMax, double jMax);
 
     bool get_profile(const Profile& input, double vMax, double aMax, double jMax);
 
@@ -122,7 +144,13 @@ class Ruckig {
     double t, tf;
     std::array<Profile, DOFs> profiles;
 
-    bool synchronize(const std::array<Block, DOFs>& blocks, double& t_sync, size_t& limiting_dof) {
+    bool synchronize(const std::array<Block, DOFs>& blocks, double& t_sync, int& limiting_dof) {
+        if constexpr (DOFs == 1) {
+            t_sync = blocks[0].t_min;
+            limiting_dof = 0;
+            return true;
+        }
+
         std::array<double, 5*DOFs> possible_t_syncs;
         for (size_t dof = 0; dof < DOFs; dof += 1) {
             auto& block = blocks[dof];
@@ -145,6 +173,12 @@ class Ruckig {
 
             t_sync = possible_t_sync;
             limiting_dof = std::ceil((i + 1.0) / 5) - 1;
+            // std::cout << "here: " << limiting_dof << " " << blocks[limiting_dof].t_min << " " << t_sync << std::endl;
+
+            // Only keep limiting dof if it is its t_min
+            if (std::abs(blocks[limiting_dof].t_min - t_sync) > 1e-14) {
+                limiting_dof = -1;
+            }
             return true;
         }
 
@@ -221,8 +255,13 @@ class Ruckig {
             blocks[dof] = step1.block;
         }
 
-        size_t limiting_dof;
-        synchronize(blocks, tf, limiting_dof);
+        int limiting_dof;
+        bool found_synchronization = synchronize(blocks, tf, limiting_dof);
+        if (!found_synchronization) {
+            throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
+        }
+
+        // std::cout << "t_sync: " << tf << " limiting_dof: " << limiting_dof << std::endl;
 
         if (tf > 0.0) {
             for (size_t dof = 0; dof < DOFs; dof += 1) {
@@ -231,6 +270,8 @@ class Ruckig {
                 }
 
                 double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
+
+                // std::cout << "calculate: " << dof << std::endl;
 
                 RuckigStep2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
