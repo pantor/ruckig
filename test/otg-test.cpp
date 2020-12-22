@@ -198,6 +198,34 @@ TEST_CASE("Ruckig") {
         }
     }
 
+    SECTION("Random input with 1 DoF with target velocity, acceleration") {
+        Ruckig<1> otg {0.005};
+        InputParameter<1> input;
+
+        srand(47);
+        std::default_random_engine gen;
+        std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+        for (size_t i = 0; i < 12*1024; i += 1) {
+            input.current_position = Vec1::Random();
+            input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
+            input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
+            input.target_position = Vec1::Random();
+            input.target_velocity = dist(gen) < 0.6 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
+            input.target_acceleration = dist(gen) < 0.4 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
+            input.max_velocity = 10 * Vec1::Random().array().abs() + input.target_velocity.array().abs(); // Target velocity needs to be smaller than max velocity
+            input.max_acceleration = 10 * Vec1::Random().array().abs() + input.target_acceleration.array().abs() + 0.1;
+            input.max_jerk = 10 * Vec1::Random().array().abs() + 0.1;
+
+            auto max_target_acceleration = (2 * input.max_jerk.array() * (input.max_velocity.array() - input.target_velocity.array().abs())).sqrt();
+            if ((input.target_acceleration.array().abs() > max_target_acceleration.array()).any()) {
+                continue;
+            }
+
+            check_calculation(otg, input);
+        }
+    }
+
 #ifdef WITH_REFLEXXES
     SECTION("Comparison with Reflexxes with 1 DoF") {
         Ruckig<1> otg {0.005};
@@ -231,7 +259,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 96; i += 1) {
+        for (size_t i = 0; i < 1024; i += 1) {
             input.current_position = Vec2::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();

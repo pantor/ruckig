@@ -95,18 +95,18 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-0.2684100202]
-    inp.current_velocity = [0.8327910499]
-    inp.current_acceleration = [0.7191754485]
-    inp.target_position = [-0.8182368855]
-    inp.target_velocity = [0]
-    inp.target_acceleration = [0]
-    inp.max_velocity = [1.073347279]
-    inp.max_acceleration = [0.3522756207]
-    inp.max_jerk = [0.103642817]
+    inp.current_position = [-0.9579634331]
+    inp.current_velocity = [-0.491420063]
+    inp.current_acceleration = [0.7030019433]
+    inp.target_position = [-0.6463393167]
+    inp.target_velocity = [0.9751044297]
+    inp.target_acceleration = [0.5401507661]
+    inp.max_velocity = [6.914363305]
+    inp.max_acceleration = [1.804067883]
+    inp.max_jerk = [9.774990577]
     inp.minimum_duration = None
 
-    # print_input_for_mathematica(inp, 0)
+    print_input_for_mathematica(inp, 0)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)

@@ -115,8 +115,9 @@ class Ruckig {
             return false;
         }
 
-        if ((input.target_acceleration.array() != 0.0).any()) {
-            std::cerr << "Ruckig does not support a target acceleration." << std::endl;
+        auto max_target_acceleration = (2 * input.max_jerk.array() * (input.max_velocity.array() - input.target_velocity.array().abs())).sqrt();
+        if ((input.target_acceleration.array().abs() > max_target_acceleration.array()).any()) {
+            std::cerr << "Target acceleration exceeds maximal possible acceleration." << std::endl;
             return false;
         }
 
