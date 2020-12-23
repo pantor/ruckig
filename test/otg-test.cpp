@@ -70,8 +70,8 @@ void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& ot
 
     if (output.duration == Approx(output_comparison.duration)) {
         double half_duration = output.duration / 2;
-        otg.atTime(half_duration, output);
-        otg_comparison.atTime(half_duration, output_comparison);
+        otg.at_time(half_duration, output);
+        otg_comparison.at_time(half_duration, output_comparison);
 
         for (size_t dof = 0; dof < DOFs; dof += 1) {
             CHECK( output.new_position[dof] == Approx(output_comparison.new_position[dof]).margin(1e-7) );
@@ -105,7 +105,7 @@ TEST_CASE("Quintic") {
 }
 
 TEST_CASE("Ruckig") {
-    bool full {true};
+    bool full {false};
 
     SECTION("Known examples") {
         Ruckig<3> otg {0.005};
@@ -209,7 +209,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 64; i += 1) {
+        for (size_t i = 0; i < 16*1024; i += 1) {
             input.current_position = Vec::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
@@ -284,7 +284,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 1024; i += 1) {
+        for (size_t i = 0; i < 1*1024; i += 1) {
             input.current_position = Vec2::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec2)Vec2::Random() : (Vec2)Vec2::Zero();

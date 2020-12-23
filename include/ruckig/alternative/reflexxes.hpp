@@ -119,7 +119,7 @@ public:
         return Result::Working;
     }
 
-    void atTime(double time, OutputParameter<DOFs>& output) {
+    void at_time(double time, OutputParameter<DOFs>& output) {
         switch (current_input.type) {
         case InputParameter<DOFs>::Type::Position: {
             rml->RMLPositionAtAGivenSampleTime(time, output_parameters.get());

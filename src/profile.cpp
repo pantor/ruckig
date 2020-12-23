@@ -5,6 +5,25 @@
 
 namespace ruckig {
 
+std::string Profile::to_string() const {
+    std::string result;
+    switch (direction) {
+        case Direction::UP: result += "UP_"; break;
+        case Direction::DOWN: result += "DOWN_"; break;
+    }
+    switch (limits) {
+        case Limits::ACC0_ACC1_VEL: result += "ACC0_ACC1_VEL"; break;
+        case Limits::VEL: result += "VEL"; break;
+        case Limits::ACC0: result += "ACC0"; break;
+        case Limits::ACC1: result += "ACC1"; break;
+        case Limits::ACC0_ACC1: result += "ACC0_ACC1"; break;
+        case Limits::ACC0_VEL: result += "ACC0_VEL"; break;
+        case Limits::ACC1_VEL: result += "ACC1_VEL"; break;
+        case Limits::NONE: result += "NONE"; break;
+    }
+    return result; 
+}
+
 void Profile::set(double p0, double v0, double a0, const std::array<double, 7>& j) {
     this->j = j;
     t_sum[0] = t[0];
@@ -32,7 +51,7 @@ bool Profile::check(double pf, double vf, double af, double vMax, double aMax) c
 }
 
 bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax) const {
-    // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << std::endl;
+    // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
     return std::abs(t_sum[6] - tf) < 2e-3 && check(pf, vf, af, vMax, aMax);
 }
 

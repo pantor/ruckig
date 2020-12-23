@@ -1,7 +1,7 @@
 <div align="center">
   <h1 align="center">Ruckig</h1>
   <h3 align="center">
-    Online Trajectory Generation. Real-time. Jerk-constrained.
+    Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.
   </h3>
 </div>
 <p align="center">
@@ -21,6 +21,8 @@
     <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="LGPL">
   </a>
 </p>
+
+Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration, starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Robotics. Machine control. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is a Type V trajectory generator. In general, Ruckig allows for instant reactions to unforeseen events.
 
 
 ## Installation

@@ -9,7 +9,7 @@ option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
 
 
-find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
+find_package(Eigen3 3.3.9 REQUIRED NO_MODULE)
 find_package(Reflexxes)
 
 message("Found Eigen Version: ${Eigen3_VERSION}")

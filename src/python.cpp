@@ -22,7 +22,9 @@ using namespace ruckig;
 
 
 PYBIND11_MODULE(_ruckig, m) {
-    m.doc() = "Online Trajectory Generation";
+    m.doc() = "Online Trajectory Generation. Real-time and time-optimal trajectory calculation \
+given a target waypoint with position, velocity, and acceleration, starting from any initial state \
+limited by velocity, acceleration, and jerk constraints.";
 
     constexpr size_t DOFs {3};
 
@@ -38,7 +40,10 @@ PYBIND11_MODULE(_ruckig, m) {
         .def_readwrite("max_velocity", &InputParameter<DOFs>::max_velocity)
         .def_readwrite("max_acceleration", &InputParameter<DOFs>::max_acceleration)
         .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk)
-        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration);
+        .def_readwrite("enabled", &InputParameter<DOFs>::enabled)
+        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration)
+        .def(py::self != py::self)
+        .def("__repr__", static_cast<std::string (InputParameter<DOFs>::*)() const>(&InputParameter<DOFs>::to_string));
 
     py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
         .def(py::init<>())
@@ -73,13 +78,13 @@ PYBIND11_MODULE(_ruckig, m) {
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<DOFs>::delta_time)
         .def("update", &Ruckig<DOFs>::update)
-        .def("at_time", &Ruckig<DOFs>::atTime);
+        .def("at_time", &Ruckig<DOFs>::at_time);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
         .def("update", &Reflexxes<DOFs>::update)
-        .def("at_time", &Reflexxes<DOFs>::atTime);
+        .def("at_time", &Reflexxes<DOFs>::at_time);
 #endif
 }
