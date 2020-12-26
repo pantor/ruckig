@@ -14,13 +14,15 @@ Step2::Step2(double tf, double p0, double v0, double a0, double pf, double vf, d
 bool Step2::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
     // Profile UDDU
     {
+        double h1 = Sqrt(3)*Sqrt(Power(aMax,2)*Power(jMax,2)*(-3*Power(a0,4) - 3*Power(af,4) + 4*Power(a0,3)*aMax - 4*Power(af,3)*aMax + 6*Power(a0,2)*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) - 12*a0*aMax*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) + 12*Power(af,2)*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 24*af*aMax*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 12*(Power(aMax,4) - 2*Power(aMax,3)*jMax*tf + Power(aMax,2)*Power(jMax,2)*Power(tf,2) - Power(jMax,2)*Power(v0 - vf,2) + 2*aMax*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf)))));
+
         profile.t[0] = (-a0 + aMax)/jMax;
-        profile.t[1] = -(-3*Power(a0,2)*aMax*jMax + 3*Power(af,2)*aMax*jMax - 6*a0*Power(aMax,2)*jMax + 6*af*Power(aMax,2)*jMax + 18*Power(aMax,3)*jMax - 6*Power(aMax,2)*Power(jMax,2)*tf + 6*aMax*Power(jMax,2)*v0 - 6*aMax*Power(jMax,2)*vf + Sqrt(3)*Sqrt(Power(aMax,2)*Power(jMax,2)*(-3*Power(a0,4) - 3*Power(af,4) + 4*Power(a0,3)*aMax - 4*Power(af,3)*aMax + 6*Power(a0,2)*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) - 12*a0*aMax*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) + 12*Power(af,2)*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 24*af*aMax*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 12*(Power(aMax,4) - 2*Power(aMax,3)*jMax*tf + Power(aMax,2)*Power(jMax,2)*Power(tf,2) - Power(jMax,2)*Power(v0 - vf,2) + 2*aMax*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf))))))/(12.*Power(aMax,2)*Power(jMax,2));
-        profile.t[2] = aMax/jMax;
-        profile.t[3] = (-6*Power(aMax,3)*jMax + Sqrt(3)*Sqrt(Power(aMax,2)*Power(jMax,2)*(-3*Power(a0,4) - 3*Power(af,4) + 4*Power(a0,3)*aMax - 4*Power(af,3)*aMax + 6*Power(a0,2)*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) - 12*a0*aMax*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) + 12*Power(af,2)*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 24*af*aMax*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 12*(Power(aMax,4) - 2*Power(aMax,3)*jMax*tf + Power(aMax,2)*Power(jMax,2)*Power(tf,2) - Power(jMax,2)*Power(v0 - vf,2) + 2*aMax*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf))))))/(6.*Power(aMax,2)*Power(jMax,2));
+        profile.t[1] = -(-3*Power(a0,2)*aMax*jMax + 3*Power(af,2)*aMax*jMax - 6*a0*Power(aMax,2)*jMax + 6*af*Power(aMax,2)*jMax + 18*Power(aMax,3)*jMax - 6*Power(aMax,2)*Power(jMax,2)*tf + 6*aMax*Power(jMax,2)*v0 - 6*aMax*Power(jMax,2)*vf + h1)/(12.*Power(aMax,2)*Power(jMax,2));
+        profile.t[2] = profile.t[0] + a0/jMax;
+        profile.t[3] = (-6*Power(aMax,3)*jMax + h1)/(6.*Power(aMax,2)*Power(jMax,2));
         profile.t[4] = profile.t[2];
-        profile.t[5] = -(3*Power(a0,2)*aMax*jMax - 3*Power(af,2)*aMax*jMax - 6*a0*Power(aMax,2)*jMax + 6*af*Power(aMax,2)*jMax + 18*Power(aMax,3)*jMax - 6*Power(aMax,2)*Power(jMax,2)*tf - 6*aMax*Power(jMax,2)*v0 + 6*aMax*Power(jMax,2)*vf + Sqrt(3)*Sqrt(Power(aMax,2)*Power(jMax,2)*(-3*Power(a0,4) - 3*Power(af,4) + 4*Power(a0,3)*aMax - 4*Power(af,3)*aMax + 6*Power(a0,2)*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) - 12*a0*aMax*(Power(af,2) + 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf + jMax*(v0 - vf))) + 12*Power(af,2)*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 24*af*aMax*(Power(aMax,2) - aMax*jMax*tf + jMax*(-v0 + vf)) + 12*(Power(aMax,4) - 2*Power(aMax,3)*jMax*tf + Power(aMax,2)*Power(jMax,2)*Power(tf,2) - Power(jMax,2)*Power(v0 - vf,2) + 2*aMax*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf))))))/(12.*Power(aMax,2)*Power(jMax,2));
-        profile.t[6] = (af + aMax)/jMax;
+        profile.t[5] = -(3*Power(a0,2)*aMax*jMax - 3*Power(af,2)*aMax*jMax - 6*a0*Power(aMax,2)*jMax + 6*af*Power(aMax,2)*jMax + 18*Power(aMax,3)*jMax - 6*Power(aMax,2)*Power(jMax,2)*tf - 6*aMax*Power(jMax,2)*v0 + 6*aMax*Power(jMax,2)*vf + h1)/(12.*Power(aMax,2)*Power(jMax,2));
+        profile.t[6] = profile.t[4] + af/jMax;
 
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
         if (profile.check(tf, pf, vf, af, vMax, aMax)) {
@@ -32,11 +34,11 @@ bool Step2::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
     {
         profile.t[0] = (-a0 + aMax)/jMax;
         profile.t[1] = (3*Power(a0,4) + 3*Power(af,4) - 4*Power(a0,3)*aMax - 8*Power(af,3)*aMax + 24*a0*Power(aMax,3) + 24*af*aMax*(Power(aMax,2) + jMax*(v0 - vf)) - 6*Power(af,2)*(Power(aMax,2) + 2*jMax*(v0 - vf)) + 6*Power(a0,2)*(Power(af,2) - 2*af*aMax - Power(aMax,2) - 2*aMax*jMax*tf - 2*jMax*v0 + 2*jMax*vf) - 12*(2*Power(aMax,4) - 2*Power(aMax,3)*jMax*tf - 2*aMax*Power(jMax,2)*(p0 - pf + tf*v0) - Power(jMax,2)*Power(v0 - vf,2) + Power(aMax,2)*jMax*(-v0 + vf)))/(12.*aMax*jMax*(Power(a0,2) + Power(af,2) - 2*a0*aMax - 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf - jMax*v0 + jMax*vf)));
-        profile.t[2] = aMax/jMax;
+        profile.t[2] = profile.t[0] + a0/jMax;
         profile.t[3] = -(Power(a0,2) + Power(af,2) - 2*a0*aMax - 2*af*aMax + 4*Power(aMax,2) - 2*aMax*jMax*tf - 2*jMax*v0 + 2*jMax*vf)/(2.*aMax*jMax);
         profile.t[4] = profile.t[2];
         profile.t[5] = (3*Power(a0,4) + 3*Power(af,4) - 8*Power(a0,3)*aMax - 4*Power(af,3)*aMax + 24*af*Power(aMax,3) - 6*Power(af,2)*(Power(aMax,2) + 2*aMax*jMax*tf + 2*jMax*(v0 - vf)) + 6*Power(a0,2)*(Power(af,2) - Power(aMax,2) - 2*jMax*v0 + 2*jMax*vf) - 12*a0*aMax*(Power(af,2) - 2*(Power(aMax,2) + jMax*v0 - jMax*vf)) - 12*(2*Power(aMax,4) - 2*Power(aMax,3)*jMax*tf - Power(jMax,2)*Power(v0 - vf,2) + Power(aMax,2)*jMax*(-v0 + vf) + 2*aMax*Power(jMax,2)*(p0 - pf + tf*vf)))/(12.*aMax*jMax*(Power(a0,2) + Power(af,2) - 2*a0*aMax - 2*af*aMax + 2*(Power(aMax,2) - aMax*jMax*tf - jMax*v0 + jMax*vf)));
-        profile.t[6] = (-af + aMax)/jMax;
+        profile.t[6] = profile.t[4] - af/jMax;
 
         profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, jMax, 0, -jMax});
         if (profile.check(tf, pf, vf, af, vMax, aMax)) {
@@ -62,11 +64,11 @@ bool Step2::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double 
         for (double t: roots) {
             profile.t[0] = t;
             profile.t[1] = 0;
-            profile.t[2] = a0/jMax + t;
+            profile.t[2] = profile.t[0] + a0/jMax;
             profile.t[3] = -(Power(a0,2) + Power(af,2) + 2*a0*(aMax + 2*jMax*t) + 2*(af*aMax + Power(aMax,2) + aMax*jMax*(2*t - tf) + jMax*(jMax*Power(t,2) + v0 - vf)))/(2.*aMax*jMax);
             profile.t[4] = aMax/jMax;
             profile.t[5] = (Power(a0,2) + Power(af,2) - 2*Power(aMax,2) + 4*a0*jMax*t + 2*jMax*(jMax*Power(t,2) + v0 - vf))/(2.*aMax*jMax);
-            profile.t[6] = (af + aMax)/jMax;
+            profile.t[6] = profile.t[4] + af/jMax;
             
             profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
             if (profile.check(tf, pf, vf, af, vMax, aMax)) {
@@ -92,7 +94,7 @@ bool Step2::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double 
             profile.t[3] = (Power(a0,2) - Power(af,2) - 2*a0*aMax + 2*af*aMax - 2*Power(aMax,2) + 4*a0*jMax*t - 4*aMax*jMax*t + 2*Power(jMax,2)*Power(t,2) + 2*aMax*jMax*tf + 2*jMax*v0 - 2*jMax*vf)/(2.*aMax*jMax);
             profile.t[4] = aMax/jMax;
             profile.t[5] = -(Power(a0,2) - Power(af,2) + 4*a0*jMax*t + 2*(Power(aMax,2) + jMax*(jMax*Power(t,2) + v0 - vf)))/(2.*aMax*jMax);
-            profile.t[6] = (-af + aMax)/jMax;
+            profile.t[6] = profile.t[4] - af/jMax;
             
             profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, jMax, 0, -jMax});
             if (profile.check(tf, pf, vf, af, vMax, aMax)) {
@@ -173,11 +175,11 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         polynom[5] = (7*Power(a0,6) + Power(af,6) - 12*Power(a0,5)*(af - jMax*tf) + 48*Power(af,3)*Power(jMax,2)*(p0 - pf + tf*v0) - 8*Power(a0,3)*(Power(af,3) - 3*Power(jMax,2)*(p0 - pf + tf*v0) + 3*af*jMax*(v0 - vf)) - 72*Power(jMax,3)*(jMax*Power(p0 - pf + tf*v0,2) - Power(v0 - vf,3)) + 6*Power(af,4)*jMax*(v0 - vf) + 144*af*Power(jMax,3)*(p0 - pf + tf*v0)*(v0 - vf) + 36*Power(af,2)*Power(jMax,2)*Power(v0 - vf,2) + 9*Power(a0,4)*(Power(af,2) + 4*af*jMax*tf - 2*jMax*(jMax*Power(tf,2) - 3*v0 + 3*vf)) + 3*Power(a0,2)*(Power(af,4) + 8*Power(af,3)*jMax*tf - 24*Power(jMax,3)*tf*(p0 - pf + tf*v0) + 12*Power(af,2)*jMax*(v0 - vf) + 36*Power(jMax,2)*Power(v0 - vf,2) + 24*af*Power(jMax,2)*(p0 - pf + 2*tf*v0 - tf*vf)))/(144.*Power(jMax,5)*(a0 - af + jMax*tf));
 
         std::array<double, 5> deriv;
-        deriv[0] = 5 * polynom[0];
-        deriv[1] = 4 * polynom[1];
-        deriv[2] = 3 * polynom[2];
-        deriv[3] = 2 * polynom[3];
-        deriv[4] = polynom[4];
+        deriv[0] = 1;
+        deriv[1] = 4./5 * polynom[1];
+        deriv[2] = 3./5 * polynom[2];
+        deriv[3] = 2./5 * polynom[3];
+        deriv[4] = 1./5 * polynom[4];
 
         // Solve 4th order derivative analytically
         auto extremas = Roots::solveQuart(deriv[0], deriv[1], deriv[2], deriv[3], deriv[4]);
@@ -195,14 +197,10 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             // Check that polynom(lower) and polynom(upper) have different signs (should only happen at first and last boundary)
             double val_current = Roots::polyEval(polynom, tz_current);
             double val_new = Roots::polyEval(polynom, tz);
+            // std::cout << "tz: " << tz << " " << val_new << " " << val_current << std::endl;
             if (std::abs(val_new) < 1e-15) {
-                // if (val_current * val_new < 0) {
-                //     tz_intervals.insert({tz_current, tz});
-                //     tz += 1e-14;
-                // } else {
-                    tz_intervals.insert({tz - 1e-12, tz + 1e-12});
-                    tz += 1e-14;
-                // }
+                tz_intervals.insert({tz - 2e-16, tz + 2e-16});
+                tz += 1e-15;
                 
             } else if (val_current * val_new < 0) {
                 tz_intervals.insert({tz_current, tz});
@@ -217,23 +215,26 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             // Use safe Newton method
             double lower = std::get<0>(interval);
             double upper = std::get<1>(interval);
-            double t = Roots::shrinkInterval(polynom, lower, upper, 2e-16);
+            double t = Roots::shrinkInterval(polynom, lower, upper, 1e-16);
 
-            double vPlat = Power(a0,2)/(2.*jMax) + 2*a0*t + jMax*Power(t,2) + v0;
-            double h1 = 2*Sqrt((vPlat - vf)/jMax);
+            // Single Newton step
+            {
+                double h2 = Sqrt((Power(a0,2) + Power(af,2) + 4*a0*jMax*t + 2*jMax*(jMax*Power(t,2) + v0 - vf))/Power(jMax,2));
+                double orig = -pf -(2*Power(a0,3) + 4*Power(af,3) + 12*a0*jMax*t*(2*af + 2*jMax*t - 2*jMax*tf + Sqrt(2)*jMax*h2) + 3*Power(a0,2)*(2*af + 4*jMax*t - 2*jMax*tf + Sqrt(2)*jMax*h2) + 3*Sqrt(2)*Power(af,2)*jMax*h2 + 12*af*jMax*(jMax*Power(t,2) + v0 - vf) + 6*Power(jMax,2)*(-2*p0 + 2*jMax*Power(t,3) - 2*jMax*Power(t,2)*tf - 2*tf*v0 + Sqrt(2)*jMax*Power(t,2)*h2 + Sqrt(2)*v0*h2 - Sqrt(2)*h2*vf))/(12.*Power(jMax,2));
+                double deriv = -((a0 + jMax*t)*(3*Sqrt(2)*(Power(a0,2) + Power(af,2)) + 12*Sqrt(2)*a0*jMax*t + 6*Sqrt(2)*Power(jMax,2)*Power(t,2) + 6*Sqrt(2)*jMax*(v0 - vf) + 2*a0*jMax*h2 + 4*af*jMax*h2 + 6*Power(jMax,2)*t*h2 - 4*Power(jMax,2)*tf*h2))/(2*Power(jMax,2)*h2);
+            
+                // std::cout << "t: " << t << " " << orig << " new t: " << t - orig / deriv << std::endl;
+                t = t - orig / deriv;
+            }
 
+            
             profile.t[0] = t;
             profile.t[1] = 0;
-            profile.t[2] = a0/jMax + t;
-            // profile.t[3] = -((23*Power(a0,7) + Power(a0,6)*jMax*(200*t + 39*tf) + 6*Power(a0,5)*jMax*(2*jMax*(45*Power(t,2) + 22*t*tf - 5*Power(tf,2)) + 13*(v0 - vf)) + 6*Power(a0,4)*Power(jMax,2)*(20*p0 - 20*pf + 2*jMax*t*(41*Power(t,2) + 52*t*tf - 23*Power(tf,2)) + 24*t*(v0 - vf) + 5*tf*(-3*v0 + 7*vf)) + 12*Power(a0,3)*Power(jMax,2)*(2*Power(jMax,2)*Power(t,2)*(6*Power(t,2) + 22*t*tf - 11*Power(tf,2)) - 19*Power(v0 - vf,2) + 2*jMax*(20*p0*t - 20*pf*t - 6*p0*tf + 6*pf*tf - 25*Power(t,2)*v0 - 26*t*tf*v0 + Power(tf,2)*v0 + 25*Power(t,2)*vf + 46*t*tf*vf - 7*Power(tf,2)*vf)) + 36*Power(a0,2)*Power(jMax,3)*(2*Power(jMax,2)*Power(t,3)*(2*t - tf)*tf - 2*jMax*(pf*(9*Power(t,2) + 2*t*tf - Power(tf,2)) + p0*(-9*Power(t,2) - 2*t*tf + Power(tf,2)) + 4*t*(3*t - tf)*(t + 2*tf)*v0 + (-12*Power(t,3) - 29*Power(t,2)*tf + 6*t*Power(tf,2) + Power(tf,3))*vf) - (v0 - vf)*(4*p0 - 4*pf + 40*t*(v0 - vf) + tf*(v0 + 3*vf))) + 72*a0*Power(jMax,3)*(-3*Power(v0 - vf,3) - 4*Power(jMax,2)*t*(pf*(Power(t,2) + 2*t*tf - Power(tf,2)) + p0*(-Power(t,2) - 2*t*tf + Power(tf,2)) + t*(Power(t,2) + 4*t*tf - 2*Power(tf,2))*v0 + (-Power(t,3) - 5*Power(t,2)*tf + Power(tf,3))*vf) + jMax*(Power(p0,2) + Power(pf,2) + 4*(-5*Power(t,2) + Power(tf,2))*Power(v0,2) + 2*(20*Power(t,2) - Power(tf,2))*v0*vf - (20*Power(t,2) + Power(tf,2))*Power(vf,2) + pf*tf*(-6*v0 + 4*vf) - 2*p0*(pf - 3*tf*v0 + 2*tf*vf))) + 72*Power(jMax,4)*(2*Power(jMax,2)*Power(t,2)*(2*t - tf)*tf*(p0 - pf - t*v0 + (t + tf)*vf) + Power(v0 - vf,2)*(4*p0 - 4*pf + tf*(v0 + 3*vf)) + jMax*(Power(p0,2)*(4*t - 3*tf) + Power(pf,2)*(4*t - 3*tf) - 2*pf*(Power(t,2) + 2*t*tf - Power(tf,2))*v0 + 2*t*(-3*Power(t,2) + Power(tf,2))*Power(v0,2) + 2*pf*(Power(t,2) - 2*t*tf + 2*Power(tf,2))*vf + 2*(6*Power(t,3) + Power(t,2)*tf - Power(tf,3))*v0*vf - (6*Power(t,3) + 2*Power(t,2)*tf - 2*t*Power(tf,2) + Power(tf,3))*Power(vf,2) - 2*p0*(pf*(4*t - 3*tf) + Power(t,2)*(-v0 + vf) - 2*t*tf*(v0 + vf) + Power(tf,2)*(v0 + 2*vf)))))/(jMax*(-Power(a0,6) + 6*Power(a0,4)*jMax*(v0 - vf) - 36*Power(a0,2)*Power(jMax,2)*Power(v0 - vf,2) + 48*Power(a0,3)*Power(jMax,2)*(p0 - pf + tf*vf) - 144*a0*Power(jMax,3)*(v0 - vf)*(p0 - pf + tf*vf) + 72*Power(jMax,3)*(Power(v0 - vf,3) + jMax*Power(p0 - pf + tf*vf,2)))));
-            // profile.t[4] = (12*Power(a0,7) + Power(a0,6)*jMax*(101*t + 19*tf) + 6*Power(a0,5)*jMax*(45*jMax*Power(t,2) + 22*jMax*t*tf - 5*jMax*Power(tf,2) + 6*v0 - 6*vf) + 6*Power(a0,4)*Power(jMax,2)*(6*p0 - 6*pf + jMax*t*(41*Power(t,2) + 52*t*tf - 23*Power(tf,2)) - 7*tf*v0 + 11*t*(v0 - vf) + 13*tf*vf) + 12*Power(a0,3)*Power(jMax,2)*(Power(jMax,2)*Power(t,2)*(6*Power(t,2) + 22*t*tf - 11*Power(tf,2)) - 8*Power(v0 - vf,2) + jMax*(16*p0*t - 16*pf*t - 4*p0*tf + 4*pf*tf - 25*Power(t,2)*v0 - 26*t*tf*v0 + Power(tf,2)*v0 + 25*Power(t,2)*vf + 42*t*tf*vf - 5*Power(tf,2)*vf)) + 144*a0*Power(jMax,3)*(-Power(v0 - vf,3) + jMax*(v0 - vf)*(p0*(t + tf) - pf*(t + tf) - 5*Power(t,2)*v0 + Power(tf,2)*v0 + 5*Power(t,2)*vf + t*tf*vf) + Power(jMax,2)*t*(p0*(Power(t,2) + 2*t*tf - Power(tf,2)) + pf*(-Power(t,2) - 2*t*tf + Power(tf,2)) - t*(Power(t,2) + 4*t*tf - 2*Power(tf,2))*v0 + (Power(t,3) + 5*Power(t,2)*tf - Power(tf,3))*vf)) + 36*Power(a0,2)*Power(jMax,3)*(Power(jMax,2)*Power(t,3)*(2*t - tf)*tf - (19*t + tf)*Power(v0 - vf,2) - jMax*(pf*(9*Power(t,2) + 2*t*tf - Power(tf,2)) + p0*(-9*Power(t,2) - 2*t*tf + Power(tf,2)) + 4*t*(3*t - tf)*(t + 2*tf)*v0 + (-12*Power(t,3) - 29*Power(t,2)*tf + 6*t*Power(tf,2) + Power(tf,3))*vf)) + 72*Power(jMax,4)*(Power(jMax,2)*Power(t,2)*(2*t - tf)*tf*(p0 - pf - t*v0 + (t + tf)*vf) + Power(v0 - vf,2)*(2*p0 - 2*pf - t*v0 + tf*v0 + (t + tf)*vf) + jMax*(Power(p0,2)*(t - tf) + Power(pf,2)*(t - tf) + pf*(-Power(t,2) - 2*t*tf + Power(tf,2))*v0 + t*(-3*Power(t,2) + Power(tf,2))*Power(v0,2) + pf*(Power(t,2) + Power(tf,2))*vf + (6*Power(t,3) + Power(t,2)*tf - Power(tf,3))*v0*vf - Power(t,2)*(3*t + tf)*Power(vf,2) - p0*(2*pf*(t - tf) - 2*t*tf*v0 + Power(t,2)*(-v0 + vf) + Power(tf,2)*(v0 + vf)))))/(jMax*(-Power(a0,6) + 6*Power(a0,4)*jMax*(v0 - vf) - 36*Power(a0,2)*Power(jMax,2)*Power(v0 - vf,2) + 48*Power(a0,3)*Power(jMax,2)*(p0 - pf + tf*vf) - 144*a0*Power(jMax,3)*(v0 - vf)*(p0 - pf + tf*vf) + 72*Power(jMax,3)*(Power(v0 - vf,3) + jMax*Power(p0 - pf + tf*vf,2))));
-            // profile.t[5] = 0.0;
-            // profile.t[6] = (12*Power(a0,7) + Power(a0,6)*jMax*(101*t + 19*tf) + 6*Power(a0,5)*jMax*(45*jMax*Power(t,2) + 22*jMax*t*tf - 5*jMax*Power(tf,2) + 6*v0 - 6*vf) + 6*Power(a0,4)*Power(jMax,2)*(6*p0 - 6*pf + jMax*t*(41*Power(t,2) + 52*t*tf - 23*Power(tf,2)) - 7*tf*v0 + 11*t*(v0 - vf) + 13*tf*vf) + 12*Power(a0,3)*Power(jMax,2)*(Power(jMax,2)*Power(t,2)*(6*Power(t,2) + 22*t*tf - 11*Power(tf,2)) - 8*Power(v0 - vf,2) + jMax*(16*p0*t - 16*pf*t - 4*p0*tf + 4*pf*tf - 25*Power(t,2)*v0 - 26*t*tf*v0 + Power(tf,2)*v0 + 25*Power(t,2)*vf + 42*t*tf*vf - 5*Power(tf,2)*vf)) + 144*a0*Power(jMax,3)*(-Power(v0 - vf,3) + jMax*(v0 - vf)*(p0*(t + tf) - pf*(t + tf) - 5*Power(t,2)*v0 + Power(tf,2)*v0 + 5*Power(t,2)*vf + t*tf*vf) + Power(jMax,2)*t*(p0*(Power(t,2) + 2*t*tf - Power(tf,2)) + pf*(-Power(t,2) - 2*t*tf + Power(tf,2)) - t*(Power(t,2) + 4*t*tf - 2*Power(tf,2))*v0 + (Power(t,3) + 5*Power(t,2)*tf - Power(tf,3))*vf)) + 36*Power(a0,2)*Power(jMax,3)*(Power(jMax,2)*Power(t,3)*(2*t - tf)*tf - (19*t + tf)*Power(v0 - vf,2) - jMax*(pf*(9*Power(t,2) + 2*t*tf - Power(tf,2)) + p0*(-9*Power(t,2) - 2*t*tf + Power(tf,2)) + 4*t*(3*t - tf)*(t + 2*tf)*v0 + (-12*Power(t,3) - 29*Power(t,2)*tf + 6*t*Power(tf,2) + Power(tf,3))*vf)) + 72*Power(jMax,4)*(Power(jMax,2)*Power(t,2)*(2*t - tf)*tf*(p0 - pf - t*v0 + (t + tf)*vf) + Power(v0 - vf,2)*(2*p0 - 2*pf - t*v0 + tf*v0 + (t + tf)*vf) + jMax*(Power(p0,2)*(t - tf) + Power(pf,2)*(t - tf) + pf*(-Power(t,2) - 2*t*tf + Power(tf,2))*v0 + t*(-3*Power(t,2) + Power(tf,2))*Power(v0,2) + pf*(Power(t,2) + Power(tf,2))*vf + (6*Power(t,3) + Power(t,2)*tf - Power(tf,3))*v0*vf - Power(t,2)*(3*t + tf)*Power(vf,2) - p0*(2*pf*(t - tf) - 2*t*tf*v0 + Power(t,2)*(-v0 + vf) + Power(tf,2)*(v0 + vf)))))/(jMax*(-Power(a0,6) + 6*Power(a0,4)*jMax*(v0 - vf) - 36*Power(a0,2)*Power(jMax,2)*Power(v0 - vf,2) + 48*Power(a0,3)*Power(jMax,2)*(p0 - pf + tf*vf) - 144*a0*Power(jMax,3)*(v0 - vf)*(p0 - pf + tf*vf) + 72*Power(jMax,3)*(Power(v0 - vf,3) + jMax*Power(p0 - pf + tf*vf,2))));
-
-            profile.t[3] = -(4*Power(a0,3) + 12*a0*jMax*(v0 + jMax*t*(3*t + h1)) + 3*Power(a0,2)*jMax*(8*t + h1) + 6*Power(jMax,2)*(2*p0 - 2*pf + 2*jMax*Power(t,3) + 4*t*v0 + jMax*Power(t,2)*h1 + v0*h1 + h1*vf))/(6.*jMax*(Power(a0,2) + 4*a0*jMax*t + 2*jMax*(jMax*Power(t,2) + v0)));
-            profile.t[4] = Sqrt((-vf + vPlat)/jMax);
+            profile.t[2] = profile.t[0] + a0/jMax;
+            profile.t[4] = Sqrt(Power(a0,2)/2 + Power(af,2)/2 + jMax*(2*a0*t + jMax*Power(t,2) + v0 - vf))/Abs(jMax);
             profile.t[5] = 0;
-            profile.t[6] = profile.t[4];
+            profile.t[6] = profile.t[4] + af/jMax;
+            profile.t[3] = tf - (profile.t[0] + profile.t[2] + profile.t[4] + profile.t[6]);
 
             profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
             if (profile.check(tf, pf, vf, af, vMax, aMax)) {
@@ -255,7 +256,7 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         polynom[6] = (11*Power(a0,6) - Power(af,6) - 12*Power(a0,5)*(af + jMax*tf) - 48*Power(af,3)*Power(jMax,2)*(p0 - pf + tf*v0) - 9*Power(a0,4)*(Power(af,2) - 4*af*jMax*tf - 2*jMax*(jMax*Power(tf,2) + 3*v0 - 3*vf)) + 72*Power(jMax,3)*(jMax*Power(p0 - pf + tf*v0,2) + Power(v0 - vf,3)) + 6*Power(af,4)*jMax*(v0 - vf) + 144*af*Power(jMax,3)*(p0 - pf + tf*v0)*(v0 - vf) - 36*Power(af,2)*Power(jMax,2)*Power(v0 - vf,2) + 8*Power(a0,3)*(Power(af,3) - 3*Power(jMax,2)*(p0 - pf + tf*v0) + 3*af*jMax*(-v0 + vf)) + 3*Power(a0,2)*(Power(af,4) - 8*Power(af,3)*jMax*tf + 12*Power(jMax,2)*(2*jMax*tf*(p0 - pf + tf*v0) + 3*Power(v0 - vf,2)) - 12*Power(af,2)*jMax*(v0 - vf) + 24*af*Power(jMax,2)*(p0 - pf + 2*tf*v0 - tf*vf)))/(144.*Power(jMax,6));
 
         std::array<double, 6> deriv;
-        deriv[0] = 6 * polynom[0];
+        deriv[0] = 6;
         deriv[1] = 5 * polynom[1];
         deriv[2] = 4 * polynom[2];
         deriv[3] = 3 * polynom[3];
@@ -314,14 +315,13 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             double vPlat = Power(a0,2)/(2.*jMax) + 2*a0*tz + jMax*Power(tz,2) + v0;
             // std::cout << "BE CAREFUL " << vPlat << std::endl;
 
-            // TODO: for af
             profile.t[0] = tz;
             profile.t[1] = 0;
-            profile.t[2] = a0/jMax + tz;
-            profile.t[3] = tf - (2*tz + a0/jMax + 2 * Sqrt((vf - vPlat)/jMax));
+            profile.t[2] = profile.t[0] + a0/jMax;
             profile.t[4] = Sqrt((vf - vPlat)/jMax); 
             profile.t[5] = 0;
-            profile.t[6] = profile.t[4];
+            profile.t[6] = profile.t[4] - af/jMax;
+            profile.t[3] = tf - (profile.t[0] + profile.t[2] + profile.t[4] + profile.t[6]);
 
             profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, jMax, 0, -jMax});
             if (profile.check(tf, pf, vf, af, vMax, aMax)) {
@@ -351,16 +351,16 @@ bool Step2::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
     double h3 = Sqrt(aMax*(6*Power(aMax,5)*Power(tf,2) + 3*Power(af,4)*(2*p0 - 2*pf + tf*(aMax*tf + 2*v0)) + 3*Power(a0,4)*(2*p0 - 2*pf + tf*(aMax*tf + 2*vf)) + 6*Power(af,2)*aMax*(Power(aMax,2)*Power(tf,2) + 2*Power(v0 - vf,2) + aMax*(-4*p0 + 4*pf + tf*v0 - 5*tf*vf)) + 4*Power(af,3)*(2*Power(aMax,2)*Power(tf,2) + Power(v0 - vf,2) + 2*aMax*(p0 - pf + 2*tf*v0 - tf*vf)) - 4*Power(a0,3)*(2*Power(aMax,2)*Power(tf,2) + Power(v0 - vf,2) + 2*aMax*(p0 - pf - tf*v0 + 2*tf*vf)) - 12*af*Power(aMax,2)*(-Power(v0 - vf,2) + aMax*(4*p0 - 4*pf + tf*v0 + 3*tf*vf)) - 6*Power(a0,2)*(Power(af,2)*(2*p0 - 2*pf + tf*(v0 + vf)) + 2*af*aMax*(2*p0 - 2*pf + tf*(v0 + vf)) - aMax*(Power(aMax,2)*Power(tf,2) + 2*Power(v0 - vf,2) + aMax*(-4*p0 + 4*pf - 5*tf*v0 + tf*vf))) + 12*a0*aMax*(Power(af,2)*(2*p0 - 2*pf + tf*(v0 + vf)) + 2*af*aMax*(2*p0 - 2*pf + tf*(v0 + vf)) + aMax*(-Power(v0 - vf,2) + aMax*(4*p0 - 4*pf + 3*tf*v0 + tf*vf)))));
     double h1 = (3*Power(a0,2)*aMax*tf + 3*Power(af,2)*aMax*tf - 6*a0*Power(aMax,2)*tf + 6*af*Power(aMax,2)*tf + 6*Power(aMax,3)*tf - 3*Power(a0,2)*v0 + 3*Power(af,2)*v0 + 6*a0*aMax*v0 + 6*af*aMax*v0 + 3*Power(a0,2)*vf - 3*Power(af,2)*vf - 6*a0*aMax*vf - 6*af*aMax*vf - Sqrt(6)*h3);
     double h5 = (3*Power(a0,3) - 3*Power(af,3) + Power(a0,2)*(3*af - 4*aMax) - 4*Power(af,2)*aMax + 12*af*Power(aMax,2) + 24*Power(aMax,3) - a0*(3*Power(af,2) + 16*af*aMax + 12*Power(aMax,2)));
-    double h2 = ((a0 - af)*h5);
-    double h4 = (2.*(a0 - af)*aMax*h5);
+    double h2 = (a0 - af)*h5;
+    double h4 = 2*(a0 - af)*aMax*h5;
 
     profile.t[0] = (2*(a0 - aMax)*h1)/h2;
     profile.t[1] = (-6*Power(a0,2)*Power(af,2)*aMax*tf + 6*Power(af,4)*aMax*tf - 4*Power(a0,3)*Power(aMax,2)*tf - 12*Power(a0,2)*af*Power(aMax,2)*tf + 16*Power(af,3)*Power(aMax,2)*tf + 18*Power(a0,2)*Power(aMax,3)*tf + 30*Power(af,2)*Power(aMax,3)*tf - 36*a0*Power(aMax,4)*tf + 36*af*Power(aMax,4)*tf + 48*Power(aMax,5)*tf + 4*Power(a0,3)*aMax*v0 - 12*a0*Power(af,2)*aMax*v0 + 8*Power(af,3)*aMax*v0 - 24*Power(a0,2)*Power(aMax,2)*v0 - 24*a0*af*Power(aMax,2)*v0 + 48*Power(af,2)*Power(aMax,2)*v0 + 24*a0*Power(aMax,3)*v0 + 72*af*Power(aMax,3)*v0 - 4*Power(a0,3)*aMax*vf + 12*a0*Power(af,2)*aMax*vf - 8*Power(af,3)*aMax*vf + 24*Power(a0,2)*Power(aMax,2)*vf + 24*a0*af*Power(aMax,2)*vf - 48*Power(af,2)*Power(aMax,2)*vf - 24*a0*Power(aMax,3)*vf - 72*af*Power(aMax,3)*vf + Sqrt(6)*Power(a0,2)*h3 - Sqrt(6)*Power(af,2)*h3 + 2*Sqrt(6)*a0*aMax*h3 - 2*Sqrt(6)*af*aMax*h3 - 8*Sqrt(6)*Power(aMax,2)*h3)/h4;
-    profile.t[2] = (-2*aMax*h1)/h2;
+    profile.t[2] = profile.t[0] + a0/jMax;
     profile.t[3] = 0;
     profile.t[4] = profile.t[2];
     profile.t[5] = (6*Power(a0,4)*aMax*tf - 6*Power(a0,2)*Power(af,2)*aMax*tf - 16*Power(a0,3)*Power(aMax,2)*tf + 12*a0*Power(af,2)*Power(aMax,2)*tf + 4*Power(af,3)*Power(aMax,2)*tf + 30*Power(a0,2)*Power(aMax,3)*tf + 18*Power(af,2)*Power(aMax,3)*tf - 36*a0*Power(aMax,4)*tf + 36*af*Power(aMax,4)*tf + 48*Power(aMax,5)*tf + 8*Power(a0,3)*aMax*v0 - 12*Power(a0,2)*af*aMax*v0 + 4*Power(af,3)*aMax*v0 - 48*Power(a0,2)*Power(aMax,2)*v0 + 24*a0*af*Power(aMax,2)*v0 + 24*Power(af,2)*Power(aMax,2)*v0 + 72*a0*Power(aMax,3)*v0 + 24*af*Power(aMax,3)*v0 - 8*Power(a0,3)*aMax*vf + 12*Power(a0,2)*af*aMax*vf - 4*Power(af,3)*aMax*vf + 48*Power(a0,2)*Power(aMax,2)*vf - 24*a0*af*Power(aMax,2)*vf - 24*Power(af,2)*Power(aMax,2)*vf - 72*a0*Power(aMax,3)*vf - 24*af*Power(aMax,3)*vf - Sqrt(6)*Power(a0,2)*h3 + Sqrt(6)*Power(af,2)*h3 + 2*Sqrt(6)*a0*aMax*h3 - 2*Sqrt(6)*af*aMax*h3 - 8*Sqrt(6)*Power(aMax,2)*h3)/h4;
-    profile.t[6] = (-2*(af + aMax)*h1)/h2;
+    profile.t[6] = profile.t[4] + af/jMax;
     jMax = -(-12*Power(a0,2)*aMax*tf - 12*Power(af,2)*aMax*tf + 24*a0*Power(aMax,2)*tf - 24*af*Power(aMax,2)*tf - 24*Power(aMax,3)*tf + 12*Power(a0,2)*v0 - 12*Power(af,2)*v0 - 24*a0*aMax*v0 - 24*af*aMax*v0 - 12*Power(a0,2)*vf + 12*Power(af,2)*vf + 24*a0*aMax*vf + 24*af*aMax*vf - 4*Sqrt(9*Power(2*Power(aMax,3)*tf + Power(af,2)*(aMax*tf + v0 - vf) + 2*af*aMax*(aMax*tf + v0 - vf) + Power(a0,2)*(aMax*tf - v0 + vf) - 2*a0*aMax*(aMax*tf - v0 + vf),2) + 3*(a0 - af)*h5*(Power(aMax,2)*Power(tf,2) - Power(v0 - vf,2) + 2*aMax*(2*p0 - 2*pf + tf*(v0 + vf)))))/(24.*(Power(aMax,2)*Power(tf,2) - Power(v0 - vf,2) + 2*aMax*(2*p0 - 2*pf + tf*(v0 + vf))));
 
     profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
@@ -443,15 +443,15 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = 0;
         profile.t[6] = profile.t[0];
 
-        double jMaxNew = (-32*(p0 - pf))/Power(tf,3);
+        double jMaxNew = -32*(p0 - pf)/Power(tf,3);
 
         profile.set(p0, v0, a0, {jMaxNew, 0, -jMaxNew, 0, -jMaxNew, 0, jMaxNew});
-        return profile.check(tf, pf, vf, af, vMax, aMax) && std::abs(jMaxNew) <= std::abs(jMax) + 1e-9;
+        return profile.check(tf, pf, vf, af, vMax, aMax) && std::abs(jMaxNew) <= std::abs(jMax) + 1e-12;
     }
     
     if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON) {
-        double h1 = Sqrt(Power(tf,2)*(Power(tf,2)*Power(vf,2) + 4*Power(2*p0 - 2*pf + tf*vf,2)));
-        profile.t[0] = (4*p0 - 4*pf + 3*tf*vf + h1/tf)/(4.*vf);
+        double h1 = Sqrt(Power(tf,2)*Power(vf,2) + Power(4*(p0 - pf) + tf*vf,2));
+        profile.t[0] = (4*(p0 - pf) + 3*tf*vf + h1)/(4*vf);
         profile.t[1] = 0;
         profile.t[2] = profile.t[0];
         profile.t[3] = 0;
@@ -459,10 +459,10 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = 0;
         profile.t[6] = profile.t[0];
 
-        double jMaxNew = (4*(-4*p0*tf + 4*pf*tf - 2*Power(tf,2)*vf + h1))/Power(tf,4);
+        double jMaxNew = 4*(-4*(p0 - pf) - 2*tf*vf + h1)/Power(tf,3);
 
         profile.set(p0, v0, a0, {jMaxNew, 0, -jMaxNew, 0, -jMaxNew, 0, jMaxNew});
-        if (profile.check(tf, pf, vf, af, vMax, aMax) && std::abs(jMaxNew) <= std::abs(jMax) + 1e-9) {
+        if (profile.check(tf, pf, vf, af, vMax, aMax) && std::abs(jMaxNew) <= std::abs(jMax) + 1e-12) {
             return true;
         }
     }
@@ -490,18 +490,20 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         // Solution 1
         {
-            profile.t[0] = (-4*p0 + 4*pf - tf*v0 - 3*tf*vf + Sqrt(Power(tf,2)*(Power(tf,2)*Power(v0 - vf,2) + 4*Power(2*p0 - 2*pf + tf*(v0 + vf),2)))/tf)/(4.*(v0 - vf));
+            double h1 = Sqrt(Power(tf,2)*Power(v0 - vf,2) + 4*Power(2*p0 - 2*pf + tf*(v0 + vf),2));
+
+            profile.t[0] = (-4*p0 + 4*pf - tf*v0 - 3*tf*vf + h1)/(4*(v0 - vf));
             profile.t[1] = 0;
-            profile.t[2] = (-4*p0 + 4*pf - tf*v0 - 3*tf*vf + Sqrt(Power(tf,2)*(Power(tf,2)*Power(v0 - vf,2) + 4*Power(2*p0 - 2*pf + tf*(v0 + vf),2)))/tf)/(4.*(v0 - vf));
+            profile.t[2] = profile.t[0];
             profile.t[3] = 0;
-            profile.t[4] = (4*p0 - 4*pf + 3*tf*v0 + tf*vf - Sqrt(Power(tf,2)*(Power(tf,2)*Power(v0 - vf,2) + 4*Power(2*p0 - 2*pf + tf*(v0 + vf),2)))/tf)/(4.*(v0 - vf));
+            profile.t[4] = (4*p0 - 4*pf + 3*tf*v0 + tf*vf - h1)/(4*(v0 - vf));
             profile.t[5] = 0;
-            profile.t[6] = (4*p0 - 4*pf + 3*tf*v0 + tf*vf - Sqrt(Power(tf,2)*(Power(tf,2)*Power(v0 - vf,2) + 4*Power(2*p0 - 2*pf + tf*(v0 + vf),2)))/tf)/(4.*(v0 - vf));
+            profile.t[6] = profile.t[4];
         
             double jMaxNew = (-4*(4*p0*tf - 4*pf*tf + 2*Power(tf,2)*v0 + 2*Power(tf,2)*vf + Sqrt(Power(tf,2)*(16*Power(p0,2) + 16*Power(pf,2) - 16*pf*tf*(v0 + vf) + Power(tf,2)*(5*Power(v0,2) + 6*v0*vf + 5*Power(vf,2)) + 16*p0*(-2*pf + tf*(v0 + vf))))))/Power(tf,4);
         
             profile.set(p0, v0, a0, {jMaxNew, 0, -jMaxNew, 0, -jMaxNew, 0, jMaxNew});
-            if (profile.check(tf, pf, vf, af, vMax, aMax) && std::abs(jMaxNew) <= std::abs(jMax) + 1e-9) {
+            if (profile.check(tf, pf, vf, af, vMax, aMax) && std::abs(jMaxNew) <= std::abs(jMax) + 1e-12) {
                 return true;
             }
         }
@@ -602,9 +604,22 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
                 profile.t[1] = 0;
                 profile.t[2] = t;
                 profile.t[3] = (-Power(a0,4) + 2*Power(a0,3)*jMax*(t - 2*tf) - 3*Power(a0,2)*jMax*(jMax*(2*Power(t,2) - 2*t*tf + Power(tf,2)) + 2*(v0 - vf)) + 6*a0*Power(jMax,2)*(4*p0 - 4*pf + tf*(jMax*(-2*Power(t,2) + t*tf + Power(tf,2)) - 2*v0 + 6*vf)) + 6*Power(jMax,2)*(Power(jMax,2)*t*(t - tf)*Power(tf,2) - 4*Power(v0 - vf,2) + jMax*(-8*p0*t + 8*pf*t + 4*p0*tf - 4*pf*tf - 4*Power(t,2)*v0 + 3*Power(tf,2)*v0 + 4*Power(t,2)*vf - 8*t*tf*vf + Power(tf,2)*vf)))/(jMax*(Power(a0,3) + 3*Power(a0,2)*jMax*tf + 6*a0*jMax*(v0 - vf) + 6*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf))));
-                profile.t[4] = (Power(a0,4) - 2*Power(a0,3)*jMax*(t - 2*tf) + 3*Power(a0,2)*jMax*(jMax*Power(t - tf,2) + 2*(v0 - vf)) + 3*a0*Power(jMax,2)*(-2*p0 + 2*pf + 2*jMax*Power(t,2)*tf - jMax*t*Power(tf,2) - jMax*Power(tf,3) - 2*t*v0 + 4*tf*v0 + 2*t*vf - 6*tf*vf) - 3*Power(jMax,2)*(Power(jMax,2)*t*(t - tf)*Power(tf,2) - 4*Power(v0 - vf,2) + 2*jMax*(-2*p0*t + 2*pf*t + p0*tf - pf*tf - 2*Power(t,2)*v0 + t*tf*v0 + Power(tf,2)*v0 + 2*Power(t,2)*vf - 3*t*tf*vf)))/(jMax*(Power(a0,3) + 3*Power(a0,2)*jMax*tf + 6*a0*jMax*(v0 - vf) + 6*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf))));
+                // profile.t[4] = (Power(a0,4) - 2*Power(a0,3)*jMax*(t - 2*tf) + 3*Power(a0,2)*jMax*(jMax*Power(t - tf,2) + 2*(v0 - vf)) + 3*a0*Power(jMax,2)*(-2*p0 + 2*pf + 2*jMax*Power(t,2)*tf - jMax*t*Power(tf,2) - jMax*Power(tf,3) - 2*t*v0 + 4*tf*v0 + 2*t*vf - 6*tf*vf) - 3*Power(jMax,2)*(Power(jMax,2)*t*(t - tf)*Power(tf,2) - 4*Power(v0 - vf,2) + 2*jMax*(-2*p0*t + 2*pf*t + p0*tf - pf*tf - 2*Power(t,2)*v0 + t*tf*v0 + Power(tf,2)*v0 + 2*Power(t,2)*vf - 3*t*tf*vf)))/(jMax*(Power(a0,3) + 3*Power(a0,2)*jMax*tf + 6*a0*jMax*(v0 - vf) + 6*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf))));
                 profile.t[5] = 0;
-                profile.t[6] = (Power(a0,3)*(-t + tf) + 3*Power(a0,2)*jMax*(Power(t,2) - t*tf + Power(tf,2)) + 3*a0*jMax*(-6*p0 + 6*pf - tf*(jMax*(-2*Power(t,2) + t*tf + Power(tf,2)) - 2*v0 + 8*vf)) - 3*jMax*(Power(jMax,2)*t*(t - tf)*Power(tf,2) - 4*Power(v0 - vf,2) + jMax*(-8*p0*t + 8*pf*t + 2*p0*tf - 2*pf*tf - 4*Power(t,2)*v0 + 2*Power(tf,2)*v0 + 4*Power(t,2)*vf - 8*t*tf*vf)))/(Power(a0,3) + 3*Power(a0,2)*jMax*tf + 6*a0*jMax*(v0 - vf) + 6*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf)));
+                // profile.t[6] = (Power(a0,3)*(-t + tf) + 3*Power(a0,2)*jMax*(Power(t,2) - t*tf + Power(tf,2)) + 3*a0*jMax*(-6*p0 + 6*pf - tf*(jMax*(-2*Power(t,2) + t*tf + Power(tf,2)) - 2*v0 + 8*vf)) - 3*jMax*(Power(jMax,2)*t*(t - tf)*Power(tf,2) - 4*Power(v0 - vf,2) + jMax*(-8*p0*t + 8*pf*t + 2*p0*tf - 2*pf*tf - 4*Power(t,2)*v0 + 2*Power(tf,2)*v0 + 4*Power(t,2)*vf - 8*t*tf*vf)))/(Power(a0,3) + 3*Power(a0,2)*jMax*tf + 6*a0*jMax*(v0 - vf) + 6*Power(jMax,2)*(2*p0 - 2*pf + tf*(v0 + vf)));
+
+                // Solution 2 with aPlat
+                profile.t[4] = (2*a0*jMax - 2*Power(jMax,2)*t + Sqrt(2)*Sqrt(Power(jMax,2)*(Power(a0,2) + Power(af,2) + 2*a0*jMax*profile.t[3] - 2*jMax*(jMax*t*profile.t[3] - v0 + vf))))/(2.*Power(jMax,2));
+                profile.t[6] = (2*af*jMax + Sqrt(2)*Sqrt(Power(jMax,2)*(Power(a0,2) + Power(af,2) + 2*a0*jMax*profile.t[3] - 2*jMax*(jMax*t*profile.t[3] - v0 + vf))))/(2.*Power(jMax,2));
+                
+                // std::cout << profile.t[0] << std::endl;
+                // std::cout << profile.t[1] << std::endl;
+                // std::cout << profile.t[2] << std::endl;
+                // std::cout << profile.t[3] << std::endl;
+                // std::cout << profile.t[4] << std::endl;
+                // std::cout << profile.t[5] << std::endl;
+                // std::cout << profile.t[6] << std::endl;
+                // std::cout << "---" << std::endl;
 
                 profile.set(p0, v0, a0, {jMax, 0, -jMax, 0, -jMax, 0, jMax});
                 if (profile.check(tf, pf, vf, af, vMax, aMax)) {

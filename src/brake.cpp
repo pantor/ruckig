@@ -78,12 +78,9 @@ void Step1::get_brake_trajectory(double v0, double a0, double vMax, double aMax,
             t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction);
 
         } else if (v_at_a_max < -vMax) {
-            // std::cout << "HERE" << std::endl;
             double t_to_other_a_max = -(a0 - aMax) / jMax - 2e-15;
             double t_to_v_max = (-a0 + std::sqrt(std::pow(a0,2) - 2 * jMax * (v0 + vMax)))/jMax;
             double t_to_v_max_brake_for_other = -(2 * a0 - std::sqrt(2) * std::sqrt(std::pow(a0, 2) - 2 * jMax * (v0 - vMax)))/(2 * jMax);
-
-            // std::cout << t_to_other_a_max << " " << t_to_v_max << " " << t_to_v_max_brake_for_other << std::endl;
 
             if (t_to_v_max_brake_for_other < t_to_other_a_max && t_to_v_max_brake_for_other < t_to_v_max) {
                 t_brake[0] = t_to_v_max_brake_for_other - 2e-15;
@@ -138,8 +135,6 @@ void Step1::get_brake_trajectory(double v0, double a0, double vMax, double aMax,
 
         t_brake[0] = std::max(t_brake[0] - 2e-15, 0.0);
     }
-
-    // std::cout << t_brake[0] << " " << t_brake[1] << std::endl;
 }
 
 } // namespace ruckig

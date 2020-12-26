@@ -74,7 +74,7 @@ void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& ot
         otg_comparison.at_time(half_duration, output_comparison);
 
         for (size_t dof = 0; dof < DOFs; dof += 1) {
-            CHECK( output.new_position[dof] == Approx(output_comparison.new_position[dof]).margin(1e-7) );
+            CHECK( output.new_position[dof] == Approx(output_comparison.new_position[dof]).margin(1e-8) );
         }
     } else {
         WARN("Ruckig and Reflexxes differ! Maybe Reflexxes error...");
@@ -105,7 +105,7 @@ TEST_CASE("Quintic") {
 }
 
 TEST_CASE("Ruckig") {
-    bool full {false};
+    bool full {true};
 
     SECTION("Known examples") {
         Ruckig<3> otg {0.005};
@@ -187,7 +187,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 64*1024 : 1024); i += 1) {
+        for (size_t i = 0; i < (full ? 64*1024 : 1*1024); i += 1) {
             input.current_position = Vec::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
@@ -209,7 +209,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 16*1024; i += 1) {
+        for (size_t i = 0; i < (full ? 32*1024 : 1*1024); i += 1) {
             input.current_position = Vec::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
@@ -231,7 +231,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 12*1024 : 1024); i += 1) {
+        for (size_t i = 0; i < (full ? 13*1024 : 1*1024); i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();

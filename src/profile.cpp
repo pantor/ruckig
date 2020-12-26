@@ -52,7 +52,7 @@ bool Profile::check(double pf, double vf, double af, double vMax, double aMax) c
 
 bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax) const {
     // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
-    return std::abs(t_sum[6] - tf) < 2e-3 && check(pf, vf, af, vMax, aMax);
+    return std::abs(t_sum[6] - tf) < 1e-8 && check(pf, vf, af, vMax, aMax);
 }
 
 std::tuple<double, double, double> Profile::integrate(double t, double p0, double v0, double a0, double j) {

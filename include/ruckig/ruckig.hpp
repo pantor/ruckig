@@ -61,7 +61,6 @@ class Step1 {
     double p0, v0, a0;
     double pf, vf, af;
 
-    Profile fastest;
     std::vector<Profile> valid_profiles;
 
     void add_profile(Profile profile, Profile::Limits limits, double jMax);
@@ -165,7 +164,7 @@ class Ruckig {
 
             t_sync = possible_t_sync;
             limiting_dof = std::ceil((i + 1.0) / 3) - 1;
-            // std::cout << limiting_dof << " " << i % 3 << " " << t_sync << std::endl;
+            // std::cout << "sync: " << limiting_dof << " " << i % 3 << " " << t_sync << std::endl;
             switch (i % 3) {
                 case 0: {
                     profiles[limiting_dof] = blocks[limiting_dof].p_min;
@@ -265,7 +264,7 @@ class Ruckig {
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
                 if (!found_time_synchronization) {
-                    throw std::runtime_error("[ruckig] error in step 2: " + input.to_string(dof) + " all: " + input.to_string());
+                    throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " | " + input.to_string(dof) + " all: " + input.to_string());
                 }
             }
         }
@@ -297,7 +296,7 @@ public:
         auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 
-        if (t > tf) {
+        if (t + delta_time > tf) {
             return Result::Finished;
         }
 
