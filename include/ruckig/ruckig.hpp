@@ -259,8 +259,6 @@ class Ruckig {
 
                 double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
 
-                // std::cout << "step 2 for dof: " << dof << std::endl;
-
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
                 if (!found_time_synchronization) {

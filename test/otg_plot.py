@@ -46,10 +46,10 @@ def plot_trajectory(t_list, out_list):
         global_min = np.min([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof], dddqaxis[:, dof]])
 
         plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
-        plt.plot(t_list, qaxis[:, dof], label=f'r_{dof+1}')
-        plt.plot(t_list, dqaxis[:, dof], label=f'v_{dof+1}')
-        plt.plot(t_list, ddqaxis[:, dof], label=f'a_{dof+1}')
-        plt.plot(t_list, dddqaxis[:, dof], label=f'j_{dof+1}')
+        plt.plot(t_list, qaxis[:, dof], label=f'Position {dof+1}')
+        plt.plot(t_list, dqaxis[:, dof], label=f'Velocity {dof+1}')
+        plt.plot(t_list, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
+        plt.plot(t_list, dddqaxis[:, dof], label=f'Jerk {dof+1}')
 
         # Plot limit lines
         if inp.max_velocity[dof] < 1.4 * global_max:
@@ -95,18 +95,18 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-0.0559601472,  -0.522194024, -0.5149605766]
-    inp.current_velocity = [-0.9424101477,  0.9126472352,  0.8620814448]
-    inp.current_acceleration = [-0.9971579518,  0.7663038353, -0.7314396443]
-    inp.target_position = [ 0.69389748095,  0.3349620557, -0.2927297034]
-    inp.target_velocity = [0, 0, 0]
-    inp.target_acceleration = [0, 0, 0]
-    inp.max_velocity = [1.018752901, 1.580002949, 5.690439986]
-    inp.max_acceleration = [1.575151149, 7.234633519, 8.314441397]
-    inp.max_jerk = [0.2165648783, 0.9940901285,  7.072790499]
+    inp.current_position = [-0.4500943954]
+    inp.current_velocity = [-0.03650326982]
+    inp.current_acceleration = [0.489544139]
+    inp.target_position = [0.5316557268]
+    inp.target_velocity = [0.5621999612]
+    inp.target_acceleration = [0.2947477238]
+    inp.max_velocity = [0.8121350379]
+    inp.max_acceleration = [1.653581625]
+    inp.max_jerk = [7.078614049]
     inp.minimum_duration = None
 
-    print_input_for_mathematica(inp, 2)
+    print_input_for_mathematica(inp, 0)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)

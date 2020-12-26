@@ -231,7 +231,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 13*1024 : 1*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 32*1024 : 1*1024); i += 1) {
             input.current_position = Vec1::Random();
             input.current_velocity = dist(gen) < 0.9 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
             input.current_acceleration = dist(gen) < 0.8 ? (Vec1)Vec1::Random() : (Vec1)Vec1::Zero();
