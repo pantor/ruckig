@@ -133,7 +133,7 @@ double calculation_duration; // Duration of the calculation in the last cycle [Â
 
 ## Tests
 
-The current test suite validates over 190.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, and for the velocity, acceleration, and jerk limits to be within a numerical error of `1e-9`.
+The current test suite validates over 190.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
 
 
 ## Development

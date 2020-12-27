@@ -8,30 +8,6 @@
 
 namespace Roots {
 
-template<size_t N>
-inline double polyEval(std::array<double, N> p, double x) {
-    double retVal = 0.0;
-
-    if constexpr (N > 0) {
-        if (std::abs(x) < DBL_EPSILON) {
-            retVal = p[N - 1];
-        } else if (x == 1.0) {
-            for (int i = N - 1; i >= 0; i--) {
-                retVal += p[i];
-            }
-        } else {
-            double xn = 1.0;
-
-            for (int i = N - 1; i >= 0; i--) {
-                retVal += p[i] * xn;
-                xn *= x;
-            }
-        }
-    }
-
-    return retVal;
-}
-
 // Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
 inline std::set<double> solveCub(double a, double b, double c, double d) {
     std::set<double> roots;
@@ -247,15 +223,40 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
 
 // Calculate the quartic equation: a*x^4 + b*x^3 + c*x^2 + d*x + e = 0
 // All coefficients can be zero
-inline std::set<double> solveQuart(double a, double b, double c, double d, double e) {
-    if (std::abs(a) < DBL_EPSILON) {
-        return solveCub(b, c, d, e);
+inline std::set<double> solveQuart(const std::array<double, 5>& polynom) {
+    if (std::abs(polynom[0]) < DBL_EPSILON) {
+        return solveCub(polynom[1], polynom[2], polynom[3], polynom[4]);
     }
-    return solveQuartMonic(b / a, c / a, d / a, e / a);
+    return solveQuartMonic(polynom[1] / polynom[0], polynom[2] / polynom[0], polynom[3] / polynom[0], polynom[4] / polynom[0]);
 }
 
-inline std::set<double> solveQuart(const std::array<double, 5>& polynom) {
-    return solveQuart(polynom[0], polynom[1], polynom[2], polynom[3], polynom[4]);
+inline std::set<double> solveQuartMonic(const std::array<double, 5>& polynom) {
+    return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
+}
+
+
+template<size_t N>
+inline double polyEval(std::array<double, N> p, double x) {
+    double retVal = 0.0;
+
+    if constexpr (N > 0) {
+        if (std::abs(x) < DBL_EPSILON) {
+            retVal = p[N - 1];
+        } else if (x == 1.0) {
+            for (int i = N - 1; i >= 0; i--) {
+                retVal += p[i];
+            }
+        } else {
+            double xn = 1.0;
+
+            for (int i = N - 1; i >= 0; i--) {
+                retVal += p[i] * xn;
+                xn *= x;
+            }
+        }
+    }
+
+    return retVal;
 }
 
 // Calculate the derivative poly coefficients of a given poly

@@ -24,12 +24,12 @@ std::string Profile::to_string() const {
     return result; 
 }
 
-void Profile::set(double p0, double v0, double a0, const std::array<double, 7>& j) {
+void Profile::set(const std::array<double, 7>& j) {
     this->j = j;
+}
+
+bool Profile::check(double pf, double vf, double af, double vMax, double aMax) {
     t_sum[0] = t[0];
-    a[0] = a0;
-    v[0] = v0;
-    p[0] = p0;
 
     for (size_t i = 0; i < 6; i += 1) {
         t_sum[i+1] = t_sum[i] + t[i+1];
@@ -39,9 +39,7 @@ void Profile::set(double p0, double v0, double a0, const std::array<double, 7>& 
         v[i+1] = v[i] + t[i] * (a[i] + t[i] * j[i] / 2);
         p[i+1] = p[i] + t[i] * (v[i] + t[i] * (a[i] / 2 + t[i] * j[i] / 6));
     }
-}
 
-bool Profile::check(double pf, double vf, double af, double vMax, double aMax) const {
     // Velocity and acceleration limits can be broken in the beginning if the initial velocity and acceleration are too high
     // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
     return std::all_of(t.begin(), t.end(), [](double tm){ return tm >= 0; })
@@ -50,9 +48,14 @@ bool Profile::check(double pf, double vf, double af, double vMax, double aMax) c
         && std::abs(p[7] - pf) < 1e-8 && std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-8;
 }
 
-bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax) const {
+bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax) {
     // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
-    return std::abs(t_sum[6] - tf) < 1e-8 && check(pf, vf, af, vMax, aMax);
+    return check(pf, vf, af, vMax, aMax) && std::abs(t_sum[6] - tf) < 1e-8;
+}
+
+bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+    // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
+    // return check(pf, vf, af, vMax, aMax) && std::abs(t_sum[6] - tf) < 1e-8 && std::abs(j) < std::abs(jMax) + 1e-12;
 }
 
 std::tuple<double, double, double> Profile::integrate(double t, double p0, double v0, double a0, double j) {

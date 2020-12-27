@@ -104,7 +104,7 @@ struct OutputParameter {
     bool new_calculation {false};
     double calculation_duration; // [µs]
 
-    // Vector independent_min_durations;
+    std::array<double, DOFs> independent_min_durations; // [s]
     // Vector min_positions, max_positions;
     // Vector time_min_positions, time_max_positions;
 };

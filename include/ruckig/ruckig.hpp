@@ -16,6 +16,7 @@ namespace ruckig {
 struct Profile {
     enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
     enum class Direction { UP, DOWN } direction;
+    enum class Teeth { UDDU, UDUD } teeth;
 
     std::array<double, 7> t, t_sum, j;
     std::array<double, 8> a, v, p;
@@ -26,9 +27,10 @@ struct Profile {
     //! Allow up to two segments of braking before the "correct" profile starts
     std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
 
-    void set(double p0, double v0, double a0, const std::array<double, 7>& j);
-    bool check(double pf, double vf, double af, double vMax, double aMax) const;
-    bool check(double tf, double pf, double vf, double af, double vMax, double aMax) const;
+    void set(const std::array<double, 7>& j);
+    bool check(double pf, double vf, double af, double vMax, double aMax);
+    bool check(double tf, double pf, double vf, double af, double vMax, double aMax);
+    bool check(double tf, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j);
@@ -49,7 +51,7 @@ struct Block {
     std::optional<Interval> a, b; // Max. 2 intervals can be blocked
     std::optional<Profile> p_a, p_b;
 
-    bool is_blocked(double t) {
+    bool is_blocked(double t) const {
         return (t < t_min) || (a && a->left < t && t < a->right) || (b && b->left < t && t < b->right);
     }
 };
@@ -186,7 +188,23 @@ class Ruckig {
         current_input = input;
 
         // Check input
+        // if (std::any_of(input.max_velocity.begin(), input.max_velocity.end(), [](auto v){ return v <= 0.0; })) {
+        //     std::cerr << "Velocity limit needs to be positive." << std::endl;
+        //     return false;
+        // }
+
+        // if (std::any_of(input.max_acceleration.begin(), input.max_acceleration.end(), [](auto v){ return v <= 0.0; })) {
+        //     std::cerr << "Acceleration limit needs to be positive." << std::endl;
+        //     return false;
+        // }
+
+        // if (std::any_of(input.max_jerk.begin(), input.max_jerk.end(), [](auto v){ return v <= 0.0; })) {
+        //     std::cerr << "Jerk limit needs to be positive." << std::endl;
+        //     return false;
+        // }
+
         if ((input.max_velocity.array() <= 0.0).any() || (input.max_acceleration.array() <= 0.0).any() || (input.max_jerk.array() <= 0.0).any()) {
+            std::cerr << "Velocity limit needs to be positive." << std::endl;
             return false;
         }
 
@@ -243,6 +261,7 @@ class Ruckig {
             }
 
             blocks[dof] = step1.block;
+            output.independent_min_durations[dof] = step1.block.t_min;
         }
 
         int limiting_dof;
