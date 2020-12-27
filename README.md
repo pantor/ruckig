@@ -27,13 +27,16 @@ Ruckig calculates a time-optimal trajectory given a *target* waypoint with posit
 
 ## Installation
 
+To build Ruckig using CMake, just 
+
 ```bash
 mkdir -p build
 cd build
 cmake -DBUILD_TYPE=Release ..
 make
-make install
 ```
+
+To install Ruckig in a system-wide directory, use `(sudo) make install`. We recommend to include
 
 A python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
 
@@ -42,9 +45,7 @@ A python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
 
 Figure. Currently only the (more-complex) *position* interface is implemented.
 
-<div align="center">
-  <img width="500" src="https://raw.githubusercontent.com/pantor/ruckig/master/doc/example_profile.png?sanitize=true">
-</div>
+![Trajectory Profile](/doc/example_profile.png?raw=true)
 
 ### Real-time trajectory generation
 
@@ -74,7 +75,12 @@ while (otg.update(input, output) == Result::Working) {
 
 ```
 
+`at_time(double time)`
+
+
 ### Input Type
+
+The input type 
 
 ```c++
 std::array<double, DOFs> current_position;
@@ -98,6 +104,19 @@ std::optional<double> minimum_duration;
 
 The `update` function of the Ruckig class returns a Result type that indicates the current state of the algorithm. Currently, this can either be **working**, **finished** if the trajectory has finished, or **error** if something went wrong during calculation. In this case, an exception (see below for more details) is thrown.
 
+State    | Error Code
+-------- | ---
+WORKING  | 0
+FINISHED | 1
+ERROR    | -1
+ERROR_INVALID_INPUT_VALUES       | -100
+ERROR_EXECUTION_TIME_CALCULATION | -101
+ERROR_SYNCHRONIZATION            | -102
+ERROR_NO_PHASE_SYNCHRONIZATION   | -103
+ERROR_EXECUTION_TIME_TOO_BIG     | -104
+ERROR_USER_TIME_OUT_OF_RANGE     | -105
+-------- | ---
+
 
 ### Output Type
 
@@ -107,18 +126,14 @@ std::array<double, DOFs> new_velocity;
 std::array<double, DOFs> new_acceleration;
 
 double duration; // Duration of the trajectory [s]
-bool new_calculation; // Whether a new calactuion was performed
-double calculation_duration; // Duration of the calculation [µs]
+bool new_calculation; // Whether a new calactuion was performed in the last cycle
+double calculation_duration; // Duration of the calculation in the last cycle [µs]
 ```
-
-
-### Exceptions
 
 
 ## Tests
 
-The current test suite validates over 190.000 trajectories based on random inputs. Numeric stability is an issue. 
-Position, Velocity, and Acceleration target to `1e-8`, Velocity, Acceleration, and Jerk limits to `1e-9`.
+The current test suite validates over 190.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, and for the velocity, acceleration, and jerk limits to be within a numerical error of `1e-9`.
 
 
 ## Development

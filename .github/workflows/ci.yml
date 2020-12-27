@@ -37,7 +37,5 @@ jobs:
         mkdir build && cd build
         cmake -DBUILD_PYTHON_MODULE=OFF ..
         make
-    
-    - name: test
-      run: make test
+        make test
   
