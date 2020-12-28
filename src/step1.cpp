@@ -67,7 +67,7 @@ void Step1::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
     profile.t[0] = (-a0*jMax + Sqrt(Power(a0,2)/2 + jMax*(-v0 + vMax))*Abs(jMax))/Power(jMax,2);
     profile.t[1] = 0;
     profile.t[2] = profile.t[0] + a0/jMax;
-    profile.t[3] = (jMax*(-4*Power(a0,3) + 4*Power(af,3) + 12*a0*jMax*v0 - 12*af*jMax*vf + 3*Sqrt(2)*Power(af,2)*Sqrt(Power(af,2) + 2*jMax*(-vf + vMax))*jMax/Abs(jMax) - 6*Abs(jMax)*(2*Abs(jMax)*(p0 - pf) + Sqrt(2)*(vf + vMax)*Sqrt(Power(af,2) - 2*jMax*vf + 2*jMax*vMax))) + 3*Sqrt(2)*Sqrt(Power(a0,2) + 2*jMax*(-v0 + vMax))*(Power(a0,2) - 2*jMax*(v0 + vMax))*Abs(jMax))/(12.*Power(jMax,3)*vMax);
+    profile.t[3] = (jMax*(-4*Power(a0,3) + 4*Power(af,3) + 12*jMax*(a0*v0 - af*vf) + 3*Sqrt(2)*Power(af,2)*Sqrt(Power(af,2) + 2*jMax*(-vf + vMax))*jMax/Abs(jMax) - 6*Abs(jMax)*(2*Abs(jMax)*(p0 - pf) + Sqrt(2)*(vf + vMax)*Sqrt(Power(af,2) - 2*jMax*vf + 2*jMax*vMax))) + 3*Sqrt(2)*Sqrt(Power(a0,2) + 2*jMax*(-v0 + vMax))*(Power(a0,2) - 2*jMax*(v0 + vMax))*Abs(jMax))/(12.*Power(jMax,3)*vMax);
     profile.t[4] = Sqrt(Power(af,2)/2 + jMax*(-vf + vMax))/Abs(jMax);
     profile.t[5] = 0;
     profile.t[6] = profile.t[4] + af/jMax;

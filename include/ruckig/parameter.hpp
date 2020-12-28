@@ -111,8 +111,6 @@ struct OutputParameter {
     double calculation_duration; // [µs]
 
     std::array<double, DOFs> independent_min_durations; // [s]
-    // Vector min_positions, max_positions;
-    // Vector time_min_positions, time_max_positions;
 };
 
 } // namespace ruckig

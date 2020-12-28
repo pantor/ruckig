@@ -20,6 +20,28 @@ using Vec2 = InputParameter<2>::Vector;
 using Vec = InputParameter<3>::Vector;
 
 
+template<size_t DOFs>
+std::array<double, DOFs> random_array(const std::default_random_engine& gen, double min, double max) {
+    std::uniform_real_distribution<double> dist(min, max);
+
+    std::array<double, DOFs> result;
+    for (size_t dof = 0; dof < DOFs; ++dof) {
+        result[dof] = dist(gen);
+    }
+}
+
+template<size_t DOFs>
+std::array<double, DOFs> random_array(const std::default_random_engine& gen, double min, double max, double dropout) {
+    std::uniform_real_distribution<double> dist_dropout(0, 1.0);
+    std::uniform_real_distribution<double> dist(min, max);
+
+    std::array<double, DOFs> result;
+    for (size_t dof = 0; dof < DOFs; ++dof) {
+        result[dof] = dist_dropout(gen) < dropout ? dist(gen) : 0.0;
+    }
+}
+
+
 template<size_t DOFs, class OTGType>
 void check(OTGType& otg, InputParameter<DOFs>& input, double time) {
     OutputParameter<DOFs> output;

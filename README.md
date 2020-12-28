@@ -36,23 +36,32 @@ cmake -DBUILD_TYPE=Release ..
 make
 ```
 
-To install Ruckig in a system-wide directory, use `(sudo) make install`. We recommend to include
-
-A python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
+To install Ruckig in a system-wide directory, use `(sudo) make install`. We recommend to include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your main `CMakeLists.txt`. A python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
 
 
 ## Tutorial
 
-Figure. Currently only the (more-complex) *position* interface is implemented.
+Currently only the (more-complex) *position* interface is implemented. A time-optimal trajectory is shown in the figure below.
 
 ![Trajectory Profile](/doc/example_profile.png?raw=true)
 
+Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application.
+
+
 ### Real-time trajectory generation
+
+Ruckig provides three interface classes: the *Ruckig*, the *InputParameter*, and the *OutputParameter* class. 
+
+First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle in seconds in the constructor.
 
 ```c++
 Ruckig<6> ruckig {0.001}; // Number DoFs; control cycle in [s]
+```
 
-InputParameter<6> input;
+The input has 3 
+
+```c++
+InputParameter<6> input; // Number DoFs
 input.current_position = {};
 input.current_velocity = {};
 input.current_acceleration = {};
@@ -63,24 +72,23 @@ input.max_velocity = {};
 input.max_acceleration = {};
 input.max_jerk = {};
 
-OutputParameter<6> output;
+OutputParameter<6> output; // Number DoFs
 
 while (otg.update(input, output) == Result::Working) {
-  // output.new_position
+  // Make use of the new dynamic state here!
 
   input.current_position = output.new_position;
   input.current_velocity = output.new_velocity;
   input.current_acceleration = output.new_acceleration;
 }
-
 ```
 
-`at_time(double time)`
+During your update step, you'll need to copy the new dynamic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the new input. The output state at a given time using the last calculated trajectory is returned by the `ruckig.at_time(t)` function. 
 
 
-### Input Type
+### Input Parameter
 
-The input type 
+The *InputParameter* type has following members: 
 
 ```c++
 std::array<double, DOFs> current_position;
@@ -99,7 +107,11 @@ std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 ```
 
-To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid.
+To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
+```
+target_acceleration <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
+``` 
+If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given.
 
 
 ### Result Type
@@ -116,10 +128,11 @@ ErrorExecutionTime          | -101
 ErrorSynchronization        | -102
 ErrorNoPhaseSynchronization | -103
 ErrorUserTimeOutOfRange     | -105
--------- | ------------
 
 
-### Output Type
+### Output Parameter
+
+The output class gives the new dynamical state of the trajectory.
 
 ```c++
 std::array<double, DOFs> new_position;
@@ -129,7 +142,10 @@ std::array<double, DOFs> new_acceleration;
 double duration; // Duration of the trajectory [s]
 bool new_calculation; // Whether a new calactuion was performed in the last cycle
 double calculation_duration; // Duration of the calculation in the last cycle [µs]
+
+std::array<double, DOFs> independent_min_durations; // [s]
 ```
+Moreover, a range of additional parameter about the duration of the trajectory are included.
 
 
 ## Tests
