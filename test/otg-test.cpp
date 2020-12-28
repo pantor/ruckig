@@ -251,6 +251,30 @@ TEST_CASE("Ruckig") {
         }
     }
 
+    SECTION("Random input with 3 DoF, target velocity and acceleration") {
+        Ruckig<3> otg {0.005};
+        InputParameter<3> input;
+
+        // Eigen returns uniform random floats between -1 and 1
+        srand(39);
+        std::default_random_engine gen;
+        std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+        for (size_t i = 0; i < (full ? 0 : 0); i += 1) {
+            input.current_position = Vec::Random();
+            input.current_velocity = dist(gen) < 0.9 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
+            input.current_acceleration = dist(gen) < 0.8 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
+            input.target_position = Vec::Random();
+            input.target_velocity = dist(gen) < 0.7 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
+            input.target_acceleration = dist(gen) < 0.6 ? (Vec)Vec::Random() : (Vec)Vec::Zero();
+            input.max_velocity = 10 * Vec::Random().array().abs() + input.target_velocity.array().abs();
+            input.max_acceleration = 10 * Vec::Random().array().abs() + input.target_acceleration.array().abs() + 0.1;
+            input.max_jerk = 10 * Vec::Random().array().abs() + 0.1;
+
+            check_calculation(otg, input);
+        }
+    }
+
 #ifdef WITH_REFLEXXES
     SECTION("Comparison with Reflexxes with 1 DoF") {
         Ruckig<1> otg {0.005};

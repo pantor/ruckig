@@ -7,10 +7,10 @@
 
 namespace ruckig {
 
-enum class Result {
-    Working,
-    Finished,
-    Error
+enum Result {
+    Working = 0,
+    Finished = 1,
+    Error = -1
 };
 
 
@@ -41,6 +41,12 @@ struct InputParameter {
 
     InputParameter() {
         enabled.fill(true);
+        
+        // std::fill(enabled.begin(), enabled.end(), true);
+        // std::fill(current_velocity.begin(), current_velocity.end(), 0);
+        // std::fill(current_acceleration.begin(), current_acceleration.end(), 0);
+        // std::fill(target_velocity.begin(), enabled.end(), 0);
+        // std::fill(target_acceleration.begin(), enabled.end(), 0);
     }
 
     bool operator!=(const InputParameter<DOFs>& rhs) const {

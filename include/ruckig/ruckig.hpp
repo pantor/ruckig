@@ -27,10 +27,9 @@ struct Profile {
     //! Allow up to two segments of braking before the "correct" profile starts
     std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
 
-    void set(const std::array<double, 7>& j);
-    bool check(double pf, double vf, double af, double vMax, double aMax);
-    bool check(double tf, double pf, double vf, double af, double vMax, double aMax);
-    bool check(double tf, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    bool check(double pf, double vf, double af, double vMax, double aMax, const std::array<double, 7>& j);
+    bool check(double tf, double pf, double vf, double af, double vMax, double aMax, const std::array<double, 7>& j);
+    bool check(double tf, double pf, double vf, double af, double vMax, double aMax, double jMax, const std::array<double, 7>& j);
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j);
@@ -65,7 +64,7 @@ class Step1 {
 
     std::vector<Profile> valid_profiles;
 
-    void add_profile(Profile profile, Profile::Limits limits, double jMax);
+    void add_profile(Profile profile, Limits limits, double jMax);
 
     void time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     void time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
@@ -128,9 +127,6 @@ public:
 
 template<size_t DOFs>
 class Ruckig {
-    using InputType = InputParameter<DOFs>;
-    using OutputType = OutputParameter<DOFs>;
-
     InputParameter<DOFs> current_input;
 
     double t, tf;
@@ -185,49 +181,16 @@ class Ruckig {
     }
 
     bool calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
+        // auto start = std::chrono::high_resolution_clock::now();
         current_input = input;
 
-        // Check input
-        // if (std::any_of(input.max_velocity.begin(), input.max_velocity.end(), [](auto v){ return v <= 0.0; })) {
-        //     std::cerr << "Velocity limit needs to be positive." << std::endl;
-        //     return false;
-        // }
+        // std::cout << "reference: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
 
-        // if (std::any_of(input.max_acceleration.begin(), input.max_acceleration.end(), [](auto v){ return v <= 0.0; })) {
-        //     std::cerr << "Acceleration limit needs to be positive." << std::endl;
-        //     return false;
-        // }
-
-        // if (std::any_of(input.max_jerk.begin(), input.max_jerk.end(), [](auto v){ return v <= 0.0; })) {
-        //     std::cerr << "Jerk limit needs to be positive." << std::endl;
-        //     return false;
-        // }
-
-        if ((input.max_velocity.array() <= 0.0).any() || (input.max_acceleration.array() <= 0.0).any() || (input.max_jerk.array() <= 0.0).any()) {
-            std::cerr << "Velocity limit needs to be positive." << std::endl;
+        if (!validate_input(input)) {
             return false;
         }
 
-        if ((input.target_velocity.array().abs() > input.max_velocity.array()).any()) {
-            std::cerr << "Target velocity exceeds maximal velocity." << std::endl;
-            return false;
-        }
-
-        auto max_target_acceleration = (2 * input.max_jerk.array() * (input.max_velocity.array() - input.target_velocity.array().abs())).sqrt();
-        if ((input.target_acceleration.array().abs() > max_target_acceleration.array()).any()) {
-            std::cerr << "Target acceleration exceeds maximal possible acceleration." << std::endl;
-            return false;
-        }
-
-        // Calculate brakes (if input exceeds or will exceed limits)
-        for (size_t dof = 0; dof < DOFs; dof += 1) {
-            if (!input.enabled[dof]) {
-                continue;
-            }
-
-            Step1::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
-            profiles[dof].t_brake = profiles[dof].t_brakes[0] + profiles[dof].t_brakes[1];
-        }
+        // std::cout << "validate: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
 
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
@@ -235,6 +198,10 @@ class Ruckig {
             if (!input.enabled[dof]) {
                 continue;
             }
+
+            // Calculate brakes (if input exceeds or will exceed limits)
+            Step1::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
+            profiles[dof].t_brake = profiles[dof].t_brakes[0] + profiles[dof].t_brakes[1];
 
             p0s[dof] = input.current_position[dof];
             v0s[dof] = input.current_velocity[dof];
@@ -264,7 +231,9 @@ class Ruckig {
             output.independent_min_durations[dof] = step1.block.t_min;
         }
 
-        int limiting_dof;
+        // std::cout << "step1: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
+
+        int limiting_dof; // The DoF that doesn't need step 2
         bool found_synchronization = synchronize(blocks, input.minimum_duration, tf, limiting_dof, profiles);
         if (!found_synchronization) {
             throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
@@ -286,6 +255,8 @@ class Ruckig {
             }
         }
 
+        // std::cout << "step2: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
+
         t = 0.0;
         output.duration = tf;
         output.new_calculation = true;
@@ -293,16 +264,57 @@ class Ruckig {
     }
 
 public:
+    //! Just a shorter notation
+    using Input = InputParameter<DOFs>;
+    using Output = OutputParameter<DOFs>;
+
     //! Time step between updates (cycle time) in [s]
     const double delta_time;
 
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
 
+    bool validate_input(const InputParameter<DOFs>& input) {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            if (input.max_velocity[dof] <= 0.0) {
+                std::cerr << "Velocity limit needs to be positive." << std::endl;
+                return false;
+            }
+
+            if (input.max_acceleration[dof] <= 0.0) {
+                std::cerr << "Acceleration limit needs to be positive." << std::endl;
+                return false;
+            }
+
+            if (input.max_jerk[dof] <= 0.0) {
+                std::cerr << "Jerk limit needs to be positive." << std::endl;
+                return false;
+            }
+
+            if (input.target_velocity[dof] > input.max_velocity[dof]) {
+                std::cerr << "Target velocity exceeds velocity limit." << std::endl;
+                return false;
+            }
+
+            if (input.target_acceleration[dof] > input.max_acceleration[dof]) {
+                std::cerr << "Target acceleration exceeds acceleration limit." << std::endl;
+                return false;
+            }
+
+            double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
+            if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
+                std::cerr << "Target acceleration exceeds maximal possible acceleration." << std::endl;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
+        auto start = std::chrono::high_resolution_clock::now();
+
         t += delta_time;
         output.new_calculation = false;
-
-        auto start = std::chrono::high_resolution_clock::now();
 
         if (input != current_input && !calculate(input, output)) {
             return Result::Error;
@@ -325,18 +337,16 @@ public:
 
     void at_time(double time, OutputParameter<DOFs>& output) {
         if (time + delta_time > tf) {
-            // Keep velocity
-            output.new_position = current_input.target_position + current_input.target_velocity * (time - tf);
-            output.new_velocity = current_input.target_velocity;
-            output.new_acceleration = current_input.target_acceleration;
+            // Keep constant acceleration
+            for (size_t dof = 0; dof < DOFs; ++dof) {
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time - tf, current_input.target_position[dof], current_input.target_velocity[dof], current_input.target_acceleration[dof], 0);
+            }
             return;
         }
 
-        for (size_t dof = 0; dof < DOFs; dof += 1) {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
             if (!current_input.enabled[dof]) {
-                output.new_acceleration[dof] = current_input.current_acceleration[dof];
-                output.new_velocity[dof] = current_input.current_velocity[dof];
-                output.new_position[dof] = current_input.current_position[dof];
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time, current_input.current_position[dof], current_input.current_velocity[dof], current_input.current_acceleration[dof], 0);
             }
 
             auto& p = profiles[dof];

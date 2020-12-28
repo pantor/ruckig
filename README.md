@@ -84,20 +84,22 @@ The input type
 
 ```c++
 std::array<double, DOFs> current_position;
-std::array<double, DOFs> current_velocity {Vector::Zero()};
-std::array<double, DOFs> current_acceleration {Vector::Zero()};
+std::array<double, DOFs> current_velocity; // Initialized to zero
+std::array<double, DOFs> current_acceleration; // Initialized to zero
 
 std::array<double, DOFs> target_position;
-std::array<double, DOFs> target_velocity {Vector::Zero()};
-std::array<double, DOFs> target_acceleration {Vector::Zero()};
+std::array<double, DOFs> target_velocity; // Initialized to zero
+std::array<double, DOFs> target_acceleration; // Initialized to zero
 
 std::array<double, DOFs> max_velocity;
 std::array<double, DOFs> max_acceleration;
 std::array<double, DOFs> max_jerk;
 
-std::array<bool, DOFs> enabled;
+std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 ```
+
+To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid.
 
 
 ### Result Type
@@ -105,17 +107,16 @@ std::optional<double> minimum_duration;
 The `update` function of the Ruckig class returns a Result type that indicates the current state of the algorithm. Currently, this can either be **working**, **finished** if the trajectory has finished, or **error** if something went wrong during calculation. In this case, an exception (see below for more details) is thrown.
 
 State    | Error Code
--------- | ---
-WORKING  | 0
-FINISHED | 1
-ERROR    | -1
-ERROR_INVALID_INPUT_VALUES       | -100
-ERROR_EXECUTION_TIME_CALCULATION | -101
-ERROR_SYNCHRONIZATION            | -102
-ERROR_NO_PHASE_SYNCHRONIZATION   | -103
-ERROR_EXECUTION_TIME_TOO_BIG     | -104
-ERROR_USER_TIME_OUT_OF_RANGE     | -105
--------- | ---
+-------- | ----------
+Working  | 0
+Finished | 1
+Error    | -1
+ErrorInvalidInput           | -100
+ErrorExecutionTime          | -101
+ErrorSynchronization        | -102
+ErrorNoPhaseSynchronization | -103
+ErrorUserTimeOutOfRange     | -105
+-------- | ------------
 
 
 ### Output Type

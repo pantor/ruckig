@@ -26,7 +26,7 @@ PYBIND11_MODULE(_ruckig, m) {
 given a target waypoint with position, velocity, and acceleration, starting from any initial state \
 limited by velocity, acceleration, and jerk constraints.";
 
-    constexpr size_t DOFs {1};
+    constexpr size_t DOFs {3};
 
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())

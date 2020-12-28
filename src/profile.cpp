@@ -24,14 +24,18 @@ std::string Profile::to_string() const {
     return result; 
 }
 
-void Profile::set(const std::array<double, 7>& j) {
+bool Profile::check(double pf, double vf, double af, double vMax, double aMax, const std::array<double, 7>& j) {
     this->j = j;
-}
-
-bool Profile::check(double pf, double vf, double af, double vMax, double aMax) {
     t_sum[0] = t[0];
+    if (t[0] < 0) {
+        return false;
+    }
 
     for (size_t i = 0; i < 6; i += 1) {
+        if (t[i+1] < 0) {
+            return false;
+        }
+
         t_sum[i+1] = t_sum[i] + t[i+1];
     }
     for (size_t i = 0; i < 7; i += 1) {
@@ -42,20 +46,19 @@ bool Profile::check(double pf, double vf, double af, double vMax, double aMax) {
 
     // Velocity and acceleration limits can be broken in the beginning if the initial velocity and acceleration are too high
     // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
-    return std::all_of(t.begin(), t.end(), [](double tm){ return tm >= 0; })
-        && std::all_of(v.begin() + 3, v.end(), [vMax](double vm){ return std::abs(vm) < std::abs(vMax) + 1e-9; })
+    return std::all_of(v.begin() + 3, v.end(), [vMax](double vm){ return std::abs(vm) < std::abs(vMax) + 1e-9; })
         && std::all_of(a.begin() + 2, a.end(), [aMax](double am){ return std::abs(am) < std::abs(aMax) + 1e-9; })
         && std::abs(p[7] - pf) < 1e-8 && std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-8;
 }
 
-bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax) {
+bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax, const std::array<double, 7>& j) {
     // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
-    return check(pf, vf, af, vMax, aMax) && std::abs(t_sum[6] - tf) < 1e-8;
+    return check(pf, vf, af, vMax, aMax, j) && std::abs(t_sum[6] - tf) < 1e-8;
 }
 
-bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax, double jMax) {
+bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax, double jMax, const std::array<double, 7>& j) {
     // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
-    // return check(pf, vf, af, vMax, aMax) && std::abs(t_sum[6] - tf) < 1e-8 && std::abs(j) < std::abs(jMax) + 1e-12;
+    // return check(pf, vf, af, vMax, aMax, j) && std::abs(t_sum[6] - tf) < 1e-8 && std::abs(j) < std::abs(jMax) + 1e-12;
 }
 
 std::tuple<double, double, double> Profile::integrate(double t, double p0, double v0, double a0, double j) {

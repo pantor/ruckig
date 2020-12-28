@@ -2,19 +2,18 @@
 
 #include <ruckig/ruckig.hpp>
 #include <ruckig/roots.hpp>
-#include <ruckig/wolfram.hpp>
 
 
 namespace ruckig {
 
 Step1::Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax): p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af) {
-
+    valid_profiles.reserve(3);
 }
 
 void Step1::add_profile(Profile profile, Profile::Limits limits, double jMax) {
     profile.limits = limits;
     profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
-    valid_profiles.push_back(profile);
+    valid_profiles.emplace_back(profile);
 }
 
 void Step1::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
@@ -30,8 +29,7 @@ void Step1::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
     profile.t[5] = (af_af/2 - aMax_aMax - jMax*(vf - vMax))/(aMax*jMax);
     profile.t[6] = profile.t[4] + af/jMax;
 
-    profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-    if (profile.check(pf, vf, af, vMax, aMax)) {
+    if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
         add_profile(profile, Limits::ACC0_ACC1_VEL, jMax);
     }
 }
@@ -45,8 +43,7 @@ void Step1::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double 
     profile.t[5] = (Power(af,2)/2 - Power(aMax,2) + jMax*(vMax - vf))/(aMax*jMax);
     profile.t[6] = profile.t[4] + af/jMax;
 
-    profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-    if (profile.check(pf, vf, af, vMax, aMax)) {
+    if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
         add_profile(profile, Limits::ACC1_VEL, jMax);
     }
 }
@@ -60,8 +57,7 @@ void Step1::time_up_acc0_vel(Profile& profile, double vMax, double aMax, double 
     profile.t[5] = 0;
     profile.t[6] = profile.t[4] + af/jMax;
 
-    profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-    if (profile.check(pf, vf, af, vMax, aMax)) {
+    if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
         add_profile(profile, Limits::ACC0_VEL, jMax);
     }
 }
@@ -76,8 +72,7 @@ void Step1::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
     profile.t[5] = 0;
     profile.t[6] = profile.t[4] + af/jMax;
 
-    profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-    if (profile.check(pf, vf, af, vMax, aMax)) {
+    if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
         add_profile(profile, Limits::VEL, jMax);
     }
 }
@@ -95,8 +90,7 @@ void Step1::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
         profile.t[5] = profile.t[1] + (Power(af,2)/2 - Power(a0,2)/2 + jMax*(v0 - vf))/(aMax*jMax);
         profile.t[6] = profile.t[4] + af/jMax;
 
-        profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-        if (profile.check(pf, vf, af, vMax, aMax)) {
+        if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
             add_profile(profile, Limits::ACC0_ACC1, jMax);
         }
     }
@@ -111,8 +105,7 @@ void Step1::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
         profile.t[5] = profile.t[1] + (Power(af,2)/2 - Power(a0,2)/2 + jMax*(v0 - vf))/(aMax*jMax);
         profile.t[6] = profile.t[4] + af/jMax;
 
-        profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-        if (profile.check(pf, vf, af, vMax, aMax)) {
+        if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
             add_profile(profile, Limits::ACC0_ACC1, jMax);
         }
     }
@@ -127,8 +120,7 @@ void Step1::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
         profile.t[5] = -(3*Power(a0,4) - 3*Power(af,4) - 8*Power(a0,3)*aMax + 8*Power(af,3)*aMax + 24*a0*aMax*jMax*v0 + 6*Power(a0,2)*(Power(aMax,2) - 2*jMax*v0) + 24*af*aMax*jMax*vf - 6*Power(af,2)*(3*Power(aMax,2) + 2*jMax*vf) + 12*(2*Power(aMax,4) + 2*aMax*Power(jMax,2)*(-p0 + pf) - Power(aMax,2)*jMax*(v0 + 3*vf) + Power(jMax,2)*(Power(v0,2) - Power(vf,2))))/(24.*Power(aMax,3)*jMax);
         profile.t[6] = profile.t[4] - af/jMax;
 
-        profile.set({jMax, 0, -jMax, 0, jMax, 0, -jMax});
-        if (profile.check(pf, vf, af, vMax, aMax)) {
+        if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, jMax, 0, -jMax})) {
             add_profile(profile, Limits::ACC0_ACC1, jMax);
         }
     }
@@ -159,8 +151,7 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
         profile.t[2] = (profile.t[2] + profile.t[4]) / 2;
         profile.t[4] = profile.t[2];
             
-        profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-        if (profile.check(pf, vf, af, vMax, aMax)) {
+        if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
             add_profile(profile, Limits::ACC1, jMax);
         }
     }
@@ -188,8 +179,7 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
             profile.t[5] = -(Power(a0,2) - Power(af,2) + 4*a0*jMax*t + 2*(Power(aMax,2) + jMax*(jMax*Power(t,2) + v0 - vf)))/(2.*aMax*jMax);
             profile.t[6] = profile.t[4] - af/jMax;
 
-            profile.set({jMax, 0, -jMax, 0, jMax, 0, -jMax});
-            if (profile.check(pf, vf, af, vMax, aMax)) {
+            if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, jMax, 0, -jMax})) {
                 add_profile(profile, Limits::ACC1, jMax);
             }
         }
@@ -221,8 +211,7 @@ void Step1::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
         profile.t[2] = (profile.t[2] + profile.t[4]) / 2;
         profile.t[4] = profile.t[2];
             
-        profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-        if (profile.check(pf, vf, af, vMax, aMax)) {
+        if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
             add_profile(profile, Limits::ACC0, jMax);
         }
     }
@@ -250,8 +239,7 @@ void Step1::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] - af/jMax;
             
-            profile.set({jMax, 0, -jMax, 0, jMax, 0, -jMax});
-            if (profile.check(pf, vf, af, vMax, aMax)) {
+            if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, jMax, 0, -jMax})) {
                 add_profile(profile, Limits::ACC0, jMax);
             }
         }
@@ -268,8 +256,7 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = 0;
         profile.t[6] = profile.t[0];
 
-        profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-        if (profile.check(pf, vf, af, vMax, aMax)) {
+        if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
             add_profile(profile, Limits::NONE, jMax);
         }
         return;
@@ -304,8 +291,7 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         profile.t[2] = (profile.t[2] + profile.t[4]) / 2;
         profile.t[4] = profile.t[2];
             
-        profile.set({jMax, 0, -jMax, 0, -jMax, 0, jMax});
-        if (profile.check(pf, vf, af, vMax, aMax)) {
+        if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, -jMax, 0, jMax})) {
             add_profile(profile, Limits::NONE, jMax);
         }
     }
@@ -390,8 +376,7 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] - af/jMax;
 
-            profile.set({jMax, 0, -jMax, 0, jMax, 0, -jMax});
-            if (profile.check(pf, vf, af, vMax, aMax)) {
+            if (profile.check(pf, vf, af, vMax, aMax, {jMax, 0, -jMax, 0, jMax, 0, -jMax})) {
                 add_profile(profile, Limits::NONE, jMax);
             }
         }

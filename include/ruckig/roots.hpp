@@ -6,6 +6,23 @@
 #include <set>
 
 
+namespace ruckig {
+
+inline double Power(double v, int e) {
+    return std::pow(v, e);
+}
+
+inline double Sqrt(double v) {
+    return std::sqrt(v);
+}
+
+inline double Abs(double v) {
+    return std::abs(v);
+}
+
+} // namespace ruckig
+
+
 namespace Roots {
 
 // Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
