@@ -7,6 +7,7 @@
 #include <math.h>
 #include <numeric>
 #include <optional>
+#include <tuple>
 #include <vector>
 
 #include <ruckig/parameter.hpp>
