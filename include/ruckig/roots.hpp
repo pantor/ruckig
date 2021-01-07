@@ -167,7 +167,7 @@ inline int solveResolvent(double *x, double a, double b, double c) {
 }
 
 // Calculate all roots of the monic quartic equation:
-// x^4 + a*x^3 + b*x^2 + c*x +d = 0
+// x^4 + a*x^3 + b*x^2 + c*x + d = 0
 inline std::set<double> solveQuartMonic(double a, double b, double c, double d) {
     std::set<double> roots;
 
@@ -288,7 +288,7 @@ inline std::array<double, N-1> polyDeri(const std::array<double, N>& coeffs) {
 }
 
 // Safe Newton Method
-// Requirements: f(l)*f(h)<=0
+// Requirements: f(l)*f(h) <= 0
 template <typename F, typename DF>
 inline double safeNewton(const F& func, const DF& dfunc, const double &l, const double &h, const double &tol, const int &maxIts) {
     double xh, xl;
@@ -348,8 +348,8 @@ inline double safeNewton(const F& func, const DF& dfunc, const double &l, const 
     return rts;
 }
 
-// Calculate a single zero of poly coeffs(x) inside [lbound, ubound]
-// Requirements: coeffs(lbound)*coeffs(ubound) < 0, lbound < ubound
+// Calculate a single zero of polynom p(x) inside [lbound, ubound]
+// Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
 template<size_t N, size_t maxDblIts = 128>
 inline double shrinkInterval(const std::array<double, N>& p, double lbound, double ubound, double tol) {
     auto deriv = polyDeri(p);

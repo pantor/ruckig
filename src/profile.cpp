@@ -24,6 +24,7 @@ std::string Profile::to_string() const {
     return result; 
 }
 
+// template<Profile::Teeth teeth>
 bool Profile::check(double pf, double vf, double af, double vMax, double aMax, const std::array<double, 7>& j) {
     this->j = j;
     t_sum[0] = t[0];
@@ -51,11 +52,13 @@ bool Profile::check(double pf, double vf, double af, double vMax, double aMax, c
         && std::abs(p[7] - pf) < 1e-8 && std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-8;
 }
 
+// template<Profile::Teeth teeth>
 bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax, const std::array<double, 7>& j) {
     // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
     return check(pf, vf, af, vMax, aMax, j) && std::abs(t_sum[6] - tf) < 1e-8;
 }
 
+// template<Profile::Teeth teeth>
 bool Profile::check(double tf, double pf, double vf, double af, double vMax, double aMax, double jMax, const std::array<double, 7>& j) {
     // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
     // return check(pf, vf, af, vMax, aMax, j) && std::abs(t_sum[6] - tf) < 1e-8 && std::abs(j) < std::abs(jMax) + 1e-12;

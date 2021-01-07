@@ -56,11 +56,29 @@ struct Block {
 };
 
 
+//! Calculates (pre-) trajectory to get current state below the limits
+class Brake {
+    static constexpr double eps {2e-15};
+
+    static void acceleration_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
+    static void velocity_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
+
+public:
+    static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
+};
+
+
 class Step1 {
     using Limits = Profile::Limits;
 
     double p0, v0, a0;
     double pf, vf, af;
+
+    // Pre-calculated expressions
+    double pd;
+    double v0_v0, vf_vf, vMax_vMax;
+    double a0_a0, af_af, aMax_aMax;
+    double jMax_jMax;
 
     std::vector<Profile> valid_profiles;
 
@@ -90,8 +108,6 @@ public:
     explicit Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
 
     bool get_profile(const Profile& input, double vMax, double aMax, double jMax);
-
-    static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
 };
 
 
@@ -180,14 +196,14 @@ class Ruckig {
         return false;
     }
 
-    bool calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
+    Result calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         // auto start = std::chrono::high_resolution_clock::now();
         current_input = input;
 
         // std::cout << "reference: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
 
         if (!validate_input(input)) {
-            return false;
+            return Result::ErrorInvalidInput;
         }
 
         // std::cout << "validate: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
@@ -200,7 +216,7 @@ class Ruckig {
             }
 
             // Calculate brakes (if input exceeds or will exceed limits)
-            Step1::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
+            Brake::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
             profiles[dof].t_brake = profiles[dof].t_brakes[0] + profiles[dof].t_brakes[1];
 
             p0s[dof] = input.current_position[dof];
@@ -225,6 +241,7 @@ class Ruckig {
             bool found_profile = step1.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
             if (!found_profile) {
                 throw std::runtime_error("[ruckig] error in step 1: " + input.to_string(dof) + " all: " + input.to_string());
+                return Result::ErrorExecutionTimeCalculation;
             }
 
             blocks[dof] = step1.block;
@@ -237,6 +254,7 @@ class Ruckig {
         bool found_synchronization = synchronize(blocks, input.minimum_duration, tf, limiting_dof, profiles);
         if (!found_synchronization) {
             throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
+            return Result::ErrorSynchronizationCalculation;
         }
         
         if (tf > 0.0) {
@@ -251,6 +269,7 @@ class Ruckig {
                 bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
                 if (!found_time_synchronization) {
                     throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " | " + input.to_string(dof) + " all: " + input.to_string());
+                    return Result::ErrorSynchronizationCalculation;
                 }
             }
         }
@@ -260,7 +279,7 @@ class Ruckig {
         t = 0.0;
         output.duration = tf;
         output.new_calculation = true;
-        return true;
+        return Result::Working;
     }
 
 public:
@@ -316,7 +335,7 @@ public:
         t += delta_time;
         output.new_calculation = false;
 
-        if (input != current_input && !calculate(input, output)) {
+        if (input != current_input && Result::Working != calculate(input, output)) {
             return Result::Error;
         }
 

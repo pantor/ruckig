@@ -2,8 +2,6 @@
 
 #include <chrono>
 
-#include <Eigen/Core>
-
 #include <ReflexxesAPI.h>
 #include <RMLPositionFlags.h>
 #include <RMLPositionInputParameters.h>
@@ -47,8 +45,10 @@ public:
         if (input != current_input) {
             current_input = input;
 
-            if ((input.target_acceleration.array() != 0.0).any()) {
-                return Result::Error;
+            for (size_t dof = 0; dof < DOFs; ++dof) {
+                if (input.target_acceleration[dof] != 0.0) {
+                    return Result::Error;
+                }
             }
 
             switch (input.type) {
@@ -87,10 +87,10 @@ public:
         case InputParameter<DOFs>::Type::Position: {
             result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);
 
-            for (size_t i = 0; i < DOFs; i += 1) {
-                output.new_position(i) = output_parameters->NewPositionVector->VecData[i];
-                output.new_velocity(i) = output_parameters->NewVelocityVector->VecData[i];
-                output.new_acceleration(i) = output_parameters->NewAccelerationVector->VecData[i];
+            for (size_t dof = 0; dof < DOFs; ++dof) {
+                output.new_position[dof] = output_parameters->NewPositionVector->VecData[dof];
+                output.new_velocity[dof] = output_parameters->NewVelocityVector->VecData[dof];
+                output.new_acceleration[dof] = output_parameters->NewAccelerationVector->VecData[dof];
             }
             output.duration = output_parameters->GetSynchronizationTime();
             output.new_calculation = output_parameters->WasACompleteComputationPerformedDuringTheLastCycle();
@@ -98,10 +98,10 @@ public:
         case InputParameter<DOFs>::Type::Velocity: {
             result_value = rml->RMLVelocity(*input_vel_parameters, output_vel_parameters.get(), vel_flags);
 
-            for (size_t i = 0; i < DOFs; i += 1) {
-                output.new_position(i) = output_vel_parameters->NewPositionVector->VecData[i];
-                output.new_velocity(i) = output_vel_parameters->NewVelocityVector->VecData[i];
-                output.new_acceleration(i) = output_vel_parameters->NewAccelerationVector->VecData[i];
+            for (size_t dof = 0; dof < DOFs; ++dof) {
+                output.new_position[dof] = output_vel_parameters->NewPositionVector->VecData[dof];
+                output.new_velocity[dof] = output_vel_parameters->NewVelocityVector->VecData[dof];
+                output.new_acceleration[dof] = output_vel_parameters->NewAccelerationVector->VecData[dof];
             }
             output.duration = output_vel_parameters->GetSynchronizationTime();
             output.new_calculation = output_vel_parameters->WasACompleteComputationPerformedDuringTheLastCycle();
@@ -124,19 +124,19 @@ public:
         case InputParameter<DOFs>::Type::Position: {
             rml->RMLPositionAtAGivenSampleTime(time, output_parameters.get());
 
-            for (size_t i = 0; i < DOFs; i += 1) {
-                output.new_position(i) = output_parameters->NewPositionVector->VecData[i];
-                output.new_velocity(i) = output_parameters->NewVelocityVector->VecData[i];
-                output.new_acceleration(i) = output_parameters->NewAccelerationVector->VecData[i];
+            for (size_t dof = 0; dof < DOFs; dof += 1) {
+                output.new_position[dof] = output_parameters->NewPositionVector->VecData[dof];
+                output.new_velocity[dof] = output_parameters->NewVelocityVector->VecData[dof];
+                output.new_acceleration[dof] = output_parameters->NewAccelerationVector->VecData[dof];
             }
         } break;
         case InputParameter<DOFs>::Type::Velocity: {
             rml->RMLVelocityAtAGivenSampleTime(time, output_vel_parameters.get());
 
-            for (size_t i = 0; i < DOFs; i += 1) {
-                output.new_position(i) = output_vel_parameters->NewPositionVector->VecData[i];
-                output.new_velocity(i) = output_vel_parameters->NewVelocityVector->VecData[i];
-                output.new_acceleration(i) = output_vel_parameters->NewAccelerationVector->VecData[i];
+            for (size_t dof = 0; dof < DOFs; dof += 1) {
+                output.new_position[dof] = output_vel_parameters->NewPositionVector->VecData[dof];
+                output.new_velocity[dof] = output_vel_parameters->NewVelocityVector->VecData[dof];
+                output.new_acceleration[dof] = output_vel_parameters->NewAccelerationVector->VecData[dof];
             }
         } break;
         }

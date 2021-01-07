@@ -1,8 +1,7 @@
 #pragma once
 
 #include <optional>
-
-#include <Eigen/Core>
+#include <sstream>
 
 
 namespace ruckig {
@@ -10,13 +9,16 @@ namespace ruckig {
 enum Result {
     Working = 0,
     Finished = 1,
-    Error = -1
+    Error = -1,
+    ErrorInvalidInput = -100,
+    ErrorExecutionTimeCalculation = -110,
+    ErrorSynchronizationCalculation = -111,
 };
 
 
 template<size_t DOFs>
 struct InputParameter {
-    using Vector = Eigen::Matrix<double, DOFs, 1, Eigen::ColMajor>;
+    using Vector = std::array<double, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
 
     enum class Type {
@@ -24,29 +26,15 @@ struct InputParameter {
         Velocity,
     } type {Type::Position};
 
-    Vector current_position;
-    Vector current_velocity {Vector::Zero()};
-    Vector current_acceleration {Vector::Zero()};
-
-    Vector target_position;
-    Vector target_velocity {Vector::Zero()};
-    Vector target_acceleration {Vector::Zero()};
-
-    Vector max_velocity;
-    Vector max_acceleration;
-    Vector max_jerk;
+    Vector current_position, current_velocity {}, current_acceleration {};
+    Vector target_position, target_velocity {}, target_acceleration {};
+    Vector max_velocity, max_acceleration, max_jerk;
 
     std::array<bool, DOFs> enabled;
     std::optional<double> minimum_duration;
 
     InputParameter() {
-        enabled.fill(true);
-        
-        // std::fill(enabled.begin(), enabled.end(), true);
-        // std::fill(current_velocity.begin(), current_velocity.end(), 0);
-        // std::fill(current_acceleration.begin(), current_acceleration.end(), 0);
-        // std::fill(target_velocity.begin(), enabled.end(), 0);
-        // std::fill(target_acceleration.begin(), enabled.end(), 0);
+        std::fill(enabled.begin(), enabled.end(), true);
     }
 
     bool operator!=(const InputParameter<DOFs>& rhs) const {
@@ -66,6 +54,16 @@ struct InputParameter {
         );
     }
 
+    template<class T>
+    static std::string join(const T& array) {
+        std::ostringstream ss;
+        for (size_t i = 0; i < DOFs; ++i) {
+            if (i) ss << ", ";
+            ss << array[i];
+        }
+        return ss.str();
+    }
+
     std::string to_string(size_t dof) const {
         std::stringstream ss;
         ss << "p0: " << current_position[dof] << ", ";
@@ -80,18 +78,16 @@ struct InputParameter {
     }
 
     std::string to_string() const {
-        Eigen::IOFormat formatter(10, 0, ", ", "\n", "[", "]");
-
         std::stringstream ss;
-        ss << "\ninp.current_position = " << current_position.transpose().format(formatter) << "\n";
-        ss << "inp.current_velocity = " << current_velocity.transpose().format(formatter) << "\n";
-        ss << "inp.current_acceleration = " << current_acceleration.transpose().format(formatter) << "\n";
-        ss << "inp.target_position = " << target_position.transpose().format(formatter) << "\n";
-        ss << "inp.target_velocity = " << target_velocity.transpose().format(formatter) << "\n";
-        ss << "inp.target_acceleration = " << target_acceleration.transpose().format(formatter) << "\n";
-        ss << "inp.max_velocity = " << max_velocity.transpose().format(formatter) << "\n";
-        ss << "inp.max_acceleration = " << max_acceleration.transpose().format(formatter) << "\n";
-        ss << "inp.max_jerk = " << max_jerk.transpose().format(formatter) << "\n";
+        ss << "\ninp.current_position = [" << join(current_position) << "]\n";
+        ss << "inp.current_velocity = [" << join(current_velocity) << "]\n";
+        ss << "inp.current_acceleration = [" << join(current_acceleration) << "]\n";
+        ss << "inp.target_position = [" << join(target_position) << "]\n";
+        ss << "inp.target_velocity = [" << join(target_velocity) << "]\n";
+        ss << "inp.target_acceleration = [" << join(target_acceleration) << "]\n";
+        ss << "inp.max_velocity = [" << join(max_velocity) << "]\n";
+        ss << "inp.max_acceleration = [" << join(max_acceleration) << "]\n";
+        ss << "inp.max_jerk = [" << join(max_jerk) << "]\n";
         return ss.str();
     }
 };
@@ -99,18 +95,16 @@ struct InputParameter {
 
 template<size_t DOFs>
 struct OutputParameter {
-    using Vector = Eigen::Matrix<double, DOFs, 1, Eigen::ColMajor>;
+    using Vector = std::array<double, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
 
-    Vector new_position;
-    Vector new_velocity;
-    Vector new_acceleration;
+    Vector new_position, new_velocity, new_acceleration;
 
     double duration; // [s]
     bool new_calculation {false};
     double calculation_duration; // [µs]
 
-    std::array<double, DOFs> independent_min_durations; // [s]
+    Vector independent_min_durations; // [s]
 };
 
 } // namespace ruckig

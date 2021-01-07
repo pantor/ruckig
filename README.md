@@ -62,15 +62,15 @@ The input has 3
 
 ```c++
 InputParameter<6> input; // Number DoFs
-input.current_position = {};
-input.current_velocity = {};
-input.current_acceleration = {};
-input.target_position = {};
-input.target_velocity = {};
-input.target_acceleration = {};
-input.max_velocity = {};
-input.max_acceleration = {};
-input.max_jerk = {};
+input.current_position = {0.2, ...};
+input.current_velocity = {0.1, ...};
+input.current_acceleration = {0.1, ...};
+input.target_position = {0.5, ...};
+input.target_velocity = {-0.1, ...};
+input.target_acceleration = {0.2, ...};
+input.max_velocity = {0.4, ...};
+input.max_acceleration = {1.0, ...};
+input.max_jerk = {4.0, ...};
 
 OutputParameter<6> output; // Number DoFs
 
@@ -118,16 +118,14 @@ If a DoF is not enabled, it will be ignored in the calculation. A minimum durati
 
 The `update` function of the Ruckig class returns a Result type that indicates the current state of the algorithm. Currently, this can either be **working**, **finished** if the trajectory has finished, or **error** if something went wrong during calculation. In this case, an exception (see below for more details) is thrown.
 
-State    | Error Code
--------- | ----------
-Working  | 0
-Finished | 1
-Error    | -1
-ErrorInvalidInput           | -100
-ErrorExecutionTime          | -101
-ErrorSynchronization        | -102
-ErrorNoPhaseSynchronization | -103
-ErrorUserTimeOutOfRange     | -105
+State                           | Error Code
+------------------------------- | ----------
+Working                         | 0
+Finished                        | 1
+Error                           | -1
+ErrorInvalidInput               | -100
+ErrorExecutionTimeCalculation   | -110
+ErrorSynchronizationCalculation | -111
 
 
 ### Output Parameter
@@ -157,7 +155,7 @@ The current test suite validates over 190.000 (random) trajectories. The numeric
 
 Ruckig is written in C++17. It is currently tested against following versions
 
-- Eigen v3.3.9
+- Eigen v3.3.9 (only for testing)
 - Catch2 v2.13.3 (only for testing)
 - Reflexxes v1.2.7 (only for testing)
 - Pybind11 v2.6.0 (only for prototyping)
