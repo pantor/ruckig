@@ -10,7 +10,6 @@ Step1::Step1(double p0, double v0, double a0, double pf, double vf, double af, d
     valid_profiles.reserve(3);
 
     // max values needs to be invariant to plus minus sign change
-
     pd = pf - p0;
 
     v0_v0 = v0 * v0;

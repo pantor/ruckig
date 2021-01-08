@@ -97,6 +97,9 @@ class Step2 {
     double p0, v0, a0;
     double pf, vf, af;
 
+    // Pre-calculated expressions
+    double pd;
+
     bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
