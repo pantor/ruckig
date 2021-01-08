@@ -27,7 +27,7 @@ Ruckig calculates a time-optimal trajectory given a *target* waypoint with posit
 
 ## Installation
 
-To build Ruckig using CMake, just 
+For normal usage, Ruckig has no dependencies. To build Ruckig using CMake, just 
 
 ```bash
 mkdir -p build

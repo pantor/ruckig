@@ -119,7 +119,7 @@ TEST_CASE("Quintic") {
 }
 
 TEST_CASE("Ruckig") {
-    bool full {true};
+    constexpr bool full {true};
 
     SECTION("Known examples") {
         Ruckig<3> otg {0.005};
@@ -300,7 +300,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 32 : 32); i += 1) {
+        for (size_t i = 0; i < (full ? 1.5*1024 : 1.5*1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -314,6 +314,13 @@ TEST_CASE("Ruckig") {
             std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
             Vec max_j = 10 * Vec::Random().array().abs() + 0.1;
             std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
+
+            Vec t_v = Eigen::Map<Vec>(input.target_velocity.data());
+            Vec t_a = Eigen::Map<Vec>(input.target_acceleration.data());
+            auto max_target_acceleration = (2 * max_j.array() * (max_v.array() - t_v.array().abs())).sqrt();
+            if ((t_a.array().abs() > max_target_acceleration.array()).any()) {
+                continue;
+            }
 
             check_calculation(otg, input);
         }
@@ -378,34 +385,5 @@ TEST_CASE("Ruckig") {
             check_comparison(otg, input, rflx);
         }
     }
-
-    /* SECTION("Comparison with Reflexxes with 3 DoF") {
-        constexpr size_t DOFs {3};
-        using Vec = Eigen::Matrix<double, DOFs, 1>;
-
-        Ruckig<DOFs> otg {0.005};
-        Reflexxes<DOFs> rflx {0.005};
-        InputParameter<DOFs> input;
-
-        srand(44);
-        std::default_random_engine gen;
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
-
-        for (size_t i = 0; i < 16; i += 1) {
-            input.current_position = Random<DOFs>();
-            input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
-            input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>();
-
-            Vec max_v = 10 * Vec::Random().array().abs() + 0.1;
-            std::copy_n(max_v.data(), DOFs, input.max_velocity.begin());
-            Vec max_a = 10 * Vec::Random().array().abs() + 0.1;
-            std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
-            Vec max_j = 10 * Vec::Random().array().abs() + 0.1;
-            std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
-
-            check_comparison(otg, input, rflx);
-        }
-    } */
 #endif
 }

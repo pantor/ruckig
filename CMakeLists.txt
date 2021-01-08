@@ -25,7 +25,6 @@ endif()
 
 add_library(ruckig SHARED
   src/brake.cpp
-  src/profile.cpp
   src/step1.cpp
   src/step2.cpp
 )

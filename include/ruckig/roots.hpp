@@ -238,15 +238,8 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     return roots;
 }
 
-// Calculate the quartic equation: a*x^4 + b*x^3 + c*x^2 + d*x + e = 0
+// Calculate the quartic equation: x^4 + b*x^3 + c*x^2 + d*x + e = 0
 // All coefficients can be zero
-inline std::set<double> solveQuart(const std::array<double, 5>& polynom) {
-    if (std::abs(polynom[0]) < DBL_EPSILON) {
-        return solveCub(polynom[1], polynom[2], polynom[3], polynom[4]);
-    }
-    return solveQuartMonic(polynom[1] / polynom[0], polynom[2] / polynom[0], polynom[3] / polynom[0], polynom[4] / polynom[0]);
-}
-
 inline std::set<double> solveQuartMonic(const std::array<double, 5>& polynom) {
     return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
 }
