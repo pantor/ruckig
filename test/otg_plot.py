@@ -100,7 +100,7 @@ if __name__ == '__main__':
     inp.current_acceleration = [0, 0, 0]
     inp.target_position = [-0.128251, 0.4833, 0.826954]
     inp.target_velocity = [0.611551, 0.344663, 0.752972]
-    inp.target_acceleration = [-0.643802, 0.574176, 0.1802]
+    inp.target_acceleration = [-0.0, 0.0, 0.0]
     inp.max_velocity = [6.84868, 7.19245, 10.7824]
     inp.max_acceleration = [3.99078, 9.75084, 8.73012]
     inp.max_jerk = [2.32077, 4.51871, 5.36871]
@@ -110,8 +110,8 @@ if __name__ == '__main__':
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.005)
-    otg = Ruckig(0.005)
+    otg = Reflexxes(0.005)
+    # otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 

@@ -59,6 +59,8 @@ class Step1 {
     double a0_a0, af_af, aMax_aMax;
     double jMax_jMax;
 
+    double a0_p3, a0_p4, af_p3, af_p4;
+
     std::vector<Profile> valid_profiles;
 
     void add_profile(Profile profile, Limits limits, double jMax);
@@ -99,6 +101,12 @@ class Step2 {
 
     // Pre-calculated expressions
     double pd;
+    double tf_tf;
+    double vd, vd_vd, v0_v0, vf_vf, vMax_vMax;
+    double ad, ad_ad, a0_a0, af_af, aMax_aMax;
+    double jMax_jMax;
+
+    double a0_p3, a0_p4, af_p3, af_p4;
 
     bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
