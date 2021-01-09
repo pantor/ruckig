@@ -204,7 +204,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 64*1024 : 1*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 72*1024 : 1*1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -233,7 +233,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 32*1024 : 1*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 54*1024 : 1*1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -262,7 +262,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 32*1024 : 1*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 54*1024 : 1*1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -339,7 +339,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 64*1024 : 1024); i += 1) {
+        for (size_t i = 0; i < (full ? 72*1024 : 1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);

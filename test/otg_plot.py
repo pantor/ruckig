@@ -110,8 +110,8 @@ if __name__ == '__main__':
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    otg = Reflexxes(0.005)
-    # otg = Ruckig(0.005)
+    # otg = Reflexxes(0.005)
+    otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 

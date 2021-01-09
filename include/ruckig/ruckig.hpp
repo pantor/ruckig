@@ -59,7 +59,8 @@ class Step1 {
     double a0_a0, af_af, aMax_aMax;
     double jMax_jMax;
 
-    double a0_p3, a0_p4, af_p3, af_p4;
+    double a0_p3, a0_p4, a0_p5, a0_p6;
+    double af_p3, af_p4, af_p5, af_p6;
 
     std::vector<Profile> valid_profiles;
 
@@ -101,12 +102,13 @@ class Step2 {
 
     // Pre-calculated expressions
     double pd;
-    double tf_tf;
+    double tf_tf, tf_p3, tf_p4;
     double vd, vd_vd, v0_v0, vf_vf, vMax_vMax;
     double ad, ad_ad, a0_a0, af_af, aMax_aMax;
     double jMax_jMax;
 
-    double a0_p3, a0_p4, af_p3, af_p4;
+    double a0_p3, a0_p4, a0_p5, a0_p6;
+    double af_p3, af_p4, af_p5, af_p6;
 
     bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
@@ -189,7 +191,7 @@ class Ruckig {
     }
 
     Result calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        // auto start = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now();
         current_input = input;
 
         // std::cout << "reference: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;

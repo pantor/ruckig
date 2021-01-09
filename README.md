@@ -32,7 +32,7 @@ For normal usage, Ruckig has no dependencies. To build Ruckig using CMake, just
 ```bash
 mkdir -p build
 cd build
-cmake -DBUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
@@ -58,7 +58,7 @@ First, you'll need to create a Ruckig instance with the number of DoFs as a temp
 Ruckig<6> ruckig {0.001}; // Number DoFs; control cycle in [s]
 ```
 
-The input has 3 
+The input type has 3 blocks of data: the *current* state, the *target* state and the corresponding dynamical *limits*.
 
 ```c++
 InputParameter<6> input; // Number DoFs
@@ -148,7 +148,7 @@ Moreover, a range of additional parameter about the duration of the trajectory a
 
 ## Tests
 
-The current test suite validates over 190.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
+The current test suite validates over 270.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
 
 
 ## Development
