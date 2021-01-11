@@ -302,11 +302,13 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             continue;
         }
 
-        // Refine root
-        // std::cout << t << " " << std::abs(Roots::polyEval(polynom, t)) << std::endl;
+        // Max two Newton steps
         if (std::abs(Roots::polyEval(polynom, t)) > 1e-14) {
-            const double diff = std::max(std::abs(Roots::polyEval(polynom, t)), 1e-5);
-            t = Roots::shrinkInterval(polynom, t - diff, t + diff, 1e-14);
+            t -= Roots::polyEval(polynom, t) / Roots::polyEval(Roots::polyDeri(polynom), t);
+
+            if (std::abs(Roots::polyEval(polynom, t)) > 1e-14) {
+                t -= Roots::polyEval(polynom, t) / Roots::polyEval(Roots::polyDeri(polynom), t);
+            }
         }
 
         profile.t[0] = t;

@@ -295,7 +295,7 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             const double upper = std::get<1>(interval);
             double t = Roots::shrinkInterval(polynom, lower, upper, 1e-16);
 
-            // Single Newton step
+            // Single Newton step (regarding pd)
             {
                 const double h2 = Sqrt(2*(a0_a0 + af_af + 4*a0*jMax*t + 2*jMax*(jMax*t*t - vd)))/Abs(jMax);
                 const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(t - tf) + jMax*h2/2) + 6*a0_a0*(af + jMax*(2*t - tf) + jMax*h2/2) + 6*af_af*jMax*h2/2 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(t - tf) - tf*v0 - h2/2*(vd - jMax*t*t)))/(12*jMax_jMax);                
