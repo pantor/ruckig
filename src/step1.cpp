@@ -303,7 +303,8 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         }
 
         // Refine root
-        if (std::abs(Roots::polyEval(polynom, t)) > 1e-10) {
+        // std::cout << t << " " << std::abs(Roots::polyEval(polynom, t)) << std::endl;
+        if (std::abs(Roots::polyEval(polynom, t)) > 1e-14) {
             const double diff = std::max(std::abs(Roots::polyEval(polynom, t)), 1e-5);
             t = Roots::shrinkInterval(polynom, t - diff, t + diff, 1e-14);
         }

@@ -22,12 +22,12 @@
   </a>
 </p>
 
-Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration, starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Robotics. Machine control. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is a Type V trajectory generator. In general, Ruckig allows for instant reactions to unforeseen events.
+Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is a Type V trajectory generator. For robotics and machining applications, Ruckig allows both (online) instant reactions to unforeseen events as well as (offline) trajectory planning.
 
 
 ## Installation
 
-For normal usage, Ruckig has no dependencies. To build Ruckig using CMake, just 
+Ruckig has no dependencies for practical usage. To build Ruckig using CMake, just run
 
 ```bash
 mkdir -p build
@@ -41,12 +41,9 @@ To install Ruckig in a system-wide directory, use `(sudo) make install`. We reco
 
 ## Tutorial
 
-Currently only the (more-complex) *position* interface is implemented. A time-optimal trajectory is shown in the figure below.
+Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application. A working example can be found in the `examples` directory. A time-optimal trajectory is shown in the figure below.
 
 ![Trajectory Profile](/doc/example_profile.png?raw=true)
-
-Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application. A working example can be found in the `examples` directory.
-
 
 ### Real-time trajectory generation
 
@@ -73,7 +70,11 @@ input.max_acceleration = {1.0, ...};
 input.max_jerk = {4.0, ...};
 
 OutputParameter<6> output; // Number DoFs
+```
 
+Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
+
+```
 while (otg.update(input, output) == Result::Working) {
   // Make use of the new dynamic state here!
 
@@ -83,12 +84,12 @@ while (otg.update(input, output) == Result::Working) {
 }
 ```
 
-During your update step, you'll need to copy the new dynamic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the new input. The output state at a given time using the last calculated trajectory is returned by the `ruckig.at_time(t)` function. 
+During your update step, you'll need to copy the new dynamic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the new input. When the trajectory has finished, the `update` function will return `Result::Finished`.
 
 
 ### Input Parameter
 
-The *InputParameter* type has following members: 
+To go into more detail, the *InputParameter* type has following members: 
 
 ```c++
 std::array<double, DOFs> current_position;
@@ -116,7 +117,7 @@ If a DoF is not enabled, it will be ignored in the calculation. A minimum durati
 
 ### Result Type
 
-The `update` function of the Ruckig class returns a Result type that indicates the current state of the algorithm. Currently, this can either be **working**, **finished** if the trajectory has finished, or **error** if something went wrong during calculation. In this case, an exception (see below for more details) is thrown.
+The `update` function of the Ruckig class returns a Result type that indicates the current state of the algorithm. Currently, this can either be **working**, **finished** if the trajectory has finished, or an **error** type if something went wrong during calculation. The result type can be compared as a standard integer.
 
 State                           | Error Code
 ------------------------------- | ----------
@@ -148,7 +149,7 @@ Moreover, a range of additional parameter about the duration of the trajectory a
 
 ## Tests
 
-The current test suite validates over 918.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
+The current test suite validates over 918.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`. Currently, we presume `max_jerk > 0.1 * max_acceleration` for numerical soundness.
 
 
 ## Development
@@ -163,4 +164,4 @@ Ruckig is written in C++17. It is currently tested against following versions
 
 ## Citation
 
-A paper will follow...
+A publication for citation will follow ;)

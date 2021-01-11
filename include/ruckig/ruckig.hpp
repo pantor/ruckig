@@ -137,7 +137,7 @@ public:
 };
 
 
-template<size_t DOFs>
+template<size_t DOFs, bool THROW_ERROR = false>
 class Ruckig {
     InputParameter<DOFs> current_input;
 
@@ -236,7 +236,9 @@ class Ruckig {
             Step1 step1 {p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
             bool found_profile = step1.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
             if (!found_profile) {
-                throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
+                if constexpr (THROW_ERROR) {
+                    throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
+                }
                 return Result::ErrorExecutionTimeCalculation;
             }
 
@@ -249,7 +251,9 @@ class Ruckig {
         int limiting_dof; // The DoF that doesn't need step 2
         bool found_synchronization = synchronize(blocks, input.minimum_duration, tf, limiting_dof, profiles);
         if (!found_synchronization) {
-            throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
+            if constexpr (THROW_ERROR) {
+                throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
+            }
             return Result::ErrorSynchronizationCalculation;
         }
         
@@ -266,7 +270,9 @@ class Ruckig {
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
                 if (!found_time_synchronization) {
-                    throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " input: " + input.to_string());
+                    if constexpr (THROW_ERROR) {
+                        throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " input: " + input.to_string());
+                    }
                     return Result::ErrorSynchronizationCalculation;
                 }
             }

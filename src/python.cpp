@@ -42,6 +42,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk)
         .def_readwrite("enabled", &InputParameter<DOFs>::enabled)
         .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration)
+        .def_readwrite("min_velocity", &InputParameter<DOFs>::min_velocity)
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (InputParameter<DOFs>::*)() const>(&InputParameter<DOFs>::to_string));
 
@@ -58,10 +59,13 @@ limited by velocity, acceleration, and jerk constraints.";
             return OutputParameter<DOFs>(self);
         });
 
-    py::enum_<Result>(m, "Result")
+    py::enum_<Result>(m, "Result", py::arithmetic())
         .value("Working", Result::Working)
         .value("Finished", Result::Finished)
         .value("Error", Result::Error)
+        .value("ErrorInvalidInput", Result::ErrorInvalidInput)
+        .value("ErrorExecutionTimeCalculation", Result::ErrorExecutionTimeCalculation)
+        .value("ErrorSynchronizationCalculation", Result::ErrorSynchronizationCalculation)
         .export_values();
 
     py::class_<Quintic<DOFs>>(m, "Quintic")
@@ -74,11 +78,11 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("delta_time", &Smoothie<DOFs>::delta_time)
         .def("update", &Smoothie<DOFs>::update);
 
-    py::class_<Ruckig<DOFs>>(m, "Ruckig")
+    py::class_<Ruckig<DOFs, true>>(m, "Ruckig")
         .def(py::init<double>(), "delta_time"_a)
-        .def_readonly("delta_time", &Ruckig<DOFs>::delta_time)
-        .def("update", &Ruckig<DOFs>::update)
-        .def("at_time", &Ruckig<DOFs>::at_time);
+        .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
+        .def("update", &Ruckig<DOFs, true>::update)
+        .def("at_time", &Ruckig<DOFs, true>::at_time);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")

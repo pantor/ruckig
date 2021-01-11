@@ -4,7 +4,7 @@
 namespace ruckig {
 
 inline double v_at_t(double v0, double a0, double j, double t) {
-    return v0 + a0 * t + j * std::pow(t, 2) / 2;
+    return v0 + t * (a0 + j * t / 2);
 }
 
 void Brake::acceleration_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
@@ -25,13 +25,13 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double aMax, d
 
     if ((v_at_a_max < -vMax && jMax > 0) || (v_at_a_max > -vMax && jMax < 0)) {
         double t_to_v_max_while_a_max = -(v_at_a_max + vMax)/aMax;
-        double t_to_v_max_in_reverse_j_direction = (-std::pow(aMax, 2)/2 + jMax * (vMax - v_at_a_max))/(aMax*jMax);
+        double t_to_v_max_in_reverse_j_direction = -aMax/(2*jMax) + (vMax - v_at_a_max)/aMax;
         t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction);
         
     } else if ((v_at_a_max > vMax && jMax > 0) || (v_at_a_max < vMax && jMax < 0)) {
         double t_to_other_a_max = (a0 + aMax) / jMax - eps;
-        double t_to_v_max = (a0 + jMax / std::abs(jMax) * std::sqrt(std::pow(a0,2) + 2 * jMax * (v0 - vMax)))/jMax;
-        double t_to_v_max_brake_for_other = (a0 + jMax / std::abs(jMax) * std::sqrt(std::pow(a0, 2)/2 + jMax * (v0 + vMax)))/jMax;
+        double t_to_v_max = a0/jMax + std::sqrt(a0*a0 + 2 * jMax * (v0 - vMax)) / std::abs(jMax);
+        double t_to_v_max_brake_for_other = a0/jMax + std::sqrt(a0*a0/2 + jMax * (v0 + vMax)) / std::abs(jMax);
 
         if (t_to_v_max_brake_for_other < t_to_other_a_max && t_to_v_max_brake_for_other < t_to_v_max) {
             t_brake[0] = t_to_v_max_brake_for_other - eps;
@@ -39,12 +39,10 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double aMax, d
         } else if (t_to_other_a_max < t_to_v_max) {
             double v_at_a_other_a_max = v_at_t(v0, a0, -jMax, t_to_other_a_max);
             double t_to_v_max_while_a_max = (v_at_a_other_a_max - vMax)/aMax;
-            double t_to_v_max_brake_for_other_a_max = (-std::pow(aMax, 2)/2 + jMax * (v_at_a_other_a_max + vMax))/(aMax * jMax);
+            double t_to_v_max_brake_for_other_a_max = -aMax/(2*jMax) + (vMax + v_at_a_other_a_max)/aMax;
 
             t_brake[0] = t_to_other_a_max - eps;
             t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_brake_for_other_a_max);
-
-            // std::cout << t_brake[0] << std::endl;
         
         } else {
             t_brake[0] = t_to_v_max + eps;
@@ -55,13 +53,13 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double aMax, d
 void Brake::velocity_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     j_brake[0] = -jMax;
     double t_to_a_max = (a0 + aMax)/jMax;
-    double t_to_v_max_in_j_direction = (a0 + jMax / std::abs(jMax) * std::sqrt(std::pow(a0, 2) + 2 * jMax * (v0 - vMax)))/jMax;
-    double t_to_v_max_in_reverse_j_direction = (a0 + jMax / std::abs(jMax) * std::sqrt(std::pow(a0, 2)/2 + jMax * (v0 + vMax)))/jMax;
+    double t_to_v_max_in_j_direction = a0/jMax + std::sqrt(a0*a0 + 2 * jMax * (v0 - vMax)) / std::abs(jMax);
+    double t_to_v_max_in_reverse_j_direction = a0/jMax + std::sqrt(a0*a0/2 + jMax * (v0 + vMax)) / std::abs(jMax);
 
     if (t_to_a_max < t_to_v_max_in_j_direction && t_to_a_max < t_to_v_max_in_reverse_j_direction) {
         double v_at_a_max = v_at_t(v0, a0, -jMax, t_to_a_max);
         double t_to_v_max_while_a_max = (v_at_a_max - vMax)/aMax;
-        double t_to_v_max_in_reverse_j_direction = (-std::pow(aMax, 2)/2 + jMax * (v_at_a_max + vMax))/(aMax * jMax);
+        double t_to_v_max_in_reverse_j_direction = -aMax/(2*jMax) + (v_at_a_max + vMax)/aMax;
 
         t_brake[0] = t_to_a_max;
         t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction);

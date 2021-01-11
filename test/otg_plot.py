@@ -77,6 +77,7 @@ def plot_trajectory(t_list, out_list):
     plt.savefig(Path(__file__).parent.parent / 'build' / 'otg_trajectory.png')
     # plt.show()
 
+
 def print_input_for_mathematica(inp, dof, tf=None):
     result = f"""p0->{inp.current_position[dof]}, \
 v0->{inp.current_velocity[dof]}, \

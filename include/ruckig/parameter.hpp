@@ -78,6 +78,9 @@ struct InputParameter {
         ss << "inp.max_velocity = [" << join(max_velocity) << "]\n";
         ss << "inp.max_acceleration = [" << join(max_acceleration) << "]\n";
         ss << "inp.max_jerk = [" << join(max_jerk) << "]\n";
+        if (min_velocity) {
+            ss << "inp.min_velocity = [" << join(min_velocity.value()) << "]\n";
+        }
         return ss.str();
     }
 };
