@@ -304,7 +304,8 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
 
         // Refine root
         if (std::abs(Roots::polyEval(polynom, t)) > 1e-10) {
-            t = Roots::shrinkInterval(polynom, t - 1e-5, t + 1e-5, 1e-14);
+            const double diff = std::max(std::abs(Roots::polyEval(polynom, t)), 1e-5);
+            t = Roots::shrinkInterval(polynom, t - diff, t + diff, 1e-14);
         }
 
         profile.t[0] = t;
@@ -490,6 +491,7 @@ bool Step1::get_profile(const Profile& input, double vMax, double aMax, double j
     }
 
     if (!valid_profile_counter) {
+        // std::cout << "HERE" << std::endl;
         return false;
     }
 
@@ -497,6 +499,7 @@ bool Step1::get_profile(const Profile& input, double vMax, double aMax, double j
 
     double t_brake = valid_profiles[0].t_brake.value_or(0.0);
     block = Block {valid_profiles[0].t_sum[6] + t_brake, valid_profiles[0]};
+    // std::cout << valid_profiles[0].to_string() << std::endl;
 
     if (valid_profile_counter == 2) {
         // if (valid_profiles[0].direction == valid_profiles[1].direction) {
@@ -534,27 +537,58 @@ bool Step1::get_profile(const Profile& input, double vMax, double aMax, double j
         }
 
     } else if (valid_profile_counter == 4) {
-        auto& p_left = valid_profiles[2];
-        auto& p_right = valid_profiles[3];
-        if (p_left.direction == p_right.direction && p_left.t_sum[6] < p_right.t_sum[6]) {
-            block.b = Block::Interval {p_left.t_sum[6] + t_brake, p_right.t_sum[6] + t_brake};
-            block.p_b = p_right;
+        {
+            auto& p_left = valid_profiles[1];
+            auto& p_right = valid_profiles[2];
+            if (p_left.direction == p_right.direction && p_left.t_sum[6] < p_right.t_sum[6]) {
+                block.a = Block::Interval {p_left.t_sum[6] + t_brake, p_right.t_sum[6] + t_brake};
+                block.p_a = p_right;
+            }
+        }
+
+        {
+            auto& p_left = valid_profiles[2];
+            auto& p_right = valid_profiles[3];
+            if (p_left.direction == p_right.direction && p_left.t_sum[6] < p_right.t_sum[6]) {
+                block.b = Block::Interval {p_left.t_sum[6] + t_brake, p_right.t_sum[6] + t_brake};
+                block.p_b = p_right;
+            } else if (p_left.direction == p_right.direction && p_left.t_sum[6] > p_right.t_sum[6]) {
+                block.b = Block::Interval {p_right.t_sum[6] + t_brake, p_left.t_sum[6] + t_brake};
+                block.p_b = p_left;
+            }
         }
         
     } else if (valid_profile_counter == 5) {
-        auto& p_left = valid_profiles[3];
-        auto& p_right = valid_profiles[4];
-        if (p_left.direction == p_right.direction && p_left.t_sum[6] < p_right.t_sum[6]) {
-            block.b = Block::Interval {p_left.t_sum[6] + t_brake, p_right.t_sum[6] + t_brake};
-            block.p_b = p_right;
-        } else if (p_left.direction == p_right.direction && p_left.t_sum[6] > p_right.t_sum[6]) {
-            block.b = Block::Interval {p_right.t_sum[6] + t_brake, p_left.t_sum[6] + t_brake};
-            block.p_b = p_left;
+        {
+            auto& p_left = valid_profiles[1];
+            auto& p_right = valid_profiles[2];
+            if (p_left.direction == p_right.direction && p_left.t_sum[6] < p_right.t_sum[6]) {
+                block.a = Block::Interval {p_left.t_sum[6] + t_brake, p_right.t_sum[6] + t_brake};
+                block.p_a = p_right;
+            } else if (p_left.direction == p_right.direction && p_left.t_sum[6] > p_right.t_sum[6]) {
+                block.a = Block::Interval {p_right.t_sum[6] + t_brake, p_left.t_sum[6] + t_brake};
+                block.p_a = p_left;
+            }
+        }
+
+        {
+            auto& p_left = valid_profiles[3];
+            auto& p_right = valid_profiles[4];
+            if (p_left.direction == p_right.direction && p_left.t_sum[6] < p_right.t_sum[6]) {
+                block.b = Block::Interval {p_left.t_sum[6] + t_brake, p_right.t_sum[6] + t_brake};
+                block.p_b = p_right;
+            } else if (p_left.direction == p_right.direction && p_left.t_sum[6] > p_right.t_sum[6]) {
+                block.b = Block::Interval {p_right.t_sum[6] + t_brake, p_left.t_sum[6] + t_brake};
+                block.p_b = p_left;
+            }
         }
         
     } else if (valid_profile_counter > 5) {
-        
+        // std::cerr << "MORE THAN 5 PROFILES" << std::endl;
+        // return false;
     }
+
+    // std::cout << "---\n " << valid_profile_counter << std::endl;
 
     // if (valid_profile_counter > 1) {
     //     std::cout << "---\n " << valid_profile_counter << std::endl;

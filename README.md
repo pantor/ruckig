@@ -148,7 +148,7 @@ Moreover, a range of additional parameter about the duration of the trajectory a
 
 ## Tests
 
-The current test suite validates over 528.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
+The current test suite validates over 918.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
 
 
 ## Development
@@ -159,3 +159,8 @@ Ruckig is written in C++17. It is currently tested against following versions
 - Catch2 v2.13.3 (only for testing)
 - Reflexxes v1.2.7 (only for testing)
 - Pybind11 v2.6.0 (only for prototyping)
+
+
+## Citation
+
+A paper will follow...

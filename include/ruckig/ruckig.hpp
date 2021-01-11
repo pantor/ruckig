@@ -261,6 +261,8 @@ class Ruckig {
 
                 double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
 
+                // std::cout << "dof: " << dof << std::endl;
+
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
                 if (!found_time_synchronization) {
@@ -287,10 +289,6 @@ public:
     const double delta_time;
 
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
-
-    double get_time() const {
-        return t;
-    }
 
     bool validate_input(const InputParameter<DOFs>& input) {
         for (size_t dof = 0; dof < DOFs; ++dof) {
@@ -359,7 +357,7 @@ public:
         return Result::Working;
     }
 
-    void at_time(double time, OutputParameter<DOFs>& output) {
+    void at_time(double time, OutputParameter<DOFs>& output) const {
         if (time + delta_time > tf) {
             // Keep constant acceleration
             for (size_t dof = 0; dof < DOFs; ++dof) {
@@ -407,6 +405,10 @@ public:
 
             std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index]);
         }
+    }
+
+    double get_time() const {
+        return t;
     }
 };
 

@@ -34,15 +34,17 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double aMax, d
         double t_to_v_max_brake_for_other = (a0 + jMax / std::abs(jMax) * std::sqrt(std::pow(a0, 2)/2 + jMax * (v0 + vMax)))/jMax;
 
         if (t_to_v_max_brake_for_other < t_to_other_a_max && t_to_v_max_brake_for_other < t_to_v_max) {
-            t_brake[0] = t_to_v_max_brake_for_other - 2e-15;
+            t_brake[0] = t_to_v_max_brake_for_other - eps;
 
         } else if (t_to_other_a_max < t_to_v_max) {
             double v_at_a_other_a_max = v_at_t(v0, a0, -jMax, t_to_other_a_max);
             double t_to_v_max_while_a_max = (v_at_a_other_a_max - vMax)/aMax;
             double t_to_v_max_brake_for_other_a_max = (-std::pow(aMax, 2)/2 + jMax * (v_at_a_other_a_max + vMax))/(aMax * jMax);
 
-            t_brake[0] = t_to_other_a_max;
+            t_brake[0] = t_to_other_a_max - eps;
             t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_brake_for_other_a_max);
+
+            // std::cout << t_brake[0] << std::endl;
         
         } else {
             t_brake[0] = t_to_v_max + eps;

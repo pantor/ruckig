@@ -19,7 +19,7 @@ using namespace ruckig;
 template<size_t DOFs>
 inline std::array<double, DOFs> Random() {
     using EigenVector = Eigen::Matrix<double, DOFs, 1>;
-    EigenVector a = EigenVector::Random();
+    EigenVector a = EigenVector::Random(); // Eigen returns uniform random floats between -1 and 1
     std::array<double, DOFs> result;
     std::copy_n(a.data(), DOFs, result.begin());
     return result;
@@ -37,7 +37,7 @@ inline std::array<double, DOFs> RandomOrZero(double r, double p_random) {
 
 
 template<size_t DOFs, class OTGType>
-void check(OTGType& otg, InputParameter<DOFs>& input, double time) {
+void check_duration(OTGType& otg, InputParameter<DOFs>& input, double duration) {
     OutputParameter<DOFs> output;
 
     while (otg.update(input, output) == Result::Working) {
@@ -46,7 +46,7 @@ void check(OTGType& otg, InputParameter<DOFs>& input, double time) {
         input.current_acceleration = output.new_acceleration;
     }
 
-    CHECK( output.duration == Approx(time).margin(0.005) );
+    CHECK( output.duration == Approx(duration) );
 }
 
 
@@ -110,13 +110,13 @@ TEST_CASE("Quintic") {
     input.max_jerk = {1.0, 1.0, 1.0};
 
     Quintic<3> otg {0.005};
-    check(otg, input, 3.915);
+    check_duration(otg, input, 3.9148676412);
 
     input.current_position = {0.0, 0.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0};
     input.current_acceleration = {0.0, 0.0, 0.0};
     input.max_jerk = {2.0, 2.0, 2.0};
-    check(otg, input, 3.110);
+    check_duration(otg, input, 3.107232506);
 }
 
 TEST_CASE("Ruckig") {
@@ -135,46 +135,46 @@ TEST_CASE("Ruckig") {
         input.max_velocity = {1.0, 1.0, 1.0};
         input.max_acceleration = {1.0, 1.0, 1.0};
         input.max_jerk = {1.0, 1.0, 1.0};
-        check(otg, input, 0.0);
+        check_duration(otg, input, 0.0);
 
         input.target_position = {1.0, 1.0, 1.0};
-        check(otg, input, 3.170);
+        check_duration(otg, input, 3.1748021039);
 
         input.current_position = {0.0, 0.0, 0.0};
         input.current_velocity = {0.0, 0.0, 0.0};
         input.current_acceleration = {0.0, 0.0, 0.0};
         input.max_jerk = {2.0, 2.0, 2.0};
-        check(otg, input, 2.560);
+        check_duration(otg, input, 2.5615528128);
 
         input.current_position = {0.0, 0.0, 0.0};
         input.current_velocity = {0.0, 0.0, 0.0};
         input.current_acceleration = {0.0, 0.0, 0.0};
         input.max_velocity = {0.6, 0.6, 0.6};
-        check(otg, input, 2.765);
+        check_duration(otg, input, 2.7666666667);
 
         input.current_position = {0.0, 0.0, 0.0};
         input.current_velocity = {0.0, 0.0, 0.0};
         input.current_acceleration = {0.0, 0.0, 0.0};
         input.max_velocity = {0.4, 0.4, 0.4};
-        check(otg, input, 3.390);
+        check_duration(otg, input, 3.394427191);
 
         input.current_position = {0.0, 0.0, 0.0};
         input.current_velocity = {0.3, 0.3, 0.3};
         input.current_acceleration = {0.0, 0.0, 0.0};
         input.max_velocity = {1.0, 1.0, 1.0};
-        check(otg, input, 2.230);
+        check_duration(otg, input, 2.2319602829);
 
         input.current_position = {0.0, 0.0, 0.0};
         input.current_velocity = {0.3, 0.3, 0.3};
         input.current_acceleration = {0.0, 0.0, 0.0};
         input.max_velocity = {0.6, 0.6, 0.6};
-        check(otg, input, 2.410);
+        check_duration(otg, input, 2.410315834);
 
         input.current_position = {0.0, 0.0, 0.0};
         input.current_velocity = {0.0, 0.0, 0.0};
         input.current_acceleration = {0.0, 0.0, 0.0};
         input.target_position = {-1.0, -1.0, -1.0};
-        check(otg, input, 2.765);
+        check_duration(otg, input, 2.7666666667);
 
         input.current_position = {0.0, 0.0, 0.0};
         input.current_velocity = {0.2, 0.2, 0.2};
@@ -182,7 +182,7 @@ TEST_CASE("Ruckig") {
         input.target_position = {-1.0, -1.0, -1.0};
         input.max_velocity = {10.0, 10.0, 10.0};
         input.max_acceleration = {10.0, 10.0, 10.0};
-        check(otg, input, 2.730);
+        check_duration(otg, input, 2.7338531701);
 
         input.current_position = {-1.0, -1.0, -1.0};
         input.current_velocity = {0.2, 0.2, 0.2};
@@ -190,22 +190,21 @@ TEST_CASE("Ruckig") {
         input.target_position = {1.0, 1.0, 1.0};
         input.max_velocity = {0.4, 0.4, 0.4};
         input.max_acceleration = {1.0, 1.0, 1.0};
-        check(otg, input, 5.605);
+        check_duration(otg, input, 5.6053274785);
     }
 
-    SECTION("Random input with 3 DoF, target velocity") {
+    SECTION("Random input with 3 DoF and target velocity") {
         constexpr size_t DOFs {3};
         using Vec = Eigen::Matrix<double, DOFs, 1>;
 
         Ruckig<DOFs> otg {0.005};
         InputParameter<DOFs> input;
 
-        // Eigen returns uniform random floats between -1 and 1
         srand(39);
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 256*1024 : 1*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -223,7 +222,7 @@ TEST_CASE("Ruckig") {
         }
     }
 
-    SECTION("Random input with 1 DoF with target velocity, acceleration") {
+    SECTION("Random input with 1 DoF and target velocity, acceleration") {
         constexpr size_t DOFs {1};
         using Vec = Eigen::Matrix<double, DOFs, 1>;
 
@@ -234,7 +233,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 128*1024 : 1*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -260,19 +259,18 @@ TEST_CASE("Ruckig") {
         }
     }
 
-    SECTION("Random input with 3 DoF, target velocity and acceleration") {
+    SECTION("Random input with 3 DoF and target velocity, acceleration") {
         constexpr size_t DOFs {3};
         using Vec = Eigen::Matrix<double, DOFs, 1>;
 
         Ruckig<DOFs> otg {0.005};
         InputParameter<DOFs> input;
         
-        // Eigen returns uniform random floats between -1 and 1
         srand(39);
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 4*1024 : 4*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 256 : 256) * 1024; ++i) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -311,7 +309,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 128*1024 : 1024); i += 1) {
+        for (size_t i = 0; i < (full ? 128 : 1) * 1024; ++i) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -341,7 +339,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < 1*1024; i += 1) {
+        for (size_t i = 0; i < 1*1024; ++i) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);

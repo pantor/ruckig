@@ -17,13 +17,16 @@ int main() {
 
     input.current_position = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     input.target_position = {1.0, 0.5, 0.5, 0.0, -0.1, 0.2};
+    input.target_velocity = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     std::cout << "t | p1 | p2 | p3 | p4 | p5 | p6" << std::endl;
     while (otg.update(input, output) == Result::Working) {
-        auto& new_p = output.new_position;
-        std::cout << otg.get_time() << " " << new_p[0] << " " << new_p[1] << " " << new_p[2] << " " << new_p[3] << " " << new_p[4] << " " << new_p[5] << std::endl;
+        auto& p = output.new_position;
+        std::cout << otg.get_time() << " " << p[0] << " " << p[1] << " " << p[2] << " " << p[3] << " " << p[4] << " " << p[5] << std::endl;
 
         input.current_position = output.new_position;
         input.current_velocity = output.new_velocity;

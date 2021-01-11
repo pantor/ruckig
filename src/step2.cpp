@@ -25,11 +25,11 @@ Step2::Step2(double tf, double p0, double v0, double a0, double pf, double vf, d
     af_af = af * af;
     aMax_aMax = aMax * aMax;
 
-    a0_p3 = a0 * a0 * a0;
+    a0_p3 = a0 * a0_a0;
     a0_p4 = a0_a0 * a0_a0;
     a0_p5 = a0_p3 * a0_a0;
     a0_p6 = a0_p4 * a0_a0;
-    af_p3 = af * af * af;
+    af_p3 = af * af_af;
     af_p4 = af_af * af_af;
     af_p5 = af_p3 * af_af;
     af_p6 = af_p4 * af_af;
@@ -48,15 +48,15 @@ bool Step2::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
         const double h0a = af_af + 2*(af*aMax + aMax_aMax - aMax*jMax*tf - jMax*vd);
         const double h1 = Sqrt(-a0_p4 - af_p4 + 4./3*aMax*(a0_p3 - af_p3) + 2*a0*h0a*(a0 - 2*aMax) + 4*af*h0b*(af + 2*aMax) + 4*(Power(aMax,4) - 2*Power(aMax,3)*jMax*tf + aMax_aMax*jMax_jMax*tf_tf - jMax_jMax*vd_vd + 2*aMax*jMax_jMax*(-2*pd + tf*(v0 + vf))));
         const double h2 = 2*aMax*(ad + 3*aMax - jMax*tf) + h1;
-        const double h3 = -4*aMax*jMax;
+        const double h3 = 4*aMax*jMax;
         const double h4 = a0_a0 - af_af + 2*jMax*vd;
 
         profile.t[0] = (-a0 + aMax)/jMax;
-        profile.t[1] = (h2 - h4)/h3;
+        profile.t[1] = -(h2 - h4)/h3;
         profile.t[2] = profile.t[0] + a0/jMax;
-        profile.t[3] = -aMax/jMax - 2*h1/h3;
+        profile.t[3] = -aMax/jMax + 2*h1/h3;
         profile.t[4] = profile.t[2];
-        profile.t[5] = (h2 + h4)/h3;
+        profile.t[5] = -(h2 + h4)/h3;
         profile.t[6] = profile.t[4] + af/jMax;
 
         if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
@@ -75,7 +75,7 @@ bool Step2::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
         profile.t[2] = profile.t[0] + a0/jMax;
         profile.t[3] = -(a0_a0 + af_af - 2*aMax*(a0 + af + jMax*tf) + 4*aMax_aMax + 2*jMax*vd)/(2*aMax*jMax);
         profile.t[4] = profile.t[2];
-        profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3] + 2*profile.t[4] + af/jMax);
+        profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3] + 2*profile.t[4] - af/jMax);
         profile.t[6] = profile.t[4] - af/jMax;
 
         if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
@@ -524,20 +524,6 @@ bool Step2::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
 }
 
 bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax) {
-    if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
-        const double jMaxNew = 32*pd/tf_p3;
-
-        profile.t[0] = tf/4;
-        profile.t[1] = 0;
-        profile.t[2] = profile.t[0];
-        profile.t[3] = 0;
-        profile.t[4] = profile.t[0];
-        profile.t[5] = 0;
-        profile.t[6] = profile.t[0];
-
-        return profile.check<Teeth::UDDU>(tf, pf, vf, af, jMaxNew, vMax, aMax, jMax);
-    }
-    
     if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double h1 = Sqrt(tf_tf*vf_vf + Power(4*pd - tf*vf,2));
         const double jMaxNew = 4*(4*pd - 2*tf*vf + h1)/tf_p3;
@@ -554,25 +540,6 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             return true;
         }
     }
-
-    /* if (std::abs(a0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON) {
-        // Solution 1
-        {
-            double jMaxNew = (-4*(-4*pd*tf + 2*tf_tf*v0 + Sqrt(tf_tf*(tf_tf*v0_v0 + 4*Power(-2*pd + tf*v0,2)))))/tf_p4;
-
-            profile.t[0] = (4*pd - tf*v0 + Sqrt(tf_tf*(tf_tf*v0_v0 + 4*Power(-2*pd + tf*v0,2)))/tf)/(4*v0);
-            profile.t[1] = 0;
-            profile.t[2] = profile.t[0];
-            profile.t[3] = 0;
-            profile.t[4] = (-4*pd + 3*tf*v0 - Sqrt(tf_tf*(tf_tf*v0_v0 + 4*Power(-2*pd + tf*v0,2)))/tf)/(4*v0);
-            profile.t[5] = 0;
-            profile.t[6] = profile.t[4];
-
-            if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMaxNew, vMax, aMax, jMax)) {
-                return true;
-            }
-        }
-    } */
 
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         // Solution 1
