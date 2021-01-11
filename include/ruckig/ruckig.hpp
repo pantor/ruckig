@@ -36,7 +36,7 @@ struct Block {
 
 //! Calculates (pre-) trajectory to get current state below the limits
 class Brake {
-    static constexpr double eps {2e-15};
+    static constexpr double eps {3e-15};
 
     static void acceleration_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
     static void velocity_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
@@ -62,9 +62,9 @@ class Step1 {
     double a0_p3, a0_p4, a0_p5, a0_p6;
     double af_p3, af_p4, af_p5, af_p6;
 
-    // Max 5 valid profiles
-    std::array<Profile, 5> valid_profiles;
-    size_t valid_profile_counter {0};
+    // Max 6 valid profiles
+    std::array<Profile, 6> valid_profiles;
+    size_t valid_profile_counter;
 
     void add_profile(Profile profile, Limits limits, double jMax);
 

@@ -30,7 +30,7 @@ void Step1::add_profile(Profile profile, Profile::Limits limits, double jMax) {
     profile.limits = limits;
     profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
     valid_profiles[valid_profile_counter] = profile;
-    valid_profile_counter += 1;
+    valid_profile_counter++;
 }
 
 void Step1::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
@@ -453,6 +453,7 @@ bool Step1::get_profile(const Profile& input, double vMax, double aMax, double j
     profile.a[0] = a0;
     profile.v[0] = v0;
     profile.p[0] = p0;
+    valid_profile_counter = 0;
 
     if (pf > p0) {
         time_up_acc0_acc1_vel(profile, vMax, aMax, jMax);
@@ -584,8 +585,23 @@ bool Step1::get_profile(const Profile& input, double vMax, double aMax, double j
             }
         }
         
-    } else if (valid_profile_counter > 5) {
-        // std::cerr << "MORE THAN 5 PROFILES" << std::endl;
+    } else if (valid_profile_counter == 5) {
+        
+    } else if (valid_profile_counter == 6) {
+        {
+            auto& p_left = valid_profiles[4];
+            auto& p_right = valid_profiles[5];
+            if (p_left.direction == p_right.direction && p_left.t_sum[6] < p_right.t_sum[6]) {
+                block.b = Block::Interval {p_left.t_sum[6] + t_brake, p_right.t_sum[6] + t_brake};
+                block.p_b = p_right;
+            } else if (p_left.direction == p_right.direction && p_left.t_sum[6] > p_right.t_sum[6]) {
+                block.b = Block::Interval {p_right.t_sum[6] + t_brake, p_left.t_sum[6] + t_brake};
+                block.p_b = p_left;
+            }
+        }
+        
+    } else {
+        // std::cerr << "MORE THAN 6 PROFILES " << valid_profile_counter << std::endl;
         // return false;
     }
 

@@ -105,7 +105,6 @@ if __name__ == '__main__':
     inp.max_velocity = [9.0097, 9.67855, 8.14583]
     inp.max_acceleration = [7.0742, 4.87918, 5.84744]
     inp.max_jerk = [0.102049, 5.67016, 2.45298]
-    inp.minimum_duration = None
 
     print_input_for_mathematica(inp, 0)
 
