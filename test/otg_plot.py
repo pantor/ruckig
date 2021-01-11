@@ -106,15 +106,15 @@ if __name__ == '__main__':
     # inp.max_acceleration = [7.0742, 4.87918, 5.84744]
     # inp.max_jerk = [0.102049, 5.67016, 2.45298]
 
-    inp.current_position = [-0.632033, -0.583023, -0.8617591177]
-    inp.current_velocity = [0.414508, 0.638347, 0.6906204688]
-    inp.current_acceleration = [-0.741781, 0.884637, 0.0898325169]
-    inp.target_position = [-0.184889, 0.578098, 0.0967928549]
-    inp.target_velocity = [0, 0, 0]
-    inp.target_acceleration = [0, 0, 0]
-    inp.max_velocity = [8.07512, 2.26515, 9.7403]
-    inp.max_acceleration = [4.568, 6.37739, 4.2336378987]
-    inp.max_jerk = [6.04784, 5.3991, 2.07758330595]
+    inp.current_position = [-0.0373959, -0.512166, 0.0314268]
+    inp.current_velocity = [0.190931, 0.983475, -0.739954]
+    inp.current_acceleration = [-0.405817, -0.570935, 0.292238]
+    inp.target_position = [-0.349853, 0.017916, -0.885459]
+    inp.target_velocity = [0.0830861, 0.428442, 0.83102]
+    inp.target_acceleration = [0.955634, -0.36, 0.453253]
+    inp.max_velocity = [1.89084, 2.67277, 1.26279]
+    inp.max_acceleration = [4.98973, 1.06466, 0.982117]
+    inp.max_jerk = [8.01821, 1.4943, 6.09254]
 
     print_input_for_mathematica(inp, 0)
 

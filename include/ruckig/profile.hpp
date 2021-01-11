@@ -51,6 +51,8 @@ struct Profile {
             p[i+1] = p[i] + t[i] * (v[i] + t[i] * (a[i] / 2 + t[i] * j[i] / 6));
         }
 
+        this->teeth = teeth;
+
         // Velocity and acceleration limits can be broken in the beginning if the initial velocity and acceleration are too high
         // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
         return std::all_of(v.begin() + 3, v.end(), [vMax](double vm){ return std::abs(vm) < std::abs(vMax) + 1e-9; })
