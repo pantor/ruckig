@@ -18,7 +18,8 @@ using namespace ruckig;
 
 template<size_t DOFs>
 inline std::array<double, DOFs> Random() {
-    Eigen::Matrix<double, DOFs, 1> a = Eigen::Matrix<double, DOFs, 1>::Random();
+    using EigenVector = Eigen::Matrix<double, DOFs, 1>;
+    EigenVector a = EigenVector::Random();
     std::array<double, DOFs> result;
     std::copy_n(a.data(), DOFs, result.begin());
     return result;
@@ -192,35 +193,6 @@ TEST_CASE("Ruckig") {
         check(otg, input, 5.605);
     }
 
-    SECTION("Random input with 3 DoF") {
-        constexpr size_t DOFs {3};
-        using Vec = Eigen::Matrix<double, DOFs, 1>;
-
-        Ruckig<DOFs> otg {0.005};
-        InputParameter<DOFs> input;
-
-        // Eigen returns uniform random floats between -1 and 1
-        srand(42);
-        std::default_random_engine gen;
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
-
-        for (size_t i = 0; i < (full ? 96*1024 : 1*1024); i += 1) {
-            input.current_position = Random<DOFs>();
-            input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
-            input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>();
-            
-            Vec max_v = 10 * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_velocity.data()).array().abs() + 0.1;
-            std::copy_n(max_v.data(), DOFs, input.max_velocity.begin());
-            Vec max_a = 10 * Vec::Random().array().abs() + 0.1;
-            std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
-            Vec max_j = 10 * Vec::Random().array().abs() + 0.1;
-            std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
-
-            check_calculation(otg, input);
-        }
-    }
-
     SECTION("Random input with 3 DoF, target velocity") {
         constexpr size_t DOFs {3};
         using Vec = Eigen::Matrix<double, DOFs, 1>;
@@ -233,7 +205,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 96*1024 : 1*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 256*1024 : 1*1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -300,7 +272,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 1.5*1024 : 1.5*1024); i += 1) {
+        for (size_t i = 0; i < (full ? 4*1024 : 4*1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -339,7 +311,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 96*1024 : 1024); i += 1) {
+        for (size_t i = 0; i < (full ? 128*1024 : 1024); i += 1) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
@@ -357,7 +329,7 @@ TEST_CASE("Ruckig") {
         }
     }
 
-    SECTION("Comparison with Reflexxes with 2 DoF") {
+    /* SECTION("Comparison with Reflexxes with 2 DoF") {
         constexpr size_t DOFs {2};
         using Vec = Eigen::Matrix<double, DOFs, 1>;
 
@@ -384,6 +356,6 @@ TEST_CASE("Ruckig") {
 
             check_comparison(otg, input, rflx);
         }
-    }
+    } */
 #endif
 }

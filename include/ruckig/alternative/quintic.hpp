@@ -14,27 +14,32 @@ class Quintic {
     bool validate_input(const InputParameter<DOFs>& input) {
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (input.max_velocity[dof] <= 0.0) {
-                std::cerr << "Velocity limit needs to be positive." << std::endl;
+                std::cerr << "[quintic] velocity limit needs to be positive." << std::endl;
                 return false;
             }
 
             if (input.max_acceleration[dof] <= 0.0) {
-                std::cerr << "Acceleration limit needs to be positive." << std::endl;
+                std::cerr << "[quintic] acceleration limit needs to be positive." << std::endl;
                 return false;
             }
 
             if (input.max_jerk[dof] <= 0.0) {
-                std::cerr << "Jerk limit needs to be positive." << std::endl;
+                std::cerr << "[quintic] jerk limit needs to be positive." << std::endl;
+                return false;
+            }
+
+            if (std::isnan(input.target_position[dof])) {
+                std::cerr << "[quintic] target position is not a number." << std::endl;
                 return false;
             }
 
             if (input.target_velocity[dof] > input.max_velocity[dof]) {
-                std::cerr << "Target velocity exceeds velocity limit." << std::endl;
+                std::cerr << "[quintic] target velocity exceeds velocity limit." << std::endl;
                 return false;
             }
 
             if (input.target_acceleration[dof] > input.max_acceleration[dof]) {
-                std::cerr << "Target acceleration exceeds acceleration limit." << std::endl;
+                std::cerr << "[quintic] target acceleration exceeds acceleration limit." << std::endl;
                 return false;
             }
         }

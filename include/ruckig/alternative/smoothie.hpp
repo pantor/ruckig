@@ -110,22 +110,27 @@ public:
     bool validate_input(const InputParameter<DOFs>& input) {
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (input.max_velocity[dof] <= 0.0) {
-                std::cerr << "Velocity limit needs to be positive." << std::endl;
+                std::cerr << "[smoothie] velocity limit needs to be positive." << std::endl;
                 return false;
             }
 
             if (input.max_acceleration[dof] <= 0.0) {
-                std::cerr << "Acceleration limit needs to be positive." << std::endl;
+                std::cerr << "[smoothie] acceleration limit needs to be positive." << std::endl;
+                return false;
+            }
+
+            if (std::isnan(input.target_position[dof])) {
+                std::cerr << "[smoothie] target position is not a number." << std::endl;
                 return false;
             }
 
             if (input.target_velocity[dof] != 0.0) {
-                std::cerr << "Target velocity exceeds velocity limit." << std::endl;
+                std::cerr << "[smoothie] target velocity exceeds velocity limit." << std::endl;
                 return false;
             }
 
             if (input.target_acceleration[dof] != 0.0) {
-                std::cerr << "Target acceleration exceeds acceleration limit." << std::endl;
+                std::cerr << "[smoothie] target acceleration exceeds acceleration limit." << std::endl;
                 return false;
             }
         }

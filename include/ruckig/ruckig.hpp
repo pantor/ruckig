@@ -4,11 +4,11 @@
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <limits>
 #include <math.h>
 #include <numeric>
 #include <optional>
 #include <tuple>
-#include <vector>
 
 #include <ruckig/parameter.hpp>
 #include <ruckig/profile.hpp>
@@ -62,7 +62,9 @@ class Step1 {
     double a0_p3, a0_p4, a0_p5, a0_p6;
     double af_p3, af_p4, af_p5, af_p6;
 
-    std::vector<Profile> valid_profiles;
+    // Max 5 valid profiles
+    std::array<Profile, 5> valid_profiles;
+    size_t valid_profile_counter {0};
 
     void add_profile(Profile profile, Limits limits, double jMax);
 
@@ -234,7 +236,7 @@ class Ruckig {
             Step1 step1 {p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
             bool found_profile = step1.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
             if (!found_profile) {
-                throw std::runtime_error("[ruckig] error in step 1: " + input.to_string(dof) + " all: " + input.to_string());
+                throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
                 return Result::ErrorExecutionTimeCalculation;
             }
 
@@ -262,7 +264,7 @@ class Ruckig {
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
                 if (!found_time_synchronization) {
-                    throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " | " + input.to_string(dof) + " all: " + input.to_string());
+                    throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " input: " + input.to_string());
                     return Result::ErrorSynchronizationCalculation;
                 }
             }
@@ -286,36 +288,45 @@ public:
 
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
 
+    double get_time() const {
+        return t;
+    }
+
     bool validate_input(const InputParameter<DOFs>& input) {
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            if (input.max_velocity[dof] <= 0.0) {
-                std::cerr << "Velocity limit needs to be positive." << std::endl;
+            if (input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
+                std::cerr << "[ruckig] velocity limit needs to be positive." << std::endl;
                 return false;
             }
 
-            if (input.max_acceleration[dof] <= 0.0) {
-                std::cerr << "Acceleration limit needs to be positive." << std::endl;
+            if (input.max_acceleration[dof] <= std::numeric_limits<double>::min()) {
+                std::cerr << "[ruckig] acceleration limit needs to be positive." << std::endl;
                 return false;
             }
 
-            if (input.max_jerk[dof] <= 0.0) {
-                std::cerr << "Jerk limit needs to be positive." << std::endl;
+            if (input.max_jerk[dof] <= std::numeric_limits<double>::min()) {
+                std::cerr << "[ruckig] jerk limit needs to be positive." << std::endl;
+                return false;
+            }
+
+            if (std::isnan(input.target_position[dof])) {
+                std::cerr << "[ruckig] target position is not a number." << std::endl;
                 return false;
             }
 
             if (input.target_velocity[dof] > input.max_velocity[dof]) {
-                std::cerr << "Target velocity exceeds velocity limit." << std::endl;
+                std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
                 return false;
             }
 
             if (input.target_acceleration[dof] > input.max_acceleration[dof]) {
-                std::cerr << "Target acceleration exceeds acceleration limit." << std::endl;
+                std::cerr << "[ruckig] target acceleration exceeds acceleration limit." << std::endl;
                 return false;
             }
 
             double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
             if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
-                std::cerr << "Target acceleration exceeds maximal possible acceleration." << std::endl;
+                std::cerr << "[ruckig] target acceleration exceeds maximal possible acceleration." << std::endl;
                 return false;
             }
         }

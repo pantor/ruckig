@@ -32,6 +32,7 @@ struct InputParameter {
 
     std::array<bool, DOFs> enabled;
     std::optional<double> minimum_duration;
+    std::optional<Vector> min_velocity;
 
     InputParameter() {
         std::fill(enabled.begin(), enabled.end(), true);
@@ -50,6 +51,7 @@ struct InputParameter {
             || max_jerk != rhs.max_jerk
             || enabled != rhs.enabled
             || minimum_duration != rhs.minimum_duration
+            || min_velocity != rhs.min_velocity
             || type != rhs.type
         );
     }
@@ -61,19 +63,6 @@ struct InputParameter {
             if (i) ss << ", ";
             ss << array[i];
         }
-        return ss.str();
-    }
-
-    std::string to_string(size_t dof) const {
-        std::stringstream ss;
-        ss << "p0: " << current_position[dof] << ", ";
-        ss << "v0: " << current_velocity[dof] << ", ";
-        ss << "a0: " << current_acceleration[dof] << ", ";
-        ss << "pf: " << target_position[dof] << ", ";
-        ss << "vf: " << target_velocity[dof] << ", ";
-        ss << "vMax: " << max_velocity[dof] << ", ";
-        ss << "aMax: " << max_acceleration[dof] << ", ";
-        ss << "jMax: " << max_jerk[dof];
         return ss.str();
     }
 

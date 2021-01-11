@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <iomanip>
 #include <iostream>
 #include <math.h>
 #include <optional>
@@ -51,7 +52,7 @@ struct Profile {
         }
 
         // Velocity and acceleration limits can be broken in the beginning if the initial velocity and acceleration are too high
-        // std::cout << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
+        // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
         return std::all_of(v.begin() + 3, v.end(), [vMax](double vm){ return std::abs(vm) < std::abs(vMax) + 1e-9; })
             && std::all_of(a.begin() + 2, a.end(), [aMax](double am){ return std::abs(am) < std::abs(aMax) + 1e-9; })
             && std::abs(p[7] - pf) < 1e-8 && std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-8;

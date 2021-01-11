@@ -244,7 +244,6 @@ inline std::set<double> solveQuartMonic(const std::array<double, 5>& polynom) {
     return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
 }
 
-
 template<size_t N>
 inline double polyEval(std::array<double, N> p, double x) {
     double retVal = 0.0;

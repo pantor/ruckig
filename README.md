@@ -45,7 +45,7 @@ Currently only the (more-complex) *position* interface is implemented. A time-op
 
 ![Trajectory Profile](/doc/example_profile.png?raw=true)
 
-Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application.
+Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application. A working example can be found in the `examples` directory.
 
 
 ### Real-time trajectory generation
@@ -148,7 +148,7 @@ Moreover, a range of additional parameter about the duration of the trajectory a
 
 ## Tests
 
-The current test suite validates over 440.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
+The current test suite validates over 528.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`.
 
 
 ## Development

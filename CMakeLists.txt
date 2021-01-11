@@ -5,6 +5,7 @@ project(ruckig VERSION 0.1.0 LANGUAGES CXX)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 
+option(BUILD_EXAMPLES "Build example programs" OFF)
 option(BUILD_PYTHON_MODULE "Build python module" ON)
 option(BUILD_TESTS "Build tests" ON)
 
@@ -36,6 +37,14 @@ target_link_libraries(ruckig PUBLIC Eigen3::Eigen)
 if(Reflexxes)
   target_compile_definitions(ruckig PUBLIC WITH_REFLEXXES)
   target_link_libraries(ruckig PUBLIC Reflexxes::Reflexxes)
+endif()
+
+
+if(BUILD_EXAMPLES)
+  foreach(example IN ITEMS position)
+    add_executable(example-${example} "examples/${example}.cpp")
+    target_link_libraries(example-${example} PRIVATE ruckig)
+  endforeach()
 endif()
 
 
