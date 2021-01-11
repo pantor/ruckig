@@ -43,7 +43,7 @@ To install Ruckig in a system-wide directory, use `(sudo) make install`. We reco
 
 Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application. A working example can be found in the `examples` directory. A time-optimal trajectory is shown in the figure below.
 
-![Trajectory Profile](/doc/example_profile.png?raw=true)
+![Trajectory Profile](https://github.com/pantor/ruckig/raw/master/doc/example_profile.png?raw=true)
 
 ### Real-time trajectory generation
 
@@ -51,13 +51,13 @@ Ruckig provides three interface classes: the *Ruckig*, the *InputParameter*, and
 
 First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle in seconds in the constructor.
 
-```c++
+```.cpp
 Ruckig<6> ruckig {0.001}; // Number DoFs; control cycle in [s]
 ```
 
 The input type has 3 blocks of data: the *current* state, the *target* state and the corresponding dynamical *limits*.
 
-```c++
+```.cpp
 InputParameter<6> input; // Number DoFs
 input.current_position = {0.2, ...};
 input.current_velocity = {0.1, ...};
@@ -89,30 +89,33 @@ During your update step, you'll need to copy the new dynamic state into the curr
 
 ### Input Parameter
 
-To go into more detail, the *InputParameter* type has following members: 
+To go into more detail, the *InputParameter* type has following members:
 
-```c++
-std::array<double, DOFs> current_position;
-std::array<double, DOFs> current_velocity; // Initialized to zero
-std::array<double, DOFs> current_acceleration; // Initialized to zero
+```.cpp
+using Vector = std::array<double, DOFs>;
 
-std::array<double, DOFs> target_position;
-std::array<double, DOFs> target_velocity; // Initialized to zero
-std::array<double, DOFs> target_acceleration; // Initialized to zero
+Vector current_position;
+Vector current_velocity; // Initialized to zero
+Vector current_acceleration; // Initialized to zero
 
-std::array<double, DOFs> max_velocity;
-std::array<double, DOFs> max_acceleration;
-std::array<double, DOFs> max_jerk;
+Vector target_position;
+Vector target_velocity; // Initialized to zero
+Vector target_acceleration; // Initialized to zero
+
+Vector max_velocity;
+Vector max_acceleration;
+Vector max_jerk;
 
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
+std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 ```
 
-To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
+The members are implemented using the C++ standard libraries `array` and `optional` type. To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
 ```
 target_acceleration <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ``` 
-If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given.
+If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity can be specified. If it is not given, the negative maximum velocity will be used (similar to the acceleration and jerk limits). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human.
 
 
 ### Result Type
@@ -133,7 +136,7 @@ ErrorSynchronizationCalculation | -111
 
 The output class gives the new dynamical state of the trajectory.
 
-```c++
+```.cpp
 std::array<double, DOFs> new_position;
 std::array<double, DOFs> new_velocity;
 std::array<double, DOFs> new_acceleration;
@@ -149,7 +152,7 @@ Moreover, a range of additional parameter about the duration of the trajectory a
 
 ## Tests
 
-The current test suite validates over 918.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`. Currently, we presume `max_jerk > 0.1 * max_acceleration` for numerical soundness.
+The current test suite validates over 934.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`. Currently, we presume `max_jerk > 0.1 * max_acceleration` for numerical soundness.
 
 
 ## Development

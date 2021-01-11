@@ -6,7 +6,7 @@
 
 namespace ruckig {
 
-Step2::Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax): tf(tf), p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af) {
+Step2::Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax): tf(tf), p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af), vMax(vMax), vMin(vMin), aMax(aMax), jMax(jMax)  {
     // max values needs to be invariant to plus minus sign change
     pd = pf - p0;
     tf_tf = tf * tf;
@@ -17,7 +17,6 @@ Step2::Step2(double tf, double p0, double v0, double a0, double pf, double vf, d
     vd_vd = vd * vd;
     v0_v0 = v0 * v0;
     vf_vf = vf * vf;
-    vMax_vMax = vMax * vMax;
 
     ad = af - a0;
     ad_ad = ad * ad;
@@ -67,7 +66,7 @@ bool Step2::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
     // Profile UDUD
     {
         const double h1 = 12*aMax*jMax*(a0_a0 + af_af - 2*(a0 + af)*aMax + 2*(aMax_aMax - aMax*jMax*tf + jMax*vd));
-        const double h2 = 3*a0_p4 + 3*af_p4 - 4*a0_p3*aMax - 4*af_p3*aMax;
+        const double h2 = 3*(a0_p4 + af_p4) - 4*(a0_p3 + af_p3)*aMax;
         const double h3 = -4*af_p3*aMax + 24*(a0 + af)*Power(aMax,3) - 24*af*aMax*jMax*vd - 6*af_af*(aMax_aMax - 2*jMax*vd) + 6*a0_a0*(af_af - 2*af*aMax - aMax_aMax - 2*aMax*jMax*tf + 2*jMax*vd) - 12*(2*Power(aMax,4) - 2*Power(aMax,3)*jMax*tf - 2*aMax*jMax_jMax*(-pd + tf*v0) - jMax_jMax*vd_vd + aMax_aMax*jMax*vd);
 
         profile.t[0] = (-a0 + aMax)/jMax;
@@ -675,39 +674,39 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
     return false;
 }
 
-bool Step2::time_down_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0_acc1_vel(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0_acc1_vel(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::time_down_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc1_vel(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc1_vel(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::time_down_acc0_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0_vel(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0_vel(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::time_down_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_vel(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_vel(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::time_down_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0_acc1(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0_acc1(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::time_down_acc1(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc1(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_acc1(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc1(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::time_down_acc0(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_acc0(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::time_down_none(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_none(profile, -vMax, -aMax, -jMax);
+bool Step2::time_down_none(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_none(profile, vMin, -aMax, -jMax);
 }
 
-bool Step2::get_profile(Profile& profile, double vMax, double aMax, double jMax) {
+bool Step2::get_profile(Profile& profile) {
     profile.a[0] = a0;
     profile.v[0] = v0;
     profile.p[0] = p0;
@@ -715,38 +714,38 @@ bool Step2::get_profile(Profile& profile, double vMax, double aMax, double jMax)
     // Test all cases to get ones that match
     if (pf > p0) {
         if (time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_acc1_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_acc0_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_vel(profile, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc1_vel(profile, vMax, aMax, jMax)) {
+        } else if (time_down_acc1_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_vel(profile, vMax, aMax, jMax)) {
+        } else if (time_down_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_none(profile, vMax, aMax, jMax)) {
         } else if (time_up_acc0(profile, vMax, aMax, jMax)) {
         } else if (time_up_acc1(profile, vMax, aMax, jMax)) {
         } else if (time_up_acc0_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_down_none(profile, vMax, aMax, jMax)) {
+        } else if (time_down_acc0(profile, vMin, aMax, jMax)) {
+        } else if (time_down_acc1(profile, vMin, aMax, jMax)) {
+        } else if (time_down_acc0_acc1(profile, vMin, aMax, jMax)) {
+        } else if (time_down_none(profile, vMin, aMax, jMax)) {
         } else {
             return false;
         }
 
     } else {
-        if (time_down_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
+        if (time_down_acc0_acc1_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_vel(profile, vMax, aMax, jMax)) {
+        } else if (time_down_acc0_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_acc0_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc1_vel(profile, vMax, aMax, jMax)) {
+        } else if (time_down_acc1_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_vel(profile, vMax, aMax, jMax)) {
+        } else if (time_down_vel(profile, vMin, aMax, jMax)) {
         } else if (time_up_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_none(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_acc1(profile, vMax, aMax, jMax)) {
+        } else if (time_down_none(profile, vMin, aMax, jMax)) {
+        } else if (time_down_acc0(profile, vMin, aMax, jMax)) {
+        } else if (time_down_acc1(profile, vMin, aMax, jMax)) {
+        } else if (time_down_acc0_acc1(profile, vMin, aMax, jMax)) {
         } else if (time_up_acc0(profile, vMax, aMax, jMax)) {
         } else if (time_up_acc1(profile, vMax, aMax, jMax)) {
         } else if (time_up_acc0_acc1(profile, vMax, aMax, jMax)) {
@@ -755,7 +754,6 @@ bool Step2::get_profile(Profile& profile, double vMax, double aMax, double jMax)
             return false;
         }
     }
-    // std::cout << profile.to_string() << std::endl;
     return true;
 }
 

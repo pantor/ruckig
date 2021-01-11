@@ -55,8 +55,9 @@ def plot_trajectory(t_list, out_list):
         if inp.max_velocity[dof] < 1.4 * global_max:
             plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
 
-        if -inp.max_velocity[dof] > 1.4 * global_min:
-            plt.axhline(y=-inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
+        min_velocity = inp.min_velocity if inp.min_velocity else -inp.max_velocity
+        if min_velocity[dof] > 1.4 * global_min:
+            plt.axhline(y=min_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
 
         if inp.max_acceleration[dof] < 1.4 * global_max:
             plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
@@ -107,14 +108,15 @@ if __name__ == '__main__':
     # inp.max_jerk = [0.102049, 5.67016, 2.45298]
 
     inp.current_position = [-0.0373959, -0.512166, 0.0314268]
-    inp.current_velocity = [0.190931, 0.983475, -0.739954]
-    inp.current_acceleration = [-0.405817, -0.570935, 0.292238]
-    inp.target_position = [-0.349853, 0.017916, -0.885459]
-    inp.target_velocity = [0.0830861, 0.428442, 0.83102]
-    inp.target_acceleration = [0.955634, -0.36, 0.453253]
-    inp.max_velocity = [1.89084, 2.67277, 1.26279]
-    inp.max_acceleration = [4.98973, 1.06466, 0.982117]
-    inp.max_jerk = [8.01821, 1.4943, 6.09254]
+    inp.current_velocity = [0.0, 0.0, -0.0]
+    inp.current_acceleration = [0.0, 0.0, 0.0]
+    inp.target_position = [-0.549853, 0.517916, -0.885459]
+    inp.target_velocity = [-2.1, 0.0, 0.0]
+    inp.target_acceleration = [0.0, 0.0, 0.0]
+    inp.max_velocity = [1.89084, 0.67277, 1.26279]
+    inp.min_velocity = [-2.2, -0.67277, -1.26279]
+    inp.max_acceleration = [1.98973, 1.06466, 0.982117]
+    inp.max_jerk = [4.01821, 4.4943, 4.09254]
 
     print_input_for_mathematica(inp, 0)
 

@@ -70,7 +70,7 @@ void Brake::velocity_brake(double v0, double a0, double vMax, double aMax, doubl
     t_brake[0] = std::max(t_brake[0] - eps, 0.0);
 }
 
-void Brake::get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
+void Brake::get_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     t_brake[0] = 0.0;
     t_brake[1] = 0.0;
     j_brake[0] = 0.0;
@@ -82,13 +82,13 @@ void Brake::get_brake_trajectory(double v0, double a0, double vMax, double aMax,
         acceleration_brake(v0, a0, vMax, aMax, jMax, t_brake, j_brake);
 
     } else if (a0 < -aMax) {
-        acceleration_brake(v0, a0, -vMax, -aMax, -jMax, t_brake, j_brake);
+        acceleration_brake(v0, a0, vMin, -aMax, -jMax, t_brake, j_brake);
 
     } else if ((v0 > vMax && (a0 > 0 || a0_sq_jMax < v0)) || (a0 > 0 && a0_sq_jMax > -v0)) {
         velocity_brake(v0, a0, vMax, aMax, jMax, t_brake, j_brake);
 
-    } else if ((v0 < -vMax && (a0 < 0 || a0_sq_jMax > v0)) || (a0 < 0 && a0_sq_jMax > v0)) {
-        velocity_brake(v0, a0, -vMax, -aMax, -jMax, t_brake, j_brake);
+    } else if ((v0 < vMin && (a0 < 0 || a0_sq_jMax > v0)) || (a0 < 0 && a0_sq_jMax > v0)) {
+        velocity_brake(v0, a0, vMin, -aMax, -jMax, t_brake, j_brake);
     }
 }
 

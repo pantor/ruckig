@@ -43,6 +43,7 @@ class Brake {
 
 public:
     static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
+    static void get_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
 };
 
 
@@ -52,10 +53,11 @@ class Step1 {
 
     double p0, v0, a0;
     double pf, vf, af;
+    double vMax, vMin, aMax, jMax;
 
     // Pre-calculated expressions
     double pd;
-    double v0_v0, vf_vf, vMax_vMax;
+    double v0_v0, vf_vf;
     double a0_a0, af_af, aMax_aMax;
     double jMax_jMax;
 
@@ -86,12 +88,14 @@ class Step1 {
     void time_down_acc0(Profile& profile, double vMax, double aMax, double jMax);
     void time_down_none(Profile& profile, double vMax, double aMax, double jMax);
 
+    bool calculate_block();
+
 public:
     Block block;
 
-    explicit Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    explicit Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax);
 
-    bool get_profile(const Profile& input, double vMax, double aMax, double jMax);
+    bool get_profile(const Profile& input);
 };
 
 
@@ -101,11 +105,12 @@ class Step2 {
     double tf;
     double p0, v0, a0;
     double pf, vf, af;
+    double vMax, vMin, aMax, jMax;
 
     // Pre-calculated expressions
     double pd;
     double tf_tf, tf_p3, tf_p4;
-    double vd, vd_vd, v0_v0, vf_vf, vMax_vMax;
+    double vd, vd_vd, v0_v0, vf_vf;
     double ad, ad_ad, a0_a0, af_af, aMax_aMax;
     double jMax_jMax;
 
@@ -131,9 +136,9 @@ class Step2 {
     bool time_down_none(Profile& profile, double vMax, double aMax, double jMax);
 
 public:
-    explicit Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax);
+    explicit Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax);
 
-    bool get_profile(Profile& profile, double vMax, double aMax, double jMax);
+    bool get_profile(Profile& profile);
 };
 
 
@@ -193,7 +198,7 @@ class Ruckig {
     }
 
     Result calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        auto start = std::chrono::high_resolution_clock::now();
+        // auto start = std::chrono::high_resolution_clock::now();
         current_input = input;
 
         // std::cout << "reference: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
@@ -206,13 +211,16 @@ class Ruckig {
 
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
+        std::array<double, DOFs> input_min_velocity;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (!input.enabled[dof]) {
                 continue;
             }
 
             // Calculate brakes (if input exceeds or will exceed limits)
-            Brake::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
+            input_min_velocity[dof] = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
+            Brake::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
+            
             profiles[dof].t_brake = profiles[dof].t_brakes[0] + profiles[dof].t_brakes[1];
 
             p0s[dof] = input.current_position[dof];
@@ -233,8 +241,8 @@ class Ruckig {
                 }
             }
 
-            Step1 step1 {p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
-            bool found_profile = step1.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+            Step1 step1 {p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
+            bool found_profile = step1.get_profile(profiles[dof]);
             if (!found_profile) {
                 if constexpr (THROW_ERROR) {
                     throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
@@ -265,10 +273,8 @@ class Ruckig {
 
                 double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
 
-                // std::cout << "dof: " << dof << std::endl;
-
-                Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
-                bool found_time_synchronization = step2.get_profile(profiles[dof], input.max_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]);
+                Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
+                bool found_time_synchronization = step2.get_profile(profiles[dof]);
                 if (!found_time_synchronization) {
                     if constexpr (THROW_ERROR) {
                         throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " input: " + input.to_string());
@@ -303,6 +309,11 @@ public:
                 return false;
             }
 
+            if (input.min_velocity && input.min_velocity.value()[dof] >= -std::numeric_limits<double>::min()) {
+                std::cerr << "[ruckig] minimum velocity limit needs to be negative." << std::endl;
+                return false;
+            }
+
             if (input.max_acceleration[dof] <= std::numeric_limits<double>::min()) {
                 std::cerr << "[ruckig] acceleration limit needs to be positive." << std::endl;
                 return false;
@@ -318,9 +329,17 @@ public:
                 return false;
             }
 
-            if (input.target_velocity[dof] > input.max_velocity[dof]) {
-                std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
-                return false;
+            if (input.min_velocity) {
+                if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
+                    std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
+                    return false;
+                }
+            
+            } else {
+                if (std::abs(input.target_velocity[dof]) > input.max_velocity[dof]) {
+                    std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
+                    return false;
+                }
             }
 
             if (input.target_acceleration[dof] > input.max_acceleration[dof]) {

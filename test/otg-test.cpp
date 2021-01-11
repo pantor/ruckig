@@ -272,7 +272,7 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
+        for (size_t i = 0; i < (full ? 272 : 1) * 1024; ++i) {
             input.current_position = Random<DOFs>();
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);

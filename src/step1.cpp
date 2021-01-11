@@ -6,22 +6,25 @@
 
 namespace ruckig {
 
-Step1::Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double aMax, double jMax): p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af) {
+Step1::Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax): p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af), vMax(vMax), vMin(vMin), aMax(aMax), jMax(jMax) {
     // max values needs to be invariant to plus minus sign change
     pd = pf - p0;
 
     v0_v0 = v0 * v0;
     vf_vf = vf * vf;
-    vMax_vMax = vMax * vMax;
 
     a0_a0 = a0 * a0;
     af_af = af * af;
     aMax_aMax = aMax * aMax;
 
-    a0_p3 = a0 * a0 * a0;
+    a0_p3 = a0 * a0_a0;
     a0_p4 = a0_a0 * a0_a0;
-    af_p3 = af * af * af;
+    a0_p5 = a0_p3 * a0_a0;
+    a0_p6 = a0_p4 * a0_a0;
+    af_p3 = af * af_af;
     af_p4 = af_af * af_af;
+    af_p5 = af_p3 * af_af;
+    af_p6 = af_p4 * af_af;
 
     jMax_jMax = jMax * jMax;
 }
@@ -37,7 +40,7 @@ void Step1::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
     profile.t[0] = (-a0 + aMax)/jMax;
     profile.t[1] = (a0_a0/2 - aMax_aMax - jMax*(v0 - vMax))/(aMax*jMax);
     profile.t[2] = profile.t[0] + a0/jMax;
-    profile.t[3] = (3*(a0_p4 + af_p4) + 8*aMax*(af_p3 - a0_p3) + 24*aMax*jMax*(a0*v0 - af*vf) + 6*a0_a0*(aMax_aMax - 2*jMax*v0) + 6*af_af*(aMax_aMax - 2*jMax*vf) - 12*jMax*(aMax_aMax*(v0 + vf + 2*vMax) - jMax*(2*aMax*pd + v0_v0 + vf_vf - 2*vMax_vMax)))/(24*aMax*jMax_jMax*vMax);
+    profile.t[3] = (3*(a0_p4 + af_p4) + 8*aMax*(af_p3 - a0_p3) + 24*aMax*jMax*(a0*v0 - af*vf) + 6*a0_a0*(aMax_aMax - 2*jMax*v0) + 6*af_af*(aMax_aMax - 2*jMax*vf) - 12*jMax*(aMax_aMax*(v0 + vf + 2*vMax) - jMax*(2*aMax*pd + v0_v0 + vf_vf - 2*vMax*vMax)))/(24*aMax*jMax_jMax*vMax);
     profile.t[4] = profile.t[2];
     profile.t[5] = (af_af/2 - aMax_aMax - jMax*(vf - vMax))/(aMax*jMax);
     profile.t[6] = profile.t[4] + af/jMax;
@@ -53,7 +56,7 @@ void Step1::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double 
     profile.t[0] = (-a0 + h1*jMax)/jMax;
     profile.t[1] = 0;
     profile.t[2] = profile.t[0] + a0/jMax;
-    profile.t[3] = (3*af_p4 + 8*aMax*(af_p3 - a0_p3) + 24*aMax*jMax*(a0*v0 - af*vf) + 6*af_af*(aMax_aMax - 2*jMax*vf) - 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(vf + vMax) + jMax*(-vf_vf + vMax_vMax) - aMax*h1*(a0_a0 - 2*jMax*(v0 + vMax))))/(24*aMax*jMax_jMax*vMax);
+    profile.t[3] = (3*af_p4 + 8*aMax*(af_p3 - a0_p3) + 24*aMax*jMax*(a0*v0 - af*vf) + 6*af_af*(aMax_aMax - 2*jMax*vf) - 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(vf + vMax) + jMax*(-vf_vf + vMax*vMax) - aMax*h1*(a0_a0 - 2*jMax*(v0 + vMax))))/(24*aMax*jMax_jMax*vMax);
     profile.t[4] = aMax/jMax;
     profile.t[5] = (af_af/2 - aMax_aMax + jMax*(vMax - vf))/(aMax*jMax);
     profile.t[6] = profile.t[4] + af/jMax;
@@ -69,7 +72,7 @@ void Step1::time_up_acc0_vel(Profile& profile, double vMax, double aMax, double 
     profile.t[0] = (-a0 + aMax)/jMax;
     profile.t[1] = (a0_a0/2 - aMax_aMax - jMax*(v0 - vMax))/(aMax*jMax);
     profile.t[2] = profile.t[0] + a0/jMax;
-    profile.t[3] = (3*a0_p4 + 8*(af_p3 - a0_p3)*aMax + 24*aMax*jMax*(a0*v0 - af*vf) + 6*a0_a0*(aMax_aMax - 2*jMax*v0) + 12*af_af*aMax*h1*jMax - 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(v0 + vMax) + jMax*(-v0_v0 + vMax_vMax) + 2*aMax*(vf + vMax)*h1*jMax))/(24*aMax*jMax_jMax*vMax);
+    profile.t[3] = (3*a0_p4 + 8*(af_p3 - a0_p3)*aMax + 24*aMax*jMax*(a0*v0 - af*vf) + 6*a0_a0*(aMax_aMax - 2*jMax*v0) + 12*af_af*aMax*h1*jMax - 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(v0 + vMax) + jMax*(-v0_v0 + vMax*vMax) + 2*aMax*(vf + vMax)*h1*jMax))/(24*aMax*jMax_jMax*vMax);
     profile.t[4] = h1;
     profile.t[5] = 0;
     profile.t[6] = profile.t[4] + af/jMax;
@@ -154,7 +157,7 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
     polynom[0] = 1.0;
     polynom[1] = 2*(2*a0 + aMax)/jMax;
     polynom[2] = (5*a0_a0 + 6*a0*aMax + aMax_aMax + 2*jMax*v0)/jMax_jMax;
-    polynom[3] = (2*(a0 + aMax)*(a0_a0 + a0*aMax + 2*jMax*v0))/Power(jMax,3);
+    polynom[3] = (2*(a0 + aMax)*(a0_a0 + a0*aMax + 2*jMax*v0))/(jMax_jMax*jMax);
     polynom[4] = (3*(a0_p4 - af_p4) + 8*(a0_p3 - af_p3)*aMax + 24*aMax*jMax*(a0*v0 + af*vf) + 6*a0_a0*(aMax_aMax + 2*jMax*v0) - 6*af_af*(aMax_aMax - 2*jMax*vf) + 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(v0 + vf) + jMax*(v0_v0 - vf_vf)))/(12*jMax_jMax*jMax_jMax);
     
     auto roots = Roots::solveQuartMonic(polynom);
@@ -185,7 +188,7 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
         polynom[0] = 1.0;
         polynom[1] = 2*(2*a0 - aMax)/jMax;
         polynom[2] = (5*a0_a0 - 6*a0*aMax - aMax_aMax + 2*jMax*v0)/jMax_jMax;
-        polynom[3] = (2*(a0_p3 - a0*aMax*(2*a0 + aMax) + 2*(a0 - aMax)*jMax*v0))/Power(jMax,3);
+        polynom[3] = (2*(a0_p3 - a0*aMax*(2*a0 + aMax) + 2*(a0 - aMax)*jMax*v0))/(jMax_jMax*jMax);
         polynom[4] = -(3*(af_p4 - a0_p4) + 8*(a0_p3 - af_p3)*aMax + 24*aMax*jMax*(a0*v0 - af*vf) + 6*a0_a0*(aMax_aMax - 2*jMax*v0) + 6*af_af*(aMax_aMax + 2*jMax*vf) + 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(v0 + vf) + jMax*(vf_vf - v0_v0)))/(12*jMax_jMax*jMax_jMax);
 
         auto roots = Roots::solveQuartMonic(polynom);
@@ -214,7 +217,7 @@ void Step1::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
     polynom[0] = 1.0;
     polynom[1] = (2*aMax)/jMax;
     polynom[2] = (-af_af + aMax_aMax + 2*jMax*vf)/jMax_jMax;
-    polynom[3] = (-2*aMax*(af_af - 2*jMax*vf))/Power(jMax,3);
+    polynom[3] = (-2*aMax*(af_af - 2*jMax*vf))/(jMax_jMax*jMax);
     polynom[4] = (3*(af_p4 - a0_p4) + 8*(a0_p3 - af_p3)*aMax - 24*aMax*jMax*(a0*v0 - af*vf) - 6*a0_a0*(aMax_aMax - 2*jMax*v0) - 6*af_af*(aMax_aMax + 2*jMax*vf) + 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(v0 + vf) + jMax*(vf_vf - v0_v0)))/(12*jMax_jMax*jMax_jMax);
 
     auto roots = Roots::solveQuartMonic(polynom);
@@ -245,7 +248,7 @@ void Step1::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
         polynom[0] = 1.0;
         polynom[1] = (-2*aMax)/jMax;
         polynom[2] = -((af_af + aMax_aMax + 2*jMax*vf)/jMax_jMax);
-        polynom[3] = (2*aMax*(af_af + 2*jMax*vf))/Power(jMax,3);
+        polynom[3] = (2*aMax*(af_af + 2*jMax*vf))/(jMax*jMax_jMax);
         polynom[4] = (3*(af_p4 - a0_p4) + 8*(a0_p3 - af_p3)*aMax - 24*aMax*jMax*(a0*v0 + af*vf) - 6*a0_a0*(aMax_aMax - 2*jMax*v0) + 6*af_af*(aMax_aMax + 2*jMax*vf) + 12*jMax*(-2*aMax*jMax*pd + aMax_aMax*(v0 + vf) + jMax*(vf_vf - v0_v0)))/(12*jMax_jMax*jMax_jMax);
 
         auto roots = Roots::solveQuartMonic(polynom);
@@ -293,8 +296,8 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
     polynom[0] = 1.0;
     polynom[1] = (-4*(2*a0_p3 + af_p3 + 3*jMax_jMax*pd - 3*a0*(af_af + jMax*(v0 - 2*vf)) - 3*af*jMax*vf))/(3*jMax*p1);
     polynom[2] = (-3*a0_p4 + Power(af_af - 2*jMax*(vf - v0),2) - 8*a0*p3 + 2*a0_a0*(5*af_af - 2*jMax*(v0 + 5*vf)))/(2*jMax_jMax*p1);
-    polynom[3] = -(Power(a0,5) + 8*(a0_a0 + jMax*v0)*p3 + a0_p3*(-6*af_af + 4*jMax*(v0 + 3*vf)) - 3*a0*p2)/(3*Power(jMax,3)*p1);
-    polynom[4] = -(Power(a0,6) + Power(af,6) - 48*af_p3*jMax_jMax*pd + 144*af*Power(jMax,3)*pd*vf - 6*af_p4*jMax*(3*v0 + vf) + 16*a0_p3*p3 + 48*a0*jMax*v0*p3 - 36*af_af*jMax_jMax*(v0_v0 - 2*v0*vf - vf_vf) - 72*Power(jMax,3)*(jMax*Power(pd,2) + (vf - v0)*Power(v0 + vf,2)) + a0_p4*(-9*af_af + 6*jMax*(v0 + 3*vf)) - 9*a0_a0*p2)/(36*jMax_jMax*jMax_jMax*p1);
+    polynom[3] = -(a0_p5 + 8*(a0_a0 + jMax*v0)*p3 + a0_p3*(-6*af_af + 4*jMax*(v0 + 3*vf)) - 3*a0*p2)/(3*jMax_jMax*jMax*p1);
+    polynom[4] = -(a0_p6 + af_p6 - 48*af_p3*jMax_jMax*pd + 144*af*jMax_jMax*jMax*pd*vf - 6*af_p4*jMax*(3*v0 + vf) + 16*a0_p3*p3 + 48*a0*jMax*v0*p3 - 36*af_af*jMax_jMax*(v0_v0 - 2*v0*vf - vf_vf) - 72*jMax_jMax*jMax*(jMax*Power(pd,2) + (vf - v0)*Power(v0 + vf,2)) + a0_p4*(-9*af_af + 6*jMax*(v0 + 3*vf)) - 9*a0_a0*p2)/(36*jMax_jMax*jMax_jMax*p1);
 
     auto roots = Roots::solveQuartMonic(polynom);
     for (double t: roots) {
@@ -337,10 +340,10 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         polynom[0] = 1.0;
         polynom[1] = (6*a0)/jMax;
         polynom[2] = (53*a0_a0 + af_af + 2*jMax*(7*v0 + vf))/(4*jMax_jMax);
-        polynom[3] = (40*a0_p3 - af_p3 - 3*jMax_jMax*pd - 3*af*jMax*vf + 3*a0*(af_af + 13*jMax*v0 + 2*jMax*vf))/(3*Power(jMax,3));
+        polynom[3] = (40*a0_p3 - af_p3 - 3*jMax_jMax*pd - 3*af*jMax*vf + 3*a0*(af_af + 13*jMax*v0 + 2*jMax*vf))/(3*jMax_jMax*jMax);
         polynom[4] = (51*a0_p4 - af_p4 - 4*af_af*jMax*(vf - v0) + 2*a0_a0*(5*af_af + 58*jMax*v0 + 10*jMax*vf) - 8*a0*p1 + 4*jMax_jMax*(7*v0_v0 + 2*v0*vf - vf_vf))/(8*jMax_jMax*jMax_jMax);
-        polynom[5] = (17*Power(a0,5) + 2*a0_p3*p3 - 8*(a0_a0 + jMax*v0)*p1 - 3*a0*p2)/(12*Power(jMax,5));
-        polynom[6] = -(-17*Power(a0,6) + Power(af,6) - 48*af_p3*jMax_jMax*pd - 144*af*Power(jMax,3)*pd*vf + 6*af_p4*jMax*(3*v0 + vf) - 3*a0_p4*p3 + 16*a0_p3*p1 + 48*a0*jMax*v0*p1 - 36*af_af*jMax_jMax*(v0_v0 - 2*v0*vf - vf_vf) - 72*Power(jMax,3)*(jMax*Power(pd,2) - (vf - v0)*Power(v0 + vf,2)) + 9*a0_a0*p2)/(144*Power(jMax,6));
+        polynom[5] = (17*a0_p5 + 2*a0_p3*p3 - 8*(a0_a0 + jMax*v0)*p1 - 3*a0*p2)/(12*jMax_jMax*jMax_jMax*jMax);
+        polynom[6] = -(-17*a0_p6 + af_p6 - 48*af_p3*jMax_jMax*pd - 144*af*jMax_jMax*jMax*pd*vf + 6*af_p4*jMax*(3*v0 + vf) - 3*a0_p4*p3 + 16*a0_p3*p1 + 48*a0*jMax*v0*p1 - 36*af_af*jMax_jMax*(v0_v0 - 2*v0*vf - vf_vf) - 72*jMax_jMax*jMax*(jMax*Power(pd,2) - (vf - v0)*Power(v0 + vf,2)) + 9*a0_a0*p2)/(144*jMax_jMax*jMax_jMax*jMax_jMax);
 
         std::array<double, 6> deriv;
         deriv[0] = 1.0;
@@ -418,89 +421,39 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
     }
 }
 
-void Step1::time_down_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0_acc1_vel(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0_acc1_vel(profile, vMin, -aMax, -jMax);
 }
 
-void Step1::time_down_acc1_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc1_vel(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc1_vel(profile, vMin, -aMax, -jMax);
 }
 
-void Step1::time_down_acc0_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0_vel(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0_vel(profile, vMin, -aMax, -jMax);
 }
 
-void Step1::time_down_vel(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_vel(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_vel(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_vel(profile, vMin, -aMax, -jMax);
 }
 
-void Step1::time_down_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0_acc1(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0_acc1(profile, vMin, -aMax, -jMax);
 }
 
-void Step1::time_down_acc1(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc1(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_acc1(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc1(profile, vMin, -aMax, -jMax);
 }
 
-void Step1::time_down_acc0(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_acc0(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_acc0(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_acc0(profile, vMin, -aMax, -jMax);
 }
 
-void Step1::time_down_none(Profile& profile, double vMax, double aMax, double jMax) {
-    return time_up_none(profile, -vMax, -aMax, -jMax);
+void Step1::time_down_none(Profile& profile, double vMin, double aMax, double jMax) {
+    return time_up_none(profile, vMin, -aMax, -jMax);
 }
 
-bool Step1::get_profile(const Profile& input, double vMax, double aMax, double jMax) {
-    Profile profile = input;
-    profile.a[0] = a0;
-    profile.v[0] = v0;
-    profile.p[0] = p0;
-    valid_profile_counter = 0;
-
-    if (pf > p0) {
-        time_up_acc0_acc1_vel(profile, vMax, aMax, jMax);
-        time_down_acc0_acc1_vel(profile, vMax, aMax, jMax);
-        time_up_acc1_vel(profile, vMax, aMax, jMax);
-        time_down_acc1_vel(profile, vMax, aMax, jMax);
-        time_up_acc0_vel(profile, vMax, aMax, jMax);
-        time_down_acc0_vel(profile, vMax, aMax, jMax);
-        time_up_vel(profile, vMax, aMax, jMax);
-        time_down_vel(profile, vMax, aMax, jMax);
-        time_up_none(profile, vMax, aMax, jMax);
-        time_up_acc0(profile, vMax, aMax, jMax);
-        time_up_acc1(profile, vMax, aMax, jMax);
-        time_up_acc0_acc1(profile, vMax, aMax, jMax);
-        time_down_none(profile, vMax, aMax, jMax);
-        time_down_acc0(profile, vMax, aMax, jMax);
-        time_down_acc1(profile, vMax, aMax, jMax);
-        time_down_acc0_acc1(profile, vMax, aMax, jMax);
-
-    } else {
-        time_down_acc0_acc1_vel(profile, vMax, aMax, jMax);
-        time_up_acc0_acc1_vel(profile, vMax, aMax, jMax);
-        time_down_acc1_vel(profile, vMax, aMax, jMax);
-        time_up_acc1_vel(profile, vMax, aMax, jMax);
-        time_down_acc0_vel(profile, vMax, aMax, jMax);
-        time_up_acc0_vel(profile, vMax, aMax, jMax);
-        time_down_vel(profile, vMax, aMax, jMax);
-        time_up_vel(profile, vMax, aMax, jMax);
-        time_down_none(profile, vMax, aMax, jMax);
-        time_down_acc0(profile, vMax, aMax, jMax);
-        time_down_acc1(profile, vMax, aMax, jMax);
-        time_down_acc0_acc1(profile, vMax, aMax, jMax);
-        time_up_none(profile, vMax, aMax, jMax);
-        time_up_acc0(profile, vMax, aMax, jMax);
-        time_up_acc1(profile, vMax, aMax, jMax);
-        time_up_acc0_acc1(profile, vMax, aMax, jMax);
-    }
-
-    if (!valid_profile_counter) {
-        // std::cout << "HERE" << std::endl;
-        return false;
-    }
-
-    // auto min_profile = std::min_element(valid_profiles.begin(), valid_profiles.end(), [](const Profile& a, const Profile& b){ return a.t_sum[6] < b.t_sum[6]; }); 
-
+bool Step1::calculate_block() {
     double t_brake = valid_profiles[0].t_brake.value_or(0.0);
     block = Block {valid_profiles[0].t_sum[6] + t_brake, valid_profiles[0]};
 
@@ -624,15 +577,62 @@ bool Step1::get_profile(const Profile& input, double vMax, double aMax, double j
 
     // std::cout << "---\n " << valid_profile_counter << std::endl;
 
-    if (valid_profile_counter > 1) {
-        std::cout << "---\n " << valid_profile_counter << std::endl;
-        for (size_t i = 0; i < valid_profile_counter; ++i) {
-            auto& p = valid_profiles[i];
-            std::cout << p.t_sum[6] + t_brake << " " << p.to_string() << std::endl;
-        }
-    }
+    // if (valid_profile_counter > 1) {
+    //     std::cout << "---\n " << valid_profile_counter << std::endl;
+    //     for (size_t i = 0; i < valid_profile_counter; ++i) {
+    //         auto& p = valid_profiles[i];
+    //         std::cout << p.t_sum[6] + t_brake << " " << p.to_string() << std::endl;
+    //     }
+    // }
 
     return true;
+}
+
+bool Step1::get_profile(const Profile& input) {
+    Profile profile = input;
+    profile.a[0] = a0;
+    profile.v[0] = v0;
+    profile.p[0] = p0;
+    valid_profile_counter = 0;
+
+    if (pf > p0) {
+        time_up_acc0_acc1_vel(profile, vMax, aMax, jMax);
+        time_down_acc0_acc1_vel(profile, vMin, aMax, jMax);
+        time_up_acc1_vel(profile, vMax, aMax, jMax);
+        time_down_acc1_vel(profile, vMin, aMax, jMax);
+        time_up_acc0_vel(profile, vMax, aMax, jMax);
+        time_down_acc0_vel(profile, vMin, aMax, jMax);
+        time_up_vel(profile, vMax, aMax, jMax);
+        time_down_vel(profile, vMin, aMax, jMax);
+        time_up_none(profile, vMax, aMax, jMax);
+        time_up_acc0(profile, vMax, aMax, jMax);
+        time_up_acc1(profile, vMax, aMax, jMax);
+        time_up_acc0_acc1(profile, vMax, aMax, jMax);
+        time_down_none(profile, vMin, aMax, jMax);
+        time_down_acc0(profile, vMin, aMax, jMax);
+        time_down_acc1(profile, vMin, aMax, jMax);
+        time_down_acc0_acc1(profile, vMin, aMax, jMax);
+
+    } else {
+        time_down_acc0_acc1_vel(profile, vMin, aMax, jMax);
+        time_up_acc0_acc1_vel(profile, vMax, aMax, jMax);
+        time_down_acc1_vel(profile, vMin, aMax, jMax);
+        time_up_acc1_vel(profile, vMax, aMax, jMax);
+        time_down_acc0_vel(profile, vMin, aMax, jMax);
+        time_up_acc0_vel(profile, vMax, aMax, jMax);
+        time_down_vel(profile, vMin, aMax, jMax);
+        time_up_vel(profile, vMax, aMax, jMax);
+        time_down_none(profile, vMin, aMax, jMax);
+        time_down_acc0(profile, vMax, aMax, jMax);
+        time_down_acc1(profile, vMax, aMax, jMax);
+        time_down_acc0_acc1(profile, vMax, aMax, jMax);
+        time_up_none(profile, vMin, aMax, jMax);
+        time_up_acc0(profile, vMin, aMax, jMax);
+        time_up_acc1(profile, vMin, aMax, jMax);
+        time_up_acc0_acc1(profile, vMin, aMax, jMax);
+    }
+
+    return valid_profile_counter && calculate_block();
 }
 
 } // namespace ruckig
