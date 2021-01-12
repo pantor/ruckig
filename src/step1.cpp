@@ -465,22 +465,13 @@ bool Step1::calculate_block() {
             block = Block {valid_profiles[2].t_sum[6] + t_brake, valid_profiles[2]};
             add_block<0, 0, 1>(t_brake);
 
-        } /* else if (valid_profiles[1].t_sum[6] < valid_profiles[0].t_sum[6] && valid_profiles[1].t_sum[6] < valid_profiles[2].t_sum[6]) {
-            block = Block {valid_profiles[1].t_sum[6] + t_brake, valid_profiles[1]};
-            add_block<0, 2, 0>(t_brake);
-
-        } */ else {
+        } else {
             add_block<0, 1, 2>(t_brake);
         }
 
     } else if (valid_profile_counter == 4) {
-        if (valid_profiles[0].direction == valid_profiles[1].direction) {
-            add_block<0, 0, 1>(t_brake);
-
-        } else if (valid_profiles[1].direction == valid_profiles[2].direction) {
-            add_block<0, 1, 2>(t_brake);
-        }
-
+        add_block<0, 0, 1>(t_brake);
+        add_block<0, 1, 2>(t_brake);
         add_block<1, 2, 3>(t_brake);
         
     } else if (valid_profile_counter == 5) {

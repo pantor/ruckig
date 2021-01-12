@@ -41,7 +41,7 @@ To install Ruckig in a system-wide directory, use `(sudo) make install`. We reco
 
 ## Tutorial
 
-Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application. A working example can be found in the `examples` directory. A time-optimal trajectory is shown in the figure below.
+Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application. A working example can be found in the `examples` directory. A time-optimal trajectory for a single degree of freedom is shown in the figure below.
 
 ![Trajectory Profile](https://github.com/pantor/ruckig/raw/master/doc/example_profile.png?raw=true)
 
@@ -159,10 +159,9 @@ The current test suite validates over 1.008.000 (random) trajectories. The numer
 
 Ruckig is written in C++17. It is currently tested against following versions
 
-- Eigen v3.3.9 (only for testing)
 - Catch2 v2.13.3 (only for testing)
-- Reflexxes v1.2.7 (only for testing)
-- Pybind11 v2.6.0 (only for prototyping)
+- Reflexxes v1.2.7 (only for comparison)
+- Pybind11 v2.6.0 (only for python wrapper)
 
 
 ## Citation

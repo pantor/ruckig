@@ -17,7 +17,8 @@ struct Block {
     double t_min; // [s]
     Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
 
-    std::optional<Interval> a, b; // Max. 2 intervals can be blocked
+    // Max. 2 intervals can be blocked: a and b with corresponding profiles
+    std::optional<Interval> a, b;
     std::optional<Profile> p_a, p_b;
 
     bool is_blocked(double t) const {

@@ -206,69 +206,42 @@ public:
     bool validate_input(const InputParameter<DOFs>& input) {
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
-                if constexpr (throw_error) {
-                    std::cerr << "[ruckig] velocity limit needs to be positive." << std::endl;
-                }
                 return false;
             }
 
             if (input.min_velocity && input.min_velocity.value()[dof] >= -std::numeric_limits<double>::min()) {
-                if constexpr (throw_error) {
-                    std::cerr << "[ruckig] minimum velocity limit needs to be negative." << std::endl;
-                }
                 return false;
             }
 
             if (input.max_acceleration[dof] <= std::numeric_limits<double>::min()) {
-                if constexpr (throw_error) {
-                    std::cerr << "[ruckig] acceleration limit needs to be positive." << std::endl;
-                }
                 return false;
             }
 
             if (input.max_jerk[dof] <= std::numeric_limits<double>::min()) {
-                if constexpr (throw_error) {
-                    std::cerr << "[ruckig] jerk limit needs to be positive." << std::endl;
-                }
                 return false;
             }
 
             if (std::isnan(input.target_position[dof])) {
-                if constexpr (throw_error) {
-                    std::cerr << "[ruckig] target position is not a number." << std::endl;
-                }
                 return false;
             }
 
             if (input.min_velocity) {
                 if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
-                    if constexpr (throw_error) {
-                        std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
-                    }
                     return false;
                 }
             
             } else {
                 if (std::abs(input.target_velocity[dof]) > input.max_velocity[dof]) {
-                    if constexpr (throw_error) {
-                        std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
-                    }
                     return false;
                 }
             }
 
             if (input.target_acceleration[dof] > input.max_acceleration[dof]) {
-                if constexpr (throw_error) {
-                    std::cerr << "[ruckig] target acceleration exceeds acceleration limit." << std::endl;
-                }
                 return false;
             }
 
             double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
             if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
-                if constexpr (throw_error) {
-                    std::cerr << "[ruckig] target acceleration exceeds maximal possible acceleration." << std::endl;
-                }
                 return false;
             }
         }

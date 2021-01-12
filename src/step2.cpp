@@ -724,48 +724,41 @@ bool Step2::get_profile(Profile& profile) {
 
     // Test all cases to get ones that match
     if (pf > p0) {
-        if (time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_acc1_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_acc0_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc1_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_none(profile, vMax, aMax, jMax)) {
-        } else if (time_up_acc0(profile, vMax, aMax, jMax)) {
-        } else if (time_up_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_up_acc0_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0(profile, vMin, aMax, jMax)) {
-        } else if (time_down_acc1(profile, vMin, aMax, jMax)) {
-        } else if (time_down_acc0_acc1(profile, vMin, aMax, jMax)) {
-        } else if (time_down_none(profile, vMin, aMax, jMax)) {
-        } else {
-            return false;
-        }
+        return time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)
+            || time_down_acc0_acc1_vel(profile, vMin, aMax, jMax)
+            || time_up_acc0_vel(profile, vMax, aMax, jMax)
+            || time_down_acc0_vel(profile, vMin, aMax, jMax)
+            || time_up_acc1_vel(profile, vMax, aMax, jMax)
+            || time_down_acc1_vel(profile, vMin, aMax, jMax)
+            || time_up_vel(profile, vMax, aMax, jMax)
+            || time_down_vel(profile, vMin, aMax, jMax)
+            || time_up_none(profile, vMax, aMax, jMax)
+            || time_up_acc0(profile, vMax, aMax, jMax)
+            || time_up_acc1(profile, vMax, aMax, jMax)
+            || time_up_acc0_acc1(profile, vMax, aMax, jMax)
+            || time_down_acc0(profile, vMin, aMax, jMax)
+            || time_down_acc1(profile, vMin, aMax, jMax)
+            || time_down_acc0_acc1(profile, vMin, aMax, jMax)
+            || time_down_none(profile, vMin, aMax, jMax);
 
     } else {
-        if (time_down_acc0_acc1_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc0_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_acc0_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_acc1_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_acc1_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_vel(profile, vMin, aMax, jMax)) {
-        } else if (time_up_vel(profile, vMax, aMax, jMax)) {
-        } else if (time_down_none(profile, vMin, aMax, jMax)) {
-        } else if (time_down_acc0(profile, vMin, aMax, jMax)) {
-        } else if (time_down_acc1(profile, vMin, aMax, jMax)) {
-        } else if (time_down_acc0_acc1(profile, vMin, aMax, jMax)) {
-        } else if (time_up_acc0(profile, vMax, aMax, jMax)) {
-        } else if (time_up_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_up_acc0_acc1(profile, vMax, aMax, jMax)) {
-        } else if (time_up_none(profile, vMax, aMax, jMax)) {
-        } else {
-            return false;
-        }
+        return time_down_acc0_acc1_vel(profile, vMin, aMax, jMax)
+            || time_up_acc0_acc1_vel(profile, vMax, aMax, jMax)
+            || time_down_acc0_vel(profile, vMin, aMax, jMax)
+            || time_up_acc0_vel(profile, vMax, aMax, jMax)
+            || time_down_acc1_vel(profile, vMin, aMax, jMax)
+            || time_up_acc1_vel(profile, vMax, aMax, jMax)
+            || time_down_vel(profile, vMin, aMax, jMax)
+            || time_up_vel(profile, vMax, aMax, jMax)
+            || time_down_none(profile, vMin, aMax, jMax)
+            || time_down_acc0(profile, vMin, aMax, jMax)
+            || time_down_acc1(profile, vMin, aMax, jMax)
+            || time_down_acc0_acc1(profile, vMin, aMax, jMax)
+            || time_up_acc0(profile, vMax, aMax, jMax)
+            || time_up_acc1(profile, vMax, aMax, jMax)
+            || time_up_acc0_acc1(profile, vMax, aMax, jMax)
+            || time_up_none(profile, vMax, aMax, jMax);
     }
-    return true;
 }
 
 } // namespace ruckig

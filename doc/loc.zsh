@@ -1,5 +1,5 @@
 echo "Lines of Code of Ruckig"
-cloc .. --exclude-lang=HTML,CSS,JSON,XML,YAML,zsh,Markdown --exclude-dir=reflexxes,build,examples
+cloc .. --exclude-lang=HTML,CSS,JSON,XML,YAML,zsh,Markdown --exclude-dir=reflexxes,build,examples,test
 
 echo
 echo "Lines of Code of Reflexxes"

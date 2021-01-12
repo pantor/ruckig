@@ -1,12 +1,11 @@
 #define CATCH_CONFIG_MAIN
+
 #include <random>
 
 #include <catch2/catch.hpp>
-#include <Eigen/Core>
 
 #include <ruckig/parameter.hpp>
 #include <ruckig/ruckig.hpp>
-
 #include <ruckig/alternative/quintic.hpp>
 
 #ifdef WITH_REFLEXXES
@@ -16,24 +15,33 @@
 
 using namespace ruckig;
 
-template<size_t DOFs>
-inline std::array<double, DOFs> Random(double min = -1.0, double max = 1.0) {
-    using EigenVector = Eigen::Matrix<double, DOFs, 1>;
-    EigenVector a = (max - min)/2 * EigenVector::Random().array() + (max + min)/2; // Eigen returns uniform random floats between -1 and 1
-    std::array<double, DOFs> result;
-    std::copy_n(a.data(), DOFs, result.begin());
-    return result;
-}
+template<size_t DOFs, class T>
+class Randomizer {
+    std::default_random_engine gen;
+    std::uniform_real_distribution<double> uniform_dist;
+    T dist;
 
-template<size_t DOFs>
-constexpr inline std::array<double, DOFs> Zero() {
-    return std::array<double, DOFs> {};
-}
+public:
+    explicit Randomizer(T dist): dist(dist), uniform_dist(std::uniform_real_distribution<double>(0.0, 1.0)) { }
 
-template<size_t DOFs>
-inline std::array<double, DOFs> RandomOrZero(double r, double p_random) {
-    return r < p_random ? Random<DOFs>() : Zero<DOFs>();
-}
+    void fill(std::array<double, DOFs>& input) {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            input[dof] = dist(gen);
+        }
+    }
+
+    void fill_or_zero(std::array<double, DOFs>& input, double p) {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            input[dof] = uniform_dist(gen) < p ? dist(gen) : 0.0;
+        }
+    }
+
+    void fill(std::array<double, DOFs>& input, const std::array<double, DOFs>& offset) {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            input[dof] = dist(gen) + std::abs(offset[dof]);
+        }
+    }
+};
 
 
 template<size_t DOFs, class OTGType>
@@ -97,6 +105,7 @@ void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& ot
     }
 }
 
+
 TEST_CASE("Quintic") {
     InputParameter<3> input;
     input.current_position = {0.0, 0.0, 0.0};
@@ -121,8 +130,10 @@ TEST_CASE("Quintic") {
 
 TEST_CASE("Ruckig") {
     constexpr bool full {true};
-    constexpr double limit_min {0.075}, limit_max {12.0};
-    constexpr double position_abs {10.0};
+
+    std::normal_distribution<double> position_dist {0.0, 4.0};
+    std::uniform_real_distribution<double> dynamic_dist {-1.0, 1.0};
+    std::uniform_real_distribution<double> limit_dist {0.1, 12.0};
 
     SECTION("Known examples") {
         Ruckig<3> otg {0.005};
@@ -197,63 +208,49 @@ TEST_CASE("Ruckig") {
 
     SECTION("Random input with 3 DoF and target velocity") {
         constexpr size_t DOFs {3};
-        using Vec = Eigen::Matrix<double, DOFs, 1>;
-
         Ruckig<DOFs, true> otg {0.005};
         InputParameter<DOFs> input;
 
         srand(39);
-        std::default_random_engine gen;
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
+        Randomizer<DOFs, decltype(position_dist)> p { position_dist };
+        Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
+        Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
         for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>(-position_abs, position_abs);
-            input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
-            input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>(-position_abs, position_abs);
-            input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.7);
-
-            Vec max_v = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_velocity.data(), 3, 1).array().abs() + limit_min;
-            std::copy_n(max_v.data(), DOFs, input.max_velocity.begin());
-            Vec max_a = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
-            Vec max_j = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
-
+            p.fill(input.current_position);
+            d.fill_or_zero(input.current_velocity, 0.9);
+            d.fill_or_zero(input.current_acceleration, 0.8);
+            p.fill(input.target_position);
+            d.fill_or_zero(input.target_velocity, 0.7);
+            l.fill(input.max_velocity, input.target_velocity);
+            l.fill(input.max_acceleration);
+            l.fill(input.max_jerk);
             check_calculation(otg, input);
         }
     }
 
     SECTION("Random input with 1 DoF and target velocity, acceleration") {
         constexpr size_t DOFs {1};
-        using Vec = Eigen::Matrix<double, DOFs, 1>;
-
         Ruckig<DOFs, true> otg {0.005};
         InputParameter<DOFs> input;
 
         srand(47);
-        std::default_random_engine gen;
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
+        Randomizer<DOFs, decltype(position_dist)> p { position_dist };
+        Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
+        Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
         for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>(-position_abs, position_abs);
-            input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
-            input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>(-position_abs, position_abs);
-            input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.7);
-            input.target_acceleration = RandomOrZero<DOFs>(dist(gen), 0.6);
+            p.fill(input.current_position);
+            d.fill_or_zero(input.current_velocity, 0.9);
+            d.fill_or_zero(input.current_acceleration, 0.8);
+            p.fill(input.target_position);
+            d.fill_or_zero(input.target_velocity, 0.7);
+            d.fill_or_zero(input.target_acceleration, 0.6);
+            l.fill(input.max_velocity, input.target_velocity);
+            l.fill(input.max_acceleration, input.target_acceleration);
+            l.fill(input.max_jerk);
 
-            Vec max_v = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_velocity.data()).array().abs() + limit_min;
-            std::copy_n(max_v.data(), DOFs, input.max_velocity.begin());
-            Vec max_a = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_acceleration.data()).array().abs() + limit_min;
-            std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
-            Vec max_j = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
-
-            Vec t_v = Eigen::Map<Vec>(input.target_velocity.data());
-            Vec t_a = Eigen::Map<Vec>(input.target_acceleration.data());
-            auto max_target_acceleration = (2 * max_j.array() * (max_v.array() - t_v.array().abs())).sqrt();
-            if ((t_a.array().abs() > max_target_acceleration.array()).any()) {
+            if (!otg.validate_input(input)) {
                 continue;
             }
 
@@ -263,34 +260,26 @@ TEST_CASE("Ruckig") {
 
     SECTION("Random input with 3 DoF and target velocity, acceleration") {
         constexpr size_t DOFs {3};
-        using Vec = Eigen::Matrix<double, DOFs, 1>;
-
         Ruckig<DOFs, true> otg {0.005};
         InputParameter<DOFs> input;
         
-        srand(39);
-        std::default_random_engine gen;
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
+        srand(43);
+        Randomizer<DOFs, decltype(position_dist)> p { position_dist };
+        Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
+        Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
         for (size_t i = 0; i < (full ? 320 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>(-position_abs, position_abs);
-            input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
-            input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>(-position_abs, position_abs);
-            input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.7);
-            input.target_acceleration = RandomOrZero<DOFs>(dist(gen), 0.6);
+            p.fill(input.current_position);
+            d.fill_or_zero(input.current_velocity, 0.9);
+            d.fill_or_zero(input.current_acceleration, 0.8);
+            p.fill(input.target_position);
+            d.fill_or_zero(input.target_velocity, 0.7);
+            d.fill_or_zero(input.target_acceleration, 0.6);
+            l.fill(input.max_velocity, input.target_velocity);
+            l.fill(input.max_acceleration, input.target_acceleration);
+            l.fill(input.max_jerk);
 
-            Vec max_v = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_velocity.data()).array().abs() + limit_min;
-            std::copy_n(max_v.data(), DOFs, input.max_velocity.begin());
-            Vec max_a = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_acceleration.data()).array().abs() + limit_min;
-            std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
-            Vec max_j = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
-
-            Vec t_v = Eigen::Map<Vec>(input.target_velocity.data());
-            Vec t_a = Eigen::Map<Vec>(input.target_acceleration.data());
-            auto max_target_acceleration = (2 * max_j.array() * (max_v.array() - t_v.array().abs())).sqrt();
-            if ((t_a.array().abs() > max_target_acceleration.array()).any()) {
+            if (!otg.validate_input(input)) {
                 continue;
             }
 
@@ -301,30 +290,24 @@ TEST_CASE("Ruckig") {
 #ifdef WITH_REFLEXXES
     SECTION("Comparison with Reflexxes with 1 DoF") {
         constexpr size_t DOFs {1};
-        using Vec = Eigen::Matrix<double, DOFs, 1>;
-
         Ruckig<DOFs, true> otg {0.005};
         Reflexxes<DOFs> rflx {0.005};
         InputParameter<DOFs> input;
 
         srand(43);
-        std::default_random_engine gen;
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
+        Randomizer<DOFs, decltype(position_dist)> p { position_dist };
+        Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
+        Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
         for (size_t i = 0; i < (full ? 154 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>(-position_abs, position_abs);
-            input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
-            input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>(-position_abs, position_abs);
-            input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.6);
-
-            Vec max_v = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_velocity.data()).array().abs() + limit_min;
-            std::copy_n(max_v.data(), DOFs, input.max_velocity.begin());
-            Vec max_a = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
-            Vec max_j = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
-
+            p.fill(input.current_position);
+            d.fill_or_zero(input.current_velocity, 0.9);
+            d.fill_or_zero(input.current_acceleration, 0.8);
+            p.fill(input.target_position);
+            d.fill_or_zero(input.target_velocity, 0.6);
+            l.fill(input.max_velocity, input.target_velocity);
+            l.fill(input.max_acceleration);
+            l.fill(input.max_jerk);
             check_comparison(otg, input, rflx);
         }
     }
@@ -338,22 +321,18 @@ TEST_CASE("Ruckig") {
         InputParameter<DOFs> input;
 
         srand(48);
-        std::default_random_engine gen;
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
+        Randomizer<DOFs, decltype(position_dist)> p { position_dist };
+        Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
+        Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
         for (size_t i = 0; i < 1*1024; ++i) {
-            input.current_position = Random<DOFs>();
-            input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
-            input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>();
-
-            Vec max_v = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_v.data(), DOFs, input.max_velocity.begin());
-            Vec max_a = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_a.data(), DOFs, input.max_acceleration.begin());
-            Vec max_j = limit_max * Vec::Random().array().abs() + limit_min;
-            std::copy_n(max_j.data(), DOFs, input.max_jerk.begin());
-
+            p.fill(input.current_position);
+            d.fill_or_zero(input.current_velocity, 0.9);
+            d.fill_or_zero(input.current_acceleration, 0.8);
+            p.fill(input.target_position);
+            l.fill(input.max_velocity);
+            l.fill(input.max_acceleration);
+            l.fill(input.max_jerk);
             check_comparison(otg, input, rflx);
         }
     } */
