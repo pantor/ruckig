@@ -18,7 +18,18 @@ enum Result {
 
 
 template<size_t DOFs>
-struct InputParameter {
+class InputParameter {
+    template<class T>
+    static std::string join(const T& array) {
+        std::ostringstream ss;
+        for (size_t i = 0; i < DOFs; ++i) {
+            if (i) ss << ", ";
+            ss << array[i];
+        }
+        return ss.str();
+    }
+
+public:
     using Vector = std::array<double, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
 
@@ -57,14 +68,22 @@ struct InputParameter {
         );
     }
 
-    template<class T>
-    static std::string join(const T& array) {
-        std::ostringstream ss;
-        for (size_t i = 0; i < DOFs; ++i) {
-            if (i) ss << ", ";
-            ss << array[i];
+    void scale(double factor) {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            current_position[dof] *= factor;
+            current_velocity[dof] *= factor;
+            current_acceleration[dof] *= factor;
+            target_position[dof] *= factor;
+            target_velocity[dof] *= factor;
+            target_acceleration[dof] *= factor;
+            max_velocity[dof] *= factor;
+            max_acceleration[dof] *= factor;
+            max_jerk[dof] *= factor;
+
+            if (min_velocity) {
+                min_velocity.value()[dof] *= factor;
+            }
         }
-        return ss.str();
     }
 
     std::string to_string() const {

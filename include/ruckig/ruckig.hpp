@@ -12,172 +12,49 @@
 
 #include <ruckig/parameter.hpp>
 #include <ruckig/profile.hpp>
+#include <ruckig/steps.hpp>
 
 
 namespace ruckig {
 
-//! Which times are possible for synchronization?
-struct Block {
-    struct Interval {
-        double left, right; // [s]
-    };
-
-    double t_min; // [s]
-    Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
-
-    std::optional<Interval> a, b; // Max. 2 intervals can be blocked
-    std::optional<Profile> p_a, p_b;
-
-    bool is_blocked(double t) const {
-        return (t < t_min) || (a && a->left < t && t < a->right) || (b && b->left < t && t < b->right);
-    }
-};
-
-
-//! Calculates (pre-) trajectory to get current state below the limits
-class Brake {
-    static constexpr double eps {3e-15};
-
-    static void acceleration_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
-    static void velocity_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
-
-public:
-    static void get_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
-};
-
-
-class Step1 {
-    using Limits = Profile::Limits;
-    using Teeth = Profile::Teeth;
-
-    double p0, v0, a0;
-    double pf, vf, af;
-    double vMax, vMin, aMax, jMax;
-
-    // Pre-calculated expressions
-    double pd;
-    double v0_v0, vf_vf;
-    double a0_a0, a0_p3, a0_p4, a0_p5, a0_p6;
-    double af_af, af_p3, af_p4, af_p5, af_p6;
-    double aMax_aMax;
-    double jMax_jMax;
-
-    // Max 6 valid profiles
-    std::array<Profile, 6> valid_profiles;
-    size_t valid_profile_counter;
-
-    void add_profile(Profile profile, Limits limits, double jMax);
-
-    void time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_up_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_up_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    void time_up_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    void time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
-    void time_up_none(Profile& profile, double vMax, double aMax, double jMax);
-
-    void time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_none(Profile& profile, double vMin, double aMax, double jMax);
-
-    template<size_t N, size_t left, size_t right, bool same_direction = true>
-    inline void add_block(double t_brake) {
-        double left_duration = valid_profiles[left].t_sum[6] + t_brake;
-        double right_duraction = valid_profiles[right].t_sum[6] + t_brake;
-        if constexpr (same_direction) {
-            if (valid_profiles[left].direction != valid_profiles[right].direction) {
-                return;
-            }
-        }
-
-        if (left_duration < right_duraction) {
-            if constexpr (N == 0) {
-                block.a = Block::Interval {left_duration, right_duraction};
-                block.p_a = valid_profiles[right];
-            } else {
-                block.b = Block::Interval {left_duration, right_duraction};
-                block.p_b = valid_profiles[right];
-            }
-        } else {
-            if constexpr (N == 0) {
-                block.a = Block::Interval {right_duraction, left_duration};
-                block.p_a = valid_profiles[left];
-            } else {
-                block.b = Block::Interval {right_duraction, left_duration};
-                block.p_b = valid_profiles[left];
-            }
-        }
-    }
-
-    bool calculate_block();
-
-public:
-    Block block;
-
-    explicit Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax);
-
-    bool get_profile(const Profile& input);
-};
-
-
-class Step2 {
-    using Teeth = Profile::Teeth;
-
-    double tf;
-    double p0, v0, a0;
-    double pf, vf, af;
-    double vMax, vMin, aMax, jMax;
-
-    // Pre-calculated expressions
-    double pd;
-    double tf_tf, tf_p3, tf_p4;
-    double vd, vd_vd;
-    double ad, ad_ad;
-    double v0_v0, vf_vf;
-    double a0_a0, a0_p3, a0_p4, a0_p5, a0_p6;
-    double af_af, af_p3, af_p4, af_p5, af_p6;
-    double aMax_aMax, aMax_p4;
-    double jMax_jMax, jMax_p4;
-
-    bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_up_none(Profile& profile, double vMax, double aMax, double jMax);
-
-    bool time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_none(Profile& profile, double vMin, double aMax, double jMax);
-
-public:
-    explicit Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax);
-
-    bool get_profile(Profile& profile);
-};
-
-
 template<size_t DOFs, bool throw_error = false>
 class Ruckig {
+    //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
-    double t, tf;
+    //! Normalized input for calculating the trajectory
+    InputParameter<DOFs> normalized_input;
+
+    //! Scale that normalizes the input
+    double scale;
+
+    //! Current time in [s]
+    double t;
+    
+    //! Duration of the current trajectory in [s]
+    double tf;
+
+    //! Set of current profiles for each DoF
     std::array<Profile, DOFs> profiles;
 
-    bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles) {
+    static bool abs_compare(double a, double b) {
+        return (std::abs(a) < std::abs(b));
+    }
+
+    void normalize_input(const InputParameter<DOFs>& input) {
+        const auto [vMax_min, vMax_max] = std::minmax_element(input.max_velocity.cbegin(), input.max_velocity.cend(), abs_compare);
+        const auto [aMax_min, aMax_max] = std::minmax_element(input.max_acceleration.cbegin(), input.max_acceleration.cend(), abs_compare);
+        const auto [jMax_min, jMax_max] = std::minmax_element(input.max_jerk.cbegin(), input.max_jerk.cend(), abs_compare);
+
+        const double min_value = std::min({*vMax_min, *aMax_min, *jMax_min});
+        const double max_value = std::max({*vMax_max, *aMax_max, *jMax_max});
+        scale = 1.0; // / min_value;
+
+        normalized_input = input;
+        // normalized_input.scale(scale);
+    }
+
+    bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, size_t& limiting_dof, std::array<Profile, DOFs>& profiles) {
         if (DOFs == 1 && !t_min) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
@@ -188,7 +65,7 @@ class Ruckig {
         // Possible t_syncs are the start times of the intervals
         std::array<double, 3*DOFs> possible_t_syncs;
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            auto& block = blocks[dof];
+            const auto& block = blocks[dof];
             possible_t_syncs[3 * dof] = block.t_min;
             possible_t_syncs[3 * dof + 1] = block.a ? block.a->right : std::numeric_limits<double>::infinity();
             possible_t_syncs[3 * dof + 2] = block.b ? block.b->right : std::numeric_limits<double>::infinity();
@@ -200,7 +77,7 @@ class Ruckig {
         std::stable_sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
         for (size_t i: idx) {
-            double possible_t_sync = possible_t_syncs[i];
+            const double possible_t_sync = possible_t_syncs[i];
             if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](auto block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
                 continue;
             }
@@ -232,40 +109,45 @@ class Ruckig {
             return Result::ErrorInvalidInput;
         }
 
+        normalize_input(input);
+        InputParameter<DOFs>& inp = normalized_input;
+
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
-        std::array<double, DOFs> input_min_velocity;
+        std::array<double, DOFs> inp_min_velocity;
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            if (!input.enabled[dof]) {
+            if (!inp.enabled[dof]) {
                 continue;
             }
 
+            Profile& p = profiles[dof];
+
             // Calculate brakes (if input exceeds or will exceed limits)
-            input_min_velocity[dof] = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
-            Brake::get_brake_trajectory(input.current_velocity[dof], input.current_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof], profiles[dof].t_brakes, profiles[dof].j_brakes);
+            inp_min_velocity[dof] = inp.min_velocity ? inp.min_velocity.value()[dof] : -inp.max_velocity[dof];
+            Brake::get_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
             
-            profiles[dof].t_brake = profiles[dof].t_brakes[0] + profiles[dof].t_brakes[1];
+            p.t_brake = p.t_brakes[0] + p.t_brakes[1];
 
-            p0s[dof] = input.current_position[dof];
-            v0s[dof] = input.current_velocity[dof];
-            a0s[dof] = input.current_acceleration[dof];
+            p0s[dof] = inp.current_position[dof];
+            v0s[dof] = inp.current_velocity[dof];
+            a0s[dof] = inp.current_acceleration[dof];
 
-            if (profiles[dof].t_brakes[0] > 0.0) {
-                profiles[dof].p_brakes[0] = p0s[dof];
-                profiles[dof].v_brakes[0] = v0s[dof];
-                profiles[dof].a_brakes[0] = a0s[dof];
-                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(profiles[dof].t_brakes[0], p0s[dof], v0s[dof], a0s[dof], profiles[dof].j_brakes[0]);
+            if (p.t_brakes[0] > 0.0) {
+                p.p_brakes[0] = p0s[dof];
+                p.v_brakes[0] = v0s[dof];
+                p.a_brakes[0] = a0s[dof];
+                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[0], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[0]);
 
-                if (profiles[dof].t_brakes[1] > 0.0) {
-                    profiles[dof].p_brakes[1] = p0s[dof];
-                    profiles[dof].v_brakes[1] = v0s[dof];
-                    profiles[dof].a_brakes[1] = a0s[dof];
-                    std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(profiles[dof].t_brakes[1], p0s[dof], v0s[dof], a0s[dof], profiles[dof].j_brakes[1]);
+                if (p.t_brakes[1] > 0.0) {
+                    p.p_brakes[1] = p0s[dof];
+                    p.v_brakes[1] = v0s[dof];
+                    p.a_brakes[1] = a0s[dof];
+                    std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[1], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[1]);
                 }
             }
 
-            Step1 step1 {p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
-            bool found_profile = step1.get_profile(profiles[dof]);
+            Step1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof]};
+            bool found_profile = step1.get_profile(p);
             if (!found_profile) {
                 if constexpr (throw_error) {
                     throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
@@ -277,8 +159,8 @@ class Ruckig {
             output.independent_min_durations[dof] = step1.block.t_min;
         }
 
-        int limiting_dof; // The DoF that doesn't need step 2
-        bool found_synchronization = synchronize(blocks, input.minimum_duration, tf, limiting_dof, profiles);
+        size_t limiting_dof; // The DoF that doesn't need step 2
+        bool found_synchronization = synchronize(blocks, inp.minimum_duration, tf, limiting_dof, profiles);
         if (!found_synchronization) {
             if constexpr (throw_error) {
                 throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
@@ -288,13 +170,13 @@ class Ruckig {
         
         if (tf > 0.0) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
-                if (!input.enabled[dof] || dof == limiting_dof) {
+                if (!inp.enabled[dof] || dof == limiting_dof) {
                     continue;
                 }
 
-                double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
+                const double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
 
-                Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
+                Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof]);
                 if (!found_time_synchronization) {
                     if constexpr (throw_error) {
@@ -312,7 +194,7 @@ class Ruckig {
     }
 
 public:
-    //! Just a shorter notation
+    // Just a shorter notation
     using Input = InputParameter<DOFs>;
     using Output = OutputParameter<DOFs>;
 
@@ -324,51 +206,69 @@ public:
     bool validate_input(const InputParameter<DOFs>& input) {
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
-                std::cerr << "[ruckig] velocity limit needs to be positive." << std::endl;
+                if constexpr (throw_error) {
+                    std::cerr << "[ruckig] velocity limit needs to be positive." << std::endl;
+                }
                 return false;
             }
 
             if (input.min_velocity && input.min_velocity.value()[dof] >= -std::numeric_limits<double>::min()) {
-                std::cerr << "[ruckig] minimum velocity limit needs to be negative." << std::endl;
+                if constexpr (throw_error) {
+                    std::cerr << "[ruckig] minimum velocity limit needs to be negative." << std::endl;
+                }
                 return false;
             }
 
             if (input.max_acceleration[dof] <= std::numeric_limits<double>::min()) {
-                std::cerr << "[ruckig] acceleration limit needs to be positive." << std::endl;
+                if constexpr (throw_error) {
+                    std::cerr << "[ruckig] acceleration limit needs to be positive." << std::endl;
+                }
                 return false;
             }
 
             if (input.max_jerk[dof] <= std::numeric_limits<double>::min()) {
-                std::cerr << "[ruckig] jerk limit needs to be positive." << std::endl;
+                if constexpr (throw_error) {
+                    std::cerr << "[ruckig] jerk limit needs to be positive." << std::endl;
+                }
                 return false;
             }
 
             if (std::isnan(input.target_position[dof])) {
-                std::cerr << "[ruckig] target position is not a number." << std::endl;
+                if constexpr (throw_error) {
+                    std::cerr << "[ruckig] target position is not a number." << std::endl;
+                }
                 return false;
             }
 
             if (input.min_velocity) {
                 if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
-                    std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
+                    if constexpr (throw_error) {
+                        std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
+                    }
                     return false;
                 }
             
             } else {
                 if (std::abs(input.target_velocity[dof]) > input.max_velocity[dof]) {
-                    std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
+                    if constexpr (throw_error) {
+                        std::cerr << "[ruckig] target velocity exceeds velocity limit." << std::endl;
+                    }
                     return false;
                 }
             }
 
             if (input.target_acceleration[dof] > input.max_acceleration[dof]) {
-                std::cerr << "[ruckig] target acceleration exceeds acceleration limit." << std::endl;
+                if constexpr (throw_error) {
+                    std::cerr << "[ruckig] target acceleration exceeds acceleration limit." << std::endl;
+                }
                 return false;
             }
 
             double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
             if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
-                std::cerr << "[ruckig] target acceleration exceeds maximal possible acceleration." << std::endl;
+                if constexpr (throw_error) {
+                    std::cerr << "[ruckig] target acceleration exceeds maximal possible acceleration." << std::endl;
+                }
                 return false;
             }
         }
@@ -405,27 +305,28 @@ public:
         if (time + delta_time > tf) {
             // Keep constant acceleration
             for (size_t dof = 0; dof < DOFs; ++dof) {
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time - tf, current_input.target_position[dof], current_input.target_velocity[dof], current_input.target_acceleration[dof], 0);
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time - tf, normalized_input.target_position[dof], normalized_input.target_velocity[dof], normalized_input.target_acceleration[dof], 0, 1./scale);
             }
             return;
         }
 
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            if (!current_input.enabled[dof]) {
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time, current_input.current_position[dof], current_input.current_velocity[dof], current_input.current_acceleration[dof], 0);
+            if (!normalized_input.enabled[dof]) {
+                // Keep constant acceleration
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time, normalized_input.current_position[dof], normalized_input.current_velocity[dof], normalized_input.current_acceleration[dof], 0, 1./scale);
             }
 
-            auto& p = profiles[dof];
+            const auto& p = profiles[dof];
 
             double t_diff = time;
-            if (p.t_brake.has_value()) {
+            if (p.t_brake) {
                 if (t_diff < p.t_brake.value()) {
-                    size_t index = (t_diff < p.t_brakes[0]) ? 0 : 1;
+                    const size_t index = (t_diff < p.t_brakes[0]) ? 0 : 1;
                     if (index > 0) {
                         t_diff -= p.t_brakes[index - 1];
                     }
 
-                    std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p_brakes[index], p.v_brakes[index], p.a_brakes[index], p.j_brakes[index]);
+                    std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p_brakes[index], p.v_brakes[index], p.a_brakes[index], p.j_brakes[index], 1./scale);
                     continue;
                 } else {
                     t_diff -= p.t_brake.value();
@@ -434,20 +335,19 @@ public:
 
             // Non-time synchronization
             if (t_diff >= p.t_sum[6]) {
-                output.new_position[dof] = p.p[7];
-                output.new_velocity[dof] = p.v[7];
-                output.new_acceleration[dof] = p.a[7];
+                // Keep constant acceleration
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff - p.t_sum[6], normalized_input.target_position[dof], normalized_input.target_velocity[dof], normalized_input.target_acceleration[dof], 0, 1./scale);
                 continue;
             }
 
-            auto index_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t_diff);
-            size_t index = std::distance(p.t_sum.begin(), index_ptr);
+            const auto index_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t_diff);
+            const size_t index = std::distance(p.t_sum.begin(), index_ptr);
 
             if (index > 0) {
                 t_diff -= p.t_sum[index - 1];
             }
 
-            std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index]);
+            std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index], 1./scale);
         }
     }
 

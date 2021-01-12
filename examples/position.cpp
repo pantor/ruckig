@@ -7,10 +7,12 @@
 using namespace ruckig;
 
 int main() {
+    // Create instances: the ruckig otg as well as input and output parameters
     Ruckig<6> otg {0.001};
     InputParameter<6> input;
     OutputParameter<6> output;
 
+    // Set input parameters
     input.max_velocity = {1.2, 1.2, 1.2, 0.6, 0.6, 0.6};
     input.max_acceleration = {4.0, 4.0, 4.0, 1.5, 1.5, 1.5};
     input.max_jerk = {10.0, 10.0, 10.0, 4.0, 4.0, 4.0};
@@ -23,6 +25,7 @@ int main() {
     input.target_velocity = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     input.target_acceleration = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
+    // Generate trajectory
     std::cout << "t | p1 | p2 | p3 | p4 | p5 | p6" << std::endl;
     while (otg.update(input, output) == Result::Working) {
         auto& p = output.new_position;

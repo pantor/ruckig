@@ -77,7 +77,7 @@ class Quintic {
         double j_max_tfs_max = *std::max_element(j_max_tfs.cbegin(), j_max_tfs.cend());
 
         tf = std::max<double>({v_max_tfs_max, a_max_tfs_max, j_max_tfs_max});
-        if (input.minimum_duration.has_value()) {
+        if (input.minimum_duration) {
             tf = std::max<double>({tf, input.minimum_duration.value()});
         }
 

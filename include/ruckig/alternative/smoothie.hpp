@@ -49,7 +49,7 @@ class Smoothie {
         }
 
         double max_t_f = *std::max_element(t_f.cbegin(), t_f.cend()); 
-        if (input.minimum_duration.has_value()) {
+        if (input.minimum_duration) {
             max_t_f = std::max<double>({max_t_f, input.minimum_duration.value()});
         }
 

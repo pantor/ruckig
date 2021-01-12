@@ -53,7 +53,7 @@ public:
 
             switch (input.type) {
             case InputParameter<DOFs>::Type::Position: {
-                if (input.minimum_duration.has_value()) {
+                if (input.minimum_duration) {
                     input_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value());
                 }
 
@@ -68,7 +68,7 @@ public:
                 input_parameters->SetMaxJerkVector(input.max_jerk.data());
             } break;
             case InputParameter<DOFs>::Type::Velocity: {
-                if (input.minimum_duration.has_value()) {
+                if (input.minimum_duration) {
                     input_vel_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value());
                 }
 

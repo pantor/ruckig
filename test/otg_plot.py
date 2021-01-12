@@ -97,15 +97,15 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-1.3345689845, 0.0, -0.0]
-    inp.current_velocity = [-0.01170609575, -0.0, -0.0]
-    inp.current_acceleration = [-0.9771928498, 0.0, 0.0]
-    inp.target_position = [-280.6957253789, 0.0, -0.0]
-    inp.target_velocity = [0.0867118552, -0.0, 0.0]
+    inp.current_position = [-13.345689845, 0.0, -0.0]
+    inp.current_velocity = [-00.1170609575, -0.0, -0.0]
+    inp.current_acceleration = [-09.771928498, 0.0, 0.0]
+    inp.target_position = [-2806.957253789, 0.0, -0.0]
+    inp.target_velocity = [00.867118552, -0.0, 0.0]
     inp.target_acceleration = [0, 0, 0]
     inp.max_velocity = [1.7894752878, 10.6789, 11.1123]
-    inp.max_acceleration = [8.70979497725, 9.22418, 9.56461]
-    inp.max_jerk = [0.0081841023, 5.63521, 6.61824]
+    inp.max_acceleration = [0.870979497725, 9.22418, 9.56461]
+    inp.max_jerk = [0.081841023, 5.63521, 6.61824]
 
     print_input_for_mathematica(inp, 0)
 
