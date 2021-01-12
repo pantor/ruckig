@@ -111,7 +111,7 @@ std::optional<double> minimum_duration;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 ```
 
-The members are implemented using the C++ standard libraries `array` and `optional` type. To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
+The members are implemented using the C++ standard libraries `array` and `optional` type. Note that there are some range constraints due to numerical reasons, you can read below for more details. To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
 ```
 target_acceleration <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ``` 
@@ -150,9 +150,9 @@ std::array<double, DOFs> independent_min_durations; // [s]
 Moreover, a range of additional parameter about the duration of the trajectory are included.
 
 
-## Tests
+## Tests and Numerical Stability
 
-The current test suite validates over 934.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`. Currently, we presume `max_jerk > 0.1 * max_acceleration` for numerical soundness.
+The current test suite validates over 1.008.000 (random) trajectories. The numerical exactness is tested for the position, velocity, acceleration, and time target to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the jerk limit to be within a numerical error of `1e-12`. Ruckig presumes that the input values are within 5 orders of magnitude. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
 
 
 ## Development

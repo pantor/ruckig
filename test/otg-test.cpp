@@ -17,9 +17,9 @@
 using namespace ruckig;
 
 template<size_t DOFs>
-inline std::array<double, DOFs> Random() {
+inline std::array<double, DOFs> Random(double min = -1.0, double max = 1.0) {
     using EigenVector = Eigen::Matrix<double, DOFs, 1>;
-    EigenVector a = EigenVector::Random(); // Eigen returns uniform random floats between -1 and 1
+    EigenVector a = (max - min)/2 * EigenVector::Random().array() + (max + min)/2; // Eigen returns uniform random floats between -1 and 1
     std::array<double, DOFs> result;
     std::copy_n(a.data(), DOFs, result.begin());
     return result;
@@ -121,8 +121,8 @@ TEST_CASE("Quintic") {
 
 TEST_CASE("Ruckig") {
     constexpr bool full {true};
-    constexpr double limit_min {0.1};
-    constexpr double limit_max = {10.0};
+    constexpr double limit_min {0.075}, limit_max {12.0};
+    constexpr double position_abs {10.0};
 
     SECTION("Known examples") {
         Ruckig<3> otg {0.005};
@@ -207,10 +207,10 @@ TEST_CASE("Ruckig") {
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
         for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>();
+            input.current_position = Random<DOFs>(-position_abs, position_abs);
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>();
+            input.target_position = Random<DOFs>(-position_abs, position_abs);
             input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.7);
 
             Vec max_v = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_velocity.data(), 3, 1).array().abs() + limit_min;
@@ -236,10 +236,10 @@ TEST_CASE("Ruckig") {
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
         for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>();
+            input.current_position = Random<DOFs>(-position_abs, position_abs);
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>();
+            input.target_position = Random<DOFs>(-position_abs, position_abs);
             input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.7);
             input.target_acceleration = RandomOrZero<DOFs>(dist(gen), 0.6);
 
@@ -272,11 +272,11 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 272 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>();
+        for (size_t i = 0; i < (full ? 320 : 1) * 1024; ++i) {
+            input.current_position = Random<DOFs>(-position_abs, position_abs);
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>();
+            input.target_position = Random<DOFs>(-position_abs, position_abs);
             input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.7);
             input.target_acceleration = RandomOrZero<DOFs>(dist(gen), 0.6);
 
@@ -311,11 +311,11 @@ TEST_CASE("Ruckig") {
         std::default_random_engine gen;
         std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-        for (size_t i = 0; i < (full ? 128 : 1) * 1024; ++i) {
-            input.current_position = Random<DOFs>();
+        for (size_t i = 0; i < (full ? 154 : 1) * 1024; ++i) {
+            input.current_position = Random<DOFs>(-position_abs, position_abs);
             input.current_velocity = RandomOrZero<DOFs>(dist(gen), 0.9);
             input.current_acceleration = RandomOrZero<DOFs>(dist(gen), 0.8);
-            input.target_position = Random<DOFs>();
+            input.target_position = Random<DOFs>(-position_abs, position_abs);
             input.target_velocity = RandomOrZero<DOFs>(dist(gen), 0.6);
 
             Vec max_v = limit_max * Vec::Random().array().abs() + Eigen::Map<Vec>(input.target_velocity.data()).array().abs() + limit_min;

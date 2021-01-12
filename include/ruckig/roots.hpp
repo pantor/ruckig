@@ -343,7 +343,7 @@ inline double safeNewton(const F& func, const DF& dfunc, const double &l, const 
 // Calculate a single zero of polynom p(x) inside [lbound, ubound]
 // Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
 template<size_t N, size_t maxDblIts = 128>
-inline double shrinkInterval(const std::array<double, N>& p, double lbound, double ubound, double tol) {
+inline double shrinkInterval(const std::array<double, N>& p, double lbound, double ubound, double tol = 1e-14) {
     auto deriv = polyDeri(p);
     auto func = [&p](double x) { return polyEval(p, x); };
     auto dfunc = [&deriv](double x) { return polyEval(deriv, x); };

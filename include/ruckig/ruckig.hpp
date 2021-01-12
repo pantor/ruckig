@@ -42,7 +42,6 @@ class Brake {
     static void velocity_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
 
 public:
-    static void get_brake_trajectory(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
     static void get_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
 };
 
@@ -58,11 +57,10 @@ class Step1 {
     // Pre-calculated expressions
     double pd;
     double v0_v0, vf_vf;
-    double a0_a0, af_af, aMax_aMax;
+    double a0_a0, a0_p3, a0_p4, a0_p5, a0_p6;
+    double af_af, af_p3, af_p4, af_p5, af_p6;
+    double aMax_aMax;
     double jMax_jMax;
-
-    double a0_p3, a0_p4, a0_p5, a0_p6;
-    double af_p3, af_p4, af_p5, af_p6;
 
     // Max 6 valid profiles
     std::array<Profile, 6> valid_profiles;
@@ -79,14 +77,43 @@ class Step1 {
     void time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
     void time_up_none(Profile& profile, double vMax, double aMax, double jMax);
 
-    void time_down_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_down_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_down_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_down_vel(Profile& profile, double vMax, double aMax, double jMax);
-    void time_down_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    void time_down_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    void time_down_acc0(Profile& profile, double vMax, double aMax, double jMax);
-    void time_down_none(Profile& profile, double vMax, double aMax, double jMax);
+    void time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    void time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    void time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
+    void time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
+    void time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    void time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    void time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
+    void time_down_none(Profile& profile, double vMin, double aMax, double jMax);
+
+    template<size_t N, size_t left, size_t right, bool same_direction = true>
+    inline void add_block(double t_brake) {
+        double left_duration = valid_profiles[left].t_sum[6] + t_brake;
+        double right_duraction = valid_profiles[right].t_sum[6] + t_brake;
+        if constexpr (same_direction) {
+            if (valid_profiles[left].direction != valid_profiles[right].direction) {
+                return;
+            }
+        }
+
+        if (left_duration < right_duraction) {
+            if constexpr (N == 0) {
+                block.a = Block::Interval {left_duration, right_duraction};
+                block.p_a = valid_profiles[right];
+            } else {
+                block.b = Block::Interval {left_duration, right_duraction};
+                block.p_b = valid_profiles[right];
+            }
+        } else {
+            if constexpr (N == 0) {
+                block.a = Block::Interval {right_duraction, left_duration};
+                block.p_a = valid_profiles[left];
+            } else {
+                block.b = Block::Interval {right_duraction, left_duration};
+                block.p_b = valid_profiles[left];
+            }
+        }
+    }
 
     bool calculate_block();
 
@@ -110,12 +137,13 @@ class Step2 {
     // Pre-calculated expressions
     double pd;
     double tf_tf, tf_p3, tf_p4;
-    double vd, vd_vd, v0_v0, vf_vf;
-    double ad, ad_ad, a0_a0, af_af, aMax_aMax;
-    double jMax_jMax;
-
-    double a0_p3, a0_p4, a0_p5, a0_p6;
-    double af_p3, af_p4, af_p5, af_p6;
+    double vd, vd_vd;
+    double ad, ad_ad;
+    double v0_v0, vf_vf;
+    double a0_a0, a0_p3, a0_p4, a0_p5, a0_p6;
+    double af_af, af_p3, af_p4, af_p5, af_p6;
+    double aMax_aMax, aMax_p4;
+    double jMax_jMax, jMax_p4;
 
     bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
@@ -126,14 +154,14 @@ class Step2 {
     bool time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_none(Profile& profile, double vMax, double aMax, double jMax);
 
-    bool time_down_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_vel(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc1(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_acc0(Profile& profile, double vMax, double aMax, double jMax);
-    bool time_down_none(Profile& profile, double vMax, double aMax, double jMax);
+    bool time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    bool time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    bool time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
+    bool time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
+    bool time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    bool time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    bool time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
+    bool time_down_none(Profile& profile, double vMin, double aMax, double jMax);
 
 public:
     explicit Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax);
@@ -142,7 +170,7 @@ public:
 };
 
 
-template<size_t DOFs, bool THROW_ERROR = false>
+template<size_t DOFs, bool throw_error = false>
 class Ruckig {
     InputParameter<DOFs> current_input;
 
@@ -198,16 +226,11 @@ class Ruckig {
     }
 
     Result calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        // auto start = std::chrono::high_resolution_clock::now();
         current_input = input;
-
-        // std::cout << "reference: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
 
         if (!validate_input(input)) {
             return Result::ErrorInvalidInput;
         }
-
-        // std::cout << "validate: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
 
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
@@ -244,7 +267,7 @@ class Ruckig {
             Step1 step1 {p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
             bool found_profile = step1.get_profile(profiles[dof]);
             if (!found_profile) {
-                if constexpr (THROW_ERROR) {
+                if constexpr (throw_error) {
                     throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
                 }
                 return Result::ErrorExecutionTimeCalculation;
@@ -254,12 +277,10 @@ class Ruckig {
             output.independent_min_durations[dof] = step1.block.t_min;
         }
 
-        // std::cout << "step1: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
-
         int limiting_dof; // The DoF that doesn't need step 2
         bool found_synchronization = synchronize(blocks, input.minimum_duration, tf, limiting_dof, profiles);
         if (!found_synchronization) {
-            if constexpr (THROW_ERROR) {
+            if constexpr (throw_error) {
                 throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
             }
             return Result::ErrorSynchronizationCalculation;
@@ -276,15 +297,13 @@ class Ruckig {
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], input.target_position[dof], input.target_velocity[dof], input.target_acceleration[dof], input.max_velocity[dof], input_min_velocity[dof], input.max_acceleration[dof], input.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(profiles[dof]);
                 if (!found_time_synchronization) {
-                    if constexpr (THROW_ERROR) {
+                    if constexpr (throw_error) {
                         throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " input: " + input.to_string());
                     }
                     return Result::ErrorSynchronizationCalculation;
                 }
             }
         }
-
-        // std::cout << "step2: " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1000.0 << std::endl;
 
         t = 0.0;
         output.duration = tf;

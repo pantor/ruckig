@@ -26,7 +26,7 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double aMax, d
     if ((v_at_a_max < -vMax && jMax > 0) || (v_at_a_max > -vMax && jMax < 0)) {
         double t_to_v_max_while_a_max = -(v_at_a_max + vMax)/aMax;
         double t_to_v_max_in_reverse_j_direction = -aMax/(2*jMax) + (vMax - v_at_a_max)/aMax;
-        t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction);
+        t_brake[1] = std::min(t_to_v_max_while_a_max, t_to_v_max_in_reverse_j_direction) - eps;
         
     } else if ((v_at_a_max > vMax && jMax > 0) || (v_at_a_max < vMax && jMax < 0)) {
         double t_to_other_a_max = (a0 + aMax) / jMax - eps;
