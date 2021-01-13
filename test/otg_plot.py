@@ -46,7 +46,7 @@ def plot_trajectory(t_list, out_list):
         global_min = np.min([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof], dddqaxis[:, dof]])
 
         plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
-        plt.plot(t_list, qaxis[:, dof], label=f'Position {dof+1}')
+        # plt.plot(t_list, qaxis[:, dof], label=f'Position {dof+1}')
         plt.plot(t_list, dqaxis[:, dof], label=f'Velocity {dof+1}')
         plt.plot(t_list, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
         plt.plot(t_list, dddqaxis[:, dof], label=f'Jerk {dof+1}')
@@ -97,17 +97,17 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-13.345689845, 0.0, -0.0]
-    inp.current_velocity = [-00.1170609575, -0.0, -0.0]
-    inp.current_acceleration = [-09.771928498, 0.0, 0.0]
-    inp.target_position = [-2806.957253789, 0.0, -0.0]
-    inp.target_velocity = [00.867118552, -0.0, 0.0]
+    inp.current_position = [3.5581310248, 0, 0.0]
+    inp.current_velocity = [-1.15961424805, 0.0, 0.0]
+    inp.current_acceleration = [0, -0.0, -0.0]
+    inp.target_position = [3.0870982243, 0.0, 0.0]
+    inp.target_velocity = [0, -0.0, -0.0]
     inp.target_acceleration = [0, 0, 0]
-    inp.max_velocity = [1.7894752878, 10.6789, 11.1123]
-    inp.max_acceleration = [0.870979497725, 9.22418, 9.56461]
-    inp.max_jerk = [0.081841023, 5.63521, 6.61824]
+    inp.max_velocity = [8.5053447283, 3.17657, 7.51406]
+    inp.max_acceleration = [11.5220187169, 2.36737, 10.8257]
+    inp.max_jerk = [7.02808155416, 3.09066, 1.28268]
 
-    print_input_for_mathematica(inp, 0)
+    # print_input_for_mathematica(inp, 0)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)

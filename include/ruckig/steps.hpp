@@ -29,7 +29,7 @@ struct Block {
 
 //! Calculates (pre-) trajectory to get current state below the limits
 class Brake {
-    static constexpr double eps {3e-15};
+    static constexpr double eps {2e-14};
 
     static void acceleration_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
     static void velocity_brake(double v0, double a0, double vMax, double aMax, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);

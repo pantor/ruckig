@@ -195,11 +195,11 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     // h1 + h2 = y && h1*h2 = d  <=>  h^2 - y*h + d = 0    (h === q)
 
     D = y * y - 4.0 * d;
-    if (std::abs(D) < DBL_EPSILON) { //In other words: D == 0
+    if (std::abs(D) < DBL_EPSILON) {
         q1 = q2 = y * 0.5;
         // g1 + g2 = a && g1 + g2 = b - y   <=>   g^2 - a*g + b - y = 0    (p === g)
         D = a * a - 4.0 * (b - y);
-        if (std::abs(D) < DBL_EPSILON) { //In other words: D == 0
+        if (std::abs(D) < DBL_EPSILON) {
             p1 = p2 = a * 0.5;
         } else {
             sqrtD = std::sqrt(D);
@@ -215,9 +215,11 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
         p2 = (c - a * q2) / (q1 - q2);
     }
 
+    constexpr double eps {2 * DBL_EPSILON};
+
     // Solve the quadratic equation: x^2 + p1*x + q1 = 0
     D = p1 * p1 - 4.0 * q1;
-    if (std::abs(D) < DBL_EPSILON) {
+    if (std::abs(D) < eps) {
         roots.insert(-p1 * 0.5);
     } else if (D > 0.0) {
         sqrtD = std::sqrt(D);
@@ -227,7 +229,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
 
     // Solve the quadratic equation: x^2 + p2*x + q2 = 0
     D = p2 * p2 - 4.0 * q2;
-    if (std::abs(D) < DBL_EPSILON) {
+    if (std::abs(D) < eps) {
         roots.insert(-p2 * 0.5);
     } else if (D > 0.0) {
         sqrtD = std::sqrt(D);
