@@ -259,9 +259,9 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         deriv[4] = 1./5 * polynom[4];
 
         // Solve 4th order derivative analytically
-        auto extremas = Roots::solveQuartMonic(deriv[1], deriv[2], deriv[3], deriv[4]);
-        std::set<std::tuple<double, double>> tz_intervals;
-
+        auto extremas = Roots::solveQuartMonic(deriv);
+        
+        std::set<double> roots;
         double tz_min {0.0};
         double tz_max = std::min<double>(tf, (tf - a0/jMax) / 2);
         double tz_current {tz_min};
@@ -271,49 +271,42 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
                 continue;
             }
 
-            // Check that polynom(lower) and polynom(upper) have different signs (should only happen at first and last boundary)
-            double val_current = Roots::polyEval(polynom, tz_current);
-            double val_new = Roots::polyEval(polynom, tz);
-            // std::cout << "tz: " << tz << " " << val_new << " " << val_current << std::endl;
-            if (std::abs(val_new) < 1e-15) {
-                tz_intervals.insert({tz - 2e-16, tz + 2e-16});
-                tz += 1e-15;
+            const double res = std::abs(Roots::polyEval(Roots::polyDeri(deriv), tz)) * Roots::tolerance;
+            const double val_new = Roots::polyEval(polynom, tz);
+            if (std::abs(val_new) < res) {
+                roots.insert(tz);
                 
-            } else if (val_current * val_new < 0) {
-                tz_intervals.insert({tz_current, tz});
+            } else if (Roots::polyEval(polynom, tz_current) * val_new < 0) {
+                roots.insert(Roots::shrinkInterval(polynom, tz_current, tz));
             }
             tz_current = tz;
         }
         if (Roots::polyEval(polynom, tz_current) * Roots::polyEval(polynom, tz_max) < 0) {
-            tz_intervals.insert({tz_current, tz_max});
+            roots.insert(Roots::shrinkInterval(polynom, tz_current, tz_max));
         }
 
-        for (auto interval: tz_intervals) {
-            // Use safe Newton method
-            const double lower = std::get<0>(interval);
-            const double upper = std::get<1>(interval);
-            double t = Roots::shrinkInterval(polynom, lower, upper);
-
+        for (double t: roots) {
             // Single Newton step (regarding pd)
             {
-                const double h2 = Sqrt(2*(a0_a0 + af_af + 4*a0*jMax*t + 2*jMax*(jMax*t*t - vd)))/Abs(jMax);
-                const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(t - tf) + jMax*h2/2) + 6*a0_a0*(af + jMax*(2*t - tf) + jMax*h2/2) + 6*af_af*jMax*h2/2 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(t - tf) - tf*v0 - h2/2*(vd - jMax*t*t)))/(12*jMax_jMax);                
-                const double deriv = -(a0 + jMax*t)*(3*((a0_a0 + af_af) + 2*jMax_jMax*t*t + 2*jMax*(2*a0*t - vd))/(h2*jMax_jMax) + (a0 + 2*af)/jMax + (3*t - 2*tf));
-
+                const double h2 = Sqrt((a0_a0 + af_af)/2 + jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
+                const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(t - tf) + jMax*h2) + 6*a0_a0*(af + jMax*(2*t - tf) + jMax*h2) + 6*af_af*jMax*h2 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(t - tf) - tf*v0 - h2*(vd - jMax*t*t)))/(12*jMax_jMax);                
+                const double deriv = -(a0 + jMax*t)*(3*h2 + (a0 + 2*af)/jMax + (3*t - 2*tf));
                 t -= orig / deriv;
             }
 
             if (t < 0.0 || t > tf) {
                 continue;
             }
+
+            const double h1 = Sqrt((a0_a0 + af_af)/2 + jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
             
             profile.t[0] = t;
             profile.t[1] = 0;
             profile.t[2] = profile.t[0] + a0/jMax;
-            profile.t[4] = Sqrt(a0_a0/2 + af_af/2 + jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
+            profile.t[3] = tf - 2*(t + h1) - (a0 + af)/jMax;
+            profile.t[4] = h1;
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] + af/jMax;
-            profile.t[3] = tf - (profile.t[0] + profile.t[2] + profile.t[4] + profile.t[6]);
 
             if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
@@ -347,20 +340,29 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         deriv[4] = 2./6 * polynom[4];
         deriv[5] = 1./6 * polynom[5];
 
-        auto dd_extremas = Roots::solveQuartMonic(4./5 * deriv[1], 3./5 * deriv[2], 2./5 * deriv[3], 1./5 * deriv[4]);
-        std::set<std::tuple<double, double>> dd_tz_intervals;
+        std::array<double, 5> dderiv;
+        dderiv[0] = 1.0;
+        dderiv[1] = 4./5 * deriv[1];
+        dderiv[2] = 3./5 * deriv[2];
+        dderiv[3] = 2./5 * deriv[3];
+        dderiv[4] = 1./5 * deriv[4];
+
+        auto dd_extremas = Roots::solveQuartMonic(dderiv);
+        std::set<std::pair<double, double>> dd_tz_intervals;
 
         double tz_min {0.0};
         double tz_max = std::min<double>(tf, (tf - a0/jMax) / 2);
         double dd_tz_current {tz_min};
 
         for (double tz: dd_extremas) {
-            // std::cout << "tz: " << tz << std::endl;
             if (tz <= 0.0 || tz >= tz_max) {
                 continue;
             }
 
-            // Check that polynom(lower) and polynom(upper) have different signs (should only happen at first and last boundary)
+            if (std::abs(Roots::polyEval(dderiv, tz)) > Roots::tolerance) {
+                tz -= Roots::polyEval(dderiv, tz) / Roots::polyEval(Roots::polyDeri(dderiv), tz);
+            }
+
             if (Roots::polyEval(deriv, dd_tz_current) * Roots::polyEval(deriv, tz) < 0) {
                 dd_tz_intervals.insert({dd_tz_current, tz});
             }
@@ -370,54 +372,57 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             dd_tz_intervals.insert({dd_tz_current, tz_max});
         }
 
-        std::set<std::tuple<double, double>> tz_intervals;
+        std::set<double> roots;
         double tz_current {tz_min};
 
         for (auto interval: dd_tz_intervals) {
-            const double lower = std::get<0>(interval);
-            const double upper = std::get<1>(interval);
-            const double tz = Roots::shrinkInterval(deriv, lower, upper);
+            const double tz = Roots::shrinkInterval(deriv, interval.first, interval.second);
 
             if (tz <= 0.0 || tz >= tz_max) {
                 continue;
             }
+
+            const double res = std::abs(Roots::polyEval(dderiv, tz)) * Roots::tolerance;
             const double p_val = Roots::polyEval(polynom, tz);
-            // Check that polynom(lower) and polynom(upper) have different signs (should only happen at first and last boundary)
-            // std::cout << "tzd: " << p_val << std::endl;
-            if (Roots::polyEval(polynom, tz_current) * p_val < 0) {
-                tz_intervals.insert({tz_current, tz});
-            } else if (p_val < 1e-11) {
-                tz_intervals.insert({tz - 1e-12, tz + 1e-12});
-            } 
+
+            if (std::abs(p_val) < res) {
+                roots.insert(tz);
+            } else if (Roots::polyEval(polynom, tz_current) * p_val < 0) {
+                roots.insert(Roots::shrinkInterval(polynom, tz_current, tz));
+            }
             tz_current = tz;
         }
         if (Roots::polyEval(polynom, tz_current) * Roots::polyEval(polynom, tz_max) < 0) {
-            tz_intervals.insert({tz_current, tz_max});
+            roots.insert(Roots::shrinkInterval(polynom, tz_current, tz_max));
         }
 
-        for (auto interval: tz_intervals) {
-            // Use safe Newton method
-            const double lower = std::get<0>(interval);
-            const double upper = std::get<1>(interval);
-            double t = Roots::shrinkInterval(polynom, lower, upper);
-
-            // std::cout << "t: " << t << std::endl;
-
+        for (double t: roots) {
             // Single Newton step (regarding pd)
             {
-                const double h2 = -a0_a0 + af_af - 4*a0*jMax*t - 2*jMax*(jMax*t*t + v0 - vf);
-                const double orig = -pd + (-a0_p3 + af_p3 - 12*a0*jMax_jMax*t*(t - tf) + 3*a0_a0*jMax*(-2*t + tf) + 3*(af*(a0_a0 - af_af + 4*a0*jMax*t + 2*jMax*(jMax*t*t + v0 - vf))))/(6*jMax_jMax) + (jMax*t*t*(-t + tf) + tf*v0) + std::pow(h2,1.5)/(2*Sqrt(2)*jMax*Abs(jMax)); 
+                const double h2 = af_af - a0_a0 - 4*a0*jMax*t - 2*jMax*(jMax*t*t - vd);
+                const double orig = -pd + (-a0_p3 + af_p3 - 12*a0*jMax_jMax*t*(t - tf) + 3*a0_a0*jMax*(-2*t + tf) + 3*(af*(-h2)))/(6*jMax_jMax) + (jMax*t*t*(-t + tf) + tf*v0) + std::pow(h2,1.5)/(2*Sqrt(2)*jMax*Abs(jMax)); 
                 const double deriv = -((a0 + jMax*t)*(3*jMax*Sqrt(2*h2)/Abs(jMax) - 4*af + 2*(a0 + 3*jMax*t - 2*jMax*tf)))/(2*jMax);
                 t -= orig / deriv;
             }
+
+            const double h1 = Sqrt((af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
             
             profile.t[0] = t;
             profile.t[1] = 0;
             profile.t[2] = profile.t[0] + a0/jMax;
-            profile.t[4] = Sqrt((af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
+            profile.t[3] = tf - 2*(t + h1) + ad/jMax;
+            profile.t[4] = h1;
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] - af/jMax;
-            profile.t[3] = tf - (profile.t[0] + profile.t[2] + profile.t[4] + profile.t[6]);
+            
+            // std::cout << std::endl;
+            // std::cout << profile.t[0] << std::endl;
+            // std::cout << profile.t[1] << std::endl;
+            // std::cout << profile.t[2] << std::endl;
+            // std::cout << profile.t[3] << std::endl;
+            // std::cout << profile.t[4] << std::endl;
+            // std::cout << profile.t[5] << std::endl;
+            // std::cout << profile.t[6] << std::endl;
 
             if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
@@ -454,7 +459,7 @@ bool Step2::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
     profile.t[2] = profile.t[0] + a0/jf;
     profile.t[3] = 0;
     profile.t[4] = profile.t[2];
-    profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3] + 2*profile.t[4] + af/jf);
+    profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[3] + 3*profile.t[2] + af/jf);
     profile.t[6] = profile.t[4] + af/jf;
     
     return profile.check<Teeth::UDDU>(tf, pf, vf, af, jf, vMax, aMax, jMax);
@@ -621,6 +626,16 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             for (double t: roots) {
                 if (t < 0.0 || t > tf) {
                     continue;
+                }
+
+                // Single Newton step (regarding pd)
+                {
+                    const double h1 = a0_a0 + af_af + 2*af*jMax*t - 2*a0*(af + jMax*(t - tf)) + 2*jMax*(jMax*t*(t - tf) - vd);
+                    const double h2 = (a0 - af + jMax*(-2*t + tf));
+                    const double orig = (-a0_p3 + af_p3 + 3*af_af*jMax*t + 3*af*jMax_jMax*Power(t,2) + 3*a0_a0*(af + jMax*t) - 3*a0*(af_af + 2*af*jMax*t + jMax_jMax*(Power(t,2) - Power(tf,2))) + 3*jMax_jMax*(-2*pd + jMax*t*(t - tf)*tf + 2*tf*v0))/(6.*jMax_jMax) - (jMax*std::pow(h1,1.5))/(2.*Sqrt(2)*Power(Abs(jMax),3)) + ((a0 - af - jMax*t)*(h1))/(2.*jMax_jMax);
+                    const double deriv = (3*Sqrt(2)*Power(jMax,3)*h2*Sqrt(h1) - 2*jMax_jMax*(3*a0_a0 - 6*a0*af + 3*af_af + af*jMax*(8*t - 2*tf) + 4*a0*jMax*(-2*t + tf) + 2*jMax*(jMax*t*(3*t - 2*tf) - vd))*Abs(jMax) + 2*(a0 - af - jMax*tf)*h2*Power(Abs(jMax),3))/(4.*jMax*Power(Abs(jMax),3));
+
+                    t -= orig / deriv;
                 }
 
                 const double h1 = Sqrt(2*(a0_a0 + af_af + 2*af*jMax*t - 2*a0*(af + jMax*(t - tf)) + 2*jMax*(jMax*t*(t - tf) - vd)))/Abs(jMax);

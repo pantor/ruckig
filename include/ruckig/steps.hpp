@@ -81,6 +81,16 @@ class Step1 {
 
     template<size_t N, size_t left, size_t right, bool same_direction = true>
     inline void add_block(double t_brake) {
+        if constexpr (N == 0) {
+            if (block.a) {
+                return;
+            }
+        } else {
+            if (block.b) {
+                return;
+            }
+        }
+
         double left_duration = valid_profiles[left].t_sum[6] + t_brake;
         double right_duraction = valid_profiles[right].t_sum[6] + t_brake;
         if constexpr (same_direction) {

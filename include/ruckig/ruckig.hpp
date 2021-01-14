@@ -84,7 +84,6 @@ class Ruckig {
 
             t_sync = possible_t_sync;
             limiting_dof = std::ceil((i + 1.0) / 3) - 1;
-            // std::cout << "sync: " << limiting_dof << " " << i % 3 << " " << t_sync << std::endl;
             switch (i % 3) {
                 case 0: {
                     profiles[limiting_dof] = blocks[limiting_dof].p_min;

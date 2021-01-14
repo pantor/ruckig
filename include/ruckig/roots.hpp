@@ -274,12 +274,20 @@ inline double polyEval(std::array<double, N> p, double x) {
 template<size_t N>
 inline std::array<double, N-1> polyDeri(const std::array<double, N>& coeffs) {
     std::array<double, N-1> deriv;
-    int horder = N - 1;
-    for (int i = 0; i < horder; i++) {
-        deriv[i] = (horder - i) * coeffs[i];
+    for (int i = 0; i < N - 1; i++) {
+        deriv[i] = (N - 1 - i) * coeffs[i];
     }
     return deriv;
 }
+
+// template<size_t N>
+// inline std::array<double, N-1> polyMonicDeri(const std::array<double, N>& monic_coeffs) {
+//     std::array<double, N-1> deriv;
+//     for (int i = 0; i < N - 1; i++) {
+//         deriv[i] = (N - 1 - i) * monic_coeffs[i] / (N - 1);
+//     }
+//     return deriv;
+// }
 
 // Safe Newton Method
 // Requirements: f(l)*f(h) <= 0
@@ -344,12 +352,15 @@ inline double safeNewton(const F& func, const DF& dfunc, const double &l, const 
 
 // Calculate a single zero of polynom p(x) inside [lbound, ubound]
 // Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
+
+constexpr double tolerance {1e-14};
+
 template<size_t N, size_t maxDblIts = 128>
-inline double shrinkInterval(const std::array<double, N>& p, double lbound, double ubound, double tol = 1e-14) {
+inline double shrinkInterval(const std::array<double, N>& p, double lbound, double ubound) {
     auto deriv = polyDeri(p);
     auto func = [&p](double x) { return polyEval(p, x); };
     auto dfunc = [&deriv](double x) { return polyEval(deriv, x); };
-    return safeNewton(func, dfunc, lbound, ubound, tol, maxDblIts);
+    return safeNewton(func, dfunc, lbound, ubound, tolerance, maxDblIts);
 }
 
 } // namespace Roots

@@ -132,8 +132,8 @@ TEST_CASE("Ruckig") {
     constexpr bool full {true};
 
     std::normal_distribution<double> position_dist {0.0, 4.0};
-    std::normal_distribution<double> dynamic_dist {0.0, 0.6};
-    std::uniform_real_distribution<double> limit_dist {0.06, 12.0};
+    std::normal_distribution<double> dynamic_dist {0.0, 0.8};
+    std::uniform_real_distribution<double> limit_dist {0.05, 12.0};
 
     SECTION("Known examples") {
         Ruckig<3> otg {0.005};
