@@ -97,22 +97,22 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-2.0176247756, 0.0, 0.0]
-    inp.current_velocity = [-0.22271144785, 0.0, 0.0]
-    inp.current_acceleration = [1.41933174435, 0.0, 0.0]
-    inp.target_position = [6.474094467, 0.0, 0.0]
-    inp.target_velocity = [1.267076033443, 0.0, 0.0]
-    inp.target_acceleration = [0, 0.0, 0.0]
-    inp.max_velocity = [7.87691201185, 1.0, 1.0]
-    inp.max_acceleration = [2.00135800905, 1.0, 1.0]
-    inp.max_jerk = [0.0002, 1.0, 1.0]
+    inp.current_position = [-7.48091, 2.60172, -4.16764]
+    inp.current_velocity = [2.00124, -1.85028, -2.27512]
+    inp.current_acceleration = [0.917428, -0.0715869, -0.0625666]
+    inp.target_position = [3.29562, 1.05322, -5.57146]
+    inp.target_velocity = [-0.607177, -0.00822628, 0.427635]
+    inp.target_acceleration = [0, 0, 0.1]
+    inp.max_velocity = [11.932, 6.71343, 0.638077]
+    inp.max_acceleration = [8.22098, 10.5062, 10.1116]
+    inp.max_jerk = [7.34937, 6.97684, 2.47969]
 
     print_input_for_mathematica(inp, 0)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    # otg = Reflexxes(1000.025)
-    otg = Ruckig(1000.0)
+    # otg = Reflexxes(0.005)
+    otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 

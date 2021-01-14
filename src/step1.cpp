@@ -487,6 +487,7 @@ bool Step1::calculate_block() {
         add_block<1, 3, 4>(t_brake);
         
     } else if (valid_profile_counter == 6) {
+        add_block<0, 2, 3>(t_brake);
         add_block<1, 4, 5>(t_brake);
         
     } else {
