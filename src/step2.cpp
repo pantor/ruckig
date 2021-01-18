@@ -576,6 +576,16 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
                     continue;
                 }
 
+                // Single Newton step (regarding pd)
+                {
+                    const double h1 = (a0_a0 + af_af - 2*af*jMax*t - 2*a0*(af + jMax*(-t + tf)) + 2*jMax*(jMax*t*(t - tf) + vd))/(2*jMax*(-ad + 2*jMax*t - jMax*tf));
+                    const double h2 = (-a0_a0 - af_af + 2*jMax_jMax*Power(t,2) + af*jMax*tf - 2*jMax_jMax*t*tf + jMax_jMax*Power(tf,2) + a0*(-ad + 2*af + jMax*tf) + ad*(af - 2*jMax*t + jMax*tf) + 2*jMax*v0 - 2*jMax*vf)/Power(ad + jMax*(-2*t + tf),2);
+                    const double orig = (-Power(a0,3) + Power(af,3) + 3*a0_a0*(af + jMax*(h1 - t)) + 3*af_af*jMax*(h1 - t) + 3*af*jMax_jMax*Power(h1 - t,2) - 3*a0*(af_af + 2*af*jMax*(h1 - t) + jMax_jMax*(Power(h1,2) - 2*h1*t + Power(t,2) - Power(tf,2))) + 3*jMax_jMax*(2*p0 - 2*pf - 2*Power(h1,2)*jMax*t + Power(h1,2)*jMax*tf + 2*h1*jMax*t*tf - jMax*Power(t,2)*tf - h1*jMax*Power(tf,2) + jMax*t*Power(tf,2) + 2*tf*v0))/(6.*jMax_jMax);
+                    const double deriv = -(jMax*Power(h1,2)) + ((a0 - af + 2*jMax*t - jMax*tf)*(a0 - af + jMax*tf)*(-1 + h2))/(2*jMax) + h1*(a0 - af + jMax*tf + (-a0 + af - 2*jMax*t + jMax*tf)*h2);
+                    
+                    t -= orig / deriv;
+                }
+
                 profile.t[0] = t;
                 profile.t[1] = 0;
                 profile.t[2] = (a0_a0 + af_af - 2*af*jMax*t - 2*a0*(af + jMax*(-t + tf)) + 2*jMax*(jMax*t*(t - tf) + vd))/(2*jMax*(-ad + 2*jMax*t - jMax*tf));
@@ -583,7 +593,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
                 profile.t[4] = tf - (t + profile.t[2] + profile.t[3]);
                 profile.t[5] = 0;
                 profile.t[6] = 0;
-
+                
                 if (profile.check<Teeth::UDDU, Limits::NONE>(tf, pf, vf, af, jMax, vMax, aMax)) {
                     return true;
                 }

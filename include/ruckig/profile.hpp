@@ -64,7 +64,7 @@ struct Profile {
         this->limits = limits;
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
-        // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << std::endl;
+        // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << " " << to_string() << std::endl;
         const double vMaxAbs = std::abs(vMax) + 1e-9;
         const double aMaxAbs = std::abs(aMax) + 1e-9;
         return std::abs(p[7] - pf) < 1e-8

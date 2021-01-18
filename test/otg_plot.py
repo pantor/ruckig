@@ -17,12 +17,17 @@ def walk_through_trajectory(otg, inp):
     out = OutputParameter()
 
     res = Result.Working
+    old_acc = 0
     while res == Result.Working:
         res = otg.update(inp, out)
 
         inp.current_position = out.new_position
         inp.current_velocity = out.new_velocity
         inp.current_acceleration = out.new_acceleration
+        
+        # jerk = (old_acc - out.new_acceleration[0]) / 0.005
+        # old_acc = out.new_acceleration[0]
+        # print(str(t) + '\t' + str(inp.current_position[0]) + '\t' + str(inp.current_velocity[0]) + '\t' + str(inp.current_acceleration[0]) + '\t' + str(jerk))
 
         t_list.append(t)
         out_list.append(copy.copy(out))
@@ -46,7 +51,7 @@ def plot_trajectory(t_list, out_list):
         global_min = np.min([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof], dddqaxis[:, dof]])
 
         plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
-        # plt.plot(t_list, qaxis[:, dof], label=f'Position {dof+1}')
+        plt.plot(t_list, qaxis[:, dof], label=f'Position {dof+1}')
         plt.plot(t_list, dqaxis[:, dof], label=f'Velocity {dof+1}')
         plt.plot(t_list, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
         plt.plot(t_list, dddqaxis[:, dof], label=f'Jerk {dof+1}')
@@ -97,15 +102,15 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0.9, 0.0, 5.0]
-    inp.current_velocity = [1.5, 0.0, -1.7]
-    inp.current_acceleration = [1.1, 1.79803, 0.6]
-    inp.target_position = [0.1, 1.0, -0.8]
-    inp.target_velocity = [0, 0, 0]
-    inp.target_acceleration = [0, 0, 0]
-    inp.max_velocity = [1.0, 0.055, 1.0]
-    inp.max_acceleration = [1.0, 2.6, 1.0]
-    inp.max_jerk = [1.6467, 0.01, 2.37436]
+    inp.current_position = [-1, 0.0, 0.0]
+    inp.current_velocity = [0.25, 0.0, 0.0]
+    inp.current_acceleration = [0.0, 0.0, 0]
+    inp.target_position = [1, 0.0, 0.0]
+    inp.target_velocity = [0.0, 0.0, 0.0]
+    inp.target_acceleration = [-0.2, 0.0, 0]
+    inp.max_velocity = [0.7, 0.485517, 1.60955]
+    inp.max_acceleration = [0.5, 9.45755, 1.48146]
+    inp.max_jerk = [1.2, 1.33483, 3.99488]
 
     print_input_for_mathematica(inp, 1)
 

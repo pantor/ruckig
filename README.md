@@ -128,6 +128,7 @@ Working                         | 0
 Finished                        | 1
 Error                           | -1
 ErrorInvalidInput               | -100
+ErrorTrajectoryDuration         | -101
 ErrorExecutionTimeCalculation   | -110
 ErrorSynchronizationCalculation | -111
 
@@ -152,7 +153,7 @@ Moreover, a range of additional parameter about the duration of the trajectory a
 
 ## Tests and Numerical Stability
 
-The current test suite validates over 1.008.000 (random) trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the final acceleration as well as jerk limit to be within a numerical error of `1e-12`. Ruckig presumes that the input values are within 5 orders of magnitude and that `jMax > 5e-2`. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness. The maximal supported trajectory duration is `1e12`.
+The current test suite validates over 1.206.000 (random) trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the velocity and acceleration limit to be withing `1e-9`, and for the final acceleration as well as jerk limit to be within a numerical error of `1e-12`. Ruckig presumes that the input values are within 5 orders of magnitude and that `jMax > 5e-2`. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness. The maximal supported trajectory duration is `1e12`.
 
 
 ## Development

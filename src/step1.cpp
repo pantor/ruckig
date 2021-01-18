@@ -457,8 +457,72 @@ bool Step1::calculate_block() {
     
     const double t_brake = valid_profiles[idx_min].t_brake.value_or(0.0); // t_brake is equal for every idx
     size_t count_udud = std::count_if(valid_profiles.cbegin(), valid_profiles.cbegin() + valid_profile_counter, [](auto& a) { return a.teeth == Profile::Teeth::UDUD; });
+    // if (valid_profile_counter - count_udud > 3) {
+    //     std::cout << valid_profile_counter - count_udud << std::endl;
+    // }
+    
 
-    // if (valid_profile_counter > 4) {
+    // std::array<Profile, 5> up_profiles, down_profiles;
+    // size_t up_profile_counter {0}, down_profile_counter {0};
+    // for (size_t i = 0; i < valid_profile_counter; ++i) {
+    //     if (valid_profiles[i].direction == Profile::Direction::UP) {
+    //         up_profiles[up_profile_counter] = valid_profiles[i];
+    //         ++up_profile_counter;
+    //     } else {
+    //         down_profiles[down_profile_counter] = valid_profiles[i];
+    //         ++down_profile_counter;
+    //     }
+    // }
+
+    // std::stable_sort(up_profiles.begin(), up_profiles.begin() + up_profile_counter, [](auto& p1, auto& p2) { return p1.t_sum[6] < p2.t_sum[6]; });
+    // std::stable_sort(down_profiles.begin(), down_profiles.begin() + down_profile_counter, [](auto& p1, auto& p2) { return p1.t_sum[6] < p2.t_sum[6]; });
+
+    // size_t up_idx {0}, down_idx {0};
+
+
+    /* if (down_profile_counter == 0 || (up_profile_counter > 0 && up_profiles[0].t_sum[6] < down_profiles[0].t_sum[6])) {
+        size_t up_idx {0};
+        if (up_profile_counter % 2 == 0) {
+            ++up_idx;
+        }
+
+        block = Block(up_profiles[up_idx]);
+
+        size_t inter {0};
+
+        if (up_profile_counter >= 3) {
+            block.a = Block::Interval(up_profiles[up_idx + 1].t_sum[6] + t_brake, up_profiles[up_idx + 2].t_sum[6] + t_brake, up_profiles[up_idx + 2]);
+            ++inter;
+        } else if (up_profile_counter >= 5) {
+            block.b = Block::Interval(up_profiles[up_idx + 3].t_sum[6] + t_brake, up_profiles[up_idx + 4].t_sum[6] + t_brake, up_profiles[up_idx + 4]);
+            ++inter;
+        }
+
+        size_t down_idx {0};
+        if (down_profile_counter % 2 == 1) {
+            std::cout << "---\n " << valid_profile_counter << " " << up_profile_counter << " " << down_profile_counter << std::endl;
+            for (size_t i = 0; i < valid_profile_counter; ++i) {
+                auto& p = valid_profiles[i];
+                std::cout << p.t_sum[6] << " " << p.to_string() << std::endl;
+            }
+
+            ++down_idx;
+        }
+
+        if (down_profile_counter >= 2) {
+            if (inter) {
+                block.a = Block::Interval(down_profiles[down_idx + 1].t_sum[6] + t_brake, down_profiles[down_idx + 2].t_sum[6] + t_brake, down_profiles[down_idx + 2]);
+            } else {
+                block.b = Block::Interval(down_profiles[down_idx + 1].t_sum[6] + t_brake, down_profiles[down_idx + 2].t_sum[6] + t_brake, down_profiles[down_idx + 2]);
+            }
+        } else if (down_profile_counter >= 4) {
+            block.b = Block::Interval(down_profiles[down_idx + 3].t_sum[6] + t_brake, down_profiles[down_idx + 4].t_sum[6] + t_brake, down_profiles[down_idx + 4]);
+        }
+
+        return true;
+    } */
+
+    // if (valid_profile_counter > 3) {
     //     std::cout << "---\n " << valid_profile_counter << std::endl;
     //     for (size_t i = 0; i < valid_profile_counter; ++i) {
     //         auto& p = valid_profiles[i];
@@ -469,7 +533,7 @@ bool Step1::calculate_block() {
     if (valid_profile_counter == 2) {
         size_t idx_else_1 = (idx_min + 1) % 2;
         
-        if (count_udud == 1) {
+        if (count_udud == 1) { // Ignore UDUD
             block = Block(valid_profiles[idx_min]);
         } else {
             block = Block(valid_profiles[idx_else_1]);
@@ -500,8 +564,8 @@ bool Step1::calculate_block() {
                 block = Block(valid_profiles[idx_else_3]);
                 add_interval(block.a, idx_else_1, idx_else_2, t_brake);
             }
-
-        } else if (count_udud == 1) { 
+        
+        } else if (count_udud == 1) { // Ignore UDUD
             block = Block(valid_profiles[idx_min]);
             if (valid_profiles[idx_else_1].teeth == Profile::Teeth::UDUD) {
                 add_interval(block.a, idx_else_2, idx_else_3, t_brake);

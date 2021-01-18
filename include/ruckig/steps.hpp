@@ -82,16 +82,24 @@ class Step1 {
     void time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
     void time_down_none(Profile& profile, double vMin, double aMax, double jMax);
 
-    void add_profile(Profile profile, double jMax) {
+    inline void add_profile(Profile profile, double jMax) {
         profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
         valid_profiles[valid_profile_counter] = profile;
         ++valid_profile_counter;
     }
 
     inline void add_interval(std::optional<Block::Interval>& interval, size_t left, size_t right, double t_brake) const {
-        if (interval) {
-            return;
-        }
+        // if (interval) {
+        //     return;
+        // }
+
+        // if (valid_profiles[left].teeth != valid_profiles[right].teeth) {
+        //     return;
+        // }
+
+        // if (valid_profiles[left].direction != valid_profiles[right].direction) {
+        //     return;
+        // }
         
         const double left_duration = valid_profiles[left].t_sum[6] + t_brake;
         const double right_duraction = valid_profiles[right].t_sum[6] + t_brake;
