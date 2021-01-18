@@ -89,10 +89,10 @@ class Ruckig {
                     profiles[limiting_dof] = blocks[limiting_dof].p_min;
                 } break;
                 case 1: {
-                    profiles[limiting_dof] = blocks[limiting_dof].p_a.value();
+                    profiles[limiting_dof] = blocks[limiting_dof].a->profile;
                 } break;
                 case 2: {
-                    profiles[limiting_dof] = blocks[limiting_dof].p_b.value();
+                    profiles[limiting_dof] = blocks[limiting_dof].b->profile;
                 } break;
             }
             return true;

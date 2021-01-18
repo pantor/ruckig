@@ -76,7 +76,7 @@ def plot_trajectory(t_list, out_list):
 
     plt.xlabel('t')
     plt.savefig(Path(__file__).parent.parent / 'build' / 'otg_trajectory.png')
-    plt.show()
+    # plt.show()
 
 
 def print_input_for_mathematica(inp, dof, tf=None):
@@ -97,17 +97,17 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-7.48091, 2.60172, -4.16764]
-    inp.current_velocity = [2.00124, -1.85028, -2.27512]
-    inp.current_acceleration = [0.917428, -0.0715869, -0.0625666]
-    inp.target_position = [3.29562, 1.05322, -5.57146]
-    inp.target_velocity = [-0.607177, -0.00822628, 0.427635]
-    inp.target_acceleration = [0, 0, 0.1]
-    inp.max_velocity = [11.932, 6.71343, 0.638077]
-    inp.max_acceleration = [8.22098, 10.5062, 10.1116]
-    inp.max_jerk = [7.34937, 6.97684, 2.47969]
+    inp.current_position = [0.9, 0.0, 5.0]
+    inp.current_velocity = [1.5, 0.0, -1.7]
+    inp.current_acceleration = [1.1, 1.79803, 0.6]
+    inp.target_position = [0.1, 1.0, -0.8]
+    inp.target_velocity = [0, 0, 0]
+    inp.target_acceleration = [0, 0, 0]
+    inp.max_velocity = [1.0, 0.055, 1.0]
+    inp.max_acceleration = [1.0, 2.6, 1.0]
+    inp.max_jerk = [1.6467, 0.01, 2.37436]
 
-    print_input_for_mathematica(inp, 0)
+    print_input_for_mathematica(inp, 1)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)

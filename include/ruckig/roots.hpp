@@ -280,14 +280,15 @@ inline std::array<double, N-1> polyDeri(const std::array<double, N>& coeffs) {
     return deriv;
 }
 
-// template<size_t N>
-// inline std::array<double, N-1> polyMonicDeri(const std::array<double, N>& monic_coeffs) {
-//     std::array<double, N-1> deriv;
-//     for (int i = 0; i < N - 1; i++) {
-//         deriv[i] = (N - 1 - i) * monic_coeffs[i] / (N - 1);
-//     }
-//     return deriv;
-// }
+template<size_t N>
+inline std::array<double, N-1> polyMonicDeri(const std::array<double, N>& monic_coeffs) {
+    std::array<double, N-1> deriv;
+    deriv[0] = 1.0;
+    for (int i = 1; i < N - 1; i++) {
+        deriv[i] = (N - 1 - i) * monic_coeffs[i] / (N - 1);
+    }
+    return deriv;
+}
 
 // Safe Newton Method
 // Requirements: f(l)*f(h) <= 0

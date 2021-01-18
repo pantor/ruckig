@@ -53,12 +53,12 @@ bool Step2::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
         profile.t[0] = (-a0 + aMax)/jMax;
         profile.t[1] = -(h2 - h4)/h3;
         profile.t[2] = profile.t[0] + a0/jMax;
-        profile.t[3] = -aMax/jMax + 2*h1/h3;
+        profile.t[3] = tf - (ad + 4*aMax)/jMax + 2*h2/h3;
         profile.t[4] = profile.t[2];
         profile.t[5] = -(h2 + h4)/h3;
         profile.t[6] = profile.t[4] + af/jMax;
 
-        if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+        if (profile.check<Teeth::UDDU, Limits::ACC0_ACC1_VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
             return true;
         }
     }
@@ -77,7 +77,7 @@ bool Step2::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
         profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3] + 2*profile.t[4] - af/jMax);
         profile.t[6] = profile.t[4] - af/jMax;
 
-        if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
+        if (profile.check<Teeth::UDUD, Limits::ACC0_ACC1_VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
             return true;
         }
     }
@@ -113,12 +113,12 @@ bool Step2::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double 
             profile.t[0] = t;
             profile.t[1] = 0;
             profile.t[2] = profile.t[0] + a0/jMax;
-            profile.t[3] = -(h1 + aMax + a0 + af)/jMax - (2*t - tf);
+            profile.t[3] = tf - (h1 + aMax + a0 + af)/jMax - 2*t;
             profile.t[4] = aMax/jMax;
             profile.t[5] = (h1 - aMax)/jMax;
             profile.t[6] = profile.t[4] + af/jMax;
             
-            if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<Teeth::UDDU, Limits::ACC1_VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
             }
         }
@@ -149,12 +149,12 @@ bool Step2::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double 
             profile.t[0] = t;
             profile.t[1] = 0;
             profile.t[2] = a0/jMax + t;
-            profile.t[3] = (h1 + ad - aMax)/jMax - (2*t - tf);
+            profile.t[3] = tf + (h1 + ad - aMax)/jMax - 2*t;
             profile.t[4] = aMax/jMax;
             profile.t[5] = -(h1 + aMax)/jMax;
             profile.t[6] = profile.t[4] - af/jMax;
             
-            if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<Teeth::UDUD, Limits::ACC1_VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
             }
         }
@@ -190,12 +190,12 @@ bool Step2::time_up_acc0_vel(Profile& profile, double vMax, double aMax, double 
             profile.t[0] = (-a0 + aMax)/jMax;
             profile.t[1] = (h1 - aMax)/jMax;
             profile.t[2] = aMax/jMax;
-            profile.t[3] = -(h1 + ad + aMax)/jMax - (2*t - tf);
+            profile.t[3] = tf - (h1 + ad + aMax)/jMax - 2*t;
             profile.t[4] = t;
             profile.t[5] = 0;
             profile.t[6] = af/jMax + t;
             
-            if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<Teeth::UDDU, Limits::ACC0_VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
             }
         }
@@ -221,12 +221,12 @@ bool Step2::time_up_acc0_vel(Profile& profile, double vMax, double aMax, double 
             profile.t[0] = (-a0 + aMax)/jMax;
             profile.t[1] = (h1 - aMax)/jMax;
             profile.t[2] = aMax/jMax;
-            profile.t[3] = -(h1 - a0 - af + aMax)/jMax - (2*t - tf);
+            profile.t[3] = tf - (h1 - a0 - af + aMax)/jMax - 2*t;
             profile.t[4] = t;
             profile.t[5] = 0;
             profile.t[6] = -(af/jMax) + t;
             
-            if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<Teeth::UDUD, Limits::ACC0_VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
             }
         }
@@ -251,12 +251,7 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         polynom[4] = (a0*(7*a0_p4 + af_p4 + 8*af_p3*jMax*tf - 10*a0_p3*(af - jMax*tf) - 24*jMax_jMax*jMax*tf*g1 - 4*a0*(af_p3 - 3*jMax_jMax*g1 - 3*af*jMax*vd) + p2 + 6*a0_a0*p1))/(12*jMax_jMax*jMax_jMax*(-ad + jMax*tf));
         polynom[5] = (7*a0_p6 + af_p6 - 12*a0_p5*(af - jMax*tf) + 48*af_p3*jMax_jMax*g1 - 8*a0_p3*(af_p3 - 3*jMax_jMax*g1 - 3*af*jMax*vd) - 72*jMax_jMax*jMax*(jMax*Power(-pd + tf*v0,2) - Power(v0 - vf,3)) - 6*af_p4*jMax*vd - 144*af*jMax_jMax*jMax*g1*vd + 36*af_af*jMax_jMax*vd_vd + 9*a0_p4*p1 + 3*a0_a0*(af_p4 + 8*af_p3*jMax*tf - 24*jMax_jMax*jMax*tf*g1 + p2))/(144*Power(jMax,5)*(-ad + jMax*tf));
 
-        std::array<double, 5> deriv;
-        deriv[0] = 1;
-        deriv[1] = 4./5 * polynom[1];
-        deriv[2] = 3./5 * polynom[2];
-        deriv[3] = 2./5 * polynom[3];
-        deriv[4] = 1./5 * polynom[4];
+        std::array<double, 5> deriv = Roots::polyMonicDeri(polynom);
 
         // Solve 4th order derivative analytically
         auto extremas = Roots::solveQuartMonic(deriv);
@@ -308,7 +303,7 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] + af/jMax;
 
-            if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<Teeth::UDDU, Limits::VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
             }
         }
@@ -332,20 +327,8 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         polynom[5] = (a0*(11*a0_p4 + af_p4 - 8*af_p3*jMax*tf - 10*a0_p3*(af + jMax*tf) - 6*a0_a0*ph1 + ph4 + 4*a0*ph2))/(12*Power(jMax,5));
         polynom[6] = (11*a0_p6 - af_p6 - 12*a0_p5*(af + jMax*tf) - 48*af_p3*jMax_jMax*g1 - 9*a0_p4*ph1 + 72*jMax_jMax*jMax*(jMax*g1*g1 + Power(v0 - vf,3)) - 6*af_p4*jMax*vd - 144*af*jMax_jMax*jMax*g1*vd - 36*af_af*jMax_jMax*vd_vd + 8*a0_p3*ph2 + 3*a0_a0*(af_p4 - 8*af_p3*jMax*tf + ph4))/(144*Power(jMax,6));
 
-        std::array<double, 6> deriv;
-        deriv[0] = 1.0;
-        deriv[1] = 5./6 * polynom[1];
-        deriv[2] = 4./6 * polynom[2];
-        deriv[3] = 3./6 * polynom[3];
-        deriv[4] = 2./6 * polynom[4];
-        deriv[5] = 1./6 * polynom[5];
-
-        std::array<double, 5> dderiv;
-        dderiv[0] = 1.0;
-        dderiv[1] = 4./5 * deriv[1];
-        dderiv[2] = 3./5 * deriv[2];
-        dderiv[3] = 2./5 * deriv[3];
-        dderiv[4] = 1./5 * deriv[4];
+        std::array<double, 6> deriv = Roots::polyMonicDeri(polynom);
+        std::array<double, 5> dderiv = Roots::polyMonicDeri(deriv);
 
         auto dd_extremas = Roots::solveQuartMonic(dderiv);
         std::set<std::pair<double, double>> dd_tz_intervals;
@@ -424,7 +407,7 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             // std::cout << profile.t[5] << std::endl;
             // std::cout << profile.t[6] << std::endl;
 
-            if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<Teeth::UDUD, Limits::VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
             }
         }
@@ -446,7 +429,7 @@ bool Step2::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
         profile.t[6] = profile.t[0];
         double jf = aMax/profile.t[0];
 
-        return profile.check<Teeth::UDDU>(tf, pf, vf, af, jf, vMax, aMax, jMax);
+        return profile.check<Teeth::UDDU, Limits::ACC0_ACC1>(tf, pf, vf, af, jf, vMax, aMax, jMax);
     }
 
     double h1 = -2*ad*(3*(a0_p3 - af_p3) + a0_a0*(3*af - 4*aMax) - 4*af_af*aMax + 12*(ad + 2*aMax)*aMax_aMax - a0*(3*af_af + 16*af*aMax));
@@ -462,7 +445,7 @@ bool Step2::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
     profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[3] + 3*profile.t[2] + af/jf);
     profile.t[6] = profile.t[4] + af/jf;
     
-    return profile.check<Teeth::UDDU>(tf, pf, vf, af, jf, vMax, aMax, jMax);
+    return profile.check<Teeth::UDDU, Limits::ACC0_ACC1>(tf, pf, vf, af, jf, vMax, aMax, jMax);
 }
 
 bool Step2::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax) {
@@ -485,7 +468,7 @@ bool Step2::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = tf - (profile.t[2] + profile.t[3] + profile.t[4] + (af + aMax)/jMax);
         profile.t[6] = (af + aMax)/jMax;
 
-        if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+        if (profile.check<Teeth::UDDU, Limits::ACC1>(tf, pf, vf, af, jMax, vMax, aMax)) {
             return true;
         }
     }
@@ -506,7 +489,7 @@ bool Step2::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = tf - (profile.t[2] + profile.t[3] + profile.t[4] + (-af + aMax)/jMax);
         profile.t[6] = (-af + aMax)/jMax;
 
-        if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
+        if (profile.check<Teeth::UDUD, Limits::ACC1>(tf, pf, vf, af, jMax, vMax, aMax)) {
             return true;
         }
     }
@@ -531,7 +514,7 @@ bool Step2::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
     profile.t[5] = 0;
     profile.t[6] = 0;
 
-    if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+    if (profile.check<Teeth::UDDU, Limits::ACC0>(tf, pf, vf, af, jMax, vMax, aMax)) {
         return true;
     }
 
@@ -551,7 +534,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = 0;
         profile.t[6] = profile.t[0];
 
-        if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jf, vMax, aMax, jMax)) {
+        if (profile.check<Teeth::UDDU, Limits::NONE>(tf, pf, vf, af, jf, vMax, aMax, jMax)) {
             return true;
         }
     }
@@ -570,7 +553,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             profile.t[5] = 0;
             profile.t[6] = profile.t[4];
             
-            if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jf, vMax, aMax, jMax)) {
+            if (profile.check<Teeth::UDDU, Limits::NONE>(tf, pf, vf, af, jf, vMax, aMax, jMax)) {
                 return true;
             }
         }
@@ -601,7 +584,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
                 profile.t[5] = 0;
                 profile.t[6] = 0;
 
-                if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+                if (profile.check<Teeth::UDDU, Limits::NONE>(tf, pf, vf, af, jMax, vMax, aMax)) {
                     return true;
                 }
             }
@@ -649,7 +632,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
                 profile.t[5] = 0;
                 profile.t[6] = tf - (t + profile.t[3] + profile.t[4]);
 
-                if (profile.check<Teeth::UDDU>(tf, pf, vf, af, jMax, vMax, aMax)) {
+                if (profile.check<Teeth::UDDU, Limits::NONE>(tf, pf, vf, af, jMax, vMax, aMax)) {
                     return true;
                 }
             }       
@@ -683,14 +666,14 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
                 double h1 = Sqrt(((a0_a0 + af_af)/2 - af*(a0 + jMax*t) + a0*jMax*(t + tf) + jMax*(jMax*t*tf - vd)))/Abs(jMax);
 
                 profile.t[0] = t;
-                profile.t[1] = -ad/jMax + tf - 2 * h1;
+                profile.t[1] = tf - ad/jMax - 2*h1;
                 profile.t[2] = h1;
                 profile.t[3] = 0;
                 profile.t[4] = ad/jMax + h1 - t;
                 profile.t[5] = 0;
                 profile.t[6] = 0;
  
-                if (profile.check<Teeth::UDUD>(tf, pf, vf, af, jMax, vMax, aMax)) {
+                if (profile.check<Teeth::UDUD, Limits::NONE>(tf, pf, vf, af, jMax, vMax, aMax)) {
                     return true;
                 }
             }

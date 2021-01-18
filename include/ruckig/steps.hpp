@@ -12,14 +12,19 @@ namespace ruckig {
 struct Block {
     struct Interval {
         double left, right; // [s]
+        Profile profile; // Profile corresponding to right (end) time
+
+        explicit Interval(double left, double right, const Profile& profile): left(left), right(right), profile(profile) { };
     };
 
     double t_min; // [s]
     Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
 
-    // Max. 2 intervals can be blocked: a and b with corresponding profiles
+    // Max. 2 intervals can be blocked: a and b with corresponding profiles, the order does not matter
     std::optional<Interval> a, b;
-    std::optional<Profile> p_a, p_b;
+
+    explicit Block() { }
+    explicit Block(const Profile& p_min): p_min(p_min), t_min(p_min.t_sum[6] + p_min.t_brake.value_or(0.0)) { }
 
     bool is_blocked(double t) const {
         return (t < t_min) || (a && a->left < t && t < a->right) || (b && b->left < t && t < b->right);
@@ -59,8 +64,6 @@ class Step1 {
     std::array<Profile, 6> valid_profiles;
     size_t valid_profile_counter;
 
-    void add_profile(Profile profile, Limits limits, double jMax);
-
     void time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     void time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     void time_up_acc0_vel(Profile& profile, double vMax, double aMax, double jMax);
@@ -79,42 +82,23 @@ class Step1 {
     void time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
     void time_down_none(Profile& profile, double vMin, double aMax, double jMax);
 
-    template<size_t N, size_t left, size_t right, bool same_direction = true>
-    inline void add_block(double t_brake) {
-        if constexpr (N == 0) {
-            if (block.a) {
-                return;
-            }
-        } else {
-            if (block.b) {
-                return;
-            }
-        }
+    void add_profile(Profile profile, double jMax) {
+        profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
+        valid_profiles[valid_profile_counter] = profile;
+        ++valid_profile_counter;
+    }
 
-        double left_duration = valid_profiles[left].t_sum[6] + t_brake;
-        double right_duraction = valid_profiles[right].t_sum[6] + t_brake;
-        if constexpr (same_direction) {
-            if (valid_profiles[left].direction != valid_profiles[right].direction) {
-                return;
-            }
+    inline void add_interval(std::optional<Block::Interval>& interval, size_t left, size_t right, double t_brake) const {
+        if (interval) {
+            return;
         }
-
+        
+        const double left_duration = valid_profiles[left].t_sum[6] + t_brake;
+        const double right_duraction = valid_profiles[right].t_sum[6] + t_brake;
         if (left_duration < right_duraction) {
-            if constexpr (N == 0) {
-                block.a = Block::Interval {left_duration, right_duraction};
-                block.p_a = valid_profiles[right];
-            } else {
-                block.b = Block::Interval {left_duration, right_duraction};
-                block.p_b = valid_profiles[right];
-            }
+            interval = Block::Interval(left_duration, right_duraction, valid_profiles[right]);
         } else {
-            if constexpr (N == 0) {
-                block.a = Block::Interval {right_duraction, left_duration};
-                block.p_a = valid_profiles[left];
-            } else {
-                block.b = Block::Interval {right_duraction, left_duration};
-                block.p_b = valid_profiles[left];
-            }
+            interval = Block::Interval(right_duraction, left_duration, valid_profiles[left]);
         }
     }
 
@@ -130,6 +114,7 @@ public:
 
 
 class Step2 {
+    using Limits = Profile::Limits;
     using Teeth = Profile::Teeth;
 
     double tf;
