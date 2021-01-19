@@ -534,6 +534,7 @@ bool Step1::calculate_block() {
         size_t idx_else_1 = (idx_min + 1) % 2;
         
         if (count_udud == 1) { // Ignore UDUD
+        // if (valid_profiles[idx_min].direction != valid_profiles[idx_else_1].direction) { // Doesn't work
             block = Block(valid_profiles[idx_min]);
         } else {
             block = Block(valid_profiles[idx_else_1]);

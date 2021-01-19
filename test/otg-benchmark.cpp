@@ -27,8 +27,8 @@ int main() {
 
     {
         constexpr size_t DOFs {7};
-        // Ruckig<DOFs, true> otg {0.005};
-        Reflexxes<DOFs> otg {0.005};
+        Ruckig<DOFs, true> otg {0.005};
+        // Reflexxes<DOFs> otg {0.005};
         InputParameter<DOFs> input;
         
         srand(43);
