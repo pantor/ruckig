@@ -63,18 +63,6 @@ void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& ot
     OutputParameter<DOFs> output_comparison;
     auto result_comparison = otg_comparison.update(input, output_comparison);
     CHECK( output.duration <= Approx(output_comparison.duration) );
-
-    // if (output.duration == Approx(output_comparison.duration)) {
-    //     double half_duration = output.duration / 2;
-    //     otg.at_time(half_duration, output);
-    //     otg_comparison.at_time(half_duration, output_comparison);
-
-    //     for (size_t dof = 0; dof < DOFs; dof += 1) {
-    //         CHECK( output.new_position[dof] == Approx(output_comparison.new_position[dof]).margin(1e-8) );
-    //     }
-    // } else {
-    //     WARN("Ruckig and Reflexxes differ! Maybe Reflexxes error...");
-    // }
 }
 
 
@@ -271,42 +259,51 @@ TEST_CASE("Ruckig") {
         Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
         Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
-        for (size_t i = 0; i < (full ? 154 : 1) * 1024; ++i) {
+        for (size_t i = 0; i < (full ? 128 : 1) * 1024; ++i) {
             p.fill(input.current_position);
             d.fill_or_zero(input.current_velocity, 0.9);
             d.fill_or_zero(input.current_acceleration, 0.8);
             p.fill(input.target_position);
-            d.fill_or_zero(input.target_velocity, 0.6);
+            d.fill_or_zero(input.target_velocity, 0.7);
             l.fill(input.max_velocity, input.target_velocity);
             l.fill(input.max_acceleration);
             l.fill(input.max_jerk);
+
+            if (!otg.validate_input(input)) {
+                continue;
+            }
+
             check_comparison(otg, input, rflx);
         }
     }
 
-    /* SECTION("Comparison with Reflexxes with 2 DoF") {
-        constexpr size_t DOFs {2};
-        using Vec = Eigen::Matrix<double, DOFs, 1>;
-
+    SECTION("Comparison with Reflexxes with 3 DoF") {
+        constexpr size_t DOFs {3};
         Ruckig<DOFs, true> otg {0.005};
         Reflexxes<DOFs> rflx {0.005};
         InputParameter<DOFs> input;
 
-        srand(48);
+        srand(49);
         Randomizer<DOFs, decltype(position_dist)> p { position_dist };
         Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
         Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
-        for (size_t i = 0; i < 1*1024; ++i) {
+        for (size_t i = 0; i < (full ? 128 : 1) * 1024; ++i) {
             p.fill(input.current_position);
             d.fill_or_zero(input.current_velocity, 0.9);
             d.fill_or_zero(input.current_acceleration, 0.8);
             p.fill(input.target_position);
+            d.fill_or_zero(input.target_velocity, 0.7);
             l.fill(input.max_velocity);
             l.fill(input.max_acceleration);
             l.fill(input.max_jerk);
+
+            if (!otg.validate_input(input)) {
+                continue;
+            }
+
             check_comparison(otg, input, rflx);
         }
-    } */
+    }
 #endif
 }

@@ -102,22 +102,22 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [0, 0, 1.16247]
-    inp.current_velocity = [0, 0, -1.48811]
-    inp.current_acceleration = [0, 0, 1.41893]
-    inp.target_position = [0, 0, 3.27071]
-    inp.target_velocity = [0, 0, 0]
-    inp.target_acceleration = [0, 0, 0]
-    inp.max_velocity = [4.93409, 3.51433, 0.538111]
-    inp.max_acceleration = [6.41957, 7.36326, 1.26384]
-    inp.max_jerk = [7.59939, 9.01054, 0.418113]
+    inp.current_position = [ -4.1857784219, -2.2357842907, 2.6376484755 ]
+    inp.current_velocity = [ -0.9430237797, -0.7920121307, 0 ]
+    inp.current_acceleration = [ 1.0749639298, 0.991296339, -0.0 ]
+    inp.target_position = [ -2.0700240753, 2.5414789013, -1.8010271376 ]
+    inp.target_velocity = [ 0.4665007424, 2.1812786674, 0.4382603344 ]
+    inp.target_acceleration = [ 0, 0, 0 ]
+    inp.max_velocity = [ 2.094574405, 7.5976870489, 0.151853234 ]
+    inp.max_acceleration = [ 11.4805590725, 10.4514096357, 11.8073173481 ]
+    inp.max_jerk = [ 1.365894956, 5.1880300243, 9.808201198 ]
 
     print_input_for_mathematica(inp, 2)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.005)
-    otg = Ruckig(0.005)
+    otg = Reflexxes(0.005)
+    # otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 
