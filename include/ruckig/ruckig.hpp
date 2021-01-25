@@ -22,12 +22,6 @@ class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
-    //! Normalized input for calculating the trajectory
-    InputParameter<DOFs> normalized_input;
-
-    //! Scale that normalizes the input
-    double scale;
-
     //! Current time in [s]
     double t;
     
@@ -39,19 +33,6 @@ class Ruckig {
 
     static bool abs_compare(double a, double b) {
         return (std::abs(a) < std::abs(b));
-    }
-
-    void normalize_input(const InputParameter<DOFs>& input) {
-        const auto [vMax_min, vMax_max] = std::minmax_element(input.max_velocity.cbegin(), input.max_velocity.cend(), abs_compare);
-        const auto [aMax_min, aMax_max] = std::minmax_element(input.max_acceleration.cbegin(), input.max_acceleration.cend(), abs_compare);
-        const auto [jMax_min, jMax_max] = std::minmax_element(input.max_jerk.cbegin(), input.max_jerk.cend(), abs_compare);
-
-        const double min_value = std::min({*vMax_min, *aMax_min, *jMax_min});
-        const double max_value = std::max({*vMax_max, *aMax_max, *jMax_max});
-        scale = 1.0; // / min_value;
-
-        normalized_input = input;
-        // normalized_input.scale(scale);
     }
 
     bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, size_t& limiting_dof, std::array<Profile, DOFs>& profiles) {
@@ -108,8 +89,7 @@ class Ruckig {
             return Result::ErrorInvalidInput;
         }
 
-        normalize_input(input);
-        InputParameter<DOFs>& inp = normalized_input;
+        InputParameter<DOFs>& inp = current_input;
 
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
@@ -239,7 +219,12 @@ public:
                 return false;
             }
 
-            double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
+            double max_target_acceleration;
+            if (input.min_velocity && input.target_velocity[dof] < 0) {
+                max_target_acceleration = std::sqrt(-2 * input.max_jerk[dof] * (input.min_velocity.value()[dof] - input.target_velocity[dof]));
+            } else {
+                max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
+            }
             if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
                 return false;
             }
@@ -277,15 +262,15 @@ public:
         if (time + delta_time > tf) {
             // Keep constant acceleration
             for (size_t dof = 0; dof < DOFs; ++dof) {
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time - tf, normalized_input.target_position[dof], normalized_input.target_velocity[dof], normalized_input.target_acceleration[dof], 0, 1./scale);
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time - tf, current_input.target_position[dof], current_input.target_velocity[dof], current_input.target_acceleration[dof], 0);
             }
             return;
         }
 
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            if (!normalized_input.enabled[dof]) {
+            if (!current_input.enabled[dof]) {
                 // Keep constant acceleration
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time, normalized_input.current_position[dof], normalized_input.current_velocity[dof], normalized_input.current_acceleration[dof], 0, 1./scale);
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time, current_input.current_position[dof], current_input.current_velocity[dof], current_input.current_acceleration[dof], 0);
             }
 
             const auto& p = profiles[dof];
@@ -298,7 +283,7 @@ public:
                         t_diff -= p.t_brakes[index - 1];
                     }
 
-                    std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p_brakes[index], p.v_brakes[index], p.a_brakes[index], p.j_brakes[index], 1./scale);
+                    std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p_brakes[index], p.v_brakes[index], p.a_brakes[index], p.j_brakes[index]);
                     continue;
                 } else {
                     t_diff -= p.t_brake.value();
@@ -308,7 +293,7 @@ public:
             // Non-time synchronization
             if (t_diff >= p.t_sum[6]) {
                 // Keep constant acceleration
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff - p.t_sum[6], normalized_input.target_position[dof], normalized_input.target_velocity[dof], normalized_input.target_acceleration[dof], 0, 1./scale);
+                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff - p.t_sum[6], current_input.target_position[dof], current_input.target_velocity[dof], current_input.target_acceleration[dof], 0);
                 continue;
             }
 
@@ -319,7 +304,7 @@ public:
                 t_diff -= p.t_sum[index - 1];
             }
 
-            std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index], 1./scale);
+            std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index]);
         }
     }
 

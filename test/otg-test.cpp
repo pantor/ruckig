@@ -178,28 +178,6 @@ TEST_CASE("Ruckig") {
         check_duration(otg, input, 5.6053274785);
     }
 
-    SECTION("Random input with 3 DoF and target velocity") {
-        constexpr size_t DOFs {3};
-        Ruckig<DOFs, true> otg {0.005};
-        InputParameter<DOFs> input;
-
-        srand(39);
-        Randomizer<DOFs, decltype(position_dist)> p { position_dist };
-        Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
-        Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
-
-        for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
-            p.fill(input.current_position);
-            d.fill_or_zero(input.current_velocity, 0.9);
-            d.fill_or_zero(input.current_acceleration, 0.8);
-            p.fill(input.target_position);
-            d.fill_or_zero(input.target_velocity, 0.7);
-            l.fill(input.max_velocity, input.target_velocity);
-            l.fill(input.max_acceleration);
-            l.fill(input.max_jerk);
-            check_calculation(otg, input);
-        }
-    }
 
     SECTION("Random input with 1 DoF and target velocity, acceleration") {
         constexpr size_t DOFs {1};
@@ -226,6 +204,29 @@ TEST_CASE("Ruckig") {
                 continue;
             }
 
+            check_calculation(otg, input);
+        }
+    }
+ 
+    SECTION("Random input with 3 DoF and target velocity") {
+        constexpr size_t DOFs {3};
+        Ruckig<DOFs, true> otg {0.005};
+        InputParameter<DOFs> input;
+
+        srand(39);
+        Randomizer<DOFs, decltype(position_dist)> p { position_dist };
+        Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
+        Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
+
+        for (size_t i = 0; i < (full ? 256 : 1) * 1024; ++i) {
+            p.fill(input.current_position);
+            d.fill_or_zero(input.current_velocity, 0.9);
+            d.fill_or_zero(input.current_acceleration, 0.8);
+            p.fill(input.target_position);
+            d.fill_or_zero(input.target_velocity, 0.7);
+            l.fill(input.max_velocity, input.target_velocity);
+            l.fill(input.max_acceleration);
+            l.fill(input.max_jerk);
             check_calculation(otg, input);
         }
     }

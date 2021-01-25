@@ -68,24 +68,6 @@ public:
         );
     }
 
-    void scale(double factor) {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
-            current_position[dof] *= factor;
-            current_velocity[dof] *= factor;
-            current_acceleration[dof] *= factor;
-            target_position[dof] *= factor;
-            target_velocity[dof] *= factor;
-            target_acceleration[dof] *= factor;
-            max_velocity[dof] *= factor;
-            max_acceleration[dof] *= factor;
-            max_jerk[dof] *= factor;
-
-            if (min_velocity) {
-                min_velocity.value()[dof] *= factor;
-            }
-        }
-    }
-
     std::string to_string() const {
         std::stringstream ss;
         ss << "\ninp.current_position = [" << join(current_position) << "]\n";

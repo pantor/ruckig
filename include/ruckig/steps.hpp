@@ -60,6 +60,8 @@ class Step1 {
     double aMax_aMax;
     double jMax_jMax;
 
+    bool has_up_vel {false}, has_down_vel {false};
+
     // Max 6 valid profiles
     std::array<Profile, 6> valid_profiles;
     size_t valid_profile_counter;
@@ -84,6 +86,14 @@ class Step1 {
 
     inline void add_profile(Profile profile, double jMax) {
         profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
+
+        if (profile.limits == Limits::ACC0_ACC1_VEL || profile.limits == Limits::ACC0_VEL || profile.limits == Limits::ACC1_VEL || profile.limits == Limits::VEL) {
+            switch (profile.direction) {
+                case Profile::Direction::UP: has_up_vel = true; break;
+                case Profile::Direction::DOWN: has_down_vel = true; break;
+            }
+        }
+
         valid_profiles[valid_profile_counter] = profile;
         ++valid_profile_counter;
     }

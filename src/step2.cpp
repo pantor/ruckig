@@ -397,15 +397,6 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
             profile.t[4] = h1;
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] - af/jMax;
-            
-            // std::cout << std::endl;
-            // std::cout << profile.t[0] << std::endl;
-            // std::cout << profile.t[1] << std::endl;
-            // std::cout << profile.t[2] << std::endl;
-            // std::cout << profile.t[3] << std::endl;
-            // std::cout << profile.t[4] << std::endl;
-            // std::cout << profile.t[5] << std::endl;
-            // std::cout << profile.t[6] << std::endl;
 
             if (profile.check<Teeth::UDUD, Limits::VEL>(tf, pf, vf, af, jMax, vMax, aMax)) {
                 return true;
@@ -507,9 +498,9 @@ bool Step2::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
 
     // Solution 1, UDDU?
     profile.t[0] = (-a0 + aMax)/jMax;
+    profile.t[1] = ad/jMax - 2 * profile.t[0] - (h3 - h1)/h2 + tf;
     profile.t[2] = -(h3 + h1)/h2;
     profile.t[3] = (h3 - h1)/h2;
-    profile.t[1] = ad/jMax - 2 * profile.t[0] - profile.t[3] + tf;
     profile.t[4] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3]);
     profile.t[5] = 0;
     profile.t[6] = 0;
@@ -528,9 +519,9 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         
         profile.t[0] = tf/4;
         profile.t[1] = 0;
-        profile.t[2] = profile.t[0];
+        profile.t[2] = 2*profile.t[0];
         profile.t[3] = 0;
-        profile.t[4] = profile.t[0];
+        profile.t[4] = 0;
         profile.t[5] = 0;
         profile.t[6] = profile.t[0];
 
@@ -547,9 +538,9 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         
             profile.t[0] = (2*tf*vf - h1)/(4*vd);
             profile.t[1] = 0;
-            profile.t[2] = profile.t[0];
+            profile.t[2] = tf/2;
             profile.t[3] = 0;
-            profile.t[4] = tf/2 - profile.t[0];
+            profile.t[4] = 0;
             profile.t[5] = 0;
             profile.t[6] = profile.t[4];
             
@@ -689,7 +680,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             }
         }
     }
-    
+
     return false;
 }
 
