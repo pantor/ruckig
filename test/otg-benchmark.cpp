@@ -46,14 +46,14 @@ int main() {
             d.fill_or_zero(input.current_acceleration, 0.8);
             p.fill(input.target_position);
             d.fill_or_zero(input.target_velocity, 0.7);
-            // d.fill_or_zero(input.target_acceleration, 0.6);
+            d.fill_or_zero(input.target_acceleration, 0.6);
             l.fill(input.max_velocity, input.target_velocity);
             l.fill(input.max_acceleration, input.target_acceleration);
             l.fill(input.max_jerk);
 
-            // if (!otg.validate_input(input)) {
-            //     continue;
-            // }
+            if (!otg.validate_input(input)) {
+                continue;
+            }
 
             double time = check_calculation(otg, input);
             moving_average = moving_average + (time - moving_average) / n;

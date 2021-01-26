@@ -126,7 +126,7 @@ class Ruckig {
             }
 
             Step1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof]};
-            bool found_profile = step1.get_profile(p);
+            bool found_profile = step1.get_profile(p, blocks[dof]);
             if (!found_profile) {
                 if constexpr (throw_error) {
                     throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
@@ -134,8 +134,7 @@ class Ruckig {
                 return Result::ErrorExecutionTimeCalculation;
             }
 
-            blocks[dof] = step1.block;
-            output.independent_min_durations[dof] = step1.block.t_min;
+            output.independent_min_durations[dof] = blocks[dof].t_min;
         }
 
         size_t limiting_dof; // The DoF that doesn't need step 2

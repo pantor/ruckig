@@ -27,7 +27,7 @@ Ruckig calculates a time-optimal trajectory given a *target* waypoint with posit
 
 ## Installation
 
-Ruckig has no dependencies for practical usage. To build Ruckig using CMake, just run
+Ruckig has no dependencies (except for testing). To build Ruckig using CMake, just run
 
 ```bash
 mkdir -p build
@@ -41,7 +41,7 @@ To install Ruckig in a system-wide directory, use `(sudo) make install`. We reco
 
 ## Tutorial
 
-Furthermore, a tutorial will explain the basics to include online generated trajectories within your robotics or machining application. A working example can be found in the `examples` directory. A time-optimal trajectory for a single degree of freedom is shown in the figure below.
+Furthermore, a tutorial will explain the basics to include online generated trajectories within your application. A working example can be found in the `examples` directory. A time-optimal trajectory for a single degree of freedom is shown in the figure below.
 
 ![Trajectory Profile](https://github.com/pantor/ruckig/raw/master/doc/example_profile.png?raw=true)
 
@@ -153,7 +153,7 @@ Moreover, a range of additional parameter about the duration of the trajectory a
 
 ## Tests and Numerical Stability
 
-The current test suite validates over 1.420.000 (random) trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the velocity, acceleration and jerk limit to be withing `1e-12`, and for the final acceleration as well to be within a numerical error of `1e-12`. The maximal supported trajectory duration is `7e3`, which sounds short but should suffice for most applications seeking for time-optimality. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
+The current test suite validates over 1.500.000 (random) trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the velocity, acceleration and jerk limit to be withing `1e-12`, and for the final acceleration as well to be within a numerical error of `1e-12`. The maximal supported trajectory duration is `7e3`, which sounds short but should suffice for most applications seeking for time-optimality. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
 
 
 ## Development
@@ -167,4 +167,4 @@ Ruckig is written in C++17. It is currently tested against following versions
 
 ## Citation
 
-A publication for citation will follow ;)
+A publication will follow soon ;)

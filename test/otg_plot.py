@@ -11,7 +11,7 @@ from _ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Sm
 from _ruckig import Reflexxes
 
 
-def walk_through_trajectory(otg, inp):
+def walk_through_trajectory(otg, inp, print_table=False):
     t = 0.0
     t_list, out_list = [], []
     out = OutputParameter()
@@ -25,9 +25,10 @@ def walk_through_trajectory(otg, inp):
         inp.current_velocity = out.new_velocity
         inp.current_acceleration = out.new_acceleration
         
-        # jerk = (old_acc - out.new_acceleration[0]) / 0.005
-        # old_acc = out.new_acceleration[0]
-        # print(str(t) + '\t' + str(inp.current_position[0]) + '\t' + str(inp.current_velocity[0]) + '\t' + str(inp.current_acceleration[0]) + '\t' + str(jerk))
+        if print_table:
+            jerk = (old_acc - out.new_acceleration[0]) / 0.005
+            old_acc = out.new_acceleration[0]
+            print(str(t) + '\t' + str(inp.current_position[0]) + '\t' + str(inp.current_velocity[0]) + '\t' + str(inp.current_acceleration[0]) + '\t' + str(jerk))
 
         t_list.append(t)
         out_list.append(copy.copy(out))
@@ -102,17 +103,17 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [ 0, 0, 0 ]
-    inp.current_velocity = [ 0.0, 0.3, 0.1 ]
-    inp.current_acceleration = [ 0.0, 0.0, -0.0 ]
-    inp.target_position = [ 0, 0, 0 ]
-    inp.target_velocity = [ 0.2, 0.3, 0.1 ]
-    inp.target_acceleration = [ 0.25, 0, 0 ]
-    inp.max_velocity = [ 200.094574405, 70.5976870489, 200.351853234 ]
-    inp.max_acceleration = [ 11.4805590725, 10.4514096357, 11.8073173481 ]
-    inp.max_jerk = [ 1.365894956, 5.1880300243, 9.808201198 ]
+    inp.current_position = [-0.75, 0, 0]
+    inp.current_velocity = [1.0, 0, 0]
+    inp.current_acceleration = [0, 0, 0]
+    inp.target_position = [0.75000001, 0, 0]
+    inp.target_velocity = [1.0, 0, 0]
+    inp.target_acceleration = [0, 0, 0]
+    inp.max_velocity = [2.0, 1, 1]
+    inp.max_acceleration = [2.0, 1, 1]
+    inp.max_jerk = [2.0, 1, 1]
 
-    print_input_for_mathematica(inp, 2)
+    print_input_for_mathematica(inp, 0)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)

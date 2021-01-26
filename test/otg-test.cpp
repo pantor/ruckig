@@ -228,7 +228,7 @@ TEST_CASE("Ruckig") {
         Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist };
         Randomizer<DOFs, decltype(limit_dist)> l { limit_dist };
 
-        for (size_t i = 0; i < (full ? 620 : 1) * 1024; ++i) {
+        for (size_t i = 0; i < (full ? 700 : 1) * 1024; ++i) {
             p.fill(input.current_position);
             d.fill_or_zero(input.current_velocity, 0.9);
             d.fill_or_zero(input.current_acceleration, 0.8);

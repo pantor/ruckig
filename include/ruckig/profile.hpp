@@ -3,6 +3,7 @@
 #include <array>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <math.h>
 #include <optional>
 #include <tuple>
@@ -25,20 +26,14 @@ struct Profile {
     //! Allow up to two segments of braking before the "correct" profile starts
     std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
 
-    template<Teeth teeth, Limits limits, bool add_t2_t4 = false>
+    template<Teeth teeth, Limits limits>
     bool check(double pf, double vf, double af, double jf, double vMax, double aMax) {
-        if constexpr (teeth == Teeth::UDDU) {
-            j = {jf, 0, -jf, 0, -jf, 0, jf};
-        } else {
-            j = {jf, 0, -jf, 0, jf, 0, -jf};
-        }
-
-        t_sum[0] = t[0];
         if (t[0] < 0) {
             return false;
         }
-
-        for (size_t i = 0; i < 6; i += 1) {
+    
+        t_sum[0] = t[0];
+        for (size_t i = 0; i < 6; ++i) {
             if (t[i+1] < 0) {
                 return false;
             }
@@ -46,30 +41,36 @@ struct Profile {
             t_sum[i+1] = t_sum[i] + t[i+1];
         }
 
+        if (t_sum[6] > 1e12) { // For numerical reasons
+            return false;
+        }
+
+        if constexpr (teeth == Teeth::UDDU) {
+            j = {jf, 0, -jf, 0, -jf, 0, jf};
+        } else {
+            j = {jf, 0, -jf, 0, jf, 0, -jf};
+        }
+
         const double vMaxAbs = std::abs(vMax) + 1e-12;
         const double aMaxAbs = std::abs(aMax) + 1e-12;
 
-        for (size_t i = 0; i < 7; i += 1) {
+        for (size_t i = 0; i < 7; ++i) {
             a[i+1] = a[i] + t[i] * j[i];
             v[i+1] = v[i] + t[i] * (a[i] + t[i] * j[i] / 2);
             p[i+1] = p[i] + t[i] * (v[i] + t[i] * (a[i] / 2 + t[i] * j[i] / 6));
-
-            if (i > 1 && a[i+1] * a[i] < -1e-15) {
-                const double v_a_zero = v[i] - (a[i] * a[i]) / (2 * j[i]);
-                if (std::abs(v_a_zero) > vMaxAbs) {
-                    return false;
-                }
-            }
 
             if constexpr (limits == Limits::ACC0_ACC1_VEL || limits == Limits::ACC0_VEL || limits == Limits::ACC1_VEL || limits == Limits::VEL) {
                 if (i == 2) {
                     a[3] = 0.0;
                 }
             }
-        }
 
-        if (t_sum[6] > 1e12) { // For numerical reasons
-            return false;
+            if (i > 1 && a[i+1] * a[i] < -std::numeric_limits<double>::epsilon()) {
+                const double v_a_zero = v[i] - (a[i] * a[i]) / (2 * j[i]);
+                if (std::abs(v_a_zero) > vMaxAbs) {
+                    return false;
+                }
+            }
         }
 
         this->teeth = teeth;
@@ -91,8 +92,7 @@ struct Profile {
     
     template<Teeth teeth, Limits limits>
     inline bool check(double tf, double pf, double vf, double af, double jf, double vMax, double aMax) {
-        // std::cout << std::setprecision(15) << "target: " << std::abs(t_sum[6]-tf) << " " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << std::endl;
-        // Time doesn't need to be checked as every profile has one tf - ...
+        // Time doesn't need to be checked as every profile has a: tf - ... equation
         return check<teeth, limits>(pf, vf, af, jf, vMax, aMax); // && (std::abs(t_sum[6] - tf) < 1e-8);
     }
     

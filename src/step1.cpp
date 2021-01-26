@@ -244,7 +244,7 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             profile.t[5] = 0;
             profile.t[6] = (-a0 + af + jMax*(t - profile.t[0]))/jMax;
 
-            if (profile.check<Teeth::UDDU, Limits::NONE, false>(pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<Teeth::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
                 add_profile(profile, jMax);
             }
         }
@@ -283,7 +283,7 @@ void Step1::time_down_none(Profile& profile, double vMin, double aMax, double jM
     return time_up_none(profile, vMin, -aMax, -jMax);
 }
 
-bool Step1::calculate_block() {
+bool Step1::calculate_block(Block& block) const {
     // if (valid_profile_counter > 0) {
     //     std::cout << "---\n " << valid_profile_counter << std::endl;
     //     for (size_t i = 0; i < valid_profile_counter; ++i) {
@@ -305,13 +305,13 @@ bool Step1::calculate_block() {
     size_t idx_min = std::distance(valid_profiles.cbegin(), idx_min_it);
     
     block = Block(valid_profiles[idx_min]);
-    const double t_brake = valid_profiles[idx_min].t_brake.value_or(0.0);
 
     if (valid_profile_counter == 3) {
         size_t idx_else_1 = (idx_min + 1) % 3;
         size_t idx_else_2 = (idx_min + 2) % 3;
         
-        add_interval(block.a, idx_else_1, idx_else_2, t_brake);
+        add_interval(block.a, idx_else_1, idx_else_2);
+        return true;
 
     } else if (valid_profile_counter == 5) {
         size_t idx_else_1 = (idx_min + 1) % 5;
@@ -320,21 +320,19 @@ bool Step1::calculate_block() {
         size_t idx_else_4 = (idx_min + 4) % 5;
 
         if (valid_profiles[idx_else_1].direction == valid_profiles[idx_else_2].direction) {
-            add_interval(block.a, idx_else_1, idx_else_2, t_brake);
-            add_interval(block.b, idx_else_3, idx_else_4, t_brake);
+            add_interval(block.a, idx_else_1, idx_else_2);
+            add_interval(block.b, idx_else_3, idx_else_4);
         } else {
-            add_interval(block.a, idx_else_1, idx_else_4, t_brake);
-            add_interval(block.b, idx_else_2, idx_else_3, t_brake);
+            add_interval(block.a, idx_else_1, idx_else_4);
+            add_interval(block.b, idx_else_2, idx_else_3);
         }
-
-    } else {
-        return false;
+        return true;
     }
-
-    return true;
+    
+    return false;
 }
 
-bool Step1::get_profile(const Profile& input) {
+bool Step1::get_profile(const Profile& input, Block& block) {
     Profile profile = input;
     profile.a[0] = a0;
     profile.v[0] = v0;
@@ -381,7 +379,7 @@ bool Step1::get_profile(const Profile& input) {
         time_up_acc0_acc1(profile, vMax, aMax, jMax);
     }
 
-    return calculate_block();
+    return calculate_block(block);
 }
 
 } // namespace ruckig

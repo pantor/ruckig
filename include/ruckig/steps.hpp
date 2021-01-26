@@ -20,7 +20,7 @@ struct Block {
     double t_min; // [s]
     Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
 
-    // Max. 2 intervals can be blocked: a and b with corresponding profiles, the order does not matter
+    // Max. 2 intervals can be blocked: called a and b with corresponding profiles, order does not matter
     std::optional<Interval> a, b;
 
     explicit Block() { }
@@ -60,10 +60,11 @@ class Step1 {
     double aMax_aMax;
     double jMax_jMax;
 
+    // Only a single velocity-limited profile can be valid
     bool has_up_vel {false}, has_down_vel {false};
 
-    // Max 6 valid profiles
-    std::array<Profile, 6> valid_profiles;
+    // Max 5 valid profiles
+    std::array<Profile, 5> valid_profiles;
     size_t valid_profile_counter;
 
     void time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
@@ -98,21 +99,9 @@ class Step1 {
         ++valid_profile_counter;
     }
 
-    inline void add_interval(std::optional<Block::Interval>& interval, size_t left, size_t right, double t_brake) const {
-        // if (interval) {
-        //     return;
-        // }
-
-        // if (valid_profiles[left].teeth != valid_profiles[right].teeth) {
-        //     return;
-        // }
-
-        // if (valid_profiles[left].direction != valid_profiles[right].direction) {
-        //     return;
-        // }
-        
-        const double left_duration = valid_profiles[left].t_sum[6] + t_brake;
-        const double right_duraction = valid_profiles[right].t_sum[6] + t_brake;
+    inline void add_interval(std::optional<Block::Interval>& interval, size_t left, size_t right) const {
+        const double left_duration = valid_profiles[left].t_sum[6] + valid_profiles[left].t_brake.value_or(0.0);
+        const double right_duraction = valid_profiles[right].t_sum[6] + valid_profiles[right].t_brake.value_or(0.0);
         if (left_duration < right_duraction) {
             interval = Block::Interval(left_duration, right_duraction, valid_profiles[right]);
         } else {
@@ -120,14 +109,12 @@ class Step1 {
         }
     }
 
-    bool calculate_block();
+    bool calculate_block(Block& block) const;
 
 public:
-    Block block;
-
     explicit Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax);
 
-    bool get_profile(const Profile& input);
+    bool get_profile(const Profile& input, Block& block);
 };
 
 
