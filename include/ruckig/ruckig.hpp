@@ -100,29 +100,22 @@ class Ruckig {
             }
 
             Profile& p = profiles[dof];
-
-            // Calculate brakes (if input exceeds or will exceed limits)
             inp_min_velocity[dof] = inp.min_velocity ? inp.min_velocity.value()[dof] : -inp.max_velocity[dof];
+
+            // Calculate brake (if input exceeds or will exceed limits)
             Brake::get_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
             
             p.t_brake = p.t_brakes[0] + p.t_brakes[1];
-
             p0s[dof] = inp.current_position[dof];
             v0s[dof] = inp.current_velocity[dof];
             a0s[dof] = inp.current_acceleration[dof];
 
-            if (p.t_brakes[0] > 0.0) {
-                p.p_brakes[0] = p0s[dof];
-                p.v_brakes[0] = v0s[dof];
-                p.a_brakes[0] = a0s[dof];
-                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[0], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[0]);
-
-                if (p.t_brakes[1] > 0.0) {
-                    p.p_brakes[1] = p0s[dof];
-                    p.v_brakes[1] = v0s[dof];
-                    p.a_brakes[1] = a0s[dof];
-                    std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[1], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[1]);
-                }
+            // Integrate brake pre-trajectory
+            for (size_t i = 0; p.t_brakes[i] > 0 && i < 2; ++i) {
+                p.p_brakes[i] = p0s[dof];
+                p.v_brakes[i] = v0s[dof];
+                p.a_brakes[i] = a0s[dof];
+                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[i], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[i]);
             }
 
             Step1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof]};

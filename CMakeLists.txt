@@ -1,20 +1,17 @@
 cmake_minimum_required(VERSION 3.11)
 
 
-project(ruckig VERSION 0.1.0 LANGUAGES CXX)
+project(ruckig VERSION 1.0.0 LANGUAGES CXX)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 
 option(BUILD_EXAMPLES "Build example programs" OFF)
-option(BUILD_PYTHON_MODULE "Build python module" ON)
+option(BUILD_PYTHON_MODULE "Build python module" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
 
 
-find_package(Eigen3 3.3.9 REQUIRED NO_MODULE)
 find_package(Reflexxes)
-
-message("Found Eigen Version: ${Eigen3_VERSION}")
 
 if(Reflexxes)
   set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
@@ -32,7 +29,7 @@ add_library(ruckig SHARED
 )
 target_compile_features(ruckig PUBLIC cxx_std_17)
 target_include_directories(ruckig PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(ruckig PUBLIC Eigen3::Eigen)
+target_link_libraries(ruckig PUBLIC)
 
 
 if(Reflexxes)

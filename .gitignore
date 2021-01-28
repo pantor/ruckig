@@ -1,7 +1,5 @@
 .vscode
 
 build
+local
 reflexxes
-
-local.zsh
-tmp.cpp

@@ -50,7 +50,7 @@ void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
 
 
 template<size_t DOFs, class OTGType, class OTGCompType>
-void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& otg_comparison) {
+void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& otg_comparison, size_t& counter) {
     OutputParameter<DOFs> output;
 
     CAPTURE( input.current_position, input.current_velocity, input.current_acceleration );
@@ -63,6 +63,9 @@ void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& ot
     OutputParameter<DOFs> output_comparison;
     auto result_comparison = otg_comparison.update(input, output_comparison);
     CHECK( output.duration <= Approx(output_comparison.duration) );
+    if (output.duration < output_comparison.duration - 1e-8) {
+        ++counter;
+    }
 }
 
 
@@ -188,6 +191,7 @@ TEST_CASE("Ruckig") {
             l.fill(input.max_jerk);
 
             if (!otg.validate_input(input)) {
+                --i;
                 continue;
             }
 
@@ -240,6 +244,7 @@ TEST_CASE("Ruckig") {
             l.fill(input.max_jerk);
 
             if (!otg.validate_input(input)) {
+                --i;
                 continue;
             }
 
@@ -253,6 +258,8 @@ TEST_CASE("Ruckig") {
         Ruckig<DOFs, true> otg {0.005};
         Reflexxes<DOFs> rflx {0.005};
         InputParameter<DOFs> input;
+
+        size_t counter_faster {0};
 
         srand(43);
         Randomizer<DOFs, decltype(position_dist)> p { position_dist };
@@ -270,11 +277,13 @@ TEST_CASE("Ruckig") {
             l.fill(input.max_jerk);
 
             if (!otg.validate_input(input)) {
+                --i;
                 continue;
             }
 
-            check_comparison(otg, input, rflx);
+            check_comparison(otg, input, rflx, counter_faster); 
         }
+        // WARN(counter_faster << " / " << 128*1024 << " trajectories are faster.");
     }
 
     SECTION("Comparison with Reflexxes with 3 DoF") {
@@ -282,6 +291,8 @@ TEST_CASE("Ruckig") {
         Ruckig<DOFs, true> otg {0.005};
         Reflexxes<DOFs> rflx {0.005};
         InputParameter<DOFs> input;
+
+        size_t counter_faster {0};
 
         srand(49);
         Randomizer<DOFs, decltype(position_dist)> p { position_dist };
@@ -299,10 +310,11 @@ TEST_CASE("Ruckig") {
             l.fill(input.max_jerk);
 
             if (!otg.validate_input(input)) {
+                --i;
                 continue;
             }
 
-            check_comparison(otg, input, rflx);
+            check_comparison(otg, input, rflx, counter_faster);
         }
     }
 #endif

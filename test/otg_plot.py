@@ -11,13 +11,15 @@ from _ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Sm
 from _ruckig import Reflexxes
 
 
-def walk_through_trajectory(otg, inp, print_table=False):
+def walk_through_trajectory(otg, inp, print_table=True):
     t = 0.0
     t_list, out_list = [], []
     out = OutputParameter()
 
     res = Result.Working
     old_acc = 0
+    print_dof = 0
+    t_start = 0.0
     while res == Result.Working:
         res = otg.update(inp, out)
 
@@ -26,9 +28,10 @@ def walk_through_trajectory(otg, inp, print_table=False):
         inp.current_acceleration = out.new_acceleration
         
         if print_table:
-            jerk = (old_acc - out.new_acceleration[0]) / 0.005
-            old_acc = out.new_acceleration[0]
-            print(str(t) + '\t' + str(inp.current_position[0]) + '\t' + str(inp.current_velocity[0]) + '\t' + str(inp.current_acceleration[0]) + '\t' + str(jerk))
+            jerk = (old_acc - out.new_acceleration[print_dof]) / otg.delta_time
+            old_acc = out.new_acceleration[print_dof]
+            # print(str(t_start + t) + '\t' + str(inp.current_position[print_dof]) + '\t' + str(inp.current_velocity[print_dof]) + '\t' + str(inp.current_acceleration[print_dof]) + '\t' + str(jerk))
+            # print(str(inp.current_position[0]) + '\t' + str(inp.current_position[1]))
 
         t_list.append(t)
         out_list.append(copy.copy(out))
@@ -103,14 +106,15 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-0.75, 0, 0]
-    inp.current_velocity = [1.0, 0, 0]
-    inp.current_acceleration = [0, 0, 0]
-    inp.target_position = [0.75000001, 0, 0]
-    inp.target_velocity = [1.0, 0, 0]
-    inp.target_acceleration = [0, 0, 0]
-    inp.max_velocity = [2.0, 1, 1]
-    inp.max_acceleration = [2.0, 1, 1]
+    inp.current_position = [0.0, 0, 0]
+    inp.current_velocity = [0, 0, 0]
+    inp.current_acceleration = [0.0, 0.0, 0]
+    inp.target_position = [1.0, 0, 0]
+    inp.target_velocity = [0.0, 0, 0]
+    inp.target_acceleration = [0.8, 0, 0]
+    inp.max_velocity = [0.16, 1, 1]
+    inp.min_velocity = [-0.2, -1, -1]
+    inp.max_acceleration = [1.2, 1, 1]
     inp.max_jerk = [2.0, 1, 1]
 
     print_input_for_mathematica(inp, 0)
@@ -118,7 +122,7 @@ if __name__ == '__main__':
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
     # otg = Reflexxes(0.005)
-    otg = Ruckig(0.005)
+    otg = Ruckig(0.02)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 
