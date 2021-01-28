@@ -14,15 +14,6 @@ jobs:
         sudo apt-get update
         sudo apt-get -y install build-essential cmake git
     
-    - name: install Eigen3
-      run: |
-        git clone https://gitlab.com/libeigen/eigen.git
-        cd eigen
-        git checkout 3.3.9
-        mkdir build && cd build
-        cmake ..
-        sudo make install
-    
     - name: install Catch2
       run: |
         git clone https://github.com/catchorg/Catch2.git

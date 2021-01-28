@@ -160,9 +160,9 @@ The current test suite validates over 1.500.000 (random) trajectories. The numer
 
 Ruckig is written in C++17. It is currently tested against following versions
 
-- Catch2 v2.13.3 (only for testing)
-- Reflexxes v1.2.7 (only for comparison)
-- Pybind11 v2.6.0 (only for python wrapper)
+- Catch2 v2.13 (only for testing)
+- Reflexxes v1.2 (only for comparison)
+- Pybind11 v2.6 (only for python wrapper)
 
 
 ## Citation

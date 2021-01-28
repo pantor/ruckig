@@ -39,8 +39,9 @@ int main() {
         double moving_average {0.0};
         double worst {0.0};
         size_t n {1};
+        const size_t number_trajectories {32 * 1024};
 
-        for (size_t i = 0; i < 32 * 1024; ++i) {
+        for (size_t i = 0; i < number_trajectories; ++i) {
             p.fill(input.current_position);
             d.fill_or_zero(input.current_velocity, 0.9);
             d.fill_or_zero(input.current_acceleration, 0.8);
@@ -61,7 +62,8 @@ int main() {
             ++n;
         }
 
-        std::cout << "Average Calculation Duration 3 Dof: " << moving_average << std::endl;
-        std::cout << "Worst Calculation Duration 3 Dof: " << worst << std::endl;
+        std::cout << "Benchmark for " << DOFs << " DoFs on " << number_trajectories << "trajectories" << << std::endl;
+        std::cout << "Average Calculation Duration " << moving_average << " [µs]" << std::endl;
+        std::cout << "Worst Calculation Duration " << worst << " [µs]" << std::endl;
     }
 }

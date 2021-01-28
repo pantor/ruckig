@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <random>
 
 template<size_t DOFs, class T>
