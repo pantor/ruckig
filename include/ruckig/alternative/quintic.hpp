@@ -5,6 +5,7 @@
 
 namespace ruckig {
 
+//! Alternative OTG algorithm (for comparison)
 template<size_t DOFs>
 class Quintic {
     std::array<double, DOFs> a, b, c, d, e, f;

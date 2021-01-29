@@ -7,7 +7,8 @@
 
 namespace ruckig {
 
-/**
+//! Alternative OTG algorithm (for comparison)
+/*!
  * Adapted from: Wisama Khalil and Etienne Dombre. 2002. Modeling, Identification and Control of Robots (Kogan Page Science Paper edition).
  */
 template<size_t DOFs>

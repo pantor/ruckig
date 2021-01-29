@@ -17,6 +17,7 @@
 
 namespace ruckig {
 
+//! Main class for the Ruckig algorithm.
 template<size_t DOFs, bool throw_error = false>
 class Ruckig {
     //! Current input, only for comparison for recalculation

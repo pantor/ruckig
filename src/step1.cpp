@@ -38,7 +38,7 @@ void Step1::time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, do
     profile.t[5] = (af_af/2 - aMax_aMax - jMax*(vf - vMax))/(aMax*jMax);
     profile.t[6] = profile.t[4] + af/jMax;
 
-    if (profile.check<Teeth::UDDU, Limits::ACC0_ACC1_VEL>(pf, vf, af, jMax, vMax, aMax)) {
+    if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1_VEL>(pf, vf, af, jMax, vMax, aMax)) {
         add_profile(profile, jMax);
     }
 }
@@ -58,7 +58,7 @@ void Step1::time_up_acc1_vel(Profile& profile, double vMax, double aMax, double 
     profile.t[5] = (af_af/2 - aMax_aMax + jMax*(vMax - vf))/(aMax*jMax);
     profile.t[6] = profile.t[4] + af/jMax;
 
-    if (profile.check<Teeth::UDDU, Limits::ACC1_VEL>(pf, vf, af, jMax, vMax, aMax)) {
+    if (profile.check<JerkSigns::UDDU, Limits::ACC1_VEL>(pf, vf, af, jMax, vMax, aMax)) {
         add_profile(profile, jMax);
     }
 }
@@ -78,7 +78,7 @@ void Step1::time_up_acc0_vel(Profile& profile, double vMax, double aMax, double 
     profile.t[5] = 0;
     profile.t[6] = profile.t[4] + af/jMax;
 
-    if (profile.check<Teeth::UDDU, Limits::ACC0_VEL>(pf, vf, af, jMax, vMax, aMax)) {
+    if (profile.check<JerkSigns::UDDU, Limits::ACC0_VEL>(pf, vf, af, jMax, vMax, aMax)) {
         add_profile(profile, jMax);
     }
 }
@@ -100,16 +100,17 @@ void Step1::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
     profile.t[5] = 0;
     profile.t[6] = profile.t[4] + af/jMax;
 
-    if (profile.check<Teeth::UDDU, Limits::VEL>(pf, vf, af, jMax, vMax, aMax)) {
+    if (profile.check<JerkSigns::UDDU, Limits::VEL>(pf, vf, af, jMax, vMax, aMax)) {
         add_profile(profile, jMax);
     }
 }
 
 void Step1::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double jMax) {
-    const double h1 = Sqrt((a0_p4 + af_p4)/2 + 4./3*(af_p3 - a0_p3)*aMax + 4*aMax*jMax*(a0*v0 - af*vf) + a0_a0*(aMax_aMax - 2*jMax*v0) + af_af*(aMax_aMax - 2*jMax*vf) + (aMax_aMax*(aMax_aMax - 2*jMax*(v0 + vf)) + 2*jMax_jMax*(v0_v0 + vf_vf + 2*aMax*pd)));
+    const double h1 = Sqrt((a0_p4 + af_p4)/2 + 4./3*(af_p3 - a0_p3)*aMax + 4*aMax*jMax*(a0*v0 - af*vf) + a0_a0*(aMax_aMax - 2*jMax*v0) + af_af*(aMax_aMax - 2*jMax*vf) + aMax_aMax*(aMax_aMax - 2*jMax*(v0 + vf)) + 2*jMax_jMax*(v0_v0 + vf_vf + 2*aMax*pd));
     
     if (!std::isnan(h1)) {
         const double h2 = a0_a0 - 3*aMax_aMax - 2*jMax*v0;
+        const double h3 = ((af_af - a0_a0)/2 - jMax*(vf - v0))/(aMax*jMax);
 
         // UDDU: Solution 2
         {
@@ -118,10 +119,10 @@ void Step1::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
             profile.t[2] = profile.t[0] + a0/jMax;
             profile.t[3] = 0;
             profile.t[4] = profile.t[2];
-            profile.t[5] = profile.t[1] + ((af_af - a0_a0)/2 - jMax*(vf - v0))/(aMax*jMax);
+            profile.t[5] = profile.t[1] + h3;
             profile.t[6] = profile.t[4] + af/jMax;
 
-            if (profile.check<Teeth::UDDU, Limits::ACC0_ACC1>(pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(pf, vf, af, jMax, vMax, aMax)) {
                 add_profile(profile, jMax);
             }
         }
@@ -133,10 +134,10 @@ void Step1::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
             profile.t[2] = profile.t[0] + a0/jMax;
             profile.t[3] = 0;
             profile.t[4] = profile.t[2];
-            profile.t[5] = profile.t[1] + ((af_af - a0_a0)/2 - jMax*(vf - v0))/(aMax*jMax);
+            profile.t[5] = profile.t[1] + h3;
             profile.t[6] = profile.t[4] + af/jMax;
 
-            if (profile.check<Teeth::UDDU, Limits::ACC0_ACC1>(pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(pf, vf, af, jMax, vMax, aMax)) {
                 add_profile(profile, jMax);
             }
         }
@@ -165,7 +166,7 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = ((a0_a0 + af_af)/2 - aMax_aMax + 2*a0*jMax*t + jMax_jMax*t*t - jMax*(vf - v0))/(aMax*jMax);
         profile.t[6] = (af + aMax)/jMax;
             
-        if (profile.check<Teeth::UDDU, Limits::ACC1>(pf, vf, af, jMax, vMax, aMax)) {
+        if (profile.check<JerkSigns::UDDU, Limits::ACC1>(pf, vf, af, jMax, vMax, aMax)) {
             add_profile(profile, jMax);
         }
     }
@@ -195,7 +196,7 @@ void Step1::time_up_acc0(Profile& profile, double vMax, double aMax, double jMax
         profile.t[5] = 0;
         profile.t[6] = (af - aMax + jMax*t)/jMax;
 
-        if (profile.check<Teeth::UDDU, Limits::ACC0>(pf, vf, af, jMax, vMax, aMax)) {
+        if (profile.check<JerkSigns::UDDU, Limits::ACC0>(pf, vf, af, jMax, vMax, aMax)) {
             add_profile(profile, jMax);
         }
     }
@@ -213,7 +214,7 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             profile.t[5] = 0;
             profile.t[6] = profile.t[0];
 
-            if (profile.check<Teeth::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<JerkSigns::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
                 add_profile(profile, jMax);
             }
             return;
@@ -244,7 +245,7 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             profile.t[5] = 0;
             profile.t[6] = (-a0 + af + jMax*(t - profile.t[0]))/jMax;
 
-            if (profile.check<Teeth::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
+            if (profile.check<JerkSigns::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
                 add_profile(profile, jMax);
             }
         }
@@ -287,8 +288,7 @@ bool Step1::calculate_block(Block& block) const {
     // if (valid_profile_counter > 0) {
     //     std::cout << "---\n " << valid_profile_counter << std::endl;
     //     for (size_t i = 0; i < valid_profile_counter; ++i) {
-    //         auto& p = valid_profiles[i];
-    //         std::cout << p.t_sum[6] << " " << p.to_string() << std::endl;
+    //         std::cout << valid_profiles[i].t_sum[6] << " " << valid_profiles[i].to_string() << std::endl;
     //     }
     // }
 

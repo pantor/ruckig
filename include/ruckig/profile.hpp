@@ -15,7 +15,7 @@ namespace ruckig {
 struct Profile {
     enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
     enum class Direction { UP, DOWN } direction;
-    enum class Teeth { UDDU, UDUD } teeth;
+    enum class JerkSigns { UDDU, UDUD } jerk_signs;
 
     std::array<double, 7> t, t_sum, j;
     std::array<double, 8> a, v, p;
@@ -26,7 +26,7 @@ struct Profile {
     //! Allow up to two segments of braking before the "correct" profile starts
     std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
 
-    template<Teeth teeth, Limits limits>
+    template<JerkSigns jerk_signs, Limits limits>
     bool check(double pf, double vf, double af, double jf, double vMax, double aMax) {
         if (t[0] < 0) {
             return false;
@@ -45,7 +45,7 @@ struct Profile {
             return false;
         }
 
-        if constexpr (teeth == Teeth::UDDU) {
+        if constexpr (jerk_signs == JerkSigns::UDDU) {
             j = {jf, 0, -jf, 0, -jf, 0, jf};
         } else {
             j = {jf, 0, -jf, 0, jf, 0, -jf};
@@ -73,7 +73,7 @@ struct Profile {
             }
         }
 
-        this->teeth = teeth;
+        this->jerk_signs = jerk_signs;
         this->limits = limits;
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
@@ -90,15 +90,15 @@ struct Profile {
             && std::abs(a[5]) < aMaxAbs;
     }
     
-    template<Teeth teeth, Limits limits>
+    template<JerkSigns jerk_signs, Limits limits>
     inline bool check(double tf, double pf, double vf, double af, double jf, double vMax, double aMax) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
-        return check<teeth, limits>(pf, vf, af, jf, vMax, aMax); // && (std::abs(t_sum[6] - tf) < 1e-8);
+        return check<jerk_signs, limits>(pf, vf, af, jf, vMax, aMax); // && (std::abs(t_sum[6] - tf) < 1e-8);
     }
     
-    template<Teeth teeth, Limits limits>
+    template<JerkSigns jerk_signs, Limits limits>
     inline bool check(double tf, double pf, double vf, double af, double jf, double vMax, double aMax, double jMax) {
-        return (std::abs(jf) < std::abs(jMax) + 1e-12) && check<teeth, limits>(tf, pf, vf, af, jf, vMax, aMax);
+        return (std::abs(jf) < std::abs(jMax) + 1e-12) && check<jerk_signs, limits>(tf, pf, vf, af, jf, vMax, aMax);
     }
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
@@ -126,9 +126,9 @@ struct Profile {
             case Limits::ACC1_VEL: result += "ACC1_VEL"; break;
             case Limits::NONE: result += "NONE"; break;
         }
-        switch (teeth) {
-            case Teeth::UDDU: result += "_UDDU"; break;
-            case Teeth::UDUD: result += "_UDUD"; break;
+        switch (jerk_signs) {
+            case JerkSigns::UDDU: result += "_UDDU"; break;
+            case JerkSigns::UDUD: result += "_UDUD"; break;
         }
         return result; 
     }
