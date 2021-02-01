@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <memory>
 
 #include <ReflexxesAPI.h>
 #include <RMLPositionFlags.h>

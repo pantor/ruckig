@@ -35,7 +35,7 @@ class Ruckig {
         return (std::abs(a) < std::abs(b));
     }
 
-    bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, size_t& limiting_dof, std::array<Profile, DOFs>& profiles) {
+    bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles) {
         if (DOFs == 1 && !t_min) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
@@ -43,17 +43,18 @@ class Ruckig {
             return true;
         }
 
-        // Possible t_syncs are the start times of the intervals
-        std::array<double, 3*DOFs> possible_t_syncs;
+        // Possible t_syncs are the start times of the intervals and optional t_min
+        std::array<double, 3*DOFs+1> possible_t_syncs;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             const auto& block = blocks[dof];
             possible_t_syncs[3 * dof] = block.t_min;
             possible_t_syncs[3 * dof + 1] = block.a ? block.a->right : std::numeric_limits<double>::infinity();
             possible_t_syncs[3 * dof + 2] = block.b ? block.b->right : std::numeric_limits<double>::infinity();
         }
+        possible_t_syncs[3*DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
 
         // Test them in sorted order
-        std::array<size_t, 3*DOFs> idx;
+        std::array<size_t, 3*DOFs+1> idx;
         std::iota(idx.begin(), idx.end(), 0);
         std::stable_sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
@@ -64,6 +65,11 @@ class Ruckig {
             }
 
             t_sync = possible_t_sync;
+            if (i == 3*DOFs) { // Optional t_min
+                limiting_dof = -1;
+                return true;
+            }
+
             limiting_dof = std::ceil((i + 1.0) / 3) - 1;
             switch (i % 3) {
                 case 0: {
@@ -130,7 +136,7 @@ class Ruckig {
             output.independent_min_durations[dof] = blocks[dof].t_min;
         }
 
-        size_t limiting_dof; // The DoF that doesn't need step 2
+        int limiting_dof; // The DoF that doesn't need step 2
         bool found_synchronization = synchronize(blocks, inp.minimum_duration, tf, limiting_dof, profiles);
         if (!found_synchronization) {
             if constexpr (throw_error) {
