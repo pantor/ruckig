@@ -44,9 +44,10 @@ public:
 };
 
 
+//! Mathematical equations for Step 1: Extremal profiles
 class Step1 {
     using Limits = Profile::Limits;
-    using Teeth = Profile::Teeth;
+    using JerkSigns = Profile::JerkSigns;
 
     double p0, v0, a0;
     double pf, vf, af;
@@ -118,9 +119,10 @@ public:
 };
 
 
+//! Mathematical equations for Step 2: Time synchronization
 class Step2 {
     using Limits = Profile::Limits;
-    using Teeth = Profile::Teeth;
+    using JerkSigns = Profile::JerkSigns;
 
     double tf;
     double p0, v0, a0;

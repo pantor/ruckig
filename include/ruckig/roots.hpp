@@ -25,7 +25,7 @@ inline double Abs(double v) {
 
 namespace Roots {
 
-// Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
+//! Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
 inline std::set<double> solveCub(double a, double b, double c, double d) {
     std::set<double> roots;
 
@@ -166,8 +166,7 @@ inline int solveResolvent(double *x, double a, double b, double c) {
     }
 }
 
-// Calculate all roots of the monic quartic equation:
-// x^4 + a*x^3 + b*x^2 + c*x + d = 0
+//! Calculate all roots of the monic quartic equation: x^4 + a*x^3 + b*x^2 + c*x + d = 0
 inline std::set<double> solveQuartMonic(double a, double b, double c, double d) {
     std::set<double> roots;
 
@@ -240,8 +239,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     return roots;
 }
 
-// Calculate the quartic equation: x^4 + b*x^3 + c*x^2 + d*x + e = 0
-// All coefficients can be zero
+//! Calculate the quartic equation: x^4 + b*x^3 + c*x^2 + d*x + e = 0
 inline std::set<double> solveQuartMonic(const std::array<double, 5>& polynom) {
     return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
 }

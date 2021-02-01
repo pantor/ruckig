@@ -13,6 +13,7 @@
 
 namespace ruckig {
 
+//! Wrapper around Reflexxes as an alternative OTG algorithm (for comparison)
 template<size_t DOFs>
 class Reflexxes {
     InputParameter<DOFs> current_input;

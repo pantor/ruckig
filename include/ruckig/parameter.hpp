@@ -7,6 +7,7 @@
 
 namespace ruckig {
 
+//! Result type of the OTGs update function
 enum Result {
     Working = 0,
     Finished = 1,
@@ -17,6 +18,7 @@ enum Result {
 };
 
 
+//! Input type of the OTG
 template<size_t DOFs>
 class InputParameter {
     template<class T>
@@ -87,6 +89,7 @@ public:
 };
 
 
+//! Output type of the OTG
 template<size_t DOFs>
 struct OutputParameter {
     using Vector = std::array<double, DOFs>;
