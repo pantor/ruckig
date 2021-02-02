@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 
 project(ruckig VERSION 1.0.0 LANGUAGES CXX)
-list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 
 option(BUILD_EXAMPLES "Build example programs" OFF)
