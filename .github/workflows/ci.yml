@@ -14,19 +14,10 @@ jobs:
         sudo apt-get update
         sudo apt-get -y install build-essential cmake git
     
-    - name: install Catch2
-      run: |
-        git clone https://github.com/catchorg/Catch2.git
-        cd Catch2
-        git checkout v2.13.3
-        mkdir build && cd build
-        cmake -DCATCH_BUILD_TESTING=OFF -DCATCH_ENABLE_WERROR=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_HELPERS=OFF ..
-        sudo make install
-    
     - name: configure & make
       run: |
         mkdir build && cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=OFF -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ..
         make
-        CTEST_OUTPUT_ON_FAILURE=1 make test
+        CTEST_OUTPUT_ON_FAILURE=1 ./otg-test 2000000
   

@@ -10,7 +10,10 @@ class Randomizer {
     T dist;
 
 public:
-    explicit Randomizer(T dist): dist(dist), uniform_dist(std::uniform_real_distribution<double>(0.0, 1.0)) { }
+    explicit Randomizer() { }
+    explicit Randomizer(T dist, int seed): dist(dist), uniform_dist(std::uniform_real_distribution<double>(0.0, 1.0)) {
+        gen.seed(seed);
+    }
 
     void fill(std::array<double, DOFs>& input) {
         for (size_t dof = 0; dof < DOFs; ++dof) {

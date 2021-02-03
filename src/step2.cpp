@@ -442,7 +442,11 @@ bool Step2::time_up_acc0_acc1(Profile& profile, double vMax, double aMax, double
     profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[3] + 3*profile.t[2] + af/jf);
     profile.t[6] = profile.t[4] + af/jf;
     
-    return profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(tf, pf, vf, af, jf, vMax, aMax, jMax);
+    if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(tf, pf, vf, af, jMax, vMax, aMax)) {
+        return true;
+    }
+
+    return false;
 }
 
 bool Step2::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax) {

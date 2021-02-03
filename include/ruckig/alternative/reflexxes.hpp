@@ -30,6 +30,7 @@ class Reflexxes {
 public:
     double delta_time;
 
+    explicit Reflexxes() { }
     explicit Reflexxes(double delta_time): delta_time(delta_time) {
         rml = std::make_shared<ReflexxesAPI>(DOFs, delta_time);
         input_parameters = std::make_shared<RMLPositionInputParameters>(DOFs);

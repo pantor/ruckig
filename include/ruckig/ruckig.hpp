@@ -18,7 +18,7 @@
 namespace ruckig {
 
 //! Main class for the Ruckig algorithm.
-template<size_t DOFs, bool throw_error = false>
+template<size_t DOFs, bool throw_error = false, bool return_error_at_maximal_duration = true>
 class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
@@ -40,17 +40,16 @@ class Ruckig {
         if (DOFs == 1 && !t_min) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
-            profiles[limiting_dof] = blocks[0].p_min;
+            profiles[0] = blocks[0].p_min;
             return true;
         }
 
         // Possible t_syncs are the start times of the intervals and optional t_min
         std::array<double, 3*DOFs+1> possible_t_syncs;
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            const auto& block = blocks[dof];
-            possible_t_syncs[3 * dof] = block.t_min;
-            possible_t_syncs[3 * dof + 1] = block.a ? block.a->right : std::numeric_limits<double>::infinity();
-            possible_t_syncs[3 * dof + 2] = block.b ? block.b->right : std::numeric_limits<double>::infinity();
+            possible_t_syncs[3 * dof] = blocks[dof].t_min;
+            possible_t_syncs[3 * dof + 1] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
+            possible_t_syncs[3 * dof + 2] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
         }
         possible_t_syncs[3*DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
 
@@ -145,6 +144,12 @@ class Ruckig {
             }
             return Result::ErrorSynchronizationCalculation;
         }
+
+        if constexpr (return_error_at_maximal_duration) {
+            if (tf > 7.6e3) {
+                return Result::ErrorTrajectoryDuration;
+            }
+        }
         
         if (tf > 0.0) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
@@ -177,8 +182,9 @@ public:
     using Output = OutputParameter<DOFs>;
 
     //! Time step between updates (cycle time) in [s]
-    const double delta_time;
+    double delta_time;
 
+    explicit Ruckig() { }
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
 
     bool validate_input(const InputParameter<DOFs>& input) {
@@ -238,8 +244,11 @@ public:
         t += delta_time;
         output.new_calculation = false;
 
-        if (input != current_input && Result::Working != calculate(input, output)) {
-            return Result::Error;
+        if (input != current_input) {
+            auto result = calculate(input, output);
+            if (result != Result::Working) {
+                return result;
+            }
         }
 
         at_time(t, output);

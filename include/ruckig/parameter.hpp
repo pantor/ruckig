@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <iomanip>
 #include <optional>
 #include <sstream>
 
@@ -13,6 +14,7 @@ enum Result {
     Finished = 1,
     Error = -1,
     ErrorInvalidInput = -100,
+    ErrorTrajectoryDuration = -101,
     ErrorExecutionTimeCalculation = -110,
     ErrorSynchronizationCalculation = -111,
 };
@@ -26,7 +28,7 @@ class InputParameter {
         std::ostringstream ss;
         for (size_t i = 0; i < DOFs; ++i) {
             if (i) ss << ", ";
-            ss << array[i];
+            ss << std::setprecision(15) << array[i];
         }
         return ss.str();
     }
