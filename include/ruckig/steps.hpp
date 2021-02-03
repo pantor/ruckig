@@ -139,6 +139,7 @@ class Step2 {
     double af_af, af_p3, af_p4, af_p5, af_p6;
     double aMax_aMax, aMax_p4;
     double jMax_jMax, jMax_p4;
+    double g1, g2;
 
     bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);

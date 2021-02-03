@@ -158,6 +158,14 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
             continue;
         }
 
+        // Single Newton step (regarding pd)
+        {
+            double orig = -pd + (3*(a0_p4 - af_p4) - 8*af_p3*aMax + 8*a0_p3*(aMax + 3*jMax*t) + 24*a0*jMax*(aMax + 2*jMax*t)*(aMax*t + jMax*t*t + v0) + 6*a0_a0*(aMax_aMax + 8*aMax*jMax*t + 2*jMax*(5*jMax*t*t + v0)) + 24*af*aMax*jMax*vf - 6*af_af*(aMax_aMax - 2*jMax*vf) + 12*jMax*(2*aMax*jMax*(jMax*t*t*t + 2*t*v0) + aMax_aMax*(jMax*t*t + v0 + vf) + jMax*(jMax_jMax*t*t*t*t + 2*jMax*t*t*v0 + v0_v0 - vf_vf)))/(24*aMax*jMax_jMax);
+            double deriv = ((a0 + aMax + jMax*t)*(a0_a0 + aMax*jMax*t + a0*(aMax + 4*jMax*t) + 2*jMax*(jMax*t*t + v0)))/(aMax*jMax);
+
+            t -= orig / deriv;
+        }
+
         profile.t[0] = t;
         profile.t[1] = 0;
         profile.t[2] = (a0 + aMax)/jMax + t;
@@ -165,7 +173,7 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
         profile.t[4] = 0;
         profile.t[5] = ((a0_a0 + af_af)/2 - aMax_aMax + 2*a0*jMax*t + jMax_jMax*t*t - jMax*(vf - v0))/(aMax*jMax);
         profile.t[6] = (af + aMax)/jMax;
-            
+
         if (profile.check<JerkSigns::UDDU, Limits::ACC1>(pf, vf, af, jMax, vMax, aMax)) {
             add_profile(profile, jMax);
         }
@@ -285,7 +293,8 @@ void Step1::time_down_none(Profile& profile, double vMin, double aMax, double jM
 }
 
 bool Step1::calculate_block(Block& block) const {
-    // if (valid_profile_counter > 0) {
+    // if (valid_profile_counter > 0)
+    // {
     //     std::cout << "---\n " << valid_profile_counter << std::endl;
     //     for (size_t i = 0; i < valid_profile_counter; ++i) {
     //         std::cout << valid_profiles[i].t_sum[6] << " " << valid_profiles[i].to_string() << std::endl;
