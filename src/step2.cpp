@@ -288,9 +288,9 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         for (double t: roots) {
             // Single Newton step (regarding pd)
             {
-                const double h2 = Sqrt((a0_a0 + af_af)/2 + jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
-                const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(t - tf) + jMax*h2) + 6*a0_a0*(af + jMax*(2*t - tf) + jMax*h2) + 6*af_af*jMax*h2 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(t - tf) - tf*v0 - h2*(vd - jMax*t*t)))/(12*jMax_jMax);                
-                const double deriv = -(a0 + jMax*t)*(3*h2 + (a0 + 2*af)/jMax + (3*t - 2*tf));
+                const double h1 = Sqrt((a0_a0 + af_af)/2 + jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
+                const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(t - tf) + jMax*h1) + 6*a0_a0*(af + jMax*(2*t - tf) + jMax*h1) + 6*af_af*jMax*h1 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(t - tf) - tf*v0 - h1*(vd - jMax*t*t)))/(12*jMax_jMax);                
+                const double deriv = -(a0 + jMax*t)*(3*h1 + (a0 + 2*af)/jMax + (3*t - 2*tf));
                 t -= orig / deriv;
             }
 
@@ -387,9 +387,9 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         for (double t: roots) {
             // Single Newton step (regarding pd)
             {
-                const double h2 = (af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd);
-                const double orig = -pd + (af_p3 - a0_p3 - 12*a0*jMax_jMax*t*(t - tf) + 3*a0_a0*jMax*(-2*t + tf) - 6*af*h2)/(6*jMax_jMax) + (jMax*t*t*(-t + tf) + tf*v0) + std::pow(h2,1.5)/(jMax*Abs(jMax)); 
-                const double deriv = -(a0 + jMax*t)*(3*jMax*Sqrt(h2)/Abs(jMax) - 2*af + (a0 + 3*jMax*t - 2*jMax*tf))/jMax;
+                const double h1 = (af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd);
+                const double orig = -pd + (af_p3 - a0_p3 - 12*a0*jMax_jMax*t*(t - tf) + 3*a0_a0*jMax*(-2*t + tf) - 6*af*h1)/(6*jMax_jMax) + (jMax*t*t*(-t + tf) + tf*v0) + std::pow(h1,1.5)/(jMax*Abs(jMax)); 
+                const double deriv = -(a0 + jMax*t)*(3*jMax*Sqrt(h1)/Abs(jMax) - 2*af + (a0 + 3*jMax*t - 2*jMax*tf))/jMax;
 
                 t -= orig / deriv;
             }
@@ -581,9 +581,9 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
 
                 // Single Newton step (regarding pd)
                 {
-                    const double h1 = (a0_a0 + af_af - 2*af*jMax*t - 2*a0*(af + jMax*(-t + tf)) + 2*jMax*(jMax*t*(t - tf) + vd))/(2*jMax*(-ad + 2*jMax*t - jMax*tf));
-                    const double h2 = (-a0_a0 - af_af + 2*jMax_jMax*t*t + af*jMax*tf - 2*jMax_jMax*t*tf + jMax_jMax*tf_tf + a0*(-ad + 2*af + jMax*tf) + ad*(af - 2*jMax*t + jMax*tf) - 2*jMax*vd)/Power(ad + jMax*(-2*t + tf),2);
-                    const double orig = (-a0_p3 + af_p3 + 3*(a0_a0 + af_af)*jMax*(h1 - t) + 3*ad*jMax_jMax*Power(h1 - t,2) - 3*a0*af*ad - 6*a0*af*jMax*(h1 - t) + 3*jMax_jMax*(a0*tf_tf - 2*pd + 2*tf*v0 + h1*h1*jMax*(tf - 2*t) + jMax*tf*(2*h1*t - t*t - (h1 - t)*tf)))/(6*jMax_jMax);
+                    const double h1 = (ad_ad - 2*af*jMax*t + 2*a0*jMax*(t - tf) + 2*jMax*(jMax*t*(t - tf) + vd))/(2*jMax*(-ad + 2*jMax*t - jMax*tf));
+                    const double h2 = (-ad_ad + 2*jMax_jMax*t*t + af*jMax*tf - 2*jMax_jMax*t*tf + jMax_jMax*tf_tf + a0*(-ad + jMax*tf) + ad*(af - 2*jMax*t + jMax*tf) - 2*jMax*vd)/Power(ad + jMax*(-2*t + tf),2);
+                    const double orig = (-a0_p3 + af_p3 + 3*ad_ad*jMax*(h1 - t) + 3*ad*jMax_jMax*Power(h1 - t,2) - 3*a0*af*ad + 3*jMax_jMax*(a0*tf_tf - 2*pd + 2*tf*v0 + h1*h1*jMax*(tf - 2*t) + jMax*tf*(2*h1*t - t*t - (h1 - t)*tf)))/(6*jMax_jMax);
                     const double deriv = ((-ad + 2*jMax*t - jMax*tf)*(-ad + jMax*tf)*(h2 - 1))/(2*jMax) + h1*(-ad + jMax*tf + (ad - 2*jMax*t + jMax*tf)*h2 - jMax*h1);
                     
                     t -= orig / deriv;
@@ -591,7 +591,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
 
                 profile.t[0] = t;
                 profile.t[1] = 0;
-                profile.t[2] = (a0_a0 + af_af - 2*af*jMax*t - 2*a0*(af + jMax*(-t + tf)) + 2*jMax*(jMax*t*(t - tf) + vd))/(2*jMax*(-ad + 2*jMax*t - jMax*tf));
+                profile.t[2] = (ad_ad - 2*af*jMax*t + 2*a0*jMax*(t - tf) + 2*jMax*(jMax*t*(t - tf) + vd))/(2*jMax*(-ad + 2*jMax*t - jMax*tf));
                 profile.t[3] = ad/jMax + (tf - 2*t);
                 profile.t[4] = tf - (t + profile.t[2] + profile.t[3]);
                 profile.t[5] = 0;
@@ -626,15 +626,15 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
 
                 // Single Newton step (regarding pd)
                 {
-                    const double h1 = a0_a0 + af_af + 2*af*jMax*t - 2*a0*(af + jMax*(t - tf)) + 2*jMax*(jMax*t*(t - tf) - vd);
+                    const double h1 = ad_ad + 2*jMax*(af*t + (jMax*t - a0)*(t - tf) - vd);
                     const double h2 = (-ad + jMax*(-2*t + tf));
                     const double orig = (af_p3 - a0_p3 + 3*af*jMax*t*(af + jMax*t) + 3*a0_a0*(af + jMax*t) - 3*a0*(af_af + 2*af*jMax*t + jMax_jMax*(t*t - tf_tf)) + 3*jMax_jMax*(-2*pd + jMax*t*(t - tf)*tf + 2*tf*v0))/(6*jMax_jMax) - (jMax*std::pow(h1,1.5))/(2*Sqrt(2)*jMax_jMax*Abs(jMax)) + ((-ad - jMax*t)*h1)/(2*jMax_jMax);
-                    const double deriv = (3*Sqrt(2)*jMax*h2*Sqrt(h1)/Abs(jMax) - 2*(3*a0_a0 - 6*a0*af + 3*af_af + af*jMax*(8*t - 2*tf) + 4*a0*jMax*(-2*t + tf) + 2*jMax*(jMax*t*(3*t - 2*tf) - vd)) + 2*(-ad - jMax*tf)*h2)/(4*jMax);
+                    const double deriv = (3*Sqrt(2)*jMax*h2*Sqrt(h1)/Abs(jMax) - 2*(3*ad_ad + af*jMax*(8*t - 2*tf) + 4*a0*jMax*(-2*t + tf) + 2*jMax*(jMax*t*(3*t - 2*tf) - vd)) + 2*(-ad - jMax*tf)*h2)/(4*jMax);
 
                     t -= orig / deriv;
                 }
 
-                const double h1 = Sqrt(2*(a0_a0 + af_af + 2*af*jMax*t - 2*a0*(af + jMax*(t - tf)) + 2*jMax*(jMax*t*(t - tf) - vd)))/Abs(jMax);
+                const double h1 = Sqrt(2*(ad_ad + 2*af*jMax*t - 2*a0*jMax*(t - tf) + 2*jMax*(jMax*t*(t - tf) - vd)))/Abs(jMax);
 
                 // Solution 2 with aPlat
                 profile.t[0] = 0;
@@ -678,7 +678,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
                     continue;
                 }
 
-                double h1 = Sqrt(((a0_a0 + af_af)/2 - af*(a0 + jMax*t) + a0*jMax*(t + tf) + jMax*(jMax*t*tf - vd)))/Abs(jMax);
+                double h1 = Sqrt(ad_ad/2 + jMax*(a0*(t + tf) - af*t + jMax*t*tf - vd))/Abs(jMax);
 
                 profile.t[0] = t;
                 profile.t[1] = tf - ad/jMax - 2*h1;
@@ -700,9 +700,9 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
         const double h1 = Abs(jMax)/jMax*Sqrt(9*Power((a0 + af)*tf - 2*vd,2) + 24*ad*g2);
         const double jf = (3*(a0_a0 - af_af)*tf + ad*(6*vd - h1))/(12*g2);
 
-        const double h3 = Abs(jMax)/jMax*Sqrt(-a0_a0 - af_af + 2*a0*af + jf*(2*(a0 + af)*tf + jf*tf_tf - 4*vd));
+        const double h2 = Abs(jMax)/jMax*Sqrt(-ad_ad + jf*(2*(a0 + af)*tf + jf*tf_tf - 4*vd));
 
-        profile.t[0] = (ad + jf*tf + h3)/(2*jf);
+        profile.t[0] = (ad + h2)/(2*jf) + tf/2;
         profile.t[1] = ad/jf + tf - 2*profile.t[0];
         profile.t[2] = tf - (profile.t[0] + profile.t[1]);
         profile.t[3] = 0;
