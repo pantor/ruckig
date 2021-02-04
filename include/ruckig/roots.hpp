@@ -52,10 +52,10 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
         
         } else {
             // Quadratic equation
-            double discriminant = c * c - 4.0 * b * d;
+            const double discriminant = c * c - 4 * b * d;
             if (discriminant >= 0) {
-                double inv2b = 1.0 / (2.0 * b);
-                double y = std::sqrt(discriminant);
+                const double inv2b = 1.0 / (2 * b);
+                const double y = std::sqrt(discriminant);
                 roots.insert((-c + y) * inv2b);
                 roots.insert((-c - y) * inv2b);
             }
@@ -63,26 +63,26 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
 
     } else {
         // Cubic equation
-        double inva = 1.0 / a;
-        double invaa = inva * inva;
-        double bb = b * b;
-        double bover3a = b * (1.0 / 3.0) * inva;
-        double p = (3.0 * a * c - bb) * (1.0 / 3.0) * invaa;
-        double halfq = (2.0 * bb * b - 9.0 * a * b * c + 27.0 * a * a * d) * (0.5 / 27.0) * invaa * inva;
-        double yy = p * p * p / 27.0 + halfq * halfq;
+        const double inva = 1.0 / a;
+        const double invaa = inva * inva;
+        const double bb = b * b;
+        const double bover3a = b * (1.0 / 3.0) * inva;
+        const double p = (3.0 * a * c - bb) * (1.0 / 3.0) * invaa;
+        const double halfq = (2 * bb * b - 9.0 * a * b * c + 27.0 * a * a * d) * (0.5 / 27.0) * invaa * inva;
+        const double yy = p * p * p / 27.0 + halfq * halfq;
 
         if (yy > DBL_EPSILON) {
             // Sqrt is positive: one real solution
-            double y = std::sqrt(yy);
-            double uuu = -halfq + y;
-            double vvv = -halfq - y;
-            double www = std::abs(uuu) > std::abs(vvv) ? uuu : vvv;
-            double w = std::cbrt(www);
+            const double y = std::sqrt(yy);
+            const double uuu = -halfq + y;
+            const double vvv = -halfq - y;
+            const double www = std::abs(uuu) > std::abs(vvv) ? uuu : vvv;
+            const double w = std::cbrt(www);
             roots.insert(w - p / (3.0 * w) - bover3a);
         } else if (yy < -DBL_EPSILON) {
             // Sqrt is negative: three real solutions
-            double x = -halfq;
-            double y = std::sqrt(-yy);
+            const double x = -halfq;
+            const double y = std::sqrt(-yy);
             double theta;
             double r;
             double ux;
@@ -93,29 +93,29 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
                 r = std::sqrt(x * x - yy);
             } else {
                 // Vertical line
-                theta = M_PI / 2.0;
+                theta = M_PI / 2;
                 r = y;
             }
             // Calculate cube root
             theta /= 3.0;
-            r = std::pow(r, 1.0 / 3.0);
+            r = std::cbrt(r);
             // Convert to complex coordinate
             ux = std::cos(theta) * r;
             uyi = std::sin(theta) * r;
             // First solution
             roots.insert(ux + ux - bover3a);
             // Second solution, rotate +120 degrees
-            roots.insert(2.0 * (ux * cos120 - uyi * sin120) - bover3a);
+            roots.insert(2 * (ux * cos120 - uyi * sin120) - bover3a);
             // Third solution, rotate -120 degrees
-            roots.insert(2.0 * (ux * cos120 + uyi * sin120) - bover3a);
+            roots.insert(2 * (ux * cos120 + uyi * sin120) - bover3a);
         } else {
             // Sqrt is zero: two real solutions
-            double www = -halfq;
-            double w = std::cbrt(www);
+            const double www = -halfq;
+            const double w = std::cbrt(www);
             // First solution
             roots.insert(w + w - bover3a);
             // Second solution, rotate +120 degrees
-            roots.insert(2.0 * w * cos120 - bover3a);
+            roots.insert(2 * w * cos120 - bover3a);
         }
     }
     return roots;
@@ -125,11 +125,11 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
 // The input x must be of length 3
 // Number of zeros are returned
 inline int solveResolvent(double *x, double a, double b, double c) {
-    double a2 = a * a;
+    const double a2 = a * a;
     double q = (a2 - 3.0 * b) / 9.0;
-    double r = (a * (2.0 * a2 - 9.0 * b) + 27.0 * c) / 54.0;
-    double r2 = r * r;
-    double q3 = q * q * q;
+    const double r = (a * (2 * a2 - 9.0 * b) + 27.0 * c) / 54.0;
+    const double r2 = r * r;
+    const double q3 = q * q * q;
     double A, B;
     if (r2 < q3) {
         double t = r / std::sqrt(q3);
@@ -141,10 +141,10 @@ inline int solveResolvent(double *x, double a, double b, double c) {
         }
         t = std::acos(t);
         a /= 3.0;
-        q = -2.0 * std::sqrt(q);
+        q = -2 * std::sqrt(q);
         x[0] = q * std::cos(t / 3.0) - a;
-        x[1] = q * std::cos((t + M_PI * 2.0) / 3.0) - a;
-        x[2] = q * std::cos((t - M_PI * 2.0) / 3.0) - a;
+        x[1] = q * std::cos((t + M_PI * 2) / 3.0) - a;
+        x[2] = q * std::cos((t - M_PI * 2) / 3.0) - a;
         return 3;
     } else {
         A = -std::cbrt(std::abs(r) + std::sqrt(r2 - q3));
@@ -170,9 +170,9 @@ inline int solveResolvent(double *x, double a, double b, double c) {
 inline std::set<double> solveQuartMonic(double a, double b, double c, double d) {
     std::set<double> roots;
 
-    double a3 = -b;
-    double b3 = a * c - 4.0 * d;
-    double c3 = -a * a * d - c * c + 4.0 * b * d;
+    const double a3 = -b;
+    const double b3 = a * c - 4 * d;
+    const double c3 = -a * a * d - c * c + 4 * b * d;
 
     // Solve the resolvent: y^3 - b*y^2 + (ac - 4*d)*y - a^2*d - c^2 + 4*b*d = 0
     double x3[3];
@@ -192,8 +192,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     }
 
     // h1 + h2 = y && h1*h2 = d  <=>  h^2 - y*h + d = 0    (h === q)
-
-    D = y * y - 4.0 * d;
+    D = y * y - 4 * d;
     if (std::abs(D) < DBL_EPSILON) {
         q1 = q2 = y * 0.5;
         // g1 + g2 = a && g1 + g2 = b - y   <=>   g^2 - a*g + b - y = 0    (p === g)
@@ -217,7 +216,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     constexpr double eps {2 * DBL_EPSILON};
 
     // Solve the quadratic equation: x^2 + p1*x + q1 = 0
-    D = p1 * p1 - 4.0 * q1;
+    D = p1 * p1 - 4 * q1;
     if (std::abs(D) < eps) {
         roots.insert(-p1 * 0.5);
     } else if (D > 0.0) {
@@ -227,7 +226,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
     }
 
     // Solve the quadratic equation: x^2 + p2*x + q2 = 0
-    D = p2 * p2 - 4.0 * q2;
+    D = p2 * p2 - 4 * q2;
     if (std::abs(D) < eps) {
         roots.insert(-p2 * 0.5);
     } else if (D > 0.0) {
@@ -244,6 +243,8 @@ inline std::set<double> solveQuartMonic(const std::array<double, 5>& polynom) {
     return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
 }
 
+
+//! Evaluate a polynomial of order N at x
 template<size_t N>
 inline double polyEval(std::array<double, N> p, double x) {
     double retVal = 0.0;
@@ -272,7 +273,7 @@ inline double polyEval(std::array<double, N> p, double x) {
 template<size_t N>
 inline std::array<double, N-1> polyDeri(const std::array<double, N>& coeffs) {
     std::array<double, N-1> deriv;
-    for (int i = 0; i < N - 1; i++) {
+    for (size_t i = 0; i < N - 1; ++i) {
         deriv[i] = (N - 1 - i) * coeffs[i];
     }
     return deriv;
@@ -282,7 +283,7 @@ template<size_t N>
 inline std::array<double, N-1> polyMonicDeri(const std::array<double, N>& monic_coeffs) {
     std::array<double, N-1> deriv;
     deriv[0] = 1.0;
-    for (int i = 1; i < N - 1; i++) {
+    for (size_t i = 1; i < N - 1; ++i) {
         deriv[i] = (N - 1 - i) * monic_coeffs[i] / (N - 1);
     }
     return deriv;
@@ -290,37 +291,32 @@ inline std::array<double, N-1> polyMonicDeri(const std::array<double, N>& monic_
 
 // Safe Newton Method
 // Requirements: f(l)*f(h) <= 0
-template <typename F, typename DF>
-inline double safeNewton(const F& func, const DF& dfunc, const double &l, const double &h, const double &tol, const int &maxIts) {
-    double xh, xl;
-    double fl = func(l);
-    double fh = func(h);
+template <size_t maxIts, typename F, typename DF>
+inline double safeNewton(const F& func, const DF& dfunc, double l, double h, const double tol) {
+    const double fl = func(l);
+    const double fh = func(h);
     if (fl == 0.0) {
         return l;
     }
     if (fh == 0.0) {
         return h;
     }
-    if (fl < 0.0) {
-        xl = l;
-        xh = h;
-    } else {
-        xh = l;
-        xl = h;
+    if (fl > 0.0) {
+        std::swap(l, h);
     }
 
-    double rts = 0.5 * (xl + xh);
-    double dxold = std::abs(xh - xl);
+    double rts = 0.5 * (l + h);
+    double dxold = std::abs(h - l);
     double dx = dxold;
     double f = func(rts);
     double df = dfunc(rts);
     double temp;
     for (size_t j = 0; j < maxIts; j++) {
-        if ((((rts - xh) * df - f) * ((rts - xl) * df - f) > 0.0) || (std::abs(2.0 * f) > std::abs(dxold * df))) {
+        if ((((rts - h) * df - f) * ((rts - l) * df - f) > 0.0) || (std::abs(2 * f) > std::abs(dxold * df))) {
             dxold = dx;
-            dx = 0.5 * (xh - xl);
-            rts = xl + dx;
-            if (xl == rts) {
+            dx = 0.5 * (h - l);
+            rts = l + dx;
+            if (l == rts) {
                 break;
             }
         } else {
@@ -340,9 +336,9 @@ inline double safeNewton(const F& func, const DF& dfunc, const double &l, const 
         f = func(rts);
         df = dfunc(rts);
         if (f < 0.0) {
-            xl = rts;
+            l = rts;
         } else {
-            xh = rts;
+            h = rts;
         }
     }
 
@@ -359,7 +355,7 @@ inline double shrinkInterval(const std::array<double, N>& p, double lbound, doub
     auto deriv = polyDeri(p);
     auto func = [&p](double x) { return polyEval(p, x); };
     auto dfunc = [&deriv](double x) { return polyEval(deriv, x); };
-    return safeNewton(func, dfunc, lbound, ubound, tolerance, maxDblIts);
+    return safeNewton<maxDblIts>(func, dfunc, lbound, ubound, tolerance);
 }
 
 } // namespace Roots

@@ -91,7 +91,7 @@ struct Profile {
     }
     
     template<JerkSigns jerk_signs, Limits limits>
-    inline bool check(double tf, double pf, double vf, double af, double jf, double vMax, double aMax) {
+    inline bool check([[maybe_unused]] double tf, double pf, double vf, double af, double jf, double vMax, double aMax) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
         return check<jerk_signs, limits>(pf, vf, af, jf, vMax, aMax); // && (std::abs(t_sum[6] - tf) < 1e-8);
     }

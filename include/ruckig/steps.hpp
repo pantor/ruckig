@@ -17,8 +17,8 @@ struct Block {
         explicit Interval(double left, double right, const Profile& profile): left(left), right(right), profile(profile) { };
     };
 
-    double t_min; // [s]
     Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
+    double t_min; // [s]
 
     // Max. 2 intervals can be blocked: called a and b with corresponding profiles, order does not matter
     std::optional<Interval> a, b;

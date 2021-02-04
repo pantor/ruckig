@@ -542,9 +542,8 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         // Solution 1
         {
-            const double h1 = Sqrt(tf_tf*vd_vd + 4*g2*g2);
-            const double h2 = Sqrt(16*pd*(pd - tf*(v0 + vf)) + tf_tf*(5*v0_v0 + 6*v0*vf + 5*vf_vf));
-            const double jf = 4*(4*pd - 2*tf*(v0 + vf) - h2)/tf_p3;
+            const double h1 = Sqrt(16*pd*(pd - tf*(v0 + vf)) + tf_tf*(5*v0_v0 + 6*v0*vf + 5*vf_vf));
+            const double jf = 4*(4*pd - 2*tf*(v0 + vf) - h1)/tf_p3;
         
             profile.t[0] = (tf*(v0 + 3*vf) - 4*pd)/(4*vd);
             profile.t[1] = 0;
