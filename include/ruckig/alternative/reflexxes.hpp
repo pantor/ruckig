@@ -43,8 +43,6 @@ public:
     }
 
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        auto start = std::chrono::high_resolution_clock::now();
-
         if (input != current_input) {
             current_input = input;
 
@@ -85,6 +83,8 @@ public:
             } break;
             }
         }
+
+        auto start = std::chrono::high_resolution_clock::now();
 
         switch (input.type) {
         case InputParameter<DOFs>::Type::Position: {

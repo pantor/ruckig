@@ -45,7 +45,7 @@ class Ruckig {
         }
 
         // Possible t_syncs are the start times of the intervals and optional t_min
-        std::array<double, 3*DOFs+1> possible_t_syncs;
+        std::array<double, 3*DOFs+1> possible_t_syncs, idx;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             possible_t_syncs[3 * dof] = blocks[dof].t_min;
             possible_t_syncs[3 * dof + 1] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
@@ -54,7 +54,6 @@ class Ruckig {
         possible_t_syncs[3*DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
 
         // Test them in sorted order
-        std::array<size_t, 3*DOFs+1> idx;
         std::iota(idx.begin(), idx.end(), 0);
         std::stable_sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
