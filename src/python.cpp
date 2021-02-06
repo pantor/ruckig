@@ -81,7 +81,8 @@ limited by velocity, acceleration, and jerk constraints.";
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
         .def("update", &Ruckig<DOFs, true>::update)
-        .def("at_time", &Ruckig<DOFs, true>::at_time);
+        .def("at_time", &Ruckig<DOFs, true>::at_time)
+        .def("get_position_range", &Ruckig<DOFs, true>::get_position_range);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")

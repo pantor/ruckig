@@ -262,6 +262,7 @@ public:
         return Result::Working;
     }
 
+    //! Get the output parameter for the given time on the current trajectory
     void at_time(double time, OutputParameter<DOFs>& output) const {
         if (time + delta_time > tf) {
             // Keep constant acceleration
@@ -312,8 +313,18 @@ public:
         }
     }
 
+    //! Get the current time of the trajectory
     double get_time() const {
         return t;
+    }
+
+    //! Get the min/max values of the position for each DoF and the current trajectory
+    std::array<std::pair<double, double>, DOFs> get_position_range() {
+        std::array<std::pair<double, double>, DOFs> result;
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            result[dof] = profiles[dof].get_position_range();
+        }
+        return result;
     }
 };
 

@@ -110,8 +110,8 @@ if __name__ == '__main__':
     inp.current_velocity = [-0.631048955228958, -1.02935440881227, -0.485986175478385]
     inp.current_acceleration = [-0.00247258010611476, 0, -1.09040067528293]
     inp.target_position = [1.32072926391243, -1.50720441044648, 10.2222552440055]
-    inp.target_velocity = [-1.13931998000192, 0.0817053469200048, 1.57160490634656]
-    inp.target_acceleration = [0.00939655482437155, 0, -0.201761714717827]
+    inp.target_velocity = [-1.13931998000192, 1.1817053469200048, 1.57160490634656]
+    inp.target_acceleration = [0.0, 0, 0.0]
     inp.max_velocity = [12.5582057488951, 3.98686538344635, 8.77760182258326]
     inp.max_acceleration = [0.48202376602604, 11.3641030476307, 11.4692498916033]
     inp.max_jerk = [6.80578669166441, 0.7045088159413865, 8.62520213101531]
@@ -124,6 +124,8 @@ if __name__ == '__main__':
     otg = Ruckig(0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
+
+    # print(otg.get_position_range())
 
     print(f'Calculation duration: {out_list[0].calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {out_list[0].duration:0.4f} [s]')

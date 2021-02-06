@@ -110,6 +110,50 @@ struct Profile {
         };
     }
 
+    static void check_position_extremum(double t_ext, double t, double p, double v, double a, double j, double& min, double& max) {
+        if (0 < t_ext && t_ext < t) {
+            double p_ext, a_ext;
+            std::tie(p_ext, std::ignore, a_ext) = integrate(t_ext, p, v, a, j);
+            if (a_ext > 0) {
+                min = std::min(p_ext, min);
+            } else {
+                max = std::max(p_ext, max);
+            }
+        }
+    }
+
+    static void check_step_for_position_extremum(double t, double p, double v, double a, double j, double& min, double& max) {
+        min = std::min(p, min);
+        max = std::max(p, max);
+
+        if (j != 0) {
+            const double D = a * a - 2 * j * v;
+            if (std::abs(D) < std::numeric_limits<double>::epsilon()) {
+                check_position_extremum(-a / j, t, p, v, a, j, min, max);
+
+            } else if (D > 0) {
+                const double D_sqrt = std::sqrt(D);
+                check_position_extremum((-a - D_sqrt) / j, t, p, v, a, j, min, max);
+                check_position_extremum((-a + D_sqrt) / j, t, p, v, a, j, min, max);
+            }
+        }
+    }
+
+    std::pair<double, double> get_position_range() {
+        double min {std::numeric_limits<double>::infinity()}, max {-std::numeric_limits<double>::infinity()};
+
+        if (t_brake) {
+            for (size_t i = 0; i < 2; ++i) {
+                check_step_for_position_extremum(t_brakes[i], p_brakes[i], v_brakes[i], a_brakes[i], j_brakes[i], min, max);
+            }
+        }
+        for (size_t i = 0; i < 7; ++i) {
+            check_step_for_position_extremum(t[i], p[i], v[i], a[i], j[i], min, max);
+        }
+
+        return {min, max};
+    }
+
     std::string to_string() const {
         std::string result;
         switch (direction) {
