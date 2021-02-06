@@ -176,7 +176,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
 
     // Solve the resolvent: y^3 - b*y^2 + (ac - 4*d)*y - a^2*d - c^2 + 4*b*d = 0
     double x3[3];
-    int iZeroes = solveResolvent(x3, a3, b3, c3);
+    const int iZeroes = solveResolvent(x3, a3, b3, c3);
 
     double q1, q2, p1, p2, D, sqrtD, y;
 
@@ -211,9 +211,10 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
         // g1 + g2 = a && g1*h2 + g2*h1 = c   ( && g === p )  Krammer
         p1 = (a * q1 - c) / (q1 - q2);
         p2 = (c - a * q2) / (q1 - q2);
+        // std::cout << "p1/2: " << -p1/2 << " " << -p2/2 << std::endl;
     }
 
-    constexpr double eps {2 * DBL_EPSILON};
+    constexpr double eps {16 * DBL_EPSILON};
 
     // Solve the quadratic equation: x^2 + p1*x + q1 = 0
     D = p1 * p1 - 4 * q1;

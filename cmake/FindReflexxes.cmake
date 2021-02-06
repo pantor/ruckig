@@ -1,7 +1,11 @@
 if(NOT TARGET Reflexxes::Reflexxes)
   if(NOT ${Reflexxes_ROOT_DIR} STREQUAL "")
-    # set(Reflexxes_LIB_DIR "${Reflexxes_ROOT_DIR}/MacOS/x64/release/lib/")
-    set(Reflexxes_LIB_DIR "${Reflexxes_ROOT_DIR}/Linux/x64/release/lib/shared")
+    if(APPLE)
+      set(Reflexxes_LIB_DIR "${Reflexxes_ROOT_DIR}/MacOS/x64/release/lib/")
+    elseif(UNIX)
+      set(Reflexxes_LIB_DIR "${Reflexxes_ROOT_DIR}/Linux/x64/release/lib/shared")
+    endif()
+    
     set(Reflexxes_INCLUDE_DIR "${Reflexxes_ROOT_DIR}/include")
   endif()
 

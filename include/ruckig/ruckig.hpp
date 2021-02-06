@@ -32,10 +32,6 @@ class Ruckig {
     //! Set of current profiles for each DoF
     std::array<Profile, DOFs> profiles;
 
-    static bool abs_compare(double a, double b) {
-        return (std::abs(a) < std::abs(b));
-    }
-
     bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles) {
         if (DOFs == 1 && !t_min) {
             limiting_dof = 0;
@@ -55,7 +51,7 @@ class Ruckig {
 
         // Test them in sorted order
         std::iota(idx.begin(), idx.end(), 0);
-        std::stable_sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
+        std::sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
         for (size_t i: idx) {
             const double possible_t_sync = possible_t_syncs[i];
@@ -166,6 +162,7 @@ class Ruckig {
                     }
                     return Result::ErrorSynchronizationCalculation;
                 }
+                // std::cout << dof << " profile step2: " << profiles[dof].to_string() << std::endl;
             }
         }
 

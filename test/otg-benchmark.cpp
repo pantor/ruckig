@@ -36,7 +36,7 @@ int main() {
     double moving_average {0.0};
     double worst {0.0};
     size_t n {1};
-    const size_t number_trajectories {32 * 1024};
+    const size_t number_trajectories {64 * 1024};
 
     for (size_t i = 0; i < number_trajectories; ++i) {
         p.fill(input.current_position);
