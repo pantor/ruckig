@@ -3,7 +3,7 @@
 #include <array>
 #include <optional>
 
-#include <ruckig/profile.hpp>
+#include <ruckig/trajectory.hpp>
 
 
 namespace ruckig {
@@ -77,14 +77,14 @@ class Step1 {
     void time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
     void time_up_none(Profile& profile, double vMax, double aMax, double jMax);
 
-    void time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
-    void time_down_none(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
+    inline void time_down_none(Profile& profile, double vMin, double aMax, double jMax);
 
     inline void add_profile(Profile profile, double jMax) {
         profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
@@ -137,8 +137,8 @@ class Step2 {
     double v0_v0, vf_vf;
     double a0_a0, a0_p3, a0_p4, a0_p5, a0_p6;
     double af_af, af_p3, af_p4, af_p5, af_p6;
-    double aMax_aMax, aMax_p4;
-    double jMax_jMax, jMax_p4;
+    double aMax_aMax;
+    double jMax_jMax;
     double g1, g2;
 
     bool time_up_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double jMax);
@@ -150,14 +150,14 @@ class Step2 {
     bool time_up_acc0(Profile& profile, double vMax, double aMax, double jMax);
     bool time_up_none(Profile& profile, double vMax, double aMax, double jMax);
 
-    bool time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
-    bool time_down_none(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_acc0_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_acc1_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_acc0_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_vel(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_acc0_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_acc1(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_acc0(Profile& profile, double vMin, double aMax, double jMax);
+    inline bool time_down_none(Profile& profile, double vMin, double aMax, double jMax);
 
 public:
     explicit Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double jMax);

@@ -142,13 +142,22 @@ std::array<double, DOFs> new_position;
 std::array<double, DOFs> new_velocity;
 std::array<double, DOFs> new_acceleration;
 
-double duration; // Duration of the trajectory [s]
 bool new_calculation; // Whether a new calactuion was performed in the last cycle
 double calculation_duration; // Duration of the calculation in the last cycle [µs]
 
-std::array<double, DOFs> independent_min_durations; // [s]
+Trajectory trajectory; // The current trajectory
+double time; // The current, auto-incremented time. Resetted to 0 at a new calculation.
 ```
-Moreover, a range of additional parameter about the duration of the trajectory are included.
+Moreover, the trajectory class has a range of usefull parameters and methods.
+
+```.cpp
+double duration; // Duration of the trajectory
+std::array<double, DOFs> independent_min_durations; // Time-optimal profile for each independent DoF
+
+<...> at_time(double time); // Get the kinematic state of the trajectory at a given time
+<...> get_position_extrema(); // Returns information about the position extrema and their times
+```
+We refer to the API documentation for the exact signature.
 
 
 ## Tests and Numerical Stability

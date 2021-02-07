@@ -27,6 +27,11 @@ limited by velocity, acceleration, and jerk constraints.";
 
     constexpr size_t DOFs {3};
 
+    py::enum_<InputParameter<DOFs>::Type>(m, "InputParameterType", py::arithmetic())
+        .value("Position", InputParameter<DOFs>::Type::Position)
+        .value("Velocity", InputParameter<DOFs>::Type::Velocity)
+        .export_values();
+
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())
         .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
@@ -45,15 +50,21 @@ limited by velocity, acceleration, and jerk constraints.";
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (InputParameter<DOFs>::*)() const>(&InputParameter<DOFs>::to_string));
 
+    py::class_<Trajectory<DOFs>>(m, "Trajectory")
+        .def_readonly("duration", &Trajectory<DOFs>::duration)
+        .def_readonly("independent_min_durations", &Trajectory<DOFs>::independent_min_durations)
+        .def("at_time", &Trajectory<DOFs>::at_time)
+        .def("get_position_extrema", &Trajectory<DOFs>::get_position_extrema);
+
     py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
         .def(py::init<>())
         .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
-        .def_readwrite("new_position", &OutputParameter<DOFs>::new_position)
-        .def_readwrite("new_velocity", &OutputParameter<DOFs>::new_velocity)
-        .def_readwrite("new_acceleration", &OutputParameter<DOFs>::new_acceleration)
-        .def_readwrite("duration", &OutputParameter<DOFs>::duration)
-        .def_readwrite("new_calculation", &OutputParameter<DOFs>::new_calculation)
-        .def_readwrite("calculation_duration", &OutputParameter<DOFs>::calculation_duration)
+        .def_readonly("new_position", &OutputParameter<DOFs>::new_position)
+        .def_readonly("new_velocity", &OutputParameter<DOFs>::new_velocity)
+        .def_readonly("new_acceleration", &OutputParameter<DOFs>::new_acceleration)
+        .def_readonly("trajectory", &OutputParameter<DOFs>::trajectory)
+        .def_readonly("new_calculation", &OutputParameter<DOFs>::new_calculation)
+        .def_readonly("calculation_duration", &OutputParameter<DOFs>::calculation_duration)
         .def("__copy__",  [](const OutputParameter<DOFs> &self) {
             return OutputParameter<DOFs>(self);
         });
@@ -66,6 +77,12 @@ limited by velocity, acceleration, and jerk constraints.";
         .value("ErrorExecutionTimeCalculation", Result::ErrorExecutionTimeCalculation)
         .value("ErrorSynchronizationCalculation", Result::ErrorSynchronizationCalculation)
         .export_values();
+
+    py::class_<PositionExtrema>(m, "PositionExtrema")
+        .def_readonly("min", &PositionExtrema::min)
+        .def_readonly("max", &PositionExtrema::max)
+        .def_readonly("t_min", &PositionExtrema::t_min)
+        .def_readonly("t_max", &PositionExtrema::t_max);
 
     py::class_<Quintic<DOFs>>(m, "Quintic")
         .def(py::init<double>(), "delta_time"_a)
@@ -80,15 +97,12 @@ limited by velocity, acceleration, and jerk constraints.";
     py::class_<Ruckig<DOFs, true>>(m, "Ruckig")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
-        .def("update", &Ruckig<DOFs, true>::update)
-        .def("at_time", &Ruckig<DOFs, true>::at_time)
-        .def("get_position_range", &Ruckig<DOFs, true>::get_position_range);
+        .def("update", &Ruckig<DOFs, true>::update);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
-        .def("update", &Reflexxes<DOFs>::update)
-        .def("at_time", &Reflexxes<DOFs>::at_time);
+        .def("update", &Reflexxes<DOFs>::update);
 #endif
 }

@@ -346,6 +346,9 @@ bool Step1::get_profile(const Profile& input, Block& block) {
     profile.a[0] = a0;
     profile.v[0] = v0;
     profile.p[0] = p0;
+    profile.af = af;
+    profile.vf = vf;
+    profile.pf = pf;
     valid_profile_counter = 0;
 
     if (std::abs(pf - p0) < DBL_EPSILON && std::abs(v0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
