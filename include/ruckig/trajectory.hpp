@@ -1,15 +1,23 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <limits>
-#include <math.h>
 #include <optional>
 #include <tuple>
 
 
 namespace ruckig {
+
+//! Information about the position extrema
+struct PositionExtrema {
+    double min, max;
+    double t_min, t_max;
+};
+
 
 //! The state profile for position, velocity, acceleration and jerk for a single DoF
 struct Profile {
@@ -19,6 +27,9 @@ struct Profile {
 
     std::array<double, 7> t, t_sum, j;
     std::array<double, 8> a, v, p;
+
+    //! Target (final) kinematic state
+    double pf, vf, af;
 
     //! Total time of the braking segments
     std::optional<double> t_brake;
@@ -41,7 +52,7 @@ struct Profile {
             t_sum[i+1] = t_sum[i] + t[i+1];
         }
 
-        if (t_sum[6] > 1e12) { // For numerical reasons
+        if (t_sum[6] > 1e12) { // For numerical reasons, is that needed?
             return false;
         }
 
@@ -102,7 +113,7 @@ struct Profile {
     }
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
-    static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j)  {
+    inline static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j) {
         return {
             p0 + t * (v0 + t * (a0 / 2 + t * j / 6)),
             v0 + t * (a0 + t * j / 2),
@@ -110,48 +121,71 @@ struct Profile {
         };
     }
 
-    static void check_position_extremum(double t_ext, double t, double p, double v, double a, double j, double& min, double& max) {
+    inline static void check_position_extremum(double t_ext, double t_sum, double t, double p, double v, double a, double j, PositionExtrema& ext) {
         if (0 < t_ext && t_ext < t) {
             double p_ext, a_ext;
             std::tie(p_ext, std::ignore, a_ext) = integrate(t_ext, p, v, a, j);
-            if (a_ext > 0) {
-                min = std::min(p_ext, min);
-            } else {
-                max = std::max(p_ext, max);
+            if (a_ext > 0 && p_ext < ext.min) {
+                ext.min = p_ext;
+                ext.t_min = t_sum + t_ext;
+            } else if (a_ext < 0 && p_ext > ext.max) {
+                ext.max = p_ext;
+                ext.max = t_sum + t_ext;
             }
         }
     }
 
-    static void check_step_for_position_extremum(double t, double p, double v, double a, double j, double& min, double& max) {
-        min = std::min(p, min);
-        max = std::max(p, max);
+    static void check_step_for_position_extremum(double t_sum, double t, double p, double v, double a, double j, PositionExtrema& ext) {
+        if (p < ext.min) {
+            ext.min = p;
+            ext.t_min = t_sum;
+        }
+        if (p > ext.max) {
+            ext.max = p;
+            ext.t_max = t_sum;
+        }
 
         if (j != 0) {
             const double D = a * a - 2 * j * v;
             if (std::abs(D) < std::numeric_limits<double>::epsilon()) {
-                check_position_extremum(-a / j, t, p, v, a, j, min, max);
+                check_position_extremum(-a / j, t_sum, t, p, v, a, j, ext);
 
             } else if (D > 0) {
                 const double D_sqrt = std::sqrt(D);
-                check_position_extremum((-a - D_sqrt) / j, t, p, v, a, j, min, max);
-                check_position_extremum((-a + D_sqrt) / j, t, p, v, a, j, min, max);
+                check_position_extremum((-a - D_sqrt) / j, t_sum, t, p, v, a, j, ext);
+                check_position_extremum((-a + D_sqrt) / j, t_sum, t, p, v, a, j, ext);
             }
         }
     }
 
-    std::pair<double, double> get_position_range() {
-        double min {std::numeric_limits<double>::infinity()}, max {-std::numeric_limits<double>::infinity()};
+    PositionExtrema get_position_extrema() const {
+        PositionExtrema extrema;
+        extrema.min = std::numeric_limits<double>::infinity();
+        extrema.max = -std::numeric_limits<double>::infinity();
 
         if (t_brake) {
-            for (size_t i = 0; i < 2; ++i) {
-                check_step_for_position_extremum(t_brakes[i], p_brakes[i], v_brakes[i], a_brakes[i], j_brakes[i], min, max);
+            if (t_brakes[0] > 0.0) {
+                check_step_for_position_extremum(0.0, t_brakes[0], p_brakes[0], v_brakes[0], a_brakes[0], j_brakes[0], extrema);
+                
+                if (t_brakes[1] > 0.0) {
+                    check_step_for_position_extremum(t_brakes[0], t_brakes[1], p_brakes[1], v_brakes[1], a_brakes[1], j_brakes[1], extrema);
+                }
             }
         }
         for (size_t i = 0; i < 7; ++i) {
-            check_step_for_position_extremum(t[i], p[i], v[i], a[i], j[i], min, max);
+            check_step_for_position_extremum(t_sum[i] + t_brake.value_or(0.0), t[i], p[i], v[i], a[i], j[i], extrema);
         }
 
-        return {min, max};
+        if (pf < extrema.min) {
+            extrema.min = pf;
+            extrema.t_min = t_sum[6] + t_brake.value_or(0.0);
+        }
+        if (pf > extrema.max) {
+            extrema.max = pf;
+            extrema.t_max = t_sum[6] + t_brake.value_or(0.0);
+        }
+
+        return extrema;
     }
 
     std::string to_string() const {
@@ -175,6 +209,74 @@ struct Profile {
             case JerkSigns::UDUD: result += "_UDUD"; break;
         }
         return result; 
+    }
+};
+
+
+template<size_t DOFs>
+struct Trajectory {
+    //! Duration of the synchronized trajectory
+    double duration;
+
+    //! Set of current profiles for each DoF
+    std::array<Profile, DOFs> profiles;
+
+    //! Minimum duration of each independent DoF
+    std::array<double, DOFs> independent_min_durations;
+
+    //! Get the output parameter for the given time
+    void at_time(double time, std::array<double, DOFs>& new_position, std::array<double, DOFs>& new_velocity, std::array<double, DOFs>& new_acceleration) const {
+        if (time > duration) {
+            // Keep constant acceleration
+            for (size_t dof = 0; dof < DOFs; ++dof) {
+                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(time - duration, profiles[dof].pf, profiles[dof].vf, profiles[dof].af, 0);
+            }
+            return;
+        }
+
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            const Profile& p = profiles[dof];
+
+            double t_diff = time;
+            if (p.t_brake) {
+                if (t_diff < p.t_brake.value()) {
+                    const size_t index = (t_diff < p.t_brakes[0]) ? 0 : 1;
+                    if (index > 0) {
+                        t_diff -= p.t_brakes[index - 1];
+                    }
+
+                    std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, p.p_brakes[index], p.v_brakes[index], p.a_brakes[index], p.j_brakes[index]);
+                    continue;
+                } else {
+                    t_diff -= p.t_brake.value();
+                }
+            }
+
+            // Non-time synchronization
+            if (t_diff >= p.t_sum[6]) {
+                // Keep constant acceleration
+                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff - p.t_sum[6], p.pf, p.vf, p.af, 0);
+                continue;
+            }
+
+            const auto index_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t_diff);
+            const size_t index = std::distance(p.t_sum.begin(), index_ptr);
+
+            if (index > 0) {
+                t_diff -= p.t_sum[index - 1];
+            }
+
+            std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index]);
+        }
+    }
+
+    //! Get the min/max values of the position for each DoF and the current trajectory
+    std::array<PositionExtrema, DOFs> get_position_extrema() {
+        std::array<PositionExtrema, DOFs> result;
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            result[dof] = profiles[dof].get_position_extrema();
+        }
+        return result;
     }
 };
 

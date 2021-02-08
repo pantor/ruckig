@@ -95,7 +95,7 @@ public:
                 output.new_velocity[dof] = output_parameters->NewVelocityVector->VecData[dof];
                 output.new_acceleration[dof] = output_parameters->NewAccelerationVector->VecData[dof];
             }
-            output.duration = output_parameters->GetSynchronizationTime();
+            output.trajectory.duration = output_parameters->GetSynchronizationTime();
             output.new_calculation = output_parameters->WasACompleteComputationPerformedDuringTheLastCycle();
         } break;
         case InputParameter<DOFs>::Type::Velocity: {
@@ -106,7 +106,7 @@ public:
                 output.new_velocity[dof] = output_vel_parameters->NewVelocityVector->VecData[dof];
                 output.new_acceleration[dof] = output_vel_parameters->NewAccelerationVector->VecData[dof];
             }
-            output.duration = output_vel_parameters->GetSynchronizationTime();
+            output.trajectory.duration = output_vel_parameters->GetSynchronizationTime();
             output.new_calculation = output_vel_parameters->WasACompleteComputationPerformedDuringTheLastCycle();
         } break;
         }

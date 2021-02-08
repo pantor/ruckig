@@ -11,7 +11,7 @@
 #include <tuple>
 
 #include <ruckig/parameter.hpp>
-#include <ruckig/profile.hpp>
+#include <ruckig/trajectory.hpp>
 #include <ruckig/steps.hpp>
 
 
@@ -23,16 +23,7 @@ class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
-    //! Current time in [s]
-    double t;
-    
-    //! Duration of the current trajectory in [s]
-    double tf;
-
-    //! Set of current profiles for each DoF
-    std::array<Profile, DOFs> profiles;
-
-    bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles) {
+    static bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles) {
         if (DOFs == 1 && !t_min) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
@@ -41,32 +32,35 @@ class Ruckig {
         }
 
         // Possible t_syncs are the start times of the intervals and optional t_min
-        std::array<double, 3*DOFs+1> possible_t_syncs, idx;
+        std::array<double, 3*DOFs+1> possible_t_syncs;
+        std::array<int, 3*DOFs+1> idx;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             possible_t_syncs[3 * dof] = blocks[dof].t_min;
             possible_t_syncs[3 * dof + 1] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
             possible_t_syncs[3 * dof + 2] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
         }
-        possible_t_syncs[3*DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
+        possible_t_syncs[3 * DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
 
         // Test them in sorted order
         std::iota(idx.begin(), idx.end(), 0);
         std::sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
-        for (size_t i: idx) {
-            const double possible_t_sync = possible_t_syncs[i];
+        // Start at last tmin (or worse)
+        for (auto i = idx.begin() + DOFs - 1; i != idx.end(); ++i) {
+            const double possible_t_sync = possible_t_syncs[*i];
             if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](auto block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
                 continue;
             }
 
             t_sync = possible_t_sync;
-            if (i == 3*DOFs) { // Optional t_min
+            if (*i == 3*DOFs) { // Optional t_min
                 limiting_dof = -1;
                 return true;
             }
 
-            limiting_dof = std::ceil((i + 1.0) / 3) - 1;
-            switch (i % 3) {
+            const auto div = std::div(*i, 3);
+            limiting_dof = div.quot;
+            switch (div.rem) {
                 case 0: {
                     profiles[limiting_dof] = blocks[limiting_dof].p_min;
                 } break;
@@ -91,16 +85,22 @@ class Ruckig {
         }
 
         InputParameter<DOFs>& inp = current_input;
+        Trajectory<DOFs>& trajectory = output.trajectory;
 
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
         std::array<double, DOFs> inp_min_velocity;
         for (size_t dof = 0; dof < DOFs; ++dof) {
+            Profile& p = trajectory.profiles[dof];
+
             if (!inp.enabled[dof]) {
+                p.pf = inp.current_position[dof];
+                p.vf = inp.current_velocity[dof];
+                p.af = inp.current_acceleration[dof];
+                p.t_sum[6] = 0.0;
                 continue;
             }
-
-            Profile& p = profiles[dof];
+            
             inp_min_velocity[dof] = inp.min_velocity ? inp.min_velocity.value()[dof] : -inp.max_velocity[dof];
 
             // Calculate brake (if input exceeds or will exceed limits)
@@ -128,46 +128,46 @@ class Ruckig {
                 return Result::ErrorExecutionTimeCalculation;
             }
 
-            output.independent_min_durations[dof] = blocks[dof].t_min;
+            trajectory.independent_min_durations[dof] = blocks[dof].t_min;
         }
 
         int limiting_dof; // The DoF that doesn't need step 2
-        bool found_synchronization = synchronize(blocks, inp.minimum_duration, tf, limiting_dof, profiles);
+        bool found_synchronization = synchronize(blocks, inp.minimum_duration, trajectory.duration, limiting_dof, trajectory.profiles);
         if (!found_synchronization) {
             if constexpr (throw_error) {
-                throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(tf));
+                throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(trajectory.duration));
             }
             return Result::ErrorSynchronizationCalculation;
         }
 
         if constexpr (return_error_at_maximal_duration) {
-            if (tf > 7.6e3) {
+            if (trajectory.duration > 7.6e3) {
                 return Result::ErrorTrajectoryDuration;
             }
         }
         
-        if (tf > 0.0) {
+        if (trajectory.duration > 0.0) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
                 if (!inp.enabled[dof] || dof == limiting_dof) {
                     continue;
                 }
 
-                const double t_profile = tf - profiles[dof].t_brake.value_or(0.0);
+                Profile& p = trajectory.profiles[dof];
+                const double t_profile = trajectory.duration - p.t_brake.value_or(0.0);
 
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof]};
-                bool found_time_synchronization = step2.get_profile(profiles[dof]);
+                bool found_time_synchronization = step2.get_profile(p);
                 if (!found_time_synchronization) {
                     if constexpr (throw_error) {
-                        throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(tf) + " input: " + input.to_string());
+                        throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(trajectory.duration) + " input: " + input.to_string());
                     }
                     return Result::ErrorSynchronizationCalculation;
                 }
-                // std::cout << dof << " profile step2: " << profiles[dof].to_string() << std::endl;
+                // std::cout << dof << " profile step2: " << p.to_string() << std::endl;
             }
         }
 
-        t = 0.0;
-        output.duration = tf;
+        output.time = 0.0;
         output.new_calculation = true;
         return Result::Working;
     }
@@ -184,6 +184,10 @@ public:
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
 
     bool validate_input(const InputParameter<DOFs>& input) {
+        if (input.type == InputParameter<DOFs>::Type::Velocity) {
+            return false;
+        }
+
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
                 return false;
@@ -237,7 +241,7 @@ public:
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         auto start = std::chrono::high_resolution_clock::now();
 
-        t += delta_time;
+        output.time += delta_time;
         output.new_calculation = false;
 
         if (input != current_input) {
@@ -247,12 +251,12 @@ public:
             }
         }
 
-        at_time(t, output);
+        output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration);
 
         auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 
-        if (t + delta_time > tf) {
+        if (output.time + delta_time > output.trajectory.duration) {
             return Result::Finished;
         }
 
@@ -260,71 +264,6 @@ public:
         current_input.current_velocity = output.new_velocity;
         current_input.current_acceleration = output.new_acceleration;
         return Result::Working;
-    }
-
-    //! Get the output parameter for the given time on the current trajectory
-    void at_time(double time, OutputParameter<DOFs>& output) const {
-        if (time + delta_time > tf) {
-            // Keep constant acceleration
-            for (size_t dof = 0; dof < DOFs; ++dof) {
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time - tf, current_input.target_position[dof], current_input.target_velocity[dof], current_input.target_acceleration[dof], 0);
-            }
-            return;
-        }
-
-        for (size_t dof = 0; dof < DOFs; ++dof) {
-            if (!current_input.enabled[dof]) {
-                // Keep constant acceleration
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(time, current_input.current_position[dof], current_input.current_velocity[dof], current_input.current_acceleration[dof], 0);
-            }
-
-            const auto& p = profiles[dof];
-
-            double t_diff = time;
-            if (p.t_brake) {
-                if (t_diff < p.t_brake.value()) {
-                    const size_t index = (t_diff < p.t_brakes[0]) ? 0 : 1;
-                    if (index > 0) {
-                        t_diff -= p.t_brakes[index - 1];
-                    }
-
-                    std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p_brakes[index], p.v_brakes[index], p.a_brakes[index], p.j_brakes[index]);
-                    continue;
-                } else {
-                    t_diff -= p.t_brake.value();
-                }
-            }
-
-            // Non-time synchronization
-            if (t_diff >= p.t_sum[6]) {
-                // Keep constant acceleration
-                std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff - p.t_sum[6], current_input.target_position[dof], current_input.target_velocity[dof], current_input.target_acceleration[dof], 0);
-                continue;
-            }
-
-            const auto index_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t_diff);
-            const size_t index = std::distance(p.t_sum.begin(), index_ptr);
-
-            if (index > 0) {
-                t_diff -= p.t_sum[index - 1];
-            }
-
-            std::tie(output.new_position[dof], output.new_velocity[dof], output.new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index]);
-        }
-    }
-
-    //! Get the current time of the trajectory
-    double get_time() const {
-        return t;
-    }
-
-    //! Get the min/max values of the position for each DoF and the current trajectory
-    std::array<std::pair<double, double>, DOFs> get_position_range() {
-        std::array<std::pair<double, double>, DOFs> result;
-        for (size_t dof = 0; dof < DOFs; ++dof) {
-            result[dof] = profiles[dof].get_position_range();
-        }
-        return result;
     }
 };
 

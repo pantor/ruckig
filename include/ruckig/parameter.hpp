@@ -5,6 +5,8 @@
 #include <optional>
 #include <sstream>
 
+#include <ruckig/trajectory.hpp>
+
 
 namespace ruckig {
 
@@ -94,16 +96,18 @@ public:
 //! Output type of the OTG
 template<size_t DOFs>
 struct OutputParameter {
-    using Vector = std::array<double, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
 
-    Vector new_position, new_velocity, new_acceleration;
+    std::array<double, DOFs> new_position, new_velocity, new_acceleration;
 
-    double duration; // [s]
     bool new_calculation {false};
     double calculation_duration; // [µs]
 
-    Vector independent_min_durations; // [s]
+    // Current trajectory
+    Trajectory<DOFs> trajectory;
+
+    // Current time on trajectory
+    double time;
 };
 
 } // namespace ruckig

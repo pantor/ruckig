@@ -29,12 +29,12 @@ int main() {
     std::cout << "t | p1 | p2 | p3 | p4 | p5 | p6" << std::endl;
     while (otg.update(input, output) == Result::Working) {
         auto& p = output.new_position;
-        std::cout << otg.get_time() << " " << p[0] << " " << p[1] << " " << p[2] << " " << p[3] << " " << p[4] << " " << p[5] << std::endl;
+        std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << " " << p[3] << " " << p[4] << " " << p[5] << std::endl;
 
         input.current_position = output.new_position;
         input.current_velocity = output.new_velocity;
         input.current_acceleration = output.new_acceleration;
     }
 
-    std::cout << "Reached target position in " << output.duration << " [s]." << std::endl;
+    std::cout << "Reached target position in " << output.trajectory.duration << " [s]." << std::endl;
 }

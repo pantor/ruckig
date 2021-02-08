@@ -282,7 +282,7 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         
         std::set<double> roots;
         double tz_min {0.0};
-        double tz_max = std::min<double>(tf, (tf - a0/jMax) / 2);
+        double tz_max {tf};
         double tz_current {tz_min};
 
         for (double tz: d_extremas) {
@@ -362,7 +362,7 @@ bool Step2::time_up_vel(Profile& profile, double vMax, double aMax, double jMax)
         std::set<std::pair<double, double>> dd_tz_intervals;
 
         double tz_min {0.0};
-        double tz_max = std::min<double>(tf, (tf - a0/jMax) / 2);
+        double tz_max {tf};
         double dd_tz_current {tz_min};
 
         for (double tz: dd_extremas) {
@@ -645,7 +645,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             auto roots = Roots::solveQuartMonic(polynom);
 
             for (double t: roots) {
-                if (t < 0.0 || t > tf) {
+                if (t < 0.0 || t > std::min(tf, (ad/jMax + tf) / 2)) {
                     continue;
                 }
 
@@ -691,7 +691,7 @@ bool Step2::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             auto roots = Roots::solveQuartMonic(polynom);
 
             for (double t: roots) {
-                if (t < 0.0 || t > tf) {
+                if (t < 0.0 || t > std::min(tf, (tf - ad/jMax)/2)) {
                     continue;
                 }
 

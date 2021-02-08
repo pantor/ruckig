@@ -162,7 +162,7 @@ public:
             }
             calculateSynchronizedValues(input);
 
-            output.duration = *std::max_element(t_f_sync.cbegin(), t_f_sync.cend());
+            output.trajectory.duration = *std::max_element(t_f_sync.cbegin(), t_f_sync.cend());
             output.new_calculation = true;
 
             auto stop = std::chrono::high_resolution_clock::now();

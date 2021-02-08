@@ -92,7 +92,7 @@ class Quintic {
         }
 
         t = 0.0;
-        output.duration = tf;
+        output.trajectory.duration = tf;
         output.new_calculation = true;
         return true;
     }
