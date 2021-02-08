@@ -52,6 +52,24 @@ struct Profile {
             t_sum[i+1] = t_sum[i] + t[i+1];
         }
 
+        if constexpr (limits == Limits::ACC0_ACC1_VEL || limits == Limits::ACC0_VEL || limits == Limits::ACC1_VEL || limits == Limits::VEL) {
+            if (t[3] < std::numeric_limits<double>::epsilon()) {
+                return false;
+            }
+        }
+
+        if constexpr (limits == Limits::ACC0 || limits == Limits::ACC0_ACC1) {
+            if (t[1] < std::numeric_limits<double>::epsilon()) {
+                return false;
+            }
+        }
+
+        if constexpr (limits == Limits::ACC1 || limits == Limits::ACC0_ACC1) {
+            if (t[5] < std::numeric_limits<double>::epsilon()) {
+                return false;
+            }
+        }
+
         if (t_sum[6] > 1e12) { // For numerical reasons, is that needed?
             return false;
         }

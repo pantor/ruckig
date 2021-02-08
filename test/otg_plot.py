@@ -26,7 +26,7 @@ def walk_through_trajectory(otg, inp, print_table=True):
         inp.current_position = out.new_position
         inp.current_velocity = out.new_velocity
         inp.current_acceleration = out.new_acceleration
-        
+
         if print_table:
             jerk = (old_acc - out.new_acceleration[print_dof]) / otg.delta_time
             old_acc = out.new_acceleration[print_dof]
@@ -106,15 +106,15 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [3.2654259134071, 0.149631978054923, -1.85294403350041]
-    inp.current_velocity = [-0.631048955228958, -1.02935440881227, -0.485986175478385]
-    inp.current_acceleration = [-0.00247258010611476, 0, -1.09040067528293]
-    inp.target_position = [1.32072926391243, -1.50720441044648, 10.2222552440055]
-    inp.target_velocity = [-1.13931998000192, 1.1817053469200048, 1.57160490634656]
-    inp.target_acceleration = [0.0, 0, 0.0]
-    inp.max_velocity = [12.5582057488951, 3.98686538344635, 8.77760182258326]
-    inp.max_acceleration = [0.48202376602604, 11.3641030476307, 11.4692498916033]
-    inp.max_jerk = [6.80578669166441, 0.7045088159413865, 8.62520213101531]
+    inp.current_position = [0, 1, 1]
+    inp.current_velocity = [1, -1, -1]
+    inp.current_acceleration = [0, -1, 0]
+    inp.target_position = [1, -1, 0]
+    inp.target_velocity = [-1, 0, 0]
+    inp.target_acceleration = [-1, -1, 0]
+    inp.max_velocity = [3, 1, 1]
+    inp.max_acceleration = [2, 3, 1]
+    inp.max_jerk = [1, 1, 1]
 
     print_input_for_mathematica(inp, 1)
 
@@ -128,6 +128,6 @@ if __name__ == '__main__':
     # print(otg.get_position_range())
 
     print(f'Calculation duration: {out_list[0].calculation_duration:0.1f} [µs]')
-    print(f'Trajectory duration: {out_list[0].duration:0.4f} [s]')
+    print(f'Trajectory duration: {out_list[0].trajectory.duration:0.4f} [s]')
 
     plot_trajectory(t_list, out_list)

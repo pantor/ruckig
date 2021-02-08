@@ -299,6 +299,39 @@ TEST_CASE("comparison_3" * doctest::description("Comparison with Reflexxes with 
 }
 #endif
 
+TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
+    constexpr size_t DOFs {3};
+    Ruckig<DOFs, true> otg {0.005};
+    InputParameter<DOFs> input;
+
+    std::uniform_int_distribution<int> position_discrete_dist(-1, 1);
+    std::uniform_int_distribution<int> dynamic_discrete_dist(-1, 1);
+    std::uniform_int_distribution<int> limit_discrete_dist(1, 2);
+
+    Randomizer<DOFs, decltype(position_discrete_dist)> p { position_discrete_dist, seed };
+    Randomizer<DOFs, decltype(dynamic_discrete_dist)> d { dynamic_discrete_dist, seed + 1 };
+    Randomizer<DOFs, decltype(limit_discrete_dist)> l { limit_discrete_dist, seed + 2 };
+
+    for (size_t i = 0; i < 0; ++i) {
+        p.fill(input.current_position);
+        d.fill(input.current_velocity);
+        d.fill(input.current_acceleration);
+        p.fill(input.target_position);
+        d.fill(input.target_velocity);
+        d.fill(input.target_acceleration);
+        l.fill(input.max_velocity, input.target_velocity);
+        l.fill(input.max_acceleration, input.target_acceleration);
+        l.fill(input.max_jerk);
+
+        if (!otg.validate_input(input)) {
+            --i;
+            continue;
+        }
+
+        check_calculation(otg, input);
+    }
+}
+
 
 int main(int argc, char** argv) {
     doctest::Context context;

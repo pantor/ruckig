@@ -167,6 +167,11 @@ void Step1::time_up_acc1(Profile& profile, double vMax, double aMax, double jMax
             t -= orig / deriv;
         }
 
+        // Corresponds to inverse ACC0
+        if (t < DBL_EPSILON && (-af_af + 2*jMax*(vf - v0) + aMax_aMax) < DBL_EPSILON) {
+            continue;
+        }
+
         profile.t[0] = t;
         profile.t[1] = 0;
         profile.t[2] = (a0 + aMax)/jMax + t;
@@ -226,6 +231,42 @@ void Step1::time_up_none(Profile& profile, double vMax, double aMax, double jMax
             if (profile.check<JerkSigns::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
                 add_profile(profile, jMax);
             }
+            return;
+        }
+
+        if (std::abs(a0 - af) < DBL_EPSILON && std::abs(v0 + vf) < DBL_EPSILON && std::abs(p0 - pf) < DBL_EPSILON) {
+            const double h1 = std::sqrt(a0_a0 - 2*jMax*v0);
+
+            // Solution 3
+            {
+                profile.t[0] = -(a0 + h1)/jMax;
+                profile.t[1] = 0;
+                profile.t[2] = profile.t[0];
+                profile.t[3] = 0;
+                profile.t[4] = 0;
+                profile.t[5] = 0;
+                profile.t[6] = 0;
+
+                if (profile.check<JerkSigns::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
+                    add_profile(profile, jMax);
+                }
+            }
+
+            // Solution 4
+            {
+                profile.t[0] = -(a0 - h1)/jMax;
+                profile.t[1] = 0;
+                profile.t[2] = profile.t[0];
+                profile.t[3] = 0;
+                profile.t[4] = 0;
+                profile.t[5] = 0;
+                profile.t[6] = 0;
+
+                if (profile.check<JerkSigns::UDDU, Limits::NONE>(pf, vf, af, jMax, vMax, aMax)) {
+                    add_profile(profile, jMax);
+                }
+            }
+            
             return;
         }
     }
