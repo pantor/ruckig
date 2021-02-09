@@ -47,6 +47,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("enabled", &InputParameter<DOFs>::enabled)
         .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration)
         .def_readwrite("min_velocity", &InputParameter<DOFs>::min_velocity)
+        .def_readwrite("min_acceleration", &InputParameter<DOFs>::min_acceleration)
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (InputParameter<DOFs>::*)() const>(&InputParameter<DOFs>::to_string));
 

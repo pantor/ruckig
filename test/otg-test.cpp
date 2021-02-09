@@ -80,11 +80,12 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
 
 int seed {42};
 size_t number_trajectories {100000}; // Some user variable you want to be able to set
-size_t random_1, random_3, comparison_1, comparison_3;
+size_t random_1, random_3, random_direction_3, comparison_1, comparison_3;
 
 std::normal_distribution<double> position_dist {0.0, 4.0};
 std::normal_distribution<double> dynamic_dist {0.0, 0.8};
 std::uniform_real_distribution<double> limit_dist {0.08, 12.0};
+std::uniform_real_distribution<double> min_limit_dist {-12.0, -0.08};
 
 
 TEST_CASE("quintic") {
@@ -238,6 +239,38 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
     }
 }
 
+TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration and min velocity, acceleration")) {
+    constexpr size_t DOFs {3};
+    Ruckig<DOFs, true> otg {0.005};
+    InputParameter<DOFs> input;
+    
+    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
+    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
+    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
+    Randomizer<DOFs, decltype(min_limit_dist)> min_l { min_limit_dist, seed + 5 };
+
+    for (size_t i = 0; i < random_direction_3; ++i) {
+        p.fill(input.current_position);
+        d.fill_or_zero(input.current_velocity, 0.9);
+        d.fill_or_zero(input.current_acceleration, 0.8);
+        p.fill(input.target_position);
+        d.fill_or_zero(input.target_velocity, 0.7);
+        d.fill_or_zero(input.target_acceleration, 0.6);
+        l.fill(input.max_velocity, input.target_velocity);
+        l.fill(input.max_acceleration, input.target_acceleration);
+        l.fill(input.max_jerk);
+        min_l.fill_min(*input.min_velocity, input.target_velocity);
+        min_l.fill_min(*input.min_acceleration, input.target_acceleration);
+
+        if (!otg.validate_input(input)) {
+            --i;
+            continue;
+        }
+
+        check_calculation(otg, input);
+    }
+}
+
 #ifdef WITH_REFLEXXES
 TEST_CASE("comparison_1" * doctest::description("Comparison with Reflexxes with 1 DoF")) {
     constexpr size_t DOFs {1};
@@ -348,7 +381,8 @@ int main(int argc, char** argv) {
     comparison_1 = std::min<size_t>(250000, number_trajectories / 10);
     comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
-    random_3 = number_trajectories - (random_1 + comparison_1 + comparison_3);
+    random_direction_3 = number_trajectories / 50;
+    random_3 = number_trajectories - (random_1 + random_direction_3 + comparison_1 + comparison_3);
     std::cout << "<number_trajectories> Random 1 DoF: " << random_1 << " 3 DoF: " << random_3 << "  Comparison 1 DoF: " << comparison_1 << " 3 DoF: " << comparison_3 << " Total: " << number_trajectories << std::endl;
 
     return context.run();

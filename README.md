@@ -22,7 +22,7 @@
   </a>
 </p>
 
-Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is a Type V trajectory generator. For robotics and machining applications, Ruckig allows both instant reactions to unforeseen events as well as simple offline trajectory planning.
+Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is a Type V trajectory generator with directional velocity and acceleration limits. For robotics and machining applications, Ruckig allows both instant reactions to unforeseen events as well as simple offline trajectory planning.
 
 
 ## Installation
@@ -113,7 +113,7 @@ std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 ```
 
-The members are implemented using the C++ standard libraries `array` and `optional` type. Note that there are some range constraints due to numerical reasons, you can read below for more details. To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
+Members are implemented using the C++ standard `array` and `optional` type. Note that there are range constraints due to numerical reasons, see below for more details. To check the input before a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
 ```
 target_acceleration <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ``` 

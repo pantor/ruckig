@@ -19,5 +19,5 @@ jobs:
         mkdir build && cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=OFF -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ..
         make
-        CTEST_OUTPUT_ON_FAILURE=1 ./otg-test 2000000
+        CTEST_OUTPUT_ON_FAILURE=1 ./otg-test 2500000
   

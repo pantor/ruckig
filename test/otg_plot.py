@@ -2,8 +2,8 @@ import copy
 from pathlib import Path
 import sys
 
-# import matplotlib.pyplot as plt
-# import numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
@@ -71,8 +71,9 @@ def plot_trajectory(t_list, out_list):
         if inp.max_acceleration[dof] < 1.4 * global_max:
             plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
 
-        if -inp.max_acceleration[dof] > 1.4 * global_min:
-            plt.axhline(y=-inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
+        min_acceleration = inp.min_acceleration[dof] if inp.min_acceleration else -inp.max_acceleration[dof]
+        if min_acceleration > 1.4 * global_min:
+            plt.axhline(y=min_acceleration, color='g', linestyle='--', linewidth=1.1)
 
         if inp.max_jerk[dof] < 1.4 * global_max:
             plt.axhline(y=inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
@@ -106,15 +107,16 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [-3.4892945933599, -4.69945035148771, 2.49204848752554]
-    inp.current_velocity = [0.65578126763966, 1.0884869483274, -0.0630881069389757]
-    inp.current_acceleration = [1.6380031144704, 0.77434883887819, -0.190312507264066]
-    inp.target_position = [0.232257762854349, -3.77571462366535, 0.786398044377225]
-    inp.target_velocity = [-0.430724968242918, 0, -0.935679763040163]
-    inp.target_acceleration = [0, 1.56136446402276, 0]
-    inp.max_velocity = [8.8151548981258, 10.4850574373953, 9.01164458430031]
-    inp.max_acceleration = [1.9162661732782, 2.51797431801212, 1.72576510848757]
-    inp.max_jerk = [3.05203308956307, 2.36750898434981, 1.65442703447078]
+    inp.current_position = [3.0, 0.0, 0.0]
+    inp.current_velocity = [-2.5, 0.0, 0.0]
+    inp.current_acceleration = [1.5, 0.0, 0.0]
+    inp.target_position = [0.0, 0.0, 0.0]
+    inp.target_velocity = [-0.0, 0, 0.0]
+    inp.target_acceleration = [0, 0.0, 0]
+    inp.max_velocity = [3.0, 10.0, 9.0]
+    inp.max_acceleration = [50.0, 2.0, 1.0]
+    inp.min_acceleration = [-1.0, -2.0, -1.0]
+    inp.max_jerk = [2.0, 2.0, 1.0]
 
     print_input_for_mathematica(inp, 1)
 
@@ -130,4 +132,4 @@ if __name__ == '__main__':
     print(f'Calculation duration: {out_list[0].calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {out_list[0].trajectory.duration:0.4f} [s]')
 
-    # plot_trajectory(t_list, out_list)
+    plot_trajectory(t_list, out_list)

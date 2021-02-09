@@ -163,11 +163,6 @@ void Step1::time_acc1(Profile& profile, double vMax, double aMax, double aMin, d
             t -= orig / deriv;
         }
 
-        // Corresponds to inverse ACC0
-        // if (t < DBL_EPSILON && (-af_af + 2*jMax*(vf - v0) + aMin*aMin) < DBL_EPSILON) {
-        //     continue;
-        // }
-
         profile.t[0] = t;
         profile.t[1] = 0;
         profile.t[2] = (a0 - aMin)/jMax + t;

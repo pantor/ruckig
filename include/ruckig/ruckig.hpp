@@ -202,6 +202,10 @@ public:
                 return false;
             }
 
+            if (input.min_acceleration && input.min_acceleration.value()[dof] >= -std::numeric_limits<double>::min()) {
+                return false;
+            }
+
             if (input.max_jerk[dof] <= std::numeric_limits<double>::min()) {
                 return false;
             }
@@ -221,8 +225,15 @@ public:
                 }
             }
 
-            if (input.target_acceleration[dof] > input.max_acceleration[dof]) {
-                return false;
+            if (input.min_acceleration) {
+                if (input.target_acceleration[dof] > input.max_acceleration[dof] || input.target_acceleration[dof] < input.min_acceleration.value()[dof]) {
+                    return false;
+                }
+            
+            } else {
+                if (std::abs(input.target_acceleration[dof]) > input.max_acceleration[dof]) {
+                    return false;
+                }
             }
 
             double max_target_acceleration;

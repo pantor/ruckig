@@ -32,4 +32,10 @@ public:
             input[dof] = dist(gen) + std::abs(offset[dof]);
         }
     }
+
+    void fill_min(std::array<double, DOFs>& input, const std::array<double, DOFs>& offset) {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            input[dof] = dist(gen) - std::abs(offset[dof]);
+        }
+    }
 };
