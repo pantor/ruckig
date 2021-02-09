@@ -47,10 +47,11 @@ public:
     Vector current_position, current_velocity {}, current_acceleration {};
     Vector target_position, target_velocity {}, target_acceleration {};
     Vector max_velocity, max_acceleration, max_jerk;
+    std::optional<Vector> min_velocity;
+    std::optional<Vector> min_acceleration;
 
     std::array<bool, DOFs> enabled;
     std::optional<double> minimum_duration;
-    std::optional<Vector> min_velocity;
 
     InputParameter() {
         std::fill(enabled.begin(), enabled.end(), true);
@@ -70,6 +71,7 @@ public:
             || enabled != rhs.enabled
             || minimum_duration != rhs.minimum_duration
             || min_velocity != rhs.min_velocity
+            || min_acceleration != rhs.min_acceleration
             || type != rhs.type
         );
     }
@@ -87,6 +89,9 @@ public:
         ss << "inp.max_jerk = [" << join(max_jerk) << "]\n";
         if (min_velocity) {
             ss << "inp.min_velocity = [" << join(min_velocity.value()) << "]\n";
+        }
+        if (min_acceleration) {
+            ss << "inp.min_acceleration = [" << join(min_acceleration.value()) << "]\n";
         }
         return ss.str();
     }

@@ -106,9 +106,11 @@ Vector max_velocity;
 Vector max_acceleration;
 Vector max_jerk;
 
+std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
+std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
+
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
-std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 ```
 
 The members are implemented using the C++ standard libraries `array` and `optional` type. Note that there are some range constraints due to numerical reasons, you can read below for more details. To check the input in front of a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill

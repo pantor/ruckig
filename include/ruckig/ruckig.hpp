@@ -89,7 +89,7 @@ class Ruckig {
 
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
-        std::array<double, DOFs> inp_min_velocity;
+        std::array<double, DOFs> inp_min_velocity, inp_min_acceleration;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             Profile& p = trajectory.profiles[dof];
 
@@ -102,9 +102,10 @@ class Ruckig {
             }
             
             inp_min_velocity[dof] = inp.min_velocity ? inp.min_velocity.value()[dof] : -inp.max_velocity[dof];
+            inp_min_acceleration[dof] = inp.min_acceleration ? inp.min_acceleration.value()[dof] : -inp.max_acceleration[dof];
 
             // Calculate brake (if input exceeds or will exceed limits)
-            Brake::get_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
+            Brake::get_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
             
             p.t_brake = p.t_brakes[0] + p.t_brakes[1];
             p0s[dof] = inp.current_position[dof];
@@ -119,7 +120,7 @@ class Ruckig {
                 std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[i], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[i]);
             }
 
-            Step1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof]};
+            Step1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
             bool found_profile = step1.get_profile(p, blocks[dof]);
             if (!found_profile) {
                 if constexpr (throw_error) {
@@ -155,7 +156,7 @@ class Ruckig {
                 Profile& p = trajectory.profiles[dof];
                 const double t_profile = trajectory.duration - p.t_brake.value_or(0.0);
 
-                Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp.max_jerk[dof]};
+                Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(p);
                 if (!found_time_synchronization) {
                     if constexpr (throw_error) {
