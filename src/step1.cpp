@@ -193,8 +193,16 @@ void Step1::time_acc0(Profile& profile, double vMax, double aMax, double aMin, d
             continue;
         }
 
+        // Single Newton step (regarding pd)
+        {
+            double orig = (3*(af_p4 - a0_p4) + 8*(a0_p3 - af_p3)*aMax + 24*aMax*jMax*(af*vf - a0*v0) - 6*a0_a0*(aMax*aMax - 2*jMax*v0) + 6*af_af*(aMax*aMax - 2*jMax*(jMax*t*t + vf)) + 12*jMax*(-2*aMax*jMax*(pd + jMax*t*t*t) + aMax*aMax*(jMax*t*t + v0 - vf) + jMax*(jMax*t*t*(jMax*t*t + 2*vf) + vf_vf - v0_v0)))/(24*aMax*jMax_jMax);
+            double deriv = (t*(-af_af + aMax*aMax - 3*aMax*jMax*t + 2*jMax*(jMax*t*t + vf)))/aMax;
+
+            t -= orig / deriv;
+        }
+
         profile.t[0] = (-a0 + aMax)/jMax;
-        profile.t[1] = (a0_a0 - af_af + 2*jMax*(-2*aMax*t + jMax*t*t + vf - v0))/(2*aMax*jMax);
+        profile.t[1] = (a0_a0 - af_af + 2*jMax*((-2*aMax + jMax*t)*t + vf - v0))/(2*aMax*jMax);
         profile.t[2] = t;
         profile.t[3] = 0;
         profile.t[4] = 0;
@@ -307,7 +315,13 @@ bool Step1::calculate_block(Block& block) const {
         return true;
     
     } else if (valid_profile_counter % 2 == 0) {
-        return false;
+        if (valid_profile_counter == 2 && std::abs(valid_profiles[0].t_sum[6] - valid_profiles[1].t_sum[6]) < DBL_EPSILON) {
+            block = Block(valid_profiles[0]);
+            return true;
+
+        } else {
+            return false;
+        }
     }
 
     // Find index of fastest profile

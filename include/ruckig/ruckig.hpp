@@ -156,6 +156,18 @@ class Ruckig {
                 Profile& p = trajectory.profiles[dof];
                 const double t_profile = trajectory.duration - p.t_brake.value_or(0.0);
 
+                // Check if the final time corresponds to an extremal profile calculated in step 1
+                if (std::abs(t_profile - blocks[dof].t_min) < std::numeric_limits<double>::epsilon()) {
+                    p = blocks[dof].p_min;
+                    continue;
+                } else if (blocks[dof].a && std::abs(t_profile - blocks[dof].a->right) < std::numeric_limits<double>::epsilon()) {
+                    p = blocks[dof].a->profile;
+                    continue;
+                } else if (blocks[dof].b && std::abs(t_profile - blocks[dof].b->right) < std::numeric_limits<double>::epsilon()) {
+                    p = blocks[dof].b->profile;
+                    continue;
+                }
+
                 Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                 bool found_time_synchronization = step2.get_profile(p);
                 if (!found_time_synchronization) {
