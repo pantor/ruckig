@@ -64,6 +64,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("new_velocity", &OutputParameter<DOFs>::new_velocity)
         .def_readonly("new_acceleration", &OutputParameter<DOFs>::new_acceleration)
         .def_readonly("trajectory", &OutputParameter<DOFs>::trajectory)
+        .def_readonly("time", &OutputParameter<DOFs>::time)
         .def_readonly("new_calculation", &OutputParameter<DOFs>::new_calculation)
         .def_readonly("calculation_duration", &OutputParameter<DOFs>::calculation_duration)
         .def("__copy__",  [](const OutputParameter<DOFs> &self) {

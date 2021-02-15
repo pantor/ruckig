@@ -100,13 +100,13 @@ class Ruckig {
                 p.t_sum[6] = 0.0;
                 continue;
             }
-            
+
             inp_min_velocity[dof] = inp.min_velocity ? inp.min_velocity.value()[dof] : -inp.max_velocity[dof];
             inp_min_acceleration[dof] = inp.min_acceleration ? inp.min_acceleration.value()[dof] : -inp.max_acceleration[dof];
 
             // Calculate brake (if input exceeds or will exceed limits)
             Brake::get_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
-            
+
             p.t_brake = p.t_brakes[0] + p.t_brakes[1];
             p0s[dof] = inp.current_position[dof];
             v0s[dof] = inp.current_velocity[dof];
@@ -146,7 +146,7 @@ class Ruckig {
                 return Result::ErrorTrajectoryDuration;
             }
         }
-        
+
         if (trajectory.duration > 0.0) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
                 if (!inp.enabled[dof] || dof == limiting_dof) {
@@ -230,7 +230,7 @@ public:
                 if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
                     return false;
                 }
-            
+
             } else {
                 if (std::abs(input.target_velocity[dof]) > input.max_velocity[dof]) {
                     return false;
@@ -241,7 +241,7 @@ public:
                 if (input.target_acceleration[dof] > input.max_acceleration[dof] || input.target_acceleration[dof] < input.min_acceleration.value()[dof]) {
                     return false;
                 }
-            
+
             } else {
                 if (std::abs(input.target_acceleration[dof]) > input.max_acceleration[dof]) {
                     return false;
@@ -265,7 +265,6 @@ public:
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         auto start = std::chrono::high_resolution_clock::now();
 
-        output.time += delta_time;
         output.new_calculation = false;
 
         if (input != current_input) {
@@ -275,12 +274,13 @@ public:
             }
         }
 
+        output.time += delta_time;
         output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration);
 
         auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 
-        if (output.time + delta_time > output.trajectory.duration) {
+        if (output.time > output.trajectory.duration) {
             return Result::Finished;
         }
 
