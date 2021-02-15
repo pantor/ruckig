@@ -47,7 +47,7 @@ Furthermore, a tutorial will explain the basics to include online generated traj
 
 ### Real-time trajectory generation
 
-Ruckig provides three interface classes: the *Ruckig*, the *InputParameter*, and the *OutputParameter* class. 
+Ruckig provides three interface classes: the *Ruckig*, the *InputParameter*, and the *OutputParameter* class.
 
 First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle in seconds in the constructor.
 
@@ -109,6 +109,7 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
+TimeSynchronization synchronization; // Enum with either TimeAlways, TimeIfNecessary, None
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 ```
@@ -116,7 +117,7 @@ std::optional<double> minimum_duration;
 Members are implemented using the C++ standard `array` and `optional` type. Note that there are range constraints due to numerical reasons, see below for more details. To check the input before a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
 ```
 target_acceleration <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
-``` 
+```
 If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity can be specified. If it is not given, the negative maximum velocity will be used (similar to the acceleration and jerk limits). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human.
 
 

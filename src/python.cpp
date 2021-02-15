@@ -32,6 +32,12 @@ limited by velocity, acceleration, and jerk constraints.";
         .value("Velocity", InputParameter<DOFs>::Type::Velocity)
         .export_values();
 
+    py::enum_<InputParameter<DOFs>::Synchronization>(m, "InputSynchronization", py::arithmetic())
+        .value("TimeAlways", InputParameter<DOFs>::Synchronization::TimeAlways)
+        .value("TimeIfNecessary", InputParameter<DOFs>::Synchronization::TimeIfNecessary)
+        .value("Never", InputParameter<DOFs>::Synchronization::None)
+        .export_values();
+
     py::class_<InputParameter<DOFs>>(m, "InputParameter")
         .def(py::init<>())
         .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
@@ -48,6 +54,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration)
         .def_readwrite("min_velocity", &InputParameter<DOFs>::min_velocity)
         .def_readwrite("min_acceleration", &InputParameter<DOFs>::min_acceleration)
+        .def_readwrite("synchronization", &InputParameter<DOFs>::synchronization)
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (InputParameter<DOFs>::*)() const>(&InputParameter<DOFs>::to_string));
 

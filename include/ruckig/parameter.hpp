@@ -44,6 +44,12 @@ public:
         Velocity,
     } type {Type::Position};
 
+    enum class Synchronization {
+        TimeAlways,
+        TimeIfNecessary,
+        None,
+    } synchronization {Synchronization::TimeAlways};
+
     Vector current_position, current_velocity {}, current_acceleration {};
     Vector target_position, target_velocity {}, target_acceleration {};
     Vector max_velocity, max_acceleration, max_jerk;
@@ -73,6 +79,7 @@ public:
             || min_velocity != rhs.min_velocity
             || min_acceleration != rhs.min_acceleration
             || type != rhs.type
+            || synchronization != rhs.synchronization
         );
     }
 

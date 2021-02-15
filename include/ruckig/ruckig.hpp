@@ -147,7 +147,7 @@ class Ruckig {
             }
         }
 
-        if (trajectory.duration > 0.0) {
+        if (trajectory.duration > 0.0 && input.synchronization != InputParameter<DOFs>::Synchronization::None) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
                 if (!inp.enabled[dof] || dof == limiting_dof) {
                     continue;
@@ -155,6 +155,11 @@ class Ruckig {
 
                 Profile& p = trajectory.profiles[dof];
                 const double t_profile = trajectory.duration - p.t_brake.value_or(0.0);
+
+                if (input.synchronization == InputParameter<DOFs>::Synchronization::TimeIfNecessary && std::abs(p.vf) < std::numeric_limits<double>::epsilon() && std::abs(p.af) < std::numeric_limits<double>::epsilon()) {
+                    p = blocks[dof].p_min;
+                    continue;
+                }
 
                 // Check if the final time corresponds to an extremal profile calculated in step 1
                 if (std::abs(t_profile - blocks[dof].t_min) < std::numeric_limits<double>::epsilon()) {
@@ -177,6 +182,15 @@ class Ruckig {
                     return Result::ErrorSynchronizationCalculation;
                 }
                 // std::cout << dof << " profile step2: " << p.to_string() << std::endl;
+            }
+
+        } else if (input.synchronization == InputParameter<DOFs>::Synchronization::None) {
+            for (size_t dof = 0; dof < DOFs; ++dof) {
+                if (!inp.enabled[dof] || dof == limiting_dof) {
+                    continue;
+                }
+
+                trajectory.profiles[dof] = blocks[dof].p_min;
             }
         }
 

@@ -7,7 +7,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
-from _ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
+from _ruckig import Quintic, InputParameter, InputSynchronization, OutputParameter, Result, Ruckig, Smoothie
 from _ruckig import Reflexxes
 
 
@@ -107,15 +107,16 @@ jMax->{inp.max_jerk[dof]}"""
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.current_position = [1, -0.99999, 0]
-    inp.current_velocity = [1, -1, -1]
+    inp.synchronization = InputSynchronization.TimeIfNecessary
+    inp.current_position = [1, -0.5, 0]
+    inp.current_velocity = [1, -1.2, -1]
     inp.current_acceleration = [1, -1, 0]
     inp.target_position = [-1, -1, -1]
-    inp.target_velocity = [-1, 1, 0]
-    inp.target_acceleration = [1, -1, 0]
+    inp.target_velocity = [0, 0, 0]
+    inp.target_acceleration = [0, 0, 0]
     inp.max_velocity = [2, 2, 1]
     inp.max_acceleration = [2, 3, 1]
-    inp.max_jerk = [2, 2, 2]
+    inp.max_jerk = [2.5, 4, 2]
 
     print_input_for_mathematica(inp, 1)
 
