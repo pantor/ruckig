@@ -280,13 +280,14 @@ public:
         auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 
+        current_input.current_position = output.new_position;
+        current_input.current_velocity = output.new_velocity;
+        current_input.current_acceleration = output.new_acceleration;
+
         if (output.time > output.trajectory.duration) {
             return Result::Finished;
         }
 
-        current_input.current_position = output.new_position;
-        current_input.current_velocity = output.new_velocity;
-        current_input.current_acceleration = output.new_acceleration;
         return Result::Working;
     }
 };
