@@ -55,7 +55,7 @@ First, you'll need to create a Ruckig instance with the number of DoFs as a temp
 Ruckig<6> ruckig {0.001}; // Number DoFs; control cycle in [s]
 ```
 
-The input type has 3 blocks of data: the *current* state, the *target* state and the corresponding dynamical *limits*.
+The input type has 3 blocks of data: the *current* state, the *target* state and the corresponding kinematic *limits*.
 
 ```.cpp
 InputParameter<6> input; // Number DoFs
@@ -76,7 +76,7 @@ Given all input and output resources, we can iterate over the trajectory at each
 
 ```
 while (otg.update(input, output) == Result::Working) {
-  // Make use of the new dynamic state here!
+  // Make use of the new state here!
 
   input.current_position = output.new_position;
   input.current_velocity = output.new_velocity;
@@ -84,7 +84,7 @@ while (otg.update(input, output) == Result::Working) {
 }
 ```
 
-During your update step, you'll need to copy the new dynamic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the new input. When the trajectory has finished, the `update` function will return `Result::Finished`.
+During your update step, you'll need to copy the new kinematic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the new input. When the trajectory has finished, the `update` function will return `Result::Finished`.
 
 
 ### Input Parameter
@@ -109,14 +109,14 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
-TimeSynchronization synchronization; // Enum with either TimeAlways, TimeIfNecessary, None
+Synchronization synchronization; // Synchronization behaviour of multiple DoFs: Enum with Time, TimeIfNecessary, or None
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 ```
 
-Members are implemented using the C++ standard `array` and `optional` type. Note that there are range constraints due to numerical reasons, see below for more details. To check the input before a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given dynamic limits. Additionally, the target acceleration needs to fulfill
+Members are implemented using the C++ standard `array` and `optional` type. Note that there are range constraints due to numerical reasons, see below for more details. To check the input before a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given kinematic limits. Additionally, the target acceleration needs to fulfill
 ```
-target_acceleration <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
+Abs(target_acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ```
 If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity can be specified. If it is not given, the negative maximum velocity will be used (similar to the acceleration and jerk limits). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human.
 
@@ -138,7 +138,7 @@ ErrorSynchronizationCalculation | -111
 
 ### Output Parameter
 
-The output class gives the new dynamical state of the trajectory.
+The output class gives the new kinematic state of the trajectory.
 
 ```.cpp
 std::array<double, DOFs> new_position;
@@ -179,4 +179,4 @@ Ruckig is written in C++17. It is currently tested against following versions
 
 ## Citation
 
-A publication will follow soon ;)
+A publication is submitted ;)

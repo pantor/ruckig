@@ -26,37 +26,39 @@ given a target waypoint with position, velocity, and acceleration, starting from
 limited by velocity, acceleration, and jerk constraints.";
 
     constexpr size_t DOFs {3};
+    using IP = InputParameter<DOFs>;
+    using OP = OutputParameter<DOFs>;
 
-    py::enum_<InputParameter<DOFs>::Type>(m, "InputParameterType", py::arithmetic())
-        .value("Position", InputParameter<DOFs>::Type::Position)
-        .value("Velocity", InputParameter<DOFs>::Type::Velocity)
-        .export_values();
-
-    py::enum_<InputParameter<DOFs>::Synchronization>(m, "InputSynchronization", py::arithmetic())
-        .value("TimeAlways", InputParameter<DOFs>::Synchronization::TimeAlways)
-        .value("TimeIfNecessary", InputParameter<DOFs>::Synchronization::TimeIfNecessary)
-        .value("Never", InputParameter<DOFs>::Synchronization::None)
-        .export_values();
-
-    py::class_<InputParameter<DOFs>>(m, "InputParameter")
-        .def(py::init<>())
-        .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
-        .def_readwrite("current_position", &InputParameter<DOFs>::current_position)
-        .def_readwrite("current_velocity", &InputParameter<DOFs>::current_velocity)
-        .def_readwrite("current_acceleration", &InputParameter<DOFs>::current_acceleration)
-        .def_readwrite("target_position", &InputParameter<DOFs>::target_position)
-        .def_readwrite("target_velocity", &InputParameter<DOFs>::target_velocity)
-        .def_readwrite("target_acceleration", &InputParameter<DOFs>::target_acceleration)
-        .def_readwrite("max_velocity", &InputParameter<DOFs>::max_velocity)
-        .def_readwrite("max_acceleration", &InputParameter<DOFs>::max_acceleration)
-        .def_readwrite("max_jerk", &InputParameter<DOFs>::max_jerk)
-        .def_readwrite("enabled", &InputParameter<DOFs>::enabled)
-        .def_readwrite("minimum_duration", &InputParameter<DOFs>::minimum_duration)
-        .def_readwrite("min_velocity", &InputParameter<DOFs>::min_velocity)
-        .def_readwrite("min_acceleration", &InputParameter<DOFs>::min_acceleration)
-        .def_readwrite("synchronization", &InputParameter<DOFs>::synchronization)
+    py::class_<IP> input_parameter(m, "InputParameter");
+    input_parameter.def(py::init<>())
+        .def_readonly_static("degrees_of_freedom", &IP::degrees_of_freedom)
+        .def_readwrite("current_position", &IP::current_position)
+        .def_readwrite("current_velocity", &IP::current_velocity)
+        .def_readwrite("current_acceleration", &IP::current_acceleration)
+        .def_readwrite("target_position", &IP::target_position)
+        .def_readwrite("target_velocity", &IP::target_velocity)
+        .def_readwrite("target_acceleration", &IP::target_acceleration)
+        .def_readwrite("max_velocity", &IP::max_velocity)
+        .def_readwrite("max_acceleration", &IP::max_acceleration)
+        .def_readwrite("max_jerk", &IP::max_jerk)
+        .def_readwrite("enabled", &IP::enabled)
+        .def_readwrite("minimum_duration", &IP::minimum_duration)
+        .def_readwrite("min_velocity", &IP::min_velocity)
+        .def_readwrite("min_acceleration", &IP::min_acceleration)
+        .def_readwrite("synchronization", &IP::synchronization)
         .def(py::self != py::self)
-        .def("__repr__", static_cast<std::string (InputParameter<DOFs>::*)() const>(&InputParameter<DOFs>::to_string));
+        .def("__repr__", static_cast<std::string (IP::*)() const>(&IP::to_string));
+
+    py::enum_<IP::Type>(input_parameter, "ParameterType")
+        .value("Position", IP::Type::Position)
+        .value("Velocity", IP::Type::Velocity)
+        .export_values();
+
+    py::enum_<IP::Synchronization>(input_parameter, "Synchronization")
+        .value("Time", IP::Synchronization::Time)
+        .value("TimeIfNecessary", IP::Synchronization::TimeIfNecessary)
+        .value("No", IP::Synchronization::None)
+        .export_values();
 
     py::class_<Trajectory<DOFs>>(m, "Trajectory")
         .def_readonly("duration", &Trajectory<DOFs>::duration)
@@ -64,18 +66,18 @@ limited by velocity, acceleration, and jerk constraints.";
         .def("at_time", &Trajectory<DOFs>::at_time)
         .def("get_position_extrema", &Trajectory<DOFs>::get_position_extrema);
 
-    py::class_<OutputParameter<DOFs>>(m, "OutputParameter")
+    py::class_<OP>(m, "OutputParameter")
         .def(py::init<>())
-        .def_readonly_static("degrees_of_freedom", &InputParameter<DOFs>::degrees_of_freedom)
-        .def_readonly("new_position", &OutputParameter<DOFs>::new_position)
-        .def_readonly("new_velocity", &OutputParameter<DOFs>::new_velocity)
-        .def_readonly("new_acceleration", &OutputParameter<DOFs>::new_acceleration)
-        .def_readonly("trajectory", &OutputParameter<DOFs>::trajectory)
-        .def_readonly("time", &OutputParameter<DOFs>::time)
-        .def_readonly("new_calculation", &OutputParameter<DOFs>::new_calculation)
-        .def_readonly("calculation_duration", &OutputParameter<DOFs>::calculation_duration)
-        .def("__copy__",  [](const OutputParameter<DOFs> &self) {
-            return OutputParameter<DOFs>(self);
+        .def_readonly_static("degrees_of_freedom", &IP::degrees_of_freedom)
+        .def_readonly("new_position", &OP::new_position)
+        .def_readonly("new_velocity", &OP::new_velocity)
+        .def_readonly("new_acceleration", &OP::new_acceleration)
+        .def_readonly("trajectory", &OP::trajectory)
+        .def_readonly("time", &OP::time)
+        .def_readonly("new_calculation", &OP::new_calculation)
+        .def_readonly("calculation_duration", &OP::calculation_duration)
+        .def("__copy__",  [](const OP &self) {
+            return OP(self);
         });
 
     py::enum_<Result>(m, "Result", py::arithmetic())

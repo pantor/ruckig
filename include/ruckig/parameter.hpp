@@ -45,10 +45,10 @@ public:
     } type {Type::Position};
 
     enum class Synchronization {
-        TimeAlways,
+        Time,
         TimeIfNecessary,
         None,
-    } synchronization {Synchronization::TimeAlways};
+    } synchronization {Synchronization::Time};
 
     Vector current_position, current_velocity {}, current_acceleration {};
     Vector target_position, target_velocity {}, target_acceleration {};

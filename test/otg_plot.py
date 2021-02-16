@@ -7,7 +7,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
-from _ruckig import Quintic, InputParameter, InputSynchronization, OutputParameter, Result, Ruckig, Smoothie
+from _ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
 from _ruckig import Reflexxes
 
 
@@ -89,36 +89,18 @@ def plot_trajectory(t_list, out_list):
     # plt.show()
 
 
-def print_input_for_mathematica(inp, dof, tf=None):
-    result = f"""p0->{inp.current_position[dof]}, \
-v0->{inp.current_velocity[dof]}, \
-a0->{inp.current_acceleration[dof]}, \
-pf->{inp.target_position[dof]}, \
-vf->{inp.target_velocity[dof]}, \
-af->{inp.target_acceleration[dof]}, \
-vMax->{inp.max_velocity[dof]}, \
-aMax->{inp.max_acceleration[dof]}, \
-jMax->{inp.max_jerk[dof]}"""
-
-    if tf:
-        result += f', tf->{tf}'
-    print('{ ' + result + ' }')
-
-
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.synchronization = InputSynchronization.TimeIfNecessary
+    inp.synchronization = InputParameter.TimeIfNecessary
     inp.current_position = [1, -0.5, 0]
     inp.current_velocity = [1, -1.2, -1]
     inp.current_acceleration = [1, -1, 0]
     inp.target_position = [-1, -1, -1]
-    inp.target_velocity = [0, 0, 0]
+    inp.target_velocity = [0, 1, 0]
     inp.target_acceleration = [0, 0, 0]
     inp.max_velocity = [2, 2, 1]
     inp.max_acceleration = [2, 3, 1]
     inp.max_jerk = [2.5, 4, 2]
-
-    print_input_for_mathematica(inp, 1)
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)

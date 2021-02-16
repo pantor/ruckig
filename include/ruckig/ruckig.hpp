@@ -20,6 +20,8 @@ namespace ruckig {
 //! Main class for the Ruckig algorithm.
 template<size_t DOFs, bool throw_error = false, bool return_error_at_maximal_duration = true>
 class Ruckig {
+    constexpr static double eps {std::numeric_limits<double>::epsilon()};
+
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
@@ -147,7 +149,7 @@ class Ruckig {
             }
         }
 
-        if (trajectory.duration > 0.0 && input.synchronization != InputParameter<DOFs>::Synchronization::None) {
+        if (trajectory.duration > 0.0 && input.synchronization != Input::Synchronization::None) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
                 if (!inp.enabled[dof] || dof == limiting_dof) {
                     continue;
@@ -156,19 +158,19 @@ class Ruckig {
                 Profile& p = trajectory.profiles[dof];
                 const double t_profile = trajectory.duration - p.t_brake.value_or(0.0);
 
-                if (input.synchronization == InputParameter<DOFs>::Synchronization::TimeIfNecessary && std::abs(p.vf) < std::numeric_limits<double>::epsilon() && std::abs(p.af) < std::numeric_limits<double>::epsilon()) {
+                if (input.synchronization == Input::Synchronization::TimeIfNecessary && std::abs(input.target_velocity[dof]) < eps && std::abs(input.target_acceleration[dof]) < eps) {
                     p = blocks[dof].p_min;
                     continue;
                 }
 
                 // Check if the final time corresponds to an extremal profile calculated in step 1
-                if (std::abs(t_profile - blocks[dof].t_min) < std::numeric_limits<double>::epsilon()) {
+                if (std::abs(t_profile - blocks[dof].t_min) < eps) {
                     p = blocks[dof].p_min;
                     continue;
-                } else if (blocks[dof].a && std::abs(t_profile - blocks[dof].a->right) < std::numeric_limits<double>::epsilon()) {
+                } else if (blocks[dof].a && std::abs(t_profile - blocks[dof].a->right) < eps) {
                     p = blocks[dof].a->profile;
                     continue;
-                } else if (blocks[dof].b && std::abs(t_profile - blocks[dof].b->right) < std::numeric_limits<double>::epsilon()) {
+                } else if (blocks[dof].b && std::abs(t_profile - blocks[dof].b->right) < eps) {
                     p = blocks[dof].b->profile;
                     continue;
                 }
@@ -184,7 +186,7 @@ class Ruckig {
                 // std::cout << dof << " profile step2: " << p.to_string() << std::endl;
             }
 
-        } else if (input.synchronization == InputParameter<DOFs>::Synchronization::None) {
+        } else if (input.synchronization == Input::Synchronization::None) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
                 if (!inp.enabled[dof] || dof == limiting_dof) {
                     continue;
