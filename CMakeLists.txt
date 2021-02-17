@@ -49,7 +49,7 @@ endif()
 
 if(BUILD_PYTHON_MODULE)
   # Check if pybind11 exists as a subdirectory
-  if(EXISTS pybind11)
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
     add_subdirectory(pybind11)
   else()
     find_package(pybind11 2.6 REQUIRED)

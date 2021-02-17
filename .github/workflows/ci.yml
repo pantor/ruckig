@@ -22,7 +22,6 @@ jobs:
 
     - name: configure & make
       run: |
-        ls
         mkdir build && cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ..
         make
