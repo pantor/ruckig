@@ -1,5 +1,3 @@
-#include <iomanip>
-
 #include <ruckig/ruckig.hpp>
 #include <ruckig/roots.hpp>
 
@@ -275,7 +273,7 @@ bool Step2::time_vel(Profile& profile, double vMax, double aMax, double aMin, do
         // Solve 4th order derivative analytically
         auto d_extremas = Roots::solveQuartMonic(deriv);
 
-        std::set<double> roots;
+        Roots::Set<double, 5> roots;
         double tz_min {0.0};
         double tz_max {tf};
         double tz_current {tz_min};
@@ -354,7 +352,7 @@ bool Step2::time_vel(Profile& profile, double vMax, double aMax, double aMin, do
         std::array<double, 5> dderiv = Roots::polyMonicDeri(deriv);
 
         auto dd_extremas = Roots::solveQuartMonic(dderiv);
-        std::set<std::pair<double, double>> dd_tz_intervals;
+        Roots::Set<std::pair<double, double>, 6> dd_tz_intervals;
 
         double tz_min {0.0};
         double tz_max {tf};
@@ -378,7 +376,7 @@ bool Step2::time_vel(Profile& profile, double vMax, double aMax, double aMin, do
             dd_tz_intervals.insert({dd_tz_current, tz_max});
         }
 
-        std::set<double> roots;
+        Roots::Set<double, 6> roots;
         double tz_current {tz_min};
 
         for (auto interval: dd_tz_intervals) {

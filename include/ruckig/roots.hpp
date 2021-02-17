@@ -1,9 +1,9 @@
 #pragma once
 
 #define _USE_MATH_DEFINES
+#include <array>
 #include <cfloat>
 #include <cmath>
-#include <set>
 
 
 namespace ruckig {
@@ -25,9 +25,36 @@ inline double Abs(double v) {
 
 namespace Roots {
 
+// Use own set class on stack for real-time capability
+template<typename T, size_t N>
+class Set {
+    typedef typename std::array<T, N> Container;
+    typedef typename Container::iterator iterator;
+
+    Container data;
+    size_t size {0};
+
+public:
+    // Sort when accessing the elements
+    iterator begin() {
+        std::sort(data.begin(), data.begin() + size);
+        return &data[0];
+    }
+
+    iterator end() {
+        return &data[size];
+    }
+
+    void insert(T value) {
+        data[size] = value;
+        ++size;
+    }
+};
+
+
 //! Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
-inline std::set<double> solveCub(double a, double b, double c, double d) {
-    std::set<double> roots;
+inline Set<double, 4> solveCub(double a, double b, double c, double d) {
+    Set<double, 4> roots;
 
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;
@@ -49,7 +76,7 @@ inline std::set<double> solveCub(double a, double b, double c, double d) {
             if (std::abs(c) > DBL_EPSILON) {
                 roots.insert(-d / c);
             }
-        
+
         } else {
             // Quadratic equation
             const double discriminant = c * c - 4 * b * d;
@@ -167,8 +194,8 @@ inline int solveResolvent(double *x, double a, double b, double c) {
 }
 
 //! Calculate all roots of the monic quartic equation: x^4 + a*x^3 + b*x^2 + c*x + d = 0
-inline std::set<double> solveQuartMonic(double a, double b, double c, double d) {
-    std::set<double> roots;
+inline Set<double, 4> solveQuartMonic(double a, double b, double c, double d) {
+    Set<double, 4> roots;
 
     const double a3 = -b;
     const double b3 = a * c - 4 * d;
@@ -211,7 +238,6 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
         // g1 + g2 = a && g1*h2 + g2*h1 = c   ( && g === p )  Krammer
         p1 = (a * q1 - c) / (q1 - q2);
         p2 = (c - a * q2) / (q1 - q2);
-        // std::cout << "p1/2: " << -p1/2 << " " << -p2/2 << std::endl;
     }
 
     constexpr double eps {16 * DBL_EPSILON};
@@ -240,7 +266,7 @@ inline std::set<double> solveQuartMonic(double a, double b, double c, double d) 
 }
 
 //! Calculate the quartic equation: x^4 + b*x^3 + c*x^2 + d*x + e = 0
-inline std::set<double> solveQuartMonic(const std::array<double, 5>& polynom) {
+inline Set<double, 4> solveQuartMonic(const std::array<double, 5>& polynom) {
     return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
 }
 
