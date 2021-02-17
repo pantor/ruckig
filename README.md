@@ -22,7 +22,7 @@
   </a>
 </p>
 
-Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is a Type V trajectory generator with directional velocity and acceleration limits. For robotics and machining applications, Ruckig allows both instant reactions to unforeseen events as well as simple offline trajectory planning.
+Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator and even supports directional velocity and acceleration limits, while also being faster on top. For robotics and machining applications, Ruckig allows both instant reactions to unforeseen events as well as simple offline trajectory planning.
 
 
 ## Installation
@@ -109,7 +109,7 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
-Synchronization synchronization; // Synchronization behaviour of multiple DoFs: Enum with Time, TimeIfNecessary, or None
+Synchronization synchronization; // Synchronization behavior of multiple DoFs
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 ```
@@ -118,7 +118,13 @@ Members are implemented using the C++ standard `array` and `optional` type. Note
 ```
 Abs(target_acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ```
-If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity can be specified. If it is not given, the negative maximum velocity will be used (similar to the acceleration and jerk limits). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human.
+If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human.
+
+Synchronization Behavior   | Explanation
+-------------------------- | -------------------------------------------------------------------
+Time                       | Always synchronize the DoFs to reach the target at the same time
+TimeIfNecessary            | Synchronize only when necessary
+None                       | Calculate every DoF independently
 
 
 ### Result Type

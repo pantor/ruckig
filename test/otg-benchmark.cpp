@@ -28,7 +28,7 @@ int main() {
     Ruckig<DOFs, true> otg {0.005};
     // Reflexxes<DOFs> otg {0.005};
     InputParameter<DOFs> input;
-    
+
     Randomizer<DOFs, decltype(position_dist)> p { position_dist, 42 };
     Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, 43 };
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, 44 };
@@ -45,6 +45,7 @@ int main() {
         p.fill(input.target_position);
         d.fill_or_zero(input.target_velocity, 0.7);
         // d.fill_or_zero(input.target_acceleration, 0.6);
+
         l.fill(input.max_velocity, input.target_velocity);
         l.fill(input.max_acceleration, input.target_acceleration);
         l.fill(input.max_jerk);

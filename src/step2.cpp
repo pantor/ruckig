@@ -37,10 +37,6 @@ Step2::Step2(double tf, double p0, double v0, double a0, double pf, double vf, d
 }
 
 bool Step2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
-    // if (tf < std::max((-a0 + aMax)/jMax, 0.0) + 2*std::max(aMax/jMax, 0.0)) {
-    //     return false;
-    // }
-
     // Profile UDDU, Solution 1
     {
         const double h0a = af_af - 2*af*aMin + (aMin - aMax)*aMin + 2*aMin*jMax*tf - 2*jMax*vd;
@@ -82,10 +78,6 @@ bool Step2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, doubl
 }
 
 bool Step2::time_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
-    // if (tf < std::max(a0/jMax, 0.0) + std::max(aMax/jMax, 0.0)) {
-    //     return false;
-    // }
-
     // Profile UDDU
     {
         const double ph1 = a0_a0 + af_af - aMin*(a0 + 2*af) + aMin*aMin - 2*jMax*(vd - aMin*tf);

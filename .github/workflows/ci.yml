@@ -14,9 +14,17 @@ jobs:
         sudo apt-get update
         sudo apt-get -y install build-essential cmake git
 
+    - name: install pybind11
+      run: |
+        git clone https://github.com/pybind/pybind11.git
+        cd pybind11
+        git checkout v2.6.0
+        mkdir build && cd build
+        cmake -DPYBIND11_TEST=OFF ..
+
     - name: configure & make
       run: |
         mkdir build && cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=OFF -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ..
         make
         CTEST_OUTPUT_ON_FAILURE=1 ./otg-test 5000000

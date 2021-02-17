@@ -30,7 +30,7 @@ add_library(ruckig SHARED
 target_compile_features(ruckig PUBLIC cxx_std_17)
 target_include_directories(ruckig PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(ruckig PUBLIC)
-# target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
+target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
 
 
 if(Reflexxes)
@@ -52,7 +52,6 @@ if(BUILD_PYTHON_MODULE)
   if(EXISTS pybind11)
     add_subdirectory(pybind11)
   else()
-    find_package(Python COMPONENTS Interpreter Development)
     find_package(pybind11 2.6 REQUIRED)
   endif()
 
