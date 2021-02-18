@@ -99,6 +99,7 @@ class Quintic {
 
 public:
     double delta_time;
+    static constexpr size_t degrees_of_freedom {DOFs};
 
     explicit Quintic(double delta_time): delta_time(delta_time) { }
 
@@ -126,7 +127,7 @@ public:
             output.new_velocity[dof] = e[dof] + t * (2 * d[dof] + t * (3 * c[dof] + t * (4 * b[dof] + 5 * a[dof] * t)));
             output.new_acceleration[dof] = 2 * d[dof] + t * (6 * c[dof] + t * (12 * b[dof] + t * (20 * a[dof])));
         }
-        
+
         current_input.current_position = output.new_position;
         current_input.current_velocity = output.new_velocity;
         current_input.current_acceleration = output.new_acceleration;

@@ -98,22 +98,26 @@ limited by velocity, acceleration, and jerk constraints.";
     py::class_<Quintic<DOFs>>(m, "Quintic")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Quintic<DOFs>::delta_time)
+        .def_readonly_static("degrees_of_freedom", &Quintic<DOFs>::degrees_of_freedom)
         .def("update", &Quintic<DOFs>::update);
 
     py::class_<Smoothie<DOFs>>(m, "Smoothie")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Smoothie<DOFs>::delta_time)
+        .def_readonly_static("degrees_of_freedom", &Smoothie<DOFs>::degrees_of_freedom)
         .def("update", &Smoothie<DOFs>::update);
 
     py::class_<Ruckig<DOFs, true>>(m, "Ruckig")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
+        .def_readonly_static("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
         .def("update", &Ruckig<DOFs, true>::update);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DOFs>>(m, "Reflexxes")
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
+        .def_readonly_static("degrees_of_freedom", &Reflexxes<DOFs>::degrees_of_freedom)
         .def("update", &Reflexxes<DOFs>::update);
 #endif
 }

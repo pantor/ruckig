@@ -205,6 +205,7 @@ public:
     // Just a shorter notation
     using Input = InputParameter<DOFs>;
     using Output = OutputParameter<DOFs>;
+    static constexpr size_t degrees_of_freedom {DOFs};
 
     //! Time step between updates (cycle time) in [s]
     double delta_time;

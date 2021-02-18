@@ -32,7 +32,7 @@ class Smoothie {
         Vector t_1 {};
         Vector delta_t_2_sync {};
         Vector sign_delta_q;
-        
+
         time = 0.0;
 
         for (size_t dof = 0; dof < DOFs; dof++) {
@@ -49,7 +49,7 @@ class Smoothie {
             }
         }
 
-        double max_t_f = *std::max_element(t_f.cbegin(), t_f.cend()); 
+        double max_t_f = *std::max_element(t_f.cbegin(), t_f.cend());
         if (input.minimum_duration) {
             max_t_f = std::max<double>({max_t_f, input.minimum_duration.value()});
         }
@@ -105,6 +105,7 @@ class Smoothie {
 
 public:
     double delta_time;
+    static constexpr size_t degrees_of_freedom {DOFs};
 
     explicit Smoothie(double delta_time): delta_time(delta_time) { }
 

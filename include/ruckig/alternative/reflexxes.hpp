@@ -28,6 +28,8 @@ class Reflexxes {
     RMLVelocityFlags vel_flags;
 
 public:
+    static constexpr size_t degrees_of_freedom {DOFs};
+
     double delta_time;
 
     explicit Reflexxes() { }
