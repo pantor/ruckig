@@ -46,7 +46,7 @@ void Step1::time_acc1_vel(Profile& profile, double vMax, double aMax, double aMi
     if ((jMax > 0 && has_up_vel) || (jMax < 0 && has_down_vel)) {
         return;
     }
-    
+
     const double h1 = Sqrt(a0_a0/2 + jMax*(vMax - v0))/Abs(jMax);
 
     profile.t[0] = -a0/jMax + h1;
@@ -122,7 +122,7 @@ void Step1::time_acc0_acc1(Profile& profile, double vMax, double aMax, double aM
                 add_profile(profile, jMax);
             }
         }
-        
+
         // UDDU: Solution 1
         {
             profile.t[0] = (-a0 + aMax)/jMax;
@@ -147,7 +147,7 @@ void Step1::time_acc1(Profile& profile, double vMax, double aMax, double aMin, d
     polynom[2] = (5*a0_a0 - 6*a0*aMin + aMin*aMin + 2*jMax*v0)/jMax_jMax;
     polynom[3] = (2*(a0 - aMin)*(a0_a0 - a0*aMin + 2*jMax*v0))/(jMax_jMax*jMax);
     polynom[4] = (3*(a0_p4 - af_p4) - 8*(a0_p3 - af_p3)*aMin - 24*aMin*jMax*(a0*v0 + af*vf) + 6*a0_a0*(aMin*aMin + 2*jMax*v0) - 6*af_af*(aMin*aMin - 2*jMax*vf) + 12*jMax*(2*aMin*jMax*pd + aMin*aMin*(v0 + vf) + jMax*(v0_v0 - vf_vf)))/(12*jMax_jMax*jMax_jMax);
-    
+
     auto roots = Roots::solveQuartMonic(polynom);
     for (double t: roots) {
         if (t < 0.0) {
@@ -265,7 +265,7 @@ void Step1::time_none(Profile& profile, double vMax, double aMax, double aMin, d
                     add_profile(profile, jMax);
                 }
             }
-            
+
             return;
         }
     }
@@ -310,30 +310,27 @@ bool Step1::calculate_block(Block& block) const {
     //     }
     // }
 
-    if (valid_profile_counter == 1) {
+    if (
+        (valid_profile_counter == 1)
+        || (valid_profile_counter == 2 && std::abs(valid_profiles[0].t_sum[6] - valid_profiles[1].t_sum[6]) < DBL_EPSILON)
+    ) {
         block = Block(valid_profiles[0]);
         return true;
-    
-    } else if (valid_profile_counter % 2 == 0) {
-        if (valid_profile_counter == 2 && std::abs(valid_profiles[0].t_sum[6] - valid_profiles[1].t_sum[6]) < DBL_EPSILON) {
-            block = Block(valid_profiles[0]);
-            return true;
 
-        } else {
-            return false;
-        }
+    } else if (valid_profile_counter % 2 == 0) {
+        return false;
     }
 
     // Find index of fastest profile
     auto idx_min_it = std::min_element(valid_profiles.cbegin(), valid_profiles.cbegin() + valid_profile_counter, [](auto& a, auto& b) { return a.t_sum[6] + a.t_brake.value_or(0.0) < b.t_sum[6] + b.t_brake.value_or(0.0); });
     size_t idx_min = std::distance(valid_profiles.cbegin(), idx_min_it);
-    
+
     block = Block(valid_profiles[idx_min]);
 
     if (valid_profile_counter == 3) {
         size_t idx_else_1 = (idx_min + 1) % 3;
         size_t idx_else_2 = (idx_min + 2) % 3;
-        
+
         add_interval(block.a, idx_else_1, idx_else_2);
         return true;
 
@@ -352,7 +349,7 @@ bool Step1::calculate_block(Block& block) const {
         }
         return true;
     }
-    
+
     return false;
 }
 
@@ -368,7 +365,7 @@ bool Step1::get_profile(const Profile& input, Block& block) {
 
     if (std::abs(pf - p0) < DBL_EPSILON && std::abs(v0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         time_none(profile, vMax, aMax, aMin, jMax);
-    
+
     } else {
         time_acc0_acc1_vel(profile, vMax, aMax, aMin, jMax);
         time_acc0_acc1_vel(profile, vMin, aMin, aMax, -jMax);

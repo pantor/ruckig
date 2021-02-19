@@ -47,9 +47,9 @@ Furthermore, a tutorial will explain the basics to include online generated traj
 
 ### Real-time trajectory generation
 
-Ruckig provides three interface classes: the *Ruckig*, the *InputParameter*, and the *OutputParameter* class.
+Ruckig provides three main interface classes: the *Ruckig*, the *InputParameter*, and the *OutputParameter* class.
 
-First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle in seconds in the constructor.
+First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle (e.g. in seconds) in the constructor.
 
 ```.cpp
 Ruckig<6> ruckig {0.001}; // Number DoFs; control cycle in [s]
@@ -84,7 +84,7 @@ while (otg.update(input, output) == Result::Working) {
 }
 ```
 
-During your update step, you'll need to copy the new kinematic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the new input. When the trajectory has finished, the `update` function will return `Result::Finished`.
+During your update step, you'll need to copy the new kinematic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the novel input. When the trajectory has reached the target state, the `update` function will return `Result::Finished`.
 
 
 ### Input Parameter
@@ -118,12 +118,12 @@ Members are implemented using the C++ standard `array` and `optional` type. Note
 ```
 Abs(target_acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ```
-If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human.
+If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human. The synchronization behavior is as follows:
 
 Synchronization Behavior   | Explanation
 -------------------------- | -------------------------------------------------------------------
 Time                       | Always synchronize the DoFs to reach the target at the same time
-TimeIfNecessary            | Synchronize only when necessary
+TimeIfNecessary            | Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
 None                       | Calculate every DoF independently
 
 
@@ -166,17 +166,17 @@ std::array<double, DOFs> independent_min_durations; // Time-optimal profile for 
 <...> at_time(double time); // Get the kinematic state of the trajectory at a given time
 <...> get_position_extrema(); // Returns information about the position extrema and their times
 ```
-We refer to the API documentation for the exact signature.
+We refer to the [API documentation](https://pantor.github.io/ruckig/) for the exact signature.
 
 
 ## Tests and Numerical Stability
 
-The current test suite validates over 1.000.000.000 random trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the velocity, acceleration and jerk limit to be withing `1e-12`, and for the final acceleration as well to be within a numerical error of `1e-12`. The maximal supported trajectory duration is `7e3`, which sounds short but should suffice for most applications seeking for time-optimality. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
+The current test suite validates over 1.000.000.000 random trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the velocity, acceleration and jerk limit to be within `1e-12`, and for the final acceleration as well to be within a numerical error of `1e-12`. The maximal supported trajectory duration is `7e3`, which sounds short but should suffice for most applications seeking for time-optimality. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
 
 
 ## Benchmark
 
-We find that Ruckig is around twice as fast as Reflexxes Type IV on our hardware.
+We find that Ruckig is around twice as fast as Reflexxes Type IV and well-suited for control cycles as low as half a millisecond.
 
 ![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/benchmark.png?raw=true)
 
