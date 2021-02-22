@@ -91,7 +91,8 @@ def plot_trajectory(t_list, out_list):
 
 if __name__ == '__main__':
     inp = InputParameter()
-    inp.synchronization = InputParameter.TimeIfNecessary
+    # inp.interface = InputParameter.Interface.Velocity
+    # inp.synchronization = InputParameter.TimeIfNecessary
     inp.current_position = [-0.54313521867458, -3.17017424422851, 4.42793893337363]
     inp.current_velocity = [-0.493640042989931, 1.56375670245367, -0.251619592208536]
     inp.current_acceleration = [-0.419913687184569, 0, -0.804111037795345]

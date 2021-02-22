@@ -41,17 +41,18 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("max_velocity", &IP::max_velocity)
         .def_readwrite("max_acceleration", &IP::max_acceleration)
         .def_readwrite("max_jerk", &IP::max_jerk)
-        .def_readwrite("enabled", &IP::enabled)
-        .def_readwrite("minimum_duration", &IP::minimum_duration)
         .def_readwrite("min_velocity", &IP::min_velocity)
         .def_readwrite("min_acceleration", &IP::min_acceleration)
+        .def_readwrite("enabled", &IP::enabled)
+        .def_readwrite("interface", &IP::interface)
         .def_readwrite("synchronization", &IP::synchronization)
+        .def_readwrite("minimum_duration", &IP::minimum_duration)
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (IP::*)() const>(&IP::to_string));
 
-    py::enum_<IP::Type>(input_parameter, "ParameterType")
-        .value("Position", IP::Type::Position)
-        .value("Velocity", IP::Type::Velocity)
+    py::enum_<IP::Interface>(input_parameter, "Interface")
+        .value("Position", IP::Interface::Position)
+        .value("Velocity", IP::Interface::Velocity)
         .export_values();
 
     py::enum_<IP::Synchronization>(input_parameter, "Synchronization")

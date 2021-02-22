@@ -93,16 +93,16 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
         std::cout << "Worst Calculation Duration " << worst_mean << " pm " << worst_std << " [µs]" << std::endl;
     }
 
-    std::cout << otg.degrees_of_freedom << "\t" << average_mean << "\t" << average_std << "\t" << worst_mean << "\t" << worst_std << std::endl;
+    // std::cout << otg.degrees_of_freedom << "\t" << average_mean << "\t" << average_std << "\t" << worst_mean << "\t" << worst_std << std::endl;
 }
 
 
 int main() {
-    const size_t n {5}; // Number of iterations
+    const size_t n {1}; // Number of iterations
     const size_t number_trajectories {64 * 1024};
 
     // Main comparison
-    benchmark<Ruckig<3, true>>(n, number_trajectories);
+    benchmark<Ruckig<7, true>>(n, number_trajectories);
     // benchmark<Reflexxes<7>>(n, number_trajectories);
 
     // Dependence performance vs. DoFs

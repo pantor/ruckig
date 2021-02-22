@@ -10,9 +10,12 @@
 #include <optional>
 #include <tuple>
 
+#include <ruckig/block.hpp>
+#include <ruckig/brake.hpp>
 #include <ruckig/parameter.hpp>
 #include <ruckig/trajectory.hpp>
-#include <ruckig/steps.hpp>
+#include <ruckig/position.hpp>
+#include <ruckig/velocity.hpp>
 
 
 namespace ruckig {
@@ -86,14 +89,14 @@ class Ruckig {
             return Result::ErrorInvalidInput;
         }
 
-        InputParameter<DOFs>& inp = current_input;
-        Trajectory<DOFs>& trajectory = output.trajectory;
+        auto& inp = current_input;
+        auto& trajectory = output.trajectory;
 
         std::array<Block, DOFs> blocks;
         std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
         std::array<double, DOFs> inp_min_velocity, inp_min_acceleration;
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            Profile& p = trajectory.profiles[dof];
+            auto& p = trajectory.profiles[dof];
 
             if (!inp.enabled[dof]) {
                 p.pf = inp.current_position[dof];
@@ -107,7 +110,14 @@ class Ruckig {
             inp_min_acceleration[dof] = inp.min_acceleration ? inp.min_acceleration.value()[dof] : -inp.max_acceleration[dof];
 
             // Calculate brake (if input exceeds or will exceed limits)
-            Brake::get_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
+            switch (input.interface) {
+                case Input::Interface::Position: {
+                    Brake::get_position_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
+                } break;
+                case Input::Interface::Velocity: {
+                    Brake::get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
+                } break;
+            }
 
             p.t_brake = p.t_brakes[0] + p.t_brakes[1];
             p0s[dof] = inp.current_position[dof];
@@ -122,8 +132,18 @@ class Ruckig {
                 std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[i], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[i]);
             }
 
-            Step1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-            bool found_profile = step1.get_profile(p, blocks[dof]);
+            bool found_profile;
+            switch (input.interface) {
+                case Input::Interface::Position: {
+                    Position1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    found_profile = step1.get_profile(p, blocks[dof]);
+                } break;
+                case Input::Interface::Velocity: {
+                    Velocity1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    found_profile = step1.get_profile(p, blocks[dof]);
+                } break;
+            }
+
             if (!found_profile) {
                 if constexpr (throw_error) {
                     throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + input.to_string());
@@ -175,8 +195,17 @@ class Ruckig {
                     continue;
                 }
 
-                Step2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-                bool found_time_synchronization = step2.get_profile(p);
+                bool found_time_synchronization;
+                switch (input.interface) {
+                    case Input::Interface::Position: {
+                        Position2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_time_synchronization = step2.get_profile(p);
+                    } break;
+                    case Input::Interface::Velocity: {
+                        Velocity2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_time_synchronization = step2.get_profile(p);
+                    } break;
+                }
                 if (!found_time_synchronization) {
                     if constexpr (throw_error) {
                         throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(trajectory.duration) + " input: " + input.to_string());
@@ -214,12 +243,8 @@ public:
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
 
     bool validate_input(const InputParameter<DOFs>& input) {
-        if (input.type == InputParameter<DOFs>::Type::Velocity) {
-            return false;
-        }
-
         for (size_t dof = 0; dof < DOFs; ++dof) {
-            if (input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
+            if (input.interface == Input::Interface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
                 return false;
             }
 
@@ -239,18 +264,20 @@ public:
                 return false;
             }
 
-            if (std::isnan(input.target_position[dof])) {
+            if (input.interface == Input::Interface::Position && std::isnan(input.target_position[dof])) {
                 return false;
             }
 
-            if (input.min_velocity) {
-                if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
-                    return false;
-                }
+            if (input.interface == Input::Interface::Position) {
+                if (input.min_velocity) {
+                    if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
+                        return false;
+                    }
 
-            } else {
-                if (std::abs(input.target_velocity[dof]) > input.max_velocity[dof]) {
-                    return false;
+                } else {
+                    if (std::abs(input.target_velocity[dof]) > input.max_velocity[dof]) {
+                        return false;
+                    }
                 }
             }
 
@@ -265,14 +292,16 @@ public:
                 }
             }
 
-            double max_target_acceleration;
-            if (input.min_velocity && input.target_velocity[dof] < 0) {
-                max_target_acceleration = std::sqrt(-2 * input.max_jerk[dof] * (input.min_velocity.value()[dof] - input.target_velocity[dof]));
-            } else {
-                max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
-            }
-            if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
-                return false;
+            if (input.interface == Input::Interface::Position) {
+                double max_target_acceleration;
+                if (input.min_velocity && input.target_velocity[dof] < 0) {
+                    max_target_acceleration = std::sqrt(-2 * input.max_jerk[dof] * (input.min_velocity.value()[dof] - input.target_velocity[dof]));
+                } else {
+                    max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
+                }
+                if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
+                    return false;
+                }
             }
         }
 

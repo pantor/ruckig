@@ -1,55 +1,16 @@
 #pragma once
 
 #include <array>
-#include <limits>
 #include <optional>
-
-#include <ruckig/trajectory.hpp>
 
 
 namespace ruckig {
 
-//! Which times are possible for synchronization?
-struct Block {
-    struct Interval {
-        double left, right; // [s]
-        Profile profile; // Profile corresponding to right (end) time
+using Limits = Profile::Limits;
+using JerkSigns = Profile::JerkSigns;
 
-        explicit Interval(double left, double right, const Profile& profile): left(left), right(right), profile(profile) { };
-    };
-
-    Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
-    double t_min; // [s]
-
-    // Max. 2 intervals can be blocked: called a and b with corresponding profiles, order does not matter
-    std::optional<Interval> a, b;
-
-    explicit Block() { }
-    explicit Block(const Profile& p_min): p_min(p_min), t_min(p_min.t_sum[6] + p_min.t_brake.value_or(0.0)) { }
-
-    bool is_blocked(double t) const {
-        return (t < t_min) || (a && a->left < t && t < a->right) || (b && b->left < t && t < b->right);
-    }
-};
-
-
-//! Calculates (pre-) trajectory to get current state below the limits
-class Brake {
-    static constexpr double eps {2e-14};
-
-    static void acceleration_brake(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
-    static void velocity_brake(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
-
-public:
-    static void get_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake);
-};
-
-
-//! Mathematical equations for Step 1: Extremal profiles
-class Step1 {
-    using Limits = Profile::Limits;
-    using JerkSigns = Profile::JerkSigns;
-
+//! Mathematical equations for Step 1 in position interface: Extremal profiles
+class Position1 {
     double p0, v0, a0;
     double pf, vf, af;
     double vMax, vMin, aMax, aMin, jMax;
@@ -91,33 +52,17 @@ class Step1 {
         ++valid_profile_counter;
     }
 
-    inline void add_interval(std::optional<Block::Interval>& interval, size_t left, size_t right) const {
-        const double left_duration = valid_profiles[left].t_sum[6] + valid_profiles[left].t_brake.value_or(0.0);
-        const double right_duraction = valid_profiles[right].t_sum[6] + valid_profiles[right].t_brake.value_or(0.0);
-        if (left_duration < right_duraction) {
-            interval = Block::Interval(left_duration, right_duraction, valid_profiles[right]);
-        } else {
-            interval = Block::Interval(right_duraction, left_duration, valid_profiles[left]);
-        }
-    }
-
-    bool calculate_block(Block& block) const;
-
 public:
-    explicit Step1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
+    explicit Position1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(const Profile& input, Block& block);
 };
 
 
-//! Mathematical equations for Step 2: Time synchronization
-class Step2 {
-    using Limits = Profile::Limits;
-    using JerkSigns = Profile::JerkSigns;
-
-    double tf;
+//! Mathematical equations for Step 2 in position interface: Time synchronization
+class Position2 {
     double p0, v0, a0;
-    double pf, vf, af;
+    double tf, pf, vf, af;
     double vMax, vMin, aMax, aMin, jMax;
 
     // Pre-calculated expressions
@@ -152,7 +97,7 @@ class Step2 {
     }
 
 public:
-    explicit Step2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
+    explicit Position2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(Profile& profile);
 };

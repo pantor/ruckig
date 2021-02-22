@@ -109,6 +109,7 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
+Interface interface; // Default is the regular position interface
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;

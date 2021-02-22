@@ -39,10 +39,10 @@ public:
     using Vector = std::array<double, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
 
-    enum class Type {
+    enum class Interface {
         Position,
         Velocity,
-    } type {Type::Position};
+    } interface {Interface::Position};
 
     enum class Synchronization {
         Time,
@@ -78,7 +78,7 @@ public:
             || minimum_duration != rhs.minimum_duration
             || min_velocity != rhs.min_velocity
             || min_acceleration != rhs.min_acceleration
-            || type != rhs.type
+            || interface != rhs.interface
             || synchronization != rhs.synchronization
         );
     }

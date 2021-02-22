@@ -24,8 +24,10 @@ endif()
 
 add_library(ruckig SHARED
   src/brake.cpp
-  src/step1.cpp
-  src/step2.cpp
+  src/position1.cpp
+  src/position2.cpp
+  src/velocity1.cpp
+  src/velocity2.cpp
 )
 target_compile_features(ruckig PUBLIC cxx_std_17)
 target_include_directories(ruckig PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
