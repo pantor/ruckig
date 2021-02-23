@@ -50,7 +50,7 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
         return;
     }
 
-    CHECK( result == Result::Working );
+    CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.duration < 0.005)) );
     CHECK( output.trajectory.duration > 0.0 );
 
     for (size_t dof = 0; dof < DOFs; ++dof) {
@@ -70,7 +70,7 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
         return;
     }
     
-    CHECK( result == Result::Working );
+    CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.duration < 0.005)) );
 
     OutputParameter<DOFs> output_comparison;
     auto result_comparison = otg_comparison.update(input, output_comparison);

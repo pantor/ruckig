@@ -93,15 +93,15 @@ if __name__ == '__main__':
     inp = InputParameter()
     # inp.interface = InputParameter.Interface.Velocity
     # inp.synchronization = InputParameter.TimeIfNecessary
-    inp.current_position = [-0.54313521867458, -3.17017424422851, 4.42793893337363]
-    inp.current_velocity = [-0.493640042989931, 1.56375670245367, -0.251619592208536]
-    inp.current_acceleration = [-0.419913687184569, 0, -0.804111037795345]
-    inp.target_position = [1.43229933964324, -1.20932848422867, 6.12178711581258]
-    inp.target_velocity = [0, 0, 0.354766234511527]
-    inp.target_acceleration = [0, -1.7013714615892, 0.0452265380565038]
-    inp.max_velocity = [2.07012498608305, 11.6950813084006, 6.03342046990287]
-    inp.max_acceleration = [6.08919067056857, 11.422812433004, 9.79881998474594]
-    inp.max_jerk = [0.0905211223038347, 3.34134521688858, 3.32589086558709]
+    inp.current_position = [2.46302383440342, 0 ,0]
+    inp.current_velocity = [0, 0 ,0]
+    inp.current_acceleration = [0, 0 ,0]
+    inp.target_position = [2.4630238602381, 0 ,0]
+    inp.target_velocity = [0, 0 ,0]
+    inp.target_acceleration = [0, 0 ,0]
+    inp.max_velocity = [8.83184594808781, 1,1]
+    inp.max_acceleration = [6.54026481728786, 1 ,1]
+    inp.max_jerk = [11.6086349107735, 1,1]
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)

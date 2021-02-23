@@ -109,7 +109,7 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
-Interface interface; // Default is the regular position interface
+Interface interface; // The default position interface controls the full kinematic state
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
@@ -119,7 +119,14 @@ Members are implemented using the C++ standard `array` and `optional` type. Note
 ```
 Abs(target_acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ```
-If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human. The synchronization behavior is as follows:
+If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human. Or, the dynamic limits at a given configuration of the robot can be approximated much better with different acceleration limits. There are two interfaces implemented for both position- and velocity-control:
+
+Interface           | Explanation
+------------------- | -------------------------------------------------------------------
+Position (default)  | Position-control: Full control over the entire kinematic state
+Velocity            | Velocity-control: Ignores the current position, target position, and velocity limits 
+
+The synchronization behavior is as follows:
 
 Synchronization Behavior   | Explanation
 -------------------------- | -------------------------------------------------------------------
