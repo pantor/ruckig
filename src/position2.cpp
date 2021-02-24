@@ -271,6 +271,8 @@ bool Position2::time_vel(Profile& profile, double vMax, double aMax, double aMin
         double tz_current {tz_min};
 
         for (double tz: d_extremas) {
+            
+
             if (tz <= 0.0 || tz >= tz_max) {
                 continue;
             }
@@ -279,7 +281,7 @@ bool Position2::time_vel(Profile& profile, double vMax, double aMax, double aMin
                 tz -= Roots::polyEval(deriv, tz) / Roots::polyEval(Roots::polyDeri(deriv), tz);
             }
 
-            const double res = 10 * std::abs(Roots::polyEval(Roots::polyDeri(deriv), tz)) * Roots::tolerance;
+            const double res = 16 * std::abs(Roots::polyEval(Roots::polyDeri(deriv), tz)) * Roots::tolerance;
             const double val_new = Roots::polyEval(polynom, tz);
             if (std::abs(val_new) < res) {
                 roots.insert(tz);
@@ -568,6 +570,45 @@ bool Position2::time_none(Profile& profile, double vMax, double aMax, double aMi
         // Is that really needed?
         // Profiles with a3 != 0, Solution UDDU
         {
+            // First acc, then constant
+            {
+                std::array<double, 5> polynom;
+                polynom[0] = 1.0;
+                polynom[1] = -2*tf;
+                polynom[2] = 2*vd/jMax + tf_tf;
+                polynom[3] = 4*(pd - tf*vf)/jMax;
+                polynom[4] = (vd_vd + jMax*tf*g2)/(jMax_jMax);
+                auto roots = Roots::solveQuartMonic(polynom);
+
+                for (double t: roots) {
+                    if (t < 0.0 || t > tf/2) {
+                        continue;
+                    }
+
+                    // Single Newton step (regarding pd)
+                    {
+                        const double h1 = (jMax*t*(t - tf) + vd)/(jMax*(2*t - tf));
+                        const double h2 = (2*jMax*t*(t - tf) + jMax*tf_tf - 2*vd)/(jMax*(2*t - tf)*(2*t - tf));
+                        const double orig = (-2*pd + 2*tf*v0 + h1*h1*jMax*(tf - 2*t) + jMax*tf*(2*h1*t - t*t - (h1 - t)*tf))/2;
+                        const double deriv = (jMax*tf*(2*t - tf)*(h2 - 1))/2 + h1*jMax*(tf - (2*t - tf)*h2 - h1);
+
+                        t -= orig / deriv;
+                    }
+
+                    profile.t[0] = t;
+                    profile.t[1] = 0;
+                    profile.t[2] = (jMax*t*(t - tf) + vd)/(jMax*(2*t - tf));
+                    profile.t[3] = tf - 2*t;
+                    profile.t[4] = t - profile.t[2];
+                    profile.t[5] = 0;
+                    profile.t[6] = 0;
+
+                    if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+                        return true;
+                    }
+                }
+            }
+
             // First constant, then acc
             {
                 const double ph1 = -jMax*(jMax*tf_tf + 4*vd);
@@ -813,7 +854,7 @@ bool Position2::get_profile(Profile& profile) {
 
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
-    if (pf > p0 + v0 * tf) {
+    if (pd > tf * v0) {
         return check_all(profile, vMax, aMax, aMin, jMax) || check_all(profile, vMin, aMin, aMax, -jMax);
 
     } else {

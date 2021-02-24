@@ -17,8 +17,8 @@ int main() {
     input.max_acceleration = {4.0, 4.0, 4.0, 1.5, 1.5, 1.5};
     input.max_jerk = {10.0, 10.0, 10.0, 4.0, 4.0, 4.0};
 
-    input.current_position = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    input.current_velocity = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    input.current_position = {0.0, -0.1, 0.12, 0.0, 0.3, 0.05};
+    input.current_velocity = {0.0, 0.0, 0.2, 0.0, 0.0, 0.0};
     input.current_acceleration = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     input.target_position = {1.0, 0.5, 0.5, 0.0, -0.1, 0.2};
