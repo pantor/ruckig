@@ -51,7 +51,7 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
     }
 
     CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.duration < 0.005)) );
-    CHECK( output.trajectory.duration > 0.0 );
+    CHECK( output.trajectory.duration >= 0.0 );
 
     for (size_t dof = 0; dof < DOFs; ++dof) {
         CHECK_FALSE( (std::isnan(output.new_position[dof]) || std::isnan(output.new_velocity[dof]) || std::isnan(output.new_acceleration[dof])) );
@@ -80,8 +80,7 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
 
 int seed {42};
 size_t number_trajectories {120000}; // Some user variable you want to be able to set
-size_t random_1, random_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
-size_t random_discrete_3 {10}; 
+size_t random_1, random_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
 
 std::normal_distribution<double> position_dist {0.0, 4.0};
 std::normal_distribution<double> dynamic_dist {0.0, 0.8};
@@ -244,6 +243,28 @@ TEST_CASE("random_1" * doctest::description("Random input with 1 DoF and target 
     }
 }
 
+TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration in velocity interface")) {
+    constexpr size_t DOFs {3};
+    Ruckig<DOFs, true> otg {0.005};
+    InputParameter<DOFs> input;
+    input.interface = InputParameter<DOFs>::Interface::Velocity;
+    
+    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
+    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
+    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
+
+    for (size_t i = 0; i < velocity_random_3; ++i) {
+        d.fill_or_zero(input.current_velocity, 0.9);
+        d.fill_or_zero(input.current_acceleration, 0.8);
+        d.fill_or_zero(input.target_velocity, 0.7);
+        d.fill_or_zero(input.target_acceleration, 0.6);
+        l.fill(input.max_acceleration, input.target_acceleration);
+        l.fill(input.max_jerk);
+
+        check_calculation(otg, input);
+    }
+}
+
 TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration")) {
     constexpr size_t DOFs {3};
     Ruckig<DOFs, true> otg {0.005};
@@ -268,28 +289,6 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
             --i;
             continue;
         }
-
-        check_calculation(otg, input);
-    }
-}
-
-TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration in velocity interface")) {
-    constexpr size_t DOFs {3};
-    Ruckig<DOFs, true> otg {0.005};
-    InputParameter<DOFs> input;
-    input.interface = InputParameter<DOFs>::Interface::Velocity;
-    
-    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
-    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
-    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
-
-    for (size_t i = 0; i < velocity_random_3; ++i) {
-        d.fill_or_zero(input.current_velocity, 0.9);
-        d.fill_or_zero(input.current_acceleration, 0.8);
-        d.fill_or_zero(input.target_velocity, 0.7);
-        d.fill_or_zero(input.target_acceleration, 0.6);
-        l.fill(input.max_acceleration, input.target_acceleration);
-        l.fill(input.max_jerk);
 
         check_calculation(otg, input);
     }
@@ -403,10 +402,11 @@ int main(int argc, char** argv) {
 
     comparison_1 = std::min<size_t>(250000, number_trajectories / 10);
     comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
+    random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
-    random_3 = number_trajectories - (random_1 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3);
+    random_3 = number_trajectories - (random_1 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3);
     std::cout << "<number_trajectories> Random 1 DoF: " << random_1 << " 3 DoF: " << random_3 << "  Comparison 1 DoF: " << comparison_1 << " 3 DoF: " << comparison_3 << " Total: " << number_trajectories << std::endl;
 
     return context.run();

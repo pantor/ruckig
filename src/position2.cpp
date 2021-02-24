@@ -790,8 +790,23 @@ bool Position2::time_none(Profile& profile, double vMax, double aMax, double aMi
         }
     }
 
-    // 3 step profile (ak. UZD), often missed because of numerical errors
-    {
+    // 3 step profile (ak. UZD), sometimes missed because of numerical errors
+    if (std::abs(af - a0) < DBL_EPSILON) {
+        const double h1 = Sqrt(4*(a0*tf - vd)/jMax + tf_tf);
+
+        profile.t[0] = (tf - h1)/2;
+        profile.t[1] = h1;
+        profile.t[2] = profile.t[0];
+        profile.t[3] = 0;
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = 0;
+
+        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+            return true;
+        }
+    
+    } else {
         const double h1 = Abs(jMax)/jMax*Sqrt(9*Power((a0 + af)*tf - 2*vd,2) + 24*ad*g2);
         const double jf = (3*(a0_a0 - af_af)*tf + ad*(6*vd - h1))/(12*g2);
         const double h2 = Abs(jMax)/jMax*Sqrt(-ad_ad + jf*(2*(a0 + af)*tf + jf*tf_tf - 4*vd));
@@ -811,7 +826,7 @@ bool Position2::time_none(Profile& profile, double vMax, double aMax, double aMi
         }
     }
 
-    // 3 step profile (ak. UZU), often missed because of numerical errors
+    // 3 step profile (ak. UZU), sometimes missed because of numerical errors
     {
         std::array<double, 4> polynom;
         polynom[0] = ad_ad;
@@ -838,6 +853,21 @@ bool Position2::time_none(Profile& profile, double vMax, double aMax, double aMi
             if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, aMax, aMin)) {
                 return true;
             }
+        }
+    }
+
+    // 3 step profile (ak. UDU), sometimes missed because of numerical errors
+    {
+        profile.t[0] = -(ad_ad + jMax*(2*(a0 + af)*tf - jMax*tf_tf - 4*vd))/(4*jMax*(-ad + jMax*tf));
+        profile.t[1] = 0;
+        profile.t[2] = -ad/(2*jMax) + tf/2;
+        profile.t[3] = 0;
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = tf - (profile.t[0] + profile.t[2]);
+
+        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+            return true;
         }
     }
 

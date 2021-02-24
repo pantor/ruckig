@@ -93,15 +93,15 @@ if __name__ == '__main__':
     inp = InputParameter()
     # inp.interface = InputParameter.Interface.Velocity
     # inp.synchronization = InputParameter.TimeIfNecessary
-    inp.current_position = [2.46302383440342, 0 ,0]
-    inp.current_velocity = [0, 0 ,0]
-    inp.current_acceleration = [0, 0 ,0]
-    inp.target_position = [2.4630238602381, 0 ,0]
-    inp.target_velocity = [0, 0 ,0]
-    inp.target_acceleration = [0, 0 ,0]
-    inp.max_velocity = [8.83184594808781, 1,1]
-    inp.max_acceleration = [6.54026481728786, 1 ,1]
-    inp.max_jerk = [11.6086349107735, 1,1]
+    inp.current_position = [1, -1, -1]
+    inp.current_velocity = [0, 0, 0]
+    inp.current_acceleration = [0, 1, 1]
+    inp.target_position = [1, -1, -1]
+    inp.target_velocity = [0, 0, 0]
+    inp.target_acceleration = [0, 1, 1]
+    inp.max_velocity = [2, 2, 2]
+    inp.max_acceleration = [2, 2, 2]
+    inp.max_jerk = [1, 1, 1]
 
     # otg = Quintic(0.005)
     # otg = Smoothie(0.005)
