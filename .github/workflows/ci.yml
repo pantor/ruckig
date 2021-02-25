@@ -24,11 +24,10 @@ jobs:
     - name: configure & make
       uses: lukka/run-cmake@v3
       with:
-        cmakeAppendedArgs: '-GNinja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON'
+        cmakeGenerator: 'Ninja'
+        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+        buildWithCMakeArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON'
 
-    - name: configure & make
+    - name: test
       run: |
-        mkdir build && cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ..
-        make
         env CTEST_OUTPUT_ON_FAILURE=1 ./otg-test 5000000
