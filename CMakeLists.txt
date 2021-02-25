@@ -17,8 +17,6 @@ if(Reflexxes)
   set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
 
   message("Found Reflexxes ${REFLEXXES_TYPE}")
-else()
-  message("Did not found Reflexxes.")
 endif()
 
 
@@ -32,8 +30,10 @@ add_library(ruckig SHARED
 add_library(ruckig::ruckig ALIAS ruckig)
 
 target_compile_features(ruckig PUBLIC cxx_std_17)
-target_include_directories(ruckig PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                                         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_include_directories(ruckig PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 target_link_libraries(ruckig PUBLIC)
 target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
 
@@ -64,6 +64,7 @@ if(BUILD_PYTHON_MODULE)
   target_compile_features(_ruckig PUBLIC cxx_std_17)
   target_link_libraries(_ruckig PUBLIC ruckig)
 endif()
+
 
 # Add support for installation
 include(GNUInstallDirs)

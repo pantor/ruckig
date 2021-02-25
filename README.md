@@ -36,7 +36,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-To install Ruckig in a system-wide directory, use `(sudo) make install`. We recommend to include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your main `CMakeLists.txt`. A python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
+To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. A python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
 
 
 ## Tutorial
@@ -124,7 +124,7 @@ If a DoF is not enabled, it will be ignored in the calculation. A minimum durati
 Interface           | Explanation
 ------------------- | -------------------------------------------------------------------
 Position (default)  | Position-control: Full control over the entire kinematic state
-Velocity            | Velocity-control: Ignores the current position, target position, and velocity limits 
+Velocity            | Velocity-control: Ignores the current position, target position, and velocity limits
 
 The synchronization behavior is as follows:
 
