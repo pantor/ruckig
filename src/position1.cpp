@@ -1,5 +1,3 @@
-#include <iomanip>
-
 #include <ruckig/ruckig.hpp>
 #include <ruckig/roots.hpp>
 

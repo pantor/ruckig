@@ -10,16 +10,13 @@ option(BUILD_PYTHON_MODULE "Build python module" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
+
 if(WIN32 AND BUILD_SHARED_LIBS)
   option(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS "On Windows, export all symbols when building a shared library." ON)
 endif()
+
+
 find_package(Reflexxes)
-
-if(Reflexxes)
-  set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
-
-  message("Found Reflexxes ${REFLEXXES_TYPE}")
-endif()
 
 
 add_library(ruckig
@@ -38,14 +35,21 @@ target_include_directories(ruckig PUBLIC
 )
 target_link_libraries(ruckig PUBLIC)
 
-if(NOT MSVC)
-  target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
-else()
-  # We need to define this due to the use of M_PI
+
+if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
+  target_compile_options(ruckig PRIVATE /W4 /WX)
+
+else()
+
+  target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
 endif()
 
+
 if(Reflexxes)
+  set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
+  message("Found Reflexxes ${REFLEXXES_TYPE}")
+
   target_compile_definitions(ruckig PUBLIC WITH_REFLEXXES)
   target_link_libraries(ruckig PUBLIC Reflexxes::Reflexxes)
 endif()
@@ -85,7 +89,8 @@ install(TARGETS ruckig
   EXPORT ${PROJECT_NAME}-targets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
 
 # Install CMake config files
 set(ruckig_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
