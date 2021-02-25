@@ -191,7 +191,7 @@ We find that Ruckig is around twice as fast as Reflexxes Type IV and well-suited
 
 ## Development
 
-Ruckig is written in C++17. It is currently tested against following versions
+Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos-latest`, and `windows-latest` against following versions
 
 - Doctest v2.4 (only for testing)
 - Reflexxes v1.2 (only for comparison)
