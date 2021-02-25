@@ -41,7 +41,6 @@ if(MSVC)
   target_compile_options(ruckig PRIVATE /W4 /WX)
 
 else()
-
   target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
 endif()
 
