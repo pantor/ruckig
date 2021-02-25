@@ -9,6 +9,7 @@ option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
+option(BUILD_SHARED_LIBS "Build as shared library" ON)
 
 
 find_package(Reflexxes)
@@ -20,7 +21,7 @@ if(Reflexxes)
 endif()
 
 
-add_library(ruckig SHARED
+add_library(ruckig
   src/brake.cpp
   src/position1.cpp
   src/position2.cpp
