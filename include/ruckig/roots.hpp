@@ -1,6 +1,5 @@
 #pragma once
 
-#define _USE_MATH_DEFINES
 #include <array>
 #include <cfloat>
 #include <cmath>
@@ -38,11 +37,11 @@ public:
     // Sort when accessing the elements
     iterator begin() {
         std::sort(data.begin(), data.begin() + size);
-        return &data[0];
+        return data.begin() + 0;
     }
 
     iterator end() {
-        return &data[size];
+        return data.begin() + size;
     }
 
     void insert(T value) {
