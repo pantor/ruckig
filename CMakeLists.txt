@@ -10,8 +10,9 @@ option(BUILD_PYTHON_MODULE "Build python module" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
-
-
+if(WIN32 AND BUILD_SHARED_LIBS)
+  option(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS "On Windows, export all symbols when building a shared library." ON)
+endif()
 find_package(Reflexxes)
 
 if(Reflexxes)
@@ -36,8 +37,13 @@ target_include_directories(ruckig PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(ruckig PUBLIC)
-target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
 
+if(NOT MSVC)
+  target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
+else()
+  # We need to define this due to the use of M_PI
+  target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
+endif()
 
 if(Reflexxes)
   target_compile_definitions(ruckig PUBLIC WITH_REFLEXXES)
