@@ -29,8 +29,11 @@ add_library(ruckig SHARED
   src/velocity1.cpp
   src/velocity2.cpp
 )
+add_library(ruckig::ruckig ALIAS ruckig)
+
 target_compile_features(ruckig PUBLIC cxx_std_17)
-target_include_directories(ruckig PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(ruckig PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                                         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_link_libraries(ruckig PUBLIC)
 target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
 
@@ -61,6 +64,43 @@ if(BUILD_PYTHON_MODULE)
   target_compile_features(_ruckig PUBLIC cxx_std_17)
   target_link_libraries(_ruckig PUBLIC ruckig)
 endif()
+
+# Add support for installation
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+# Install headers
+install(DIRECTORY include/ruckig DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+# Install library
+install(TARGETS ruckig
+  EXPORT ${PROJECT_NAME}-targets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# Install CMake config files
+set(ruckig_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+
+install(EXPORT ${PROJECT_NAME}-targets
+  DESTINATION ${ruckig_INSTALL_CONFIGDIR}
+  NAMESPACE ruckig::
+)
+
+configure_package_config_file(cmake/ruckig-config.cmake.in ruckig-config.cmake
+  INSTALL_DESTINATION ${ruckig_INSTALL_CONFIGDIR}
+)
+
+write_basic_package_version_file(ruckig-config-version.cmake
+  VERSION ${ruckig_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/ruckig-config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/ruckig-config-version.cmake"
+  DESTINATION ${ruckig_INSTALL_CONFIGDIR}
+)
 
 
 if(BUILD_TESTS)
