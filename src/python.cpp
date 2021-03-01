@@ -46,6 +46,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("enabled", &IP::enabled)
         .def_readwrite("interface", &IP::interface)
         .def_readwrite("synchronization", &IP::synchronization)
+        .def_readwrite("duration_discretization", &IP::duration_discretization)
         .def_readwrite("minimum_duration", &IP::minimum_duration)
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (IP::*)() const>(&IP::to_string));
@@ -59,6 +60,11 @@ limited by velocity, acceleration, and jerk constraints.";
         .value("Time", IP::Synchronization::Time)
         .value("TimeIfNecessary", IP::Synchronization::TimeIfNecessary)
         .value("No", IP::Synchronization::None)
+        .export_values();
+
+    py::enum_<IP::DurationDiscretization>(input_parameter, "DurationDiscretization")
+        .value("Continuous", IP::DurationDiscretization::Continuous)
+        .value("Discrete", IP::DurationDiscretization::Discrete)
         .export_values();
 
     py::class_<Trajectory<DOFs>>(m, "Trajectory")

@@ -50,11 +50,15 @@ public:
         None,
     } synchronization {Synchronization::Time};
 
+    enum class DurationDiscretization {
+        Continuous,
+        Discrete,
+    } duration_discretization {DurationDiscretization::Continuous};
+
     Vector current_position, current_velocity {}, current_acceleration {};
     Vector target_position, target_velocity {}, target_acceleration {};
     Vector max_velocity, max_acceleration, max_jerk;
-    std::optional<Vector> min_velocity;
-    std::optional<Vector> min_acceleration;
+    std::optional<Vector> min_velocity, min_acceleration;
 
     std::array<bool, DOFs> enabled;
     std::optional<double> minimum_duration;
@@ -80,6 +84,7 @@ public:
             || min_acceleration != rhs.min_acceleration
             || interface != rhs.interface
             || synchronization != rhs.synchronization
+            || duration_discretization != rhs.duration_discretization
         );
     }
 

@@ -93,8 +93,9 @@ if __name__ == '__main__':
     inp = InputParameter()
     # inp.interface = InputParameter.Interface.Velocity
     # inp.synchronization = InputParameter.TimeIfNecessary
-    inp.current_position = [1, -1, -1]
-    inp.current_velocity = [0, 0, 0]
+    # inp.duration_discretization = InputParameter.Discrete
+    inp.current_position = [0.5, -1, -1]
+    inp.current_velocity = [0, 0.2, 0]
     inp.current_acceleration = [0, 1, 1]
     inp.target_position = [1, -1, -1]
     inp.target_velocity = [0, 0, 0]

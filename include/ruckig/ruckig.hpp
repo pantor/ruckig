@@ -28,8 +28,8 @@ class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
-    static bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles) {
-        if (DOFs == 1 && !t_min) {
+    bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles, bool discrete_duration) const {
+        if (DOFs == 1 && !t_min && !discrete_duration) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
             profiles[0] = blocks[0].p_min;
@@ -45,6 +45,12 @@ class Ruckig {
             possible_t_syncs[3 * dof + 2] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
         }
         possible_t_syncs[3 * DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
+
+        if (discrete_duration) {
+            for (size_t i = 0; i < 3*DOFs+1; ++i) {
+                possible_t_syncs[i] = std::ceil(possible_t_syncs[i] / delta_time) * delta_time;
+            }
+        }
 
         // Test them in sorted order
         std::iota(idx.begin(), idx.end(), 0);
@@ -155,7 +161,8 @@ class Ruckig {
         }
 
         int limiting_dof; // The DoF that doesn't need step 2
-        bool found_synchronization = synchronize(blocks, inp.minimum_duration, trajectory.duration, limiting_dof, trajectory.profiles);
+        const bool discrete_duration = (input.duration_discretization == Input::DurationDiscretization::Discrete);
+        const bool found_synchronization = synchronize(blocks, inp.minimum_duration, trajectory.duration, limiting_dof, trajectory.profiles, discrete_duration);
         if (!found_synchronization) {
             if constexpr (throw_error) {
                 throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(trajectory.duration));

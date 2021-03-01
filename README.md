@@ -111,6 +111,7 @@ std::optional<Vector> min_acceleration; // If not given, the negative maximum ac
 
 Interface interface; // The default position interface controls the full kinematic state
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
+DurationDiscretization duration_discretization; // Whether the duration should be a discrete multiple of the control cycle
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 ```
@@ -133,6 +134,13 @@ Synchronization Behavior   | Explanation
 Time                       | Always synchronize the DoFs to reach the target at the same time
 TimeIfNecessary            | Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
 None                       | Calculate every DoF independently
+
+The duration discretization can be either:
+
+Duration Discretization    | Explanation
+-------------------------- | -------------------------------------------------------------------
+Continuous                 | Every trajectory duration is allowed
+Discrete                   | Only a discrete multiple of the control cycle is allowed
 
 
 ### Result Type
