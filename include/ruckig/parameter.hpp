@@ -22,9 +22,9 @@ enum Result {
 };
 
 
-//! Input type of the OTG
 template<size_t DOFs>
-class InputParameter {
+class Parameter {
+protected:
     template<class T>
     static std::string join(const T& array) {
         std::ostringstream ss;
@@ -36,9 +36,15 @@ class InputParameter {
     }
 
 public:
-    using Vector = std::array<double, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
+};
 
+
+//! Input type of the OTG
+template<size_t DOFs>
+struct InputParameter: public Parameter<DOFs> {
+    using Vector = std::array<double, DOFs>;
+    
     enum class Interface {
         Position,
         Velocity,
@@ -52,7 +58,7 @@ public:
 
     enum class DurationDiscretization {
         Continuous,
-        Discrete,
+        Discrete, ///< The trajectory duration must be a multiple of the control cycle
     } duration_discretization {DurationDiscretization::Continuous};
 
     Vector current_position, current_velocity {}, current_acceleration {};
@@ -90,20 +96,20 @@ public:
 
     std::string to_string() const {
         std::stringstream ss;
-        ss << "\ninp.current_position = [" << join(current_position) << "]\n";
-        ss << "inp.current_velocity = [" << join(current_velocity) << "]\n";
-        ss << "inp.current_acceleration = [" << join(current_acceleration) << "]\n";
-        ss << "inp.target_position = [" << join(target_position) << "]\n";
-        ss << "inp.target_velocity = [" << join(target_velocity) << "]\n";
-        ss << "inp.target_acceleration = [" << join(target_acceleration) << "]\n";
-        ss << "inp.max_velocity = [" << join(max_velocity) << "]\n";
-        ss << "inp.max_acceleration = [" << join(max_acceleration) << "]\n";
-        ss << "inp.max_jerk = [" << join(max_jerk) << "]\n";
+        ss << "\ninp.current_position = [" << this->join(current_position) << "]\n";
+        ss << "inp.current_velocity = [" << this->join(current_velocity) << "]\n";
+        ss << "inp.current_acceleration = [" << this->join(current_acceleration) << "]\n";
+        ss << "inp.target_position = [" << this->join(target_position) << "]\n";
+        ss << "inp.target_velocity = [" << this->join(target_velocity) << "]\n";
+        ss << "inp.target_acceleration = [" << this->join(target_acceleration) << "]\n";
+        ss << "inp.max_velocity = [" << this->join(max_velocity) << "]\n";
+        ss << "inp.max_acceleration = [" << this->join(max_acceleration) << "]\n";
+        ss << "inp.max_jerk = [" << this->join(max_jerk) << "]\n";
         if (min_velocity) {
-            ss << "inp.min_velocity = [" << join(min_velocity.value()) << "]\n";
+            ss << "inp.min_velocity = [" << this->join(min_velocity.value()) << "]\n";
         }
         if (min_acceleration) {
-            ss << "inp.min_acceleration = [" << join(min_acceleration.value()) << "]\n";
+            ss << "inp.min_acceleration = [" << this->join(min_acceleration.value()) << "]\n";
         }
         return ss.str();
     }
@@ -112,9 +118,7 @@ public:
 
 //! Output type of the OTG
 template<size_t DOFs>
-struct OutputParameter {
-    static constexpr size_t degrees_of_freedom {DOFs};
-
+struct OutputParameter: public Parameter<DOFs> {
     std::array<double, DOFs> new_position, new_velocity, new_acceleration;
 
     bool new_calculation {false};

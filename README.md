@@ -131,7 +131,7 @@ The synchronization behavior is as follows:
 
 Synchronization Behavior   | Explanation
 -------------------------- | -------------------------------------------------------------------
-Time                       | Always synchronize the DoFs to reach the target at the same time
+Time (default)             | Always synchronize the DoFs to reach the target at the same time
 TimeIfNecessary            | Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
 None                       | Calculate every DoF independently
 
@@ -139,7 +139,7 @@ The duration discretization can be either:
 
 Duration Discretization    | Explanation
 -------------------------- | -------------------------------------------------------------------
-Continuous                 | Every trajectory duration is allowed
+Continuous (default)       | Every trajectory duration is allowed
 Discrete                   | Only a discrete multiple of the control cycle is allowed
 
 
