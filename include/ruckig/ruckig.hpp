@@ -103,11 +103,11 @@ class Ruckig {
         std::array<double, DOFs> inp_min_velocity, inp_min_acceleration;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             auto& p = trajectory.profiles[dof];
+            p.pf = inp.current_position[dof];
+            p.vf = inp.current_velocity[dof];
+            p.af = inp.current_acceleration[dof];
 
             if (!inp.enabled[dof]) {
-                p.pf = inp.current_position[dof];
-                p.vf = inp.current_velocity[dof];
-                p.af = inp.current_acceleration[dof];
                 p.t_sum[6] = 0.0;
                 continue;
             }
@@ -176,53 +176,14 @@ class Ruckig {
             }
         }
 
-        if (trajectory.duration > 0.0 && input.synchronization != Input::Synchronization::None) {
-            for (size_t dof = 0; dof < DOFs; ++dof) {
-                if (!inp.enabled[dof] || dof == limiting_dof) {
-                    continue;
-                }
+        output.time = 0.0;
+        output.new_calculation = true;
 
-                Profile& p = trajectory.profiles[dof];
-                const double t_profile = trajectory.duration - p.t_brake.value_or(0.0);
+        if (trajectory.duration == 0.0) {
+            return Result::Working;
+        }
 
-                if (input.synchronization == Input::Synchronization::TimeIfNecessary && std::abs(input.target_velocity[dof]) < eps && std::abs(input.target_acceleration[dof]) < eps) {
-                    p = blocks[dof].p_min;
-                    continue;
-                }
-
-                // Check if the final time corresponds to an extremal profile calculated in step 1
-                if (std::abs(t_profile - blocks[dof].t_min) < eps) {
-                    p = blocks[dof].p_min;
-                    continue;
-                } else if (blocks[dof].a && std::abs(t_profile - blocks[dof].a->right) < eps) {
-                    p = blocks[dof].a->profile;
-                    continue;
-                } else if (blocks[dof].b && std::abs(t_profile - blocks[dof].b->right) < eps) {
-                    p = blocks[dof].b->profile;
-                    continue;
-                }
-
-                bool found_time_synchronization;
-                switch (input.interface) {
-                    case Input::Interface::Position: {
-                        Position2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-                        found_time_synchronization = step2.get_profile(p);
-                    } break;
-                    case Input::Interface::Velocity: {
-                        Velocity2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-                        found_time_synchronization = step2.get_profile(p);
-                    } break;
-                }
-                if (!found_time_synchronization) {
-                    if constexpr (throw_error) {
-                        throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(trajectory.duration) + " input: " + input.to_string());
-                    }
-                    return Result::ErrorSynchronizationCalculation;
-                }
-                // std::cout << dof << " profile step2: " << p.to_string() << std::endl;
-            }
-
-        } else if (input.synchronization == Input::Synchronization::None) {
+        if (input.synchronization == Input::Synchronization::None) {
             for (size_t dof = 0; dof < DOFs; ++dof) {
                 if (!inp.enabled[dof] || dof == limiting_dof) {
                     continue;
@@ -230,10 +191,55 @@ class Ruckig {
 
                 trajectory.profiles[dof] = blocks[dof].p_min;
             }
+            return Result::Working;
         }
 
-        output.time = 0.0;
-        output.new_calculation = true;
+        // The general case
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            if (!inp.enabled[dof] || dof == limiting_dof) {
+                continue;
+            }
+
+            Profile& p = trajectory.profiles[dof];
+            const double t_profile = trajectory.duration - p.t_brake.value_or(0.0);
+
+            if (input.synchronization == Input::Synchronization::TimeIfNecessary && std::abs(input.target_velocity[dof]) < eps && std::abs(input.target_acceleration[dof]) < eps) {
+                p = blocks[dof].p_min;
+                continue;
+            }
+
+            // Check if the final time corresponds to an extremal profile calculated in step 1
+            if (std::abs(t_profile - blocks[dof].t_min) < eps) {
+                p = blocks[dof].p_min;
+                continue;
+            } else if (blocks[dof].a && std::abs(t_profile - blocks[dof].a->right) < eps) {
+                p = blocks[dof].a->profile;
+                continue;
+            } else if (blocks[dof].b && std::abs(t_profile - blocks[dof].b->right) < eps) {
+                p = blocks[dof].b->profile;
+                continue;
+            }
+
+            bool found_time_synchronization;
+            switch (input.interface) {
+                case Input::Interface::Position: {
+                    Position2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    found_time_synchronization = step2.get_profile(p);
+                } break;
+                case Input::Interface::Velocity: {
+                    Velocity2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    found_time_synchronization = step2.get_profile(p);
+                } break;
+            }
+            if (!found_time_synchronization) {
+                if constexpr (throw_error) {
+                    throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(trajectory.duration) + " input: " + input.to_string());
+                }
+                return Result::ErrorSynchronizationCalculation;
+            }
+            // std::cout << dof << " profile step2: " << p.to_string() << std::endl;
+        }
+
         return Result::Working;
     }
 

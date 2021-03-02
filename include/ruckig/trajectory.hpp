@@ -24,7 +24,7 @@ struct Trajectory {
 
     //! Get the output parameter for the given time
     void at_time(double time, std::array<double, DOFs>& new_position, std::array<double, DOFs>& new_velocity, std::array<double, DOFs>& new_acceleration) const {
-        if (time > duration) {
+        if (time >= duration) {
             // Keep constant acceleration
             for (size_t dof = 0; dof < DOFs; ++dof) {
                 std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(time - duration, profiles[dof].pf, profiles[dof].vf, profiles[dof].af, 0);
