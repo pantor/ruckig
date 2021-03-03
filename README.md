@@ -36,7 +36,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. A python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
+To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. A Python module can be built using the `BUILD_PYTHON_MODULE` CMake flag.
 
 
 ## Tutorial
@@ -109,38 +109,21 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
-Interface interface; // The default position interface controls the full kinematic state
-Synchronization synchronization; // Synchronization behavior of multiple DoFs
-DurationDiscretization duration_discretization; // Whether the duration should be a discrete multiple of the control cycle
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
+
+Interface interface; // The default position interface controls the full kinematic state.
+Synchronization synchronization; // Synchronization behavior of multiple DoFs
+DurationDiscretization duration_discretization; // Whether the duration should be a discrete multiple of the control cycle (off by default)
 ```
 
 Members are implemented using the C++ standard `array` and `optional` type. Note that there are range constraints due to numerical reasons, see below for more details. To check the input before a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given kinematic limits. Additionally, the target acceleration needs to fulfill
 ```
 Abs(target_acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ```
-If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human. Or, the dynamic limits at a given configuration of the robot can be approximated much better with different acceleration limits. There are two interfaces implemented for both position- and velocity-control:
+If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human. Or, the dynamic limits at a given configuration of the robot can be approximated much better with different acceleration limits.
 
-Interface           | Explanation
-------------------- | -------------------------------------------------------------------
-Position (default)  | Position-control: Full control over the entire kinematic state
-Velocity            | Velocity-control: Ignores the current position, target position, and velocity limits
-
-The synchronization behavior is as follows:
-
-Synchronization Behavior   | Explanation
--------------------------- | -------------------------------------------------------------------
-Time (default)             | Always synchronize the DoFs to reach the target at the same time
-TimeIfNecessary            | Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
-None                       | Calculate every DoF independently
-
-The duration discretization can be either:
-
-Duration Discretization    | Explanation
--------------------------- | -------------------------------------------------------------------
-Continuous (default)       | Every trajectory duration is allowed
-Discrete                   | Only a discrete multiple of the control cycle is allowed
+Furthermore, there are some options for advanced functionality, e.g. for velocity control or discrete trajectory durations. We refer to the [API documentation](https://pantor.github.io/ruckig/structruckig_1_1_input_parameter.html) of the `InputParameter` class for the available options.
 
 
 ### Result Type
@@ -163,9 +146,9 @@ ErrorSynchronizationCalculation | -111
 The output class gives the new kinematic state of the trajectory.
 
 ```.cpp
-std::array<double, DOFs> new_position;
-std::array<double, DOFs> new_velocity;
-std::array<double, DOFs> new_acceleration;
+Vector new_position;
+Vector new_velocity;
+Vector new_acceleration;
 
 bool new_calculation; // Whether a new calactuion was performed in the last cycle
 double calculation_duration; // Duration of the calculation in the last cycle [µs]
@@ -182,7 +165,7 @@ std::array<double, DOFs> independent_min_durations; // Time-optimal profile for 
 <...> at_time(double time); // Get the kinematic state of the trajectory at a given time
 <...> get_position_extrema(); // Returns information about the position extrema and their times
 ```
-We refer to the [API documentation](https://pantor.github.io/ruckig/) for the exact signature.
+Again, we refer to the [API documentation](https://pantor.github.io/ruckig/) for the exact signatures.
 
 
 ## Tests and Numerical Stability
@@ -202,7 +185,6 @@ We find that Ruckig is around twice as fast as Reflexxes Type IV and well-suited
 Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos-latest`, and `windows-latest` against following versions
 
 - Doctest v2.4 (only for testing)
-- Reflexxes v1.2 (only for comparison)
 - Pybind11 v2.6 (only for python wrapper)
 
 

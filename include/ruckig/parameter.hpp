@@ -46,18 +46,18 @@ struct InputParameter: public Parameter<DOFs> {
     using Vector = std::array<double, DOFs>;
     
     enum class Interface {
-        Position,
-        Velocity,
+        Position, ///< Position-control: Full control over the entire kinematic state (Default)
+        Velocity, ///< Velocity-control: Ignores the current position, target position, and velocity limits
     } interface {Interface::Position};
 
     enum class Synchronization {
-        Time,
-        TimeIfNecessary,
-        None,
+        Time, ///< Always synchronize the DoFs to reach the target at the same time (Default)
+        TimeIfNecessary, ///< Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
+        None, ///< Calculate every DoF independently
     } synchronization {Synchronization::Time};
 
     enum class DurationDiscretization {
-        Continuous,
+        Continuous, ///< Every trajectory duration is allowed (Default)
         Discrete, ///< The trajectory duration must be a multiple of the control cycle
     } duration_discretization {DurationDiscretization::Continuous};
 
