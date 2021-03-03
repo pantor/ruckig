@@ -123,7 +123,7 @@ Abs(target_acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_veloc
 ```
 If a DoF is not enabled, it will be ignored in the calculation. A minimum duration can be optionally given. Furthermore, the minimum velocity and acceleration can be specified. If it is not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human. Or, the dynamic limits at a given configuration of the robot can be approximated much better with different acceleration limits.
 
-Furthermore, there are some options for advanced functionality, e.g. for velocity control or discrete trajectory durations. We refer to the [API documentation](https://pantor.github.io/ruckig/structruckig_1_1_input_parameter.html) of the `InputParameter` class for the available options.
+Furthermore, there are some options for advanced functionality, e.g. for velocity control or discrete trajectory durations. We refer to the [API documentation](https://pantor.github.io/ruckig/structruckig_1_1_input_parameter.html) of the `InputParameter` class for all available options.
 
 
 ### Result Type
