@@ -22,9 +22,9 @@ enum Result {
 };
 
 
+//! Input type of the OTG
 template<size_t DOFs>
-class Parameter {
-protected:
+class InputParameter {
     template<class T>
     static std::string join(const T& array) {
         std::ostringstream ss;
@@ -36,14 +36,8 @@ protected:
     }
 
 public:
-    static constexpr size_t degrees_of_freedom {DOFs};
-};
-
-
-//! Input type of the OTG
-template<size_t DOFs>
-struct InputParameter: public Parameter<DOFs> {
     using Vector = std::array<double, DOFs>;
+    static constexpr size_t degrees_of_freedom {DOFs};
     
     enum class Interface {
         Position, ///< Position-control: Full control over the entire kinematic state (Default)
@@ -118,7 +112,9 @@ struct InputParameter: public Parameter<DOFs> {
 
 //! Output type of the OTG
 template<size_t DOFs>
-struct OutputParameter: public Parameter<DOFs> {
+struct OutputParameter {
+    static constexpr size_t degrees_of_freedom {DOFs};
+
     std::array<double, DOFs> new_position, new_velocity, new_acceleration;
 
     bool new_calculation {false};

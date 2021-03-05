@@ -141,11 +141,11 @@ class Ruckig {
             bool found_profile;
             switch (input.interface) {
                 case Input::Interface::Position: {
-                    Position1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    PositionStep1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_profile = step1.get_profile(p, blocks[dof]);
                 } break;
                 case Input::Interface::Velocity: {
-                    Velocity1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    VelocityStep1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_profile = step1.get_profile(p, blocks[dof]);
                 } break;
             }
@@ -223,11 +223,11 @@ class Ruckig {
             bool found_time_synchronization;
             switch (input.interface) {
                 case Input::Interface::Position: {
-                    Position2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    PositionStep2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_time_synchronization = step2.get_profile(p);
                 } break;
                 case Input::Interface::Velocity: {
-                    Velocity2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    VelocityStep2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_time_synchronization = step2.get_profile(p);
                 } break;
             }
@@ -255,7 +255,7 @@ public:
     explicit Ruckig() { }
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
 
-    bool validate_input(const InputParameter<DOFs>& input) {
+    bool validate_input(const InputParameter<DOFs>& input) const {
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (input.interface == Input::Interface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
                 return false;

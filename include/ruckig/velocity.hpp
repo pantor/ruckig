@@ -10,7 +10,7 @@ using Limits = Profile::Limits;
 using JerkSigns = Profile::JerkSigns;
 
 //! Mathematical equations for Step 1 in velocity interface: Extremal profiles
-class Velocity1 {
+class VelocityStep1 {
     double p0, v0, a0;
     double vf, af;
     double aMax, aMin, jMax;
@@ -30,14 +30,14 @@ class Velocity1 {
     }
 
 public:
-    explicit Velocity1(double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax);
+    explicit VelocityStep1(double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax);
 
     bool get_profile(const Profile& input, Block& block);
 };
 
 
 //! Mathematical equations for Step 2 in velocity interface: Time synchronization
-class Velocity2 {
+class VelocityStep2 {
     double p0, v0, a0;
     double tf, vf, af; 
     double aMax, aMin, jMax;
@@ -50,7 +50,7 @@ class Velocity2 {
     }
 
 public:
-    explicit Velocity2(double tf, double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax);
+    explicit VelocityStep2(double tf, double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax);
 
     bool get_profile(Profile& profile);
 };

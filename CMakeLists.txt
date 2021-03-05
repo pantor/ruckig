@@ -21,10 +21,10 @@ find_package(Reflexxes)
 
 add_library(ruckig
   src/brake.cpp
-  src/position1.cpp
-  src/position2.cpp
-  src/velocity1.cpp
-  src/velocity2.cpp
+  src/position-step1.cpp
+  src/position-step2.cpp
+  src/velocity-step1.cpp
+  src/velocity-step2.cpp
 )
 add_library(ruckig::ruckig ALIAS ruckig)
 

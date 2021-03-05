@@ -4,9 +4,9 @@
 
 namespace ruckig {
 
-Velocity1::Velocity1(double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), vf(vf), af(af), aMax(aMax), aMin(aMin), jMax(jMax) { }
+VelocityStep1::VelocityStep1(double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), vf(vf), af(af), aMax(aMax), aMin(aMin), jMax(jMax) { }
 
-void Velocity1::time_acc0(Profile& profile, double aMax, double aMin, double jMax) {
+void VelocityStep1::time_acc0(Profile& profile, double aMax, double aMin, double jMax) {
     // UD
     {
         profile.t[0] = (-a0 + aMax)/jMax;
@@ -38,7 +38,7 @@ void Velocity1::time_acc0(Profile& profile, double aMax, double aMin, double jMa
     }
 }
 
-void Velocity1::time_none(Profile& profile, double aMax, double aMin, double jMax) {
+void VelocityStep1::time_none(Profile& profile, double aMax, double aMin, double jMax) {
     double h1 = Sqrt((a0*a0 + af*af)/2 + jMax*(vf - v0));
 
     // Solution 1
@@ -72,7 +72,7 @@ void Velocity1::time_none(Profile& profile, double aMax, double aMin, double jMa
     }
 }
 
-bool Velocity1::get_profile(const Profile& input, Block& block) {
+bool VelocityStep1::get_profile(const Profile& input, Block& block) {
     Profile profile = input;
     profile.a[0] = a0;
     profile.v[0] = v0;

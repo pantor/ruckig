@@ -10,7 +10,7 @@ using Limits = Profile::Limits;
 using JerkSigns = Profile::JerkSigns;
 
 //! Mathematical equations for Step 1 in position interface: Extremal profiles
-class Position1 {
+class PositionStep1 {
     double p0, v0, a0;
     double pf, vf, af;
     double vMax, vMin, aMax, aMin, jMax;
@@ -53,14 +53,14 @@ class Position1 {
     }
 
 public:
-    explicit Position1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
+    explicit PositionStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(const Profile& input, Block& block);
 };
 
 
 //! Mathematical equations for Step 2 in position interface: Time synchronization
-class Position2 {
+class PositionStep2 {
     double p0, v0, a0;
     double tf, pf, vf, af;
     double vMax, vMin, aMax, aMin, jMax;
@@ -97,7 +97,7 @@ class Position2 {
     }
 
 public:
-    explicit Position2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
+    explicit PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(Profile& profile);
 };

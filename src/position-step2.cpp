@@ -4,7 +4,7 @@
 
 namespace ruckig {
 
-Position2::Position2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), tf(tf), pf(pf), vf(vf), af(af), vMax(vMax), vMin(vMin), aMax(aMax), aMin(aMin), jMax(jMax)  {
+PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), tf(tf), pf(pf), vf(vf), af(af), vMax(vMax), vMin(vMin), aMax(aMax), aMin(aMin), jMax(jMax)  {
     pd = pf - p0;
     tf_tf = tf * tf;
     tf_p3 = tf_tf * tf;
@@ -36,7 +36,7 @@ Position2::Position2(double tf, double p0, double v0, double a0, double pf, doub
     g2 = -2*pd + tf*(v0 + vf);
 }
 
-bool Position2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     // Profile UDDU, Solution 1
     {
         const double h0a = af_af - 2*af*aMin + (aMin - aMax)*aMin + 2*aMin*jMax*tf - 2*jMax*vd;
@@ -77,7 +77,7 @@ bool Position2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, d
     return false;
 }
 
-bool Position2::time_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     // Profile UDDU
     {
         const double ph1 = a0_a0 + af_af - aMin*(a0 + 2*af) + aMin*aMin - 2*jMax*(vd - aMin*tf);
@@ -152,7 +152,7 @@ bool Position2::time_acc1_vel(Profile& profile, double vMax, double aMax, double
     return false;
 }
 
-bool Position2::time_acc0_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     if (tf < std::max((-a0 + aMax)/jMax, 0.0) + std::max(aMax/jMax, 0.0)) {
         return false;
     }
@@ -242,7 +242,7 @@ bool Position2::time_acc0_vel(Profile& profile, double vMax, double aMax, double
     return false;
 }
 
-bool Position2::time_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     // Profile UDDU
     {
         const double p1 = af_af - 2*jMax*(-2*af*tf + jMax*tf_tf + 3*vd);
@@ -422,7 +422,7 @@ bool Position2::time_vel(Profile& profile, double vMax, double aMax, double aMin
     return false;
 }
 
-bool Position2::time_acc0_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double h1 = 2*aMin*(-pd + tf*v0) + vd*vd + aMax*(2*pd + aMin*tf_tf - 2*tf*vf);
         const double h2 = ((aMax - aMin)*(-aMin*vd + aMax*(aMin*tf - vd)));
@@ -457,7 +457,7 @@ bool Position2::time_acc0_acc1(Profile& profile, double vMax, double aMax, doubl
     return false;
 }
 
-bool Position2::time_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     // a3 != 0
 
     // Case UDDU, Solution 2
@@ -504,7 +504,7 @@ bool Position2::time_acc1(Profile& profile, double vMax, double aMax, double aMi
     return false;
 }
 
-bool Position2::time_acc0(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     // a3 != 0
 
     // UDDU Solution 1
@@ -530,7 +530,7 @@ bool Position2::time_acc0(Profile& profile, double vMax, double aMax, double aMi
     return false;
 }
 
-bool Position2::time_none(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double h1 = Sqrt(tf_tf*vf_vf + Power(4*pd - tf*vf,2));
         const double jf = 4*(4*pd - 2*tf*vf + h1)/tf_p3;
@@ -874,7 +874,7 @@ bool Position2::time_none(Profile& profile, double vMax, double aMax, double aMi
     return false;
 }
 
-bool Position2::get_profile(Profile& profile) {
+bool PositionStep2::get_profile(Profile& profile) {
     profile.a[0] = a0;
     profile.v[0] = v0;
     profile.p[0] = p0;

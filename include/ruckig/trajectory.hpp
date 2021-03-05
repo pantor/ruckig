@@ -11,6 +11,7 @@
 namespace ruckig {
 
 
+//! Interface for the generated trajectory.
 template<size_t DOFs>
 struct Trajectory {
     //! Duration of the synchronized trajectory
