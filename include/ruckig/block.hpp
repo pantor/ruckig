@@ -92,6 +92,67 @@ struct Block {
 
         return false;
     }
+
+    template<size_t DOFs>
+    static bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles, bool discrete_duration, double delta_time) {
+        if (DOFs == 1 && !t_min && !discrete_duration) {
+            limiting_dof = 0;
+            t_sync = blocks[0].t_min;
+            profiles[0] = blocks[0].p_min;
+            return true;
+        }
+
+        // Possible t_syncs are the start times of the intervals and optional t_min
+        std::array<double, 3*DOFs+1> possible_t_syncs;
+        std::array<int, 3*DOFs+1> idx;
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            possible_t_syncs[3 * dof] = blocks[dof].t_min;
+            possible_t_syncs[3 * dof + 1] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
+            possible_t_syncs[3 * dof + 2] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
+        }
+        possible_t_syncs[3 * DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
+
+        if (discrete_duration) {
+            for (size_t i = 0; i < 3*DOFs+1; ++i) {
+                possible_t_syncs[i] = std::ceil(possible_t_syncs[i] / delta_time) * delta_time;
+            }
+        }
+
+        // Test them in sorted order
+        std::iota(idx.begin(), idx.end(), 0);
+        std::sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
+
+        // Start at last tmin (or worse)
+        for (auto i = idx.begin() + DOFs - 1; i != idx.end(); ++i) {
+            const double possible_t_sync = possible_t_syncs[*i];
+            if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](auto block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
+                continue;
+            }
+
+            t_sync = possible_t_sync;
+            if (*i == 3*DOFs) { // Optional t_min
+                limiting_dof = -1;
+                return true;
+            }
+
+            const auto div = std::div(*i, 3);
+            limiting_dof = div.quot;
+            switch (div.rem) {
+                case 0: {
+                    profiles[limiting_dof] = blocks[limiting_dof].p_min;
+                } break;
+                case 1: {
+                    profiles[limiting_dof] = blocks[limiting_dof].a->profile;
+                } break;
+                case 2: {
+                    profiles[limiting_dof] = blocks[limiting_dof].b->profile;
+                } break;
+            }
+            return true;
+        }
+
+        return false;
+    }
 };
 
 } // namespace ruckig

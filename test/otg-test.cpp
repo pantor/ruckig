@@ -4,7 +4,6 @@
 #include <random>
 #include "randomizer.hpp"
 
-#include <ruckig/parameter.hpp>
 #include <ruckig/ruckig.hpp>
 #include <ruckig/alternative/quintic.hpp>
 
@@ -69,7 +68,7 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
     if (result == Result::ErrorTrajectoryDuration) {
         return;
     }
-    
+
     CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.duration < 0.005)) );
 
     OutputParameter<DOFs> output_comparison;
@@ -247,8 +246,8 @@ TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF an
     constexpr size_t DOFs {3};
     Ruckig<DOFs, true> otg {0.005};
     InputParameter<DOFs> input;
-    input.interface = InputParameter<DOFs>::Interface::Velocity;
-    
+    input.interface = Interface::Velocity;
+
     Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
     Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
@@ -269,7 +268,7 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
     constexpr size_t DOFs {3};
     Ruckig<DOFs, true> otg {0.005};
     InputParameter<DOFs> input;
-    
+
     Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
     Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
@@ -298,7 +297,7 @@ TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF a
     constexpr size_t DOFs {3};
     Ruckig<DOFs, true> otg {0.005};
     InputParameter<DOFs> input;
-    
+
     Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
     Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
@@ -352,7 +351,7 @@ TEST_CASE("comparison_1" * doctest::description("Comparison with Reflexxes with 
             continue;
         }
 
-        check_comparison(otg, input, rflx); 
+        check_comparison(otg, input, rflx);
     }
     // WARN(counter_faster << " / " << 128*1024 << " trajectories are faster.");
 }
@@ -390,7 +389,7 @@ TEST_CASE("comparison_3" * doctest::description("Comparison with Reflexxes with 
 
 int main(int argc, char** argv) {
     doctest::Context context;
- 
+
     if (argc > 1 && std::isdigit(argv[1][0])) {
         number_trajectories = std::stoi(argv[1]);
     }

@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include <ruckig/parameter.hpp>
 #include <ruckig/ruckig.hpp>
 
 

@@ -29,8 +29,8 @@ limited by velocity, acceleration, and jerk constraints.";
     using IP = InputParameter<DOFs>;
     using OP = OutputParameter<DOFs>;
 
-    py::class_<IP> input_parameter(m, "InputParameter");
-    input_parameter.def(py::init<>())
+    py::class_<IP>(m, "InputParameter")
+        .def(py::init<>())
         .def_readonly_static("degrees_of_freedom", &IP::degrees_of_freedom)
         .def_readwrite("current_position", &IP::current_position)
         .def_readwrite("current_velocity", &IP::current_velocity)
@@ -51,20 +51,20 @@ limited by velocity, acceleration, and jerk constraints.";
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (IP::*)() const>(&IP::to_string));
 
-    py::enum_<IP::Interface>(input_parameter, "Interface")
-        .value("Position", IP::Interface::Position)
-        .value("Velocity", IP::Interface::Velocity)
+    py::enum_<Interface>(m, "Interface")
+        .value("Position", Interface::Position)
+        .value("Velocity", Interface::Velocity)
         .export_values();
 
-    py::enum_<IP::Synchronization>(input_parameter, "Synchronization")
-        .value("Time", IP::Synchronization::Time)
-        .value("TimeIfNecessary", IP::Synchronization::TimeIfNecessary)
-        .value("No", IP::Synchronization::None)
+    py::enum_<Synchronization>(m, "Synchronization")
+        .value("Time", Synchronization::Time)
+        .value("TimeIfNecessary", Synchronization::TimeIfNecessary)
+        .value("No", Synchronization::None)
         .export_values();
 
-    py::enum_<IP::DurationDiscretization>(input_parameter, "DurationDiscretization")
-        .value("Continuous", IP::DurationDiscretization::Continuous)
-        .value("Discrete", IP::DurationDiscretization::Discrete)
+    py::enum_<DurationDiscretization>(m, "DurationDiscretization")
+        .value("Continuous", DurationDiscretization::Continuous)
+        .value("Discrete", DurationDiscretization::Discrete)
         .export_values();
 
     py::class_<Trajectory<DOFs>>(m, "Trajectory")

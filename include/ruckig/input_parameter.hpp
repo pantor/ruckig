@@ -5,20 +5,35 @@
 #include <optional>
 #include <sstream>
 
-#include <ruckig/trajectory.hpp>
-
 
 namespace ruckig {
 
 //! Result type of the OTGs update function
 enum Result {
-    Working = 0,
-    Finished = 1,
-    Error = -1,
-    ErrorInvalidInput = -100,
-    ErrorTrajectoryDuration = -101,
-    ErrorExecutionTimeCalculation = -110,
-    ErrorSynchronizationCalculation = -111,
+    Working = 0, ///< The trajectory is calculated normally
+    Finished = 1, ///< Trajectory has reached its final position
+    Error = -1, ///< Unclassified error
+    ErrorInvalidInput = -100, ///< Error in the input parameter
+    ErrorTrajectoryDuration = -101, ///< The trajectory duration exceed the numeral limits
+    ErrorExecutionTimeCalculation = -110, ///< Error during the extremel time calculation (Step 1)
+    ErrorSynchronizationCalculation = -111, ///< Error during the synchronization calculation (Step 2)
+};
+
+
+enum class Interface {
+    Position, ///< Position-control: Full control over the entire kinematic state (Default)
+    Velocity, ///< Velocity-control: Ignores the current position, target position, and velocity limits
+};
+
+enum class Synchronization {
+    Time, ///< Always synchronize the DoFs to reach the target at the same time (Default)
+    TimeIfNecessary, ///< Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
+    None, ///< Calculate every DoF independently
+};
+
+enum class DurationDiscretization {
+    Continuous, ///< Every trajectory duration is allowed (Default)
+    Discrete, ///< The trajectory duration must be a multiple of the control cycle
 };
 
 
@@ -38,22 +53,10 @@ class InputParameter {
 public:
     using Vector = std::array<double, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
-    
-    enum class Interface {
-        Position, ///< Position-control: Full control over the entire kinematic state (Default)
-        Velocity, ///< Velocity-control: Ignores the current position, target position, and velocity limits
-    } interface {Interface::Position};
 
-    enum class Synchronization {
-        Time, ///< Always synchronize the DoFs to reach the target at the same time (Default)
-        TimeIfNecessary, ///< Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
-        None, ///< Calculate every DoF independently
-    } synchronization {Synchronization::Time};
-
-    enum class DurationDiscretization {
-        Continuous, ///< Every trajectory duration is allowed (Default)
-        Discrete, ///< The trajectory duration must be a multiple of the control cycle
-    } duration_discretization {DurationDiscretization::Continuous};
+    Interface interface {Interface::Position};
+    Synchronization synchronization {Synchronization::Time};
+    DurationDiscretization duration_discretization {DurationDiscretization::Continuous};
 
     Vector current_position, current_velocity {}, current_acceleration {};
     Vector target_position, target_velocity {}, target_acceleration {};
@@ -107,24 +110,6 @@ public:
         }
         return ss.str();
     }
-};
-
-
-//! Output type of the OTG
-template<size_t DOFs>
-struct OutputParameter {
-    static constexpr size_t degrees_of_freedom {DOFs};
-
-    std::array<double, DOFs> new_position, new_velocity, new_acceleration;
-
-    bool new_calculation {false};
-    double calculation_duration; // [µs]
-
-    // Current trajectory
-    Trajectory<DOFs> trajectory;
-
-    // Current time on trajectory
-    double time;
 };
 
 } // namespace ruckig

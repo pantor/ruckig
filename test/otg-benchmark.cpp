@@ -2,7 +2,6 @@
 
 #include "randomizer.hpp"
 
-#include <ruckig/parameter.hpp>
 #include <ruckig/ruckig.hpp>
 
 #ifdef WITH_REFLEXXES

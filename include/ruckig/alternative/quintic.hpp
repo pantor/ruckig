@@ -1,6 +1,7 @@
 #pragma once
 
-#include <ruckig/parameter.hpp>
+#include <ruckig/input_parameter.hpp>
+#include <ruckig/output_parameter.hpp>
 
 
 namespace ruckig {
