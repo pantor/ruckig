@@ -14,13 +14,16 @@ struct OutputParameter {
 
     std::array<double, DOFs> new_position, new_velocity, new_acceleration;
 
+    //! Was a new trajectory calculation performed in the last cycle?
     bool new_calculation {false};
+
+    //! Computational duration of the last update call
     double calculation_duration; // [µs]
 
-    // Current trajectory
+    //! Current trajectory
     Trajectory<DOFs> trajectory;
 
-    // Current time on trajectory
+    //! Current time on trajectory
     double time;
 };
 

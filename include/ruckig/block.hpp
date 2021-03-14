@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include <numeric>
 #include <optional>
 
 #include <ruckig/profile.hpp>

@@ -40,8 +40,7 @@ enum class DurationDiscretization {
 //! Input type of the OTG
 template<size_t DOFs>
 class InputParameter {
-    template<class T>
-    static std::string join(const T& array) {
+    static std::string join(const std::array<double, DOFs>& array) {
         std::ostringstream ss;
         for (size_t i = 0; i < DOFs; ++i) {
             if (i) ss << ", ";

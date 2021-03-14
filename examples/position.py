@@ -10,7 +10,7 @@ from _ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 def walk_through_trajectory(otg, inp):
     out = OutputParameter()
-    t, first_output = 0.0, None
+    first_output = None
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
@@ -18,7 +18,7 @@ def walk_through_trajectory(otg, inp):
     while res == Result.Working:
         res = otg.update(inp, out)
 
-        print('\t'.join([f'{t:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
+        print('\t'.join([f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
 
         inp.current_position = out.new_position
         inp.current_velocity = out.new_velocity
@@ -26,7 +26,6 @@ def walk_through_trajectory(otg, inp):
 
         if not first_output:
             first_output = copy(out)
-        t += otg.delta_time
 
     return first_output
 

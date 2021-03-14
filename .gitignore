@@ -1,5 +1,8 @@
 .vscode
+
 .mypy_cache
+*.pyc
+__pycache__
 
 build
 local

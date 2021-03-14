@@ -12,14 +12,12 @@ from _ruckig import Reflexxes
 
 
 def walk_through_trajectory(otg, inp, print_table=True):
-    t = 0.0
     t_list, out_list = [], []
     out = OutputParameter()
 
     res = Result.Working
     old_acc = 0
     print_dof = 0
-    t_start = 0.0
     while res == Result.Working:
         res = otg.update(inp, out)
 
@@ -30,12 +28,11 @@ def walk_through_trajectory(otg, inp, print_table=True):
         if print_table:
             jerk = (old_acc - out.new_acceleration[print_dof]) / otg.delta_time
             old_acc = out.new_acceleration[print_dof]
-            # print(str(t_start + t) + '\t' + str(inp.current_position[print_dof]) + '\t' + str(inp.current_velocity[print_dof]) + '\t' + str(inp.current_acceleration[print_dof]) + '\t' + str(jerk))
+            # print(str(out.time) + '\t' + str(inp.current_position[print_dof]) + '\t' + str(inp.current_velocity[print_dof]) + '\t' + str(inp.current_acceleration[print_dof]) + '\t' + str(jerk))
             # print(str(inp.current_position[0]) + '\t' + str(inp.current_position[1]))
 
-        t_list.append(t)
+        t_list.append(out.time)
         out_list.append(copy(out))
-        t += otg.delta_time
 
     return t_list, out_list
 

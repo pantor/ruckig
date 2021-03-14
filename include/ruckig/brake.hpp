@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <math.h>
 
 
 namespace ruckig {
