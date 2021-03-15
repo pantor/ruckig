@@ -10,7 +10,7 @@
 namespace ruckig {
 
 //! Which times are possible for synchronization?
-struct Block {
+class Block {
     struct Interval {
         double left, right; // [s]
         Profile profile; // Profile corresponding to right (end) time
@@ -18,16 +18,7 @@ struct Block {
         explicit Interval(double left, double right, const Profile& profile): left(left), right(right), profile(profile) { };
     };
 
-    Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
-    double t_min; // [s]
-
-    // Max. 2 intervals can be blocked: called a and b with corresponding profiles, order does not matter
-    std::optional<Interval> a, b;
-
-    explicit Block() { }
-    explicit Block(const Profile& p_min): p_min(p_min), t_min(p_min.t_sum[6] + p_min.t_brake.value_or(0.0)) { }
-
-    bool is_blocked(double t) const {
+    inline bool is_blocked(double t) const {
         return (t < t_min) || (a && a->left < t && t < a->right) || (b && b->left < t && t < b->right);
     }
 
@@ -40,6 +31,16 @@ struct Block {
             interval = Block::Interval(right_duraction, left_duration, left);
         }
     }
+
+public:
+    Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
+    double t_min; // [s]
+
+    // Max. 2 intervals can be blocked: called a and b with corresponding profiles, order does not matter
+    std::optional<Interval> a, b;
+
+    explicit Block() { }
+    explicit Block(const Profile& p_min): p_min(p_min), t_min(p_min.t_sum[6] + p_min.t_brake.value_or(0.0)) { }
 
     template<size_t N>
     static bool calculate_block(Block& block, const std::array<Profile, N>& valid_profiles, const size_t valid_profile_counter) {

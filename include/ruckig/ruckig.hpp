@@ -47,7 +47,7 @@ public:
     static constexpr size_t degrees_of_freedom {DOFs};
 
     //! Time step between updates (cycle time) in [s]
-    double delta_time;
+    const double delta_time;
 
     explicit Ruckig() { }
     explicit Ruckig(double delta_time): delta_time(delta_time) { }
