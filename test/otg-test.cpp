@@ -34,7 +34,7 @@ inline void check_duration(OTGType& otg, InputParameter<DOFs>& input, double dur
         input.current_acceleration = output.new_acceleration;
     }
 
-    CHECK( output.trajectory.duration == doctest::Approx(duration) );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(duration) );
 }
 
 
@@ -49,8 +49,8 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
         return;
     }
 
-    CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.duration < 0.005)) );
-    CHECK( output.trajectory.duration >= 0.0 );
+    CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.get_duration() < 0.005)) );
+    CHECK( output.trajectory.get_duration() >= 0.0 );
 
     for (size_t dof = 0; dof < DOFs; ++dof) {
         CHECK_FALSE( (std::isnan(output.new_position[dof]) || std::isnan(output.new_velocity[dof]) || std::isnan(output.new_acceleration[dof])) );
@@ -69,11 +69,11 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
         return;
     }
 
-    CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.duration < 0.005)) );
+    CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.get_duration() < 0.005)) );
 
     OutputParameter<DOFs> output_comparison;
     auto result_comparison = otg_comparison.update(input, output_comparison);
-    CHECK( output.trajectory.duration <= doctest::Approx(output_comparison.trajectory.duration) );
+    CHECK( output.trajectory.get_duration() <= doctest::Approx(output_comparison.trajectory.get_duration()) );
 }
 
 

@@ -316,11 +316,15 @@ inline std::array<double, N-1> polyMonicDeri(const std::array<double, N>& monic_
 }
 
 // Safe Newton Method
-// Requirements: f(l)*f(h) <= 0
-template <size_t maxIts, typename F, typename DF>
-inline double safeNewton(const F& func, const DF& dfunc, double l, double h, const double tol) {
-    const double fl = func(l);
-    const double fh = func(h);
+constexpr double tolerance {1e-14};
+
+// Calculate a single zero of polynom p(x) inside [lbound, ubound]
+// Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
+template <size_t N, size_t maxIts = 128>
+inline double shrinkInterval(const std::array<double, N>& p, double l, double h) {
+    const auto deriv = polyDeri(p);
+    const double fl = polyEval(p, l);
+    const double fh = polyEval(p, h);
     if (fl == 0.0) {
         return l;
     }
@@ -334,8 +338,8 @@ inline double safeNewton(const F& func, const DF& dfunc, double l, double h, con
     double rts = 0.5 * (l + h);
     double dxold = std::abs(h - l);
     double dx = dxold;
-    double f = func(rts);
-    double df = dfunc(rts);
+    double f = polyEval(p, rts);
+    double df = polyEval(deriv, rts);
     double temp;
     for (size_t j = 0; j < maxIts; j++) {
         if ((((rts - h) * df - f) * ((rts - l) * df - f) > 0.0) || (std::abs(2 * f) > std::abs(dxold * df))) {
@@ -355,12 +359,12 @@ inline double safeNewton(const F& func, const DF& dfunc, double l, double h, con
             }
         }
 
-        if (std::abs(dx) < tol) {
+        if (std::abs(dx) < tolerance) {
             break;
         }
 
-        f = func(rts);
-        df = dfunc(rts);
+        f = polyEval(p, rts);
+        df = polyEval(deriv, rts);
         if (f < 0.0) {
             l = rts;
         } else {
@@ -369,19 +373,6 @@ inline double safeNewton(const F& func, const DF& dfunc, double l, double h, con
     }
 
     return rts;
-}
-
-// Calculate a single zero of polynom p(x) inside [lbound, ubound]
-// Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
-
-constexpr double tolerance {1e-14};
-
-template<size_t N, size_t maxDblIts = 128>
-inline double shrinkInterval(const std::array<double, N>& p, double lbound, double ubound) {
-    auto deriv = polyDeri(p);
-    auto func = [&p](double x) { return polyEval(p, x); };
-    auto dfunc = [&deriv](double x) { return polyEval(deriv, x); };
-    return safeNewton<maxDblIts>(func, dfunc, lbound, ubound, tolerance);
 }
 
 } // namespace Roots

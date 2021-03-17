@@ -35,5 +35,5 @@ int main() {
         input.current_acceleration = output.new_acceleration;
     }
 
-    std::cout << "Reached target position in " << output.trajectory.duration << " [s]." << std::endl;
+    std::cout << "Reached target position in " << output.trajectory.get_duration() << " [s]." << std::endl;
 }

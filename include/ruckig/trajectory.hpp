@@ -16,22 +16,30 @@
 
 namespace ruckig {
 
+// Forward declare alternative OTG algorithms for friend class
+template <size_t> class Reflexxes;
+template <size_t> class Smoothie;
+template <size_t> class Quintic;
+
+
 //! Interface for the generated trajectory.
 template<size_t DOFs>
 class Trajectory {
+    // Allow alternative OTG algorithms to directly access members (i.e. duration)
+    friend class Reflexxes<DOFs>;
+    friend class Smoothie<DOFs>;
+    friend class Quintic<DOFs>;
+
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
 
     //! Set of current profiles for each DoF
     std::array<Profile, DOFs> profiles;
 
-public:
-    //! Duration of the synchronized trajectory
     double duration;
-
-    //! Minimum duration of each independent DoF
     std::array<double, DOFs> independent_min_durations;
 
-    //! Calculate time-optimal waypoint-based trajectories
+public:
+    //! Calculate the time-optimal waypoint-based trajectory
     template<bool throw_error, bool return_error_at_maximal_duration>
     Result calculate(const InputParameter<DOFs>& inp, double delta_time) {
         std::array<Block, DOFs> blocks;
@@ -176,7 +184,7 @@ public:
         return Result::Working;
     }
 
-    //! Get the output parameter for the given time
+    //! Get the kinematic state at a given time
     void at_time(double time, std::array<double, DOFs>& new_position, std::array<double, DOFs>& new_velocity, std::array<double, DOFs>& new_acceleration) const {
         if (time >= duration) {
             // Keep constant acceleration
@@ -222,8 +230,18 @@ public:
         }
     }
 
-    //! Get the min/max values of the position for each DoF and the current trajectory
-    std::array<PositionExtrema, DOFs> get_position_extrema() {
+    //! Get the duration of the (synchronized) trajectory
+    double get_duration() const {
+        return duration;
+    }
+
+    //! Get the minimum duration of each independent DoF
+    std::array<double, DOFs> get_independent_min_durations() const {
+        return independent_min_durations;
+    }
+
+    //! Get the min/max values of the position for each DoF
+    std::array<PositionExtrema, DOFs> get_position_extrema() const {
         std::array<PositionExtrema, DOFs> result;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             result[dof] = profiles[dof].get_position_extrema();

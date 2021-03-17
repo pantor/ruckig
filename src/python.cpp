@@ -68,10 +68,10 @@ limited by velocity, acceleration, and jerk constraints.";
         .export_values();
 
     py::class_<Trajectory<DOFs>>(m, "Trajectory")
-        .def_readonly("duration", &Trajectory<DOFs>::duration)
-        .def_readonly("independent_min_durations", &Trajectory<DOFs>::independent_min_durations)
-        .def("at_time", &Trajectory<DOFs>::at_time)
-        .def("get_position_extrema", &Trajectory<DOFs>::get_position_extrema);
+        .def_property_readonly("duration", &Trajectory<DOFs>::get_duration)
+        .def_property_readonly("independent_min_durations", &Trajectory<DOFs>::get_independent_min_durations)
+        .def_property_readonly("position_extrema", &Trajectory<DOFs>::get_position_extrema)
+        .def("at_time", &Trajectory<DOFs>::at_time);
 
     py::class_<OP>(m, "OutputParameter")
         .def(py::init<>())
@@ -118,6 +118,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def(py::init<double>(), "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
         .def_readonly_static("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
+        .def("validate_input", &Ruckig<DOFs, true>::validate_input)
         .def("update", &Ruckig<DOFs, true>::update);
 
 #ifdef WITH_REFLEXXES

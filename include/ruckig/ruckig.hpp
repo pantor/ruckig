@@ -140,7 +140,7 @@ public:
         current_input.current_velocity = output.new_velocity;
         current_input.current_acceleration = output.new_acceleration;
 
-        if (output.time > output.trajectory.duration) {
+        if (output.time > output.trajectory.get_duration()) {
             return Result::Finished;
         }
 
