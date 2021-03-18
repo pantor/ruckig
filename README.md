@@ -118,7 +118,7 @@ Synchronization synchronization; // Synchronization behavior of multiple DoFs
 DurationDiscretization duration_discretization; // Whether the duration should be a discrete multiple of the control cycle (off by default)
 ```
 
-Members are implemented using the C++ standard `array` and `optional` type. Note that there are range constraints due to numerical reasons, see below for more details. To check the input before a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given kinematic limits. Additionally, the target acceleration needs to fulfill
+Members are implemented using the C++ standard `array` and `optional` type. Note that there are range constraints due to numerical reasons, see below for more details. To check the input before a calculation step, the `ruckig.validate_input(input)` method returns `false` if an input is not valid. Of course, the target state needs to be within the given kinematic limits. Additionally, the target acceleration needs to fulfil
 ```
 Abs(target_acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(target_velocity)))
 ```
@@ -151,13 +151,13 @@ Vector new_position;
 Vector new_velocity;
 Vector new_acceleration;
 
-bool new_calculation; // Whether a new calactuion was performed in the last cycle
+bool new_calculation; // Whether a new calculation was performed in the last cycle
 double calculation_duration; // Duration of the calculation in the last cycle [µs]
 
 Trajectory trajectory; // The current trajectory
-double time; // The current, auto-incremented time. Resetted to 0 at a new calculation.
+double time; // The current, auto-incremented time. Reset to 0 at a new calculation.
 ```
-Moreover, the trajectory class has a range of usefull parameters and methods.
+Moreover, the trajectory class has a range of useful parameters and methods.
 
 ```.cpp
 double duration; // Duration of the trajectory
