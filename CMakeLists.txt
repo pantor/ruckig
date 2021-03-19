@@ -116,6 +116,11 @@ install(FILES
   DESTINATION ${ruckig_INSTALL_CONFIGDIR}
 )
 
+install(FILES
+  "${CMAKE_CURRENT_SOURCE_DIR}/package.xml"
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+)
+
 
 if(BUILD_TESTS)
   enable_testing()
