@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 
 
 project(ruckig VERSION 0.2.0 LANGUAGES CXX)
-list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(GNUInstallDirs)
+
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module" OFF)

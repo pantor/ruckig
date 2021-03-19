@@ -75,7 +75,7 @@ public:
             a0s[dof] = inp.current_acceleration[dof];
 
             // Integrate brake pre-trajectory
-            for (size_t i = 0; p.t_brakes[i] > 0 && i < 2; ++i) {
+            for (size_t i = 0; i < 2 && p.t_brakes[i] > 0; ++i) {
                 p.p_brakes[i] = p0s[dof];
                 p.v_brakes[i] = v0s[dof];
                 p.a_brakes[i] = a0s[dof];
