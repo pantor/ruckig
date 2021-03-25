@@ -13,7 +13,7 @@ from _ruckig import Reflexxes
 
 def walk_through_trajectory(otg, inp, print_table=True):
     t_list, out_list = [], []
-    out = OutputParameter()
+    out = OutputParameter(3)
 
     res = Result.Working
     old_acc = 0
@@ -87,7 +87,7 @@ def plot_trajectory(t_list, out_list):
 
 
 if __name__ == '__main__':
-    inp = InputParameter()
+    inp = InputParameter(3)
     # inp.interface = InputParameter.Interface.Velocity
     # inp.synchronization = InputParameter.TimeIfNecessary
     # inp.duration_discretization = InputParameter.Discrete
@@ -101,10 +101,10 @@ if __name__ == '__main__':
     inp.max_acceleration = [2, 2, 2]
     inp.max_jerk = [1, 1, 1]
 
-    # otg = Quintic(0.005)
-    # otg = Smoothie(0.005)
-    # otg = Reflexxes(0.005)
-    otg = Ruckig(0.005)
+    # otg = Quintic(3, 0.005)
+    # otg = Smoothie(3, 0.005)
+    # otg = Reflexxes(3, 0.005)
+    otg = Ruckig(3, 0.005)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 

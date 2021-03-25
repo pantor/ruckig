@@ -9,7 +9,7 @@ from _ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 def walk_through_trajectory(otg, inp):
-    out = OutputParameter()
+    out = OutputParameter(3)
     first_output = None
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
@@ -31,7 +31,7 @@ def walk_through_trajectory(otg, inp):
 
 
 if __name__ == '__main__':
-    inp = InputParameter()
+    inp = InputParameter(3)
     inp.current_position = [0.2, 0, -1]
     inp.current_velocity = [0, 0.2, 0]
     inp.current_acceleration = [0, 1, 0]
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     inp.max_acceleration = [0.2, 2, 2]
     inp.max_jerk = [3, 4, 5]
 
-    otg = Ruckig(0.05)
+    otg = Ruckig(3, 0.05)
 
     first_output = walk_through_trajectory(otg, inp)
 
