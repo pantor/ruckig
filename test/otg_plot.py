@@ -7,8 +7,8 @@ import numpy as np
 
 path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
-from _ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
-from _ruckig import Reflexxes
+from ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
+from ruckig import Reflexxes
 
 
 def walk_through_trajectory(otg, inp, print_table=True):

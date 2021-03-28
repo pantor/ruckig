@@ -122,7 +122,7 @@ py::object handle_dof_error(size_t dofs) {
 }
 
 
-PYBIND11_MODULE(_ruckig, m) {
+PYBIND11_MODULE(ruckig, m) {
     m.doc() = "Online Trajectory Generation. Real-time and time-optimal trajectory calculation \
 given a target waypoint with position, velocity, and acceleration, starting from any initial state \
 limited by velocity, acceleration, and jerk constraints.";

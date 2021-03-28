@@ -2,10 +2,10 @@ from copy import copy
 from pathlib import Path
 from sys import path
 
-# Path to the build directory including a file similar to '_ruckig.cpython-37m-x86_64-linux-gnu'.
+# Path to the build directory including a file similar to 'ruckig.cpython-37m-x86_64-linux-gnu'.
 path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
-from _ruckig import InputParameter, OutputParameter, Result, Ruckig
+from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 def walk_through_trajectory(otg, inp):

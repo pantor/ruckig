@@ -73,9 +73,10 @@ if(BUILD_PYTHON_MODULE)
     find_package(pybind11 2.6 REQUIRED)
   endif()
 
-  pybind11_add_module(_ruckig src/python.cpp)
-  target_compile_features(_ruckig PUBLIC cxx_std_17)
-  target_link_libraries(_ruckig PUBLIC ruckig)
+  pybind11_add_module(python_ruckig src/python.cpp)
+  target_compile_features(python_ruckig PUBLIC cxx_std_17)
+  target_link_libraries(python_ruckig PUBLIC ruckig)
+  set_target_properties(python_ruckig PROPERTIES OUTPUT_NAME ruckig)
 endif()
 
 
