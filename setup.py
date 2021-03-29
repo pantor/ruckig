@@ -39,7 +39,6 @@ class CMakeBuild(build_ext):
 
         build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
-        build_args += ['--', '-j2']
 
         # Pile all .so in one place and use $ORIGIN as RPATH
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir]
@@ -50,17 +49,18 @@ class CMakeBuild(build_ext):
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
                                                               self.distribution.get_version())
+        
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
+        
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.', '--target', ext.name] + build_args, cwd=self.build_temp)
 
 
 setup(
     name='ruckig',
-    version='0.2.1',
+    version='0.2.2',
     description='Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.',
-    description_file='README.md',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Lars Berscheid',
