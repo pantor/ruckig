@@ -45,21 +45,19 @@ class CMakeBuild(build_ext):
         build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
 
-        # Pile all .so in one place and use $ORIGIN as RPATH
         cmake_args = [
             '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
             '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
             '-DEXAMPLE_VERSION_INFO={}'.format(self.distribution.get_version()),
-            # '-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE',
-            # '-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN'),
             '-DCMAKE_BUILD_TYPE=' + build_type,
             '-DBUILD_PYTHON_MODULE=ON',
             '-DBUILD_SHARED_LIBS=OFF',
+            '-DCMAKE_POSITION_INDEPENDENT_CODE=ON',
         ]
 
-        env = os.environ.copy()
-        env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
-                                                              self.distribution.get_version())
+        # env = os.environ.copy()
+        # env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
+        #                                                       self.distribution.get_version())
         
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
@@ -70,7 +68,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='ruckig',
-    version='0.2.5',
+    version='0.2.6',
     description='Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.',
     long_description=long_description,
     long_description_content_type='text/markdown',
