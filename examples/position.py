@@ -8,7 +8,20 @@ path.insert(0, str(Path(__file__).parent.parent / 'build'))
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
-def walk_through_trajectory(otg, inp):
+if __name__ == '__main__':
+    inp = InputParameter(3)
+    inp.current_position = [0.2, 0, -1]
+    inp.current_velocity = [0, 0.2, 0]
+    inp.current_acceleration = [0, 1, 0]
+    inp.target_position = [0, -1, -1]
+    inp.target_velocity = [0.2, 0, 0]
+    inp.target_acceleration = [0, 0.1, -0.1]
+    inp.max_velocity = [2, 1, 1]
+    inp.max_acceleration = [0.2, 2, 2]
+    inp.max_jerk = [3, 4, 5]
+
+    otg = Ruckig(3, 0.05)
+
     out = OutputParameter(3)
     first_output = None
 
@@ -26,25 +39,6 @@ def walk_through_trajectory(otg, inp):
 
         if not first_output:
             first_output = copy(out)
-
-    return first_output
-
-
-if __name__ == '__main__':
-    inp = InputParameter(3)
-    inp.current_position = [0.2, 0, -1]
-    inp.current_velocity = [0, 0.2, 0]
-    inp.current_acceleration = [0, 1, 0]
-    inp.target_position = [0, -1, -1]
-    inp.target_velocity = [0.2, 0, 0]
-    inp.target_acceleration = [0, 0.1, -0.1]
-    inp.max_velocity = [2, 1, 1]
-    inp.max_acceleration = [0.2, 2, 2]
-    inp.max_jerk = [3, 4, 5]
-
-    otg = Ruckig(3, 0.05)
-
-    first_output = walk_through_trajectory(otg, inp)
 
     print(f'Calculation duration: {first_output.calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {first_output.trajectory.duration:0.4f} [s]')
