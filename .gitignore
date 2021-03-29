@@ -3,7 +3,9 @@
 .mypy_cache
 *.pyc
 __pycache__
+*.egg-info
 
 build
+dist
 local
 reflexxes
