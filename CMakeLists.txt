@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(ruckig VERSION 0.2.2 LANGUAGES CXX)
+project(ruckig VERSION 0.2.3 LANGUAGES CXX)
 
 
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -41,7 +41,7 @@ target_link_libraries(ruckig PUBLIC)
 
 if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
-  target_compile_options(ruckig PRIVATE /W4 /WX)
+  target_compile_options(ruckig PRIVATE /W4)
 
 else()
   target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)

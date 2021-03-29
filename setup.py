@@ -45,6 +45,7 @@ class CMakeBuild(build_ext):
         cmake_args += ['-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE']
         cmake_args += ['-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN')]
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + build_type]
+        cmake_args += ['-DBUILD_PYTHON_MODULE=ON']
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
@@ -59,7 +60,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='ruckig',
-    version='0.2.2',
+    version='0.2.3',
     description='Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -68,7 +69,7 @@ setup(
     url='https://github.com/pantor/ruckig',
     packages=find_packages(),
     license='MIT',
-    ext_modules=[CMakeExtension('ruckig')],
+    ext_modules=[CMakeExtension('python_ruckig')],
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=['robotics', 'trajectory-generation', 'jerk-constrained', 'time-optimal'],
     classifiers=[
