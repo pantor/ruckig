@@ -54,6 +54,7 @@ class CMakeBuild(build_ext):
             # '-DCMAKE_INSTALL_RPATH={}'.format('$ORIGIN'),
             '-DCMAKE_BUILD_TYPE=' + build_type,
             '-DBUILD_PYTHON_MODULE=ON',
+            '-DBUILD_SHARED_LIBS=OFF',
         ]
 
         env = os.environ.copy()
@@ -69,7 +70,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='ruckig',
-    version='0.2.4',
+    version='0.2.5',
     description='Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.',
     long_description=long_description,
     long_description_content_type='text/markdown',
