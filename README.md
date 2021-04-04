@@ -132,7 +132,7 @@ If a DoF is not enabled, it will be ignored in the calculation. A minimum durati
 
 Furthermore, there are some options for advanced functionality, e.g.:
 - for different synchronization behavior (i.a. phase or time synchonization).
-- for the control interface (position or velocity control)
+- for the control interface (position or velocity control).
 - for discrete trajectory durations.
 
 We refer to the [API documentation](https://pantor.github.io/ruckig/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
