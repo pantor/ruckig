@@ -41,7 +41,7 @@ target_link_libraries(ruckig PUBLIC)
 
 if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
-  target_compile_options(ruckig PRIVATE /W4)
+  target_compile_options(ruckig PRIVATE /W4 /WX)
 
 else()
   target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
