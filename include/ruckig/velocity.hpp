@@ -13,7 +13,7 @@ using JerkSigns = Profile::JerkSigns;
 class VelocityStep1 {
     double p0, v0, a0;
     double vf, af;
-    double aMax, aMin, jMax;
+    double _aMax, _aMin, _jMax;
 
     // Max 3 valid profiles
     std::array<Profile, 3> valid_profiles;
@@ -40,7 +40,7 @@ public:
 class VelocityStep2 {
     double p0, v0, a0;
     double tf, vf, af; 
-    double aMax, aMin, jMax;
+    double _aMax, _aMin, _jMax;
 
     bool time_acc0(Profile& profile, double aMax, double aMin, double jMax);
     bool time_none(Profile& profile, double aMax, double aMin, double jMax);

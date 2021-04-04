@@ -4,7 +4,7 @@
 
 namespace ruckig {
 
-VelocityStep2::VelocityStep2(double tf, double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), tf(tf), vf(vf), af(af), aMax(aMax), aMin(aMin), jMax(jMax)  { }
+VelocityStep2::VelocityStep2(double tf, double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), tf(tf), vf(vf), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax)  { }
 
 bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double jMax) {
     // UD Solution 1/2
@@ -89,10 +89,10 @@ bool VelocityStep2::get_profile(Profile& profile) {
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
     if (vf > v0) {
-        return check_all(profile, aMax, aMin, jMax) || check_all(profile, aMin, aMax, -jMax);
+        return check_all(profile, _aMax, _aMin, _jMax) || check_all(profile, _aMin, _aMax, -_jMax);
 
     } else {
-        return check_all(profile, aMin, aMax, -jMax) || check_all(profile, aMax, aMin, jMax);
+        return check_all(profile, _aMin, _aMax, -_jMax) || check_all(profile, _aMax, _aMin, _jMax);
     }
 }
 

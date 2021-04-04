@@ -4,7 +4,7 @@
 
 namespace ruckig {
 
-PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), tf(tf), pf(pf), vf(vf), af(af), vMax(vMax), vMin(vMin), aMax(aMax), aMin(aMin), jMax(jMax)  {
+PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), tf(tf), pf(pf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
     pd = pf - p0;
     tf_tf = tf * tf;
     tf_p3 = tf_tf * tf;
@@ -300,8 +300,8 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double 
             {
                 const double h1 = Sqrt((a0_a0 + af_af)/2 + jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
                 const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(h1 + t - tf)) + 6*a0_a0*(af + jMax*(2*t - tf)) + 6*(a0_a0 + af_af)*jMax*h1 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(h1 + t - tf) - tf*v0 - h1*vd))/(12*jMax_jMax);
-                const double deriv = -(a0 + jMax*t)*(3*(h1 + t) - 2*tf + (a0 + 2*af)/jMax);
-                t -= orig / deriv;
+                const double deriv_newton = -(a0 + jMax*t)*(3*(h1 + t) - 2*tf + (a0 + 2*af)/jMax);
+                t -= orig / deriv_newton;
             }
 
             if (t < 0.0 || t > tf || std::isnan(t)) {
@@ -398,9 +398,9 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double 
             {
                 const double h1 = (af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd);
                 const double orig = -pd + (af_p3 - a0_p3 - 12*a0*jMax_jMax*t*(t - tf) + 3*a0_a0*jMax*(-2*t + tf) - 6*af*h1)/(6*jMax_jMax) + (jMax*t*t*(-t + tf) + tf*v0) + std::pow(h1,1.5)/(jMax*Abs(jMax));
-                const double deriv = -(a0 + jMax*t)*(3*jMax*Sqrt(h1)/Abs(jMax) - 2*af + (a0 + 3*jMax*t - 2*jMax*tf))/jMax;
+                const double deriv_newton = -(a0 + jMax*t)*(3*jMax*Sqrt(h1)/Abs(jMax) - 2*af + (a0 + 3*jMax*t - 2*jMax*tf))/jMax;
 
-                t -= orig / deriv;
+                t -= orig / deriv_newton;
             }
 
             const double h1 = Sqrt((af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
@@ -880,10 +880,10 @@ bool PositionStep2::get_profile(Profile& profile) {
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
     if (pd > tf * v0) {
-        return check_all(profile, vMax, aMax, aMin, jMax) || check_all(profile, vMin, aMin, aMax, -jMax);
+        return check_all(profile, _vMax, _aMax, _aMin, _jMax) || check_all(profile, _vMin, _aMin, _aMax, -_jMax);
 
     } else {
-        return check_all(profile, vMin, aMin, aMax, -jMax) || check_all(profile, vMax, aMax, aMin, jMax);
+        return check_all(profile, _vMin, _aMin, _aMax, -_jMax) || check_all(profile, _vMax, _aMax, _aMin, _jMax);
     }
 }
 

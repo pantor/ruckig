@@ -189,22 +189,22 @@ struct Profile {
     }
 
     //! Set boundary values for the position interface
-    inline void set_boundary(double p0, double v0, double a0, double pf, double vf, double af) {
-        this->a[0] = a0;
-        this->v[0] = v0;
-        this->p[0] = p0;
-        this->af = af;
-        this->vf = vf;
-        this->pf = pf;
+    inline void set_boundary(double p0_new, double v0_new, double a0_new, double pf_new, double vf_new, double af_new) {
+        a[0] = a0_new;
+        v[0] = v0_new;
+        p[0] = p0_new;
+        af = af_new;
+        vf = vf_new;
+        pf = pf_new;
     }
 
     //! Set boundary values for the velocity interface
-    inline void set_boundary(double p0, double v0, double a0, double vf, double af) {
-        this->a[0] = a0;
-        this->v[0] = v0;
-        this->p[0] = p0;
-        this->af = af;
-        this->vf = vf;
+    inline void set_boundary(double p0_new, double v0_new, double a0_new, double vf_new, double af_new) {
+        a[0] = a0_new;
+        v[0] = v0_new;
+        p[0] = p0_new;
+        af = af_new;
+        vf = vf_new;
     }
 
     inline static void check_position_extremum(double t_ext, double t_sum, double t, double p, double v, double a, double j, PositionExtrema& ext) {

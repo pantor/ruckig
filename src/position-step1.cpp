@@ -4,7 +4,7 @@
 
 namespace ruckig {
 
-PositionStep1::PositionStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af), vMax(vMax), vMin(vMin), aMax(aMax), aMin(aMin), jMax(jMax) {
+PositionStep1::PositionStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), pf(pf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax) {
     pd = pf - p0;
 
     v0_v0 = v0 * v0;
@@ -305,25 +305,25 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
     valid_profile_counter = 0;
 
     if (std::abs(pf - p0) < DBL_EPSILON && std::abs(v0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
-        time_none(profile, vMax, aMax, aMin, jMax);
+        time_none(profile, _vMax, _aMax, _aMin, _jMax);
 
     } else {
-        time_acc0_acc1_vel(profile, vMax, aMax, aMin, jMax);
-        time_acc0_acc1_vel(profile, vMin, aMin, aMax, -jMax);
-        time_acc1_vel(profile, vMax, aMax, aMin, jMax);
-        time_acc1_vel(profile, vMin, aMin, aMax, -jMax);
-        time_acc0_vel(profile, vMax, aMax, aMin, jMax);
-        time_acc0_vel(profile, vMin, aMin, aMax, -jMax);
-        time_vel(profile, vMax, aMax, aMin, jMax);
-        time_vel(profile, vMin, aMin, aMax, -jMax);
-        time_none(profile, vMax, aMax, aMin, jMax);
-        time_acc0(profile, vMax, aMax, aMin, jMax);
-        time_acc1(profile, vMax, aMax, aMin, jMax);
-        time_acc0_acc1(profile, vMax, aMax, aMin, jMax);
-        time_none(profile, vMin, aMin, aMax, -jMax);
-        time_acc0(profile, vMin, aMin, aMax, -jMax);
-        time_acc1(profile, vMin, aMin, aMax, -jMax);
-        time_acc0_acc1(profile, vMin, aMin, aMax, -jMax);
+        time_acc0_acc1_vel(profile, _vMax, _aMax, _aMin, _jMax);
+        time_acc0_acc1_vel(profile, _vMin, _aMin, _aMax, -_jMax);
+        time_acc1_vel(profile, _vMax, _aMax, _aMin, _jMax);
+        time_acc1_vel(profile, _vMin, _aMin, _aMax, -_jMax);
+        time_acc0_vel(profile, _vMax, _aMax, _aMin, _jMax);
+        time_acc0_vel(profile, _vMin, _aMin, _aMax, -_jMax);
+        time_vel(profile, _vMax, _aMax, _aMin, _jMax);
+        time_vel(profile, _vMin, _aMin, _aMax, -_jMax);
+        time_none(profile, _vMax, _aMax, _aMin, _jMax);
+        time_acc0(profile, _vMax, _aMax, _aMin, _jMax);
+        time_acc1(profile, _vMax, _aMax, _aMin, _jMax);
+        time_acc0_acc1(profile, _vMax, _aMax, _aMin, _jMax);
+        time_none(profile, _vMin, _aMin, _aMax, -_jMax);
+        time_acc0(profile, _vMin, _aMin, _aMax, -_jMax);
+        time_acc1(profile, _vMin, _aMin, _aMax, -_jMax);
+        time_acc0_acc1(profile, _vMin, _aMin, _aMax, -_jMax);
     }
 
     return Block::calculate_block(block, valid_profiles, valid_profile_counter);

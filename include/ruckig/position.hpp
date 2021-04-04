@@ -13,7 +13,7 @@ using JerkSigns = Profile::JerkSigns;
 class PositionStep1 {
     double p0, v0, a0;
     double pf, vf, af;
-    double vMax, vMin, aMax, aMin, jMax;
+    double _vMax, _vMin, _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
     double pd;
@@ -63,7 +63,7 @@ public:
 class PositionStep2 {
     double p0, v0, a0;
     double tf, pf, vf, af;
-    double vMax, vMin, aMax, aMin, jMax;
+    double _vMax, _vMin, _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
     double pd;

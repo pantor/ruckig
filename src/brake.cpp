@@ -44,11 +44,11 @@ void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, doubl
 
     if (t_to_a_min < t_min_to_v_max) {
         const double v_at_a_min = v_at_t(v0, a0, -jMax, t_to_a_min);
-        const double t_to_v_max = (v_at_a_min - vMax)/aMax;
-        const double t_to_v_min = -aMax/(2*jMax) + (v_at_a_min - vMin)/aMax;
+        const double t_to_v_max_with_constant = (v_at_a_min - vMax)/aMax;
+        const double t_to_v_min_with_constant = -aMax/(2*jMax) + (v_at_a_min - vMin)/aMax;
 
         t_brake[0] = t_to_a_min - eps;
-        t_brake[1] = std::max(std::min(t_to_v_max, t_to_v_min), 0.0);
+        t_brake[1] = std::max(std::min(t_to_v_max_with_constant, t_to_v_min_with_constant), 0.0);
 
     } else {
         t_brake[0] = t_min_to_v_max - eps;
