@@ -875,12 +875,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
 }
 
 bool PositionStep2::get_profile(Profile& profile) {
-    profile.a[0] = a0;
-    profile.v[0] = v0;
-    profile.p[0] = p0;
-    profile.af = af;
-    profile.vf = vf;
-    profile.pf = pf;
+    profile.set_boundary(p0, v0, a0, pf, vf, af);
 
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
