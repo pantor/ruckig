@@ -84,11 +84,7 @@ bool VelocityStep2::time_none([[maybe_unused]] Profile& profile, [[maybe_unused]
 }
 
 bool VelocityStep2::get_profile(Profile& profile) {
-    profile.a[0] = a0;
-    profile.v[0] = v0;
-    profile.p[0] = p0;
-    profile.af = af;
-    profile.vf = vf;
+    profile.set_boundary(p0, v0, a0, vf, af);
 
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...

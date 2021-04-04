@@ -26,6 +26,7 @@ enum class Interface {
 };
 
 enum class Synchronization {
+    Phase, ///< Phase synchronize the DoFs when possible, else fallback to "Time" strategy
     Time, ///< Always synchronize the DoFs to reach the target at the same time (Default)
     TimeIfNecessary, ///< Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
     None, ///< Calculate every DoF independently

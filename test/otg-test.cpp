@@ -194,6 +194,12 @@ TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with
     Randomizer<DOFs, decltype(limit_discrete_dist)> l { limit_discrete_dist, seed + 2 };
 
     for (size_t i = 0; i < random_discrete_3; ++i) {
+        if (i < random_discrete_3 / 2) {
+            input.synchronization = Synchronization::Phase;
+        } else {
+            input.synchronization = Synchronization::Time;
+        }
+
         p.fill(input.current_position);
         d.fill(input.current_velocity);
         d.fill(input.current_acceleration);
@@ -274,6 +280,18 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
 
     for (size_t i = 0; i < random_3; ++i) {
+        if (i < random_3 / 2) {
+            input.synchronization = Synchronization::Phase;
+        } else {
+            input.synchronization = Synchronization::Time;
+        }
+
+        if (i < random_3 / 20) {
+            input.duration_discretization = DurationDiscretization::Discrete;
+        } else {
+            input.duration_discretization = DurationDiscretization::Continuous;
+        }
+
         p.fill(input.current_position);
         d.fill_or_zero(input.current_velocity, 0.9);
         d.fill_or_zero(input.current_acceleration, 0.8);

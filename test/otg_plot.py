@@ -7,7 +7,7 @@ import numpy as np
 
 path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
-from ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie
+from ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie, Synchronization, Interface, DurationDiscretization
 from ruckig import Reflexxes
 
 
@@ -88,17 +88,18 @@ def plot_trajectory(t_list, out_list):
 
 if __name__ == '__main__':
     inp = InputParameter(3)
-    # inp.interface = InputParameter.Interface.Velocity
-    # inp.synchronization = InputParameter.TimeIfNecessary
-    # inp.duration_discretization = InputParameter.Discrete
-    inp.current_position = [0.5, -1, -1]
-    inp.current_velocity = [0, 0.2, 0]
-    inp.current_acceleration = [0, 1, 1]
-    inp.target_position = [1, -1, -1]
+    # inp.interface = Interface.Velocity
+    inp.synchronization = Synchronization.Phase
+    # inp.duration_discretization = DurationDiscretization.Discrete
+    inp.current_position = [0, 0, 0]
+    inp.current_velocity = [-0.05, 0.2, -0.3]
+    inp.current_acceleration = [0, 0, 0]
+    inp.target_position = [-0.5, 2, -3]
     inp.target_velocity = [0, 0, 0]
-    inp.target_acceleration = [0, 1, 1]
-    inp.max_velocity = [2, 2, 2]
-    inp.max_acceleration = [2, 2, 2]
+    inp.target_acceleration = [0, 0, 0]
+    inp.max_velocity = [1, 1, 1]
+    # inp.min_velocity = [-1, -0.1, -1]
+    inp.max_acceleration = [1, 1, 1]
     inp.max_jerk = [1, 1, 1]
 
     # otg = Quintic(3, 0.005)

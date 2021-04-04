@@ -133,6 +133,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .export_values();
 
     py::enum_<Synchronization>(m, "Synchronization")
+        .value("Phase", Synchronization::Phase)
         .value("Time", Synchronization::Time)
         .value("TimeIfNecessary", Synchronization::TimeIfNecessary)
         .value("No", Synchronization::None)
