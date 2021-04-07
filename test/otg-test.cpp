@@ -59,11 +59,12 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
 
 
 template<size_t DOFs, class OTGType>
-inline void step_through_and_check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
+inline size_t step_through_and_check_calculation(OTGType& otg, InputParameter<DOFs>& input, size_t max_number_checks) {
     OutputParameter<DOFs> output;
 
     check_calculation<DOFs, OTGType>(otg, input);
 
+    size_t number_checks {1};
     while (otg.update(input, output) == Result::Working) {
         input.current_position = output.new_position;
         input.current_velocity = output.new_velocity;
@@ -71,7 +72,14 @@ inline void step_through_and_check_calculation(OTGType& otg, InputParameter<DOFs
 
         // Or randomize input with small noise here?
         check_calculation<DOFs, OTGType>(otg, input);
+
+        number_checks += 1;
+        if (number_checks == max_number_checks) {
+            break;
+        }
     }
+
+    return number_checks;
 }
 
 
@@ -250,6 +258,17 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {1.808598147153279, 1, 1};
     input.max_jerk = {2.516849090900998 - 3e-15, 1, 1};
     check_duration(otg, input, 38.3409477609);
+
+    input.current_position = {-4.180150148354134, 1.030371049895473, -2.660154279239869};
+    input.current_velocity = {1.673805463302308, -1.435796222257198, 0.9711306630275642};
+    input.current_acceleration = {1.412175048500792, 1.892262449040863, -1.128847905860926};
+    input.target_position = {2.079913937916431, 1.839862681333277, 2.341421542126605};
+    input.target_velocity = {0.7537566830764975, 0, 0.02507782261105568};
+    input.target_acceleration = {-0.8610296259045267, -0.07876324073516261, 0};
+    input.max_velocity = {1.863775561344568, 0.4357836109021987, 6.260907804906162};
+    input.max_acceleration = {9.49223908896113, 9.002562577262177, 1.119142029086944};
+    input.max_jerk = {8.689575453772798, 0.09322235504216797, 0.1594452521517275 + 3e-15};
+    check_duration(otg, input, 1135.0135089249);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
@@ -383,6 +402,35 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
     }
 }
 
+TEST_CASE("step_through_3" * doctest::description("Step through random input with 3 DoF and target velocity, acceleration")) {
+    constexpr size_t DOFs {3};
+    Ruckig<DOFs, true> otg {0.01};
+    InputParameter<DOFs> input;
+
+    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
+    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
+    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
+
+    for (size_t i = 0; i < step_through_3; ++i) {
+        p.fill(input.current_position);
+        d.fill_or_zero(input.current_velocity, 0.9);
+        d.fill_or_zero(input.current_acceleration, 0.8);
+        p.fill(input.target_position);
+        d.fill_or_zero(input.target_velocity, 0.7);
+        d.fill_or_zero(input.target_acceleration, 0.6);
+        l.fill(input.max_velocity, input.target_velocity);
+        l.fill(input.max_acceleration, input.target_acceleration);
+        l.fill(input.max_jerk);
+
+        if (!otg.validate_input(input)) {
+            --i;
+            continue;
+        }
+
+        i += step_through_and_check_calculation(otg, input, 1000);
+    }
+}
+
 TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration and min velocity, acceleration")) {
     constexpr size_t DOFs {3};
     Ruckig<DOFs, true> otg {0.005};
@@ -493,7 +541,7 @@ int main(int argc, char** argv) {
     comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
-    step_through_3 = 0; // number_trajectories / 500;
+    step_through_3 = 0; // number_trajectories / 20;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
     random_3 = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3);
