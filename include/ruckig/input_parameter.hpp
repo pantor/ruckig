@@ -45,7 +45,7 @@ class InputParameter {
         std::ostringstream ss;
         for (size_t i = 0; i < DOFs; ++i) {
             if (i) ss << ", ";
-            ss << std::setprecision(15) << array[i];
+            ss << std::setprecision(16) << array[i];
         }
         return ss.str();
     }

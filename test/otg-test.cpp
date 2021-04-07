@@ -127,7 +127,7 @@ TEST_CASE("quintic") {
 }
 
 TEST_CASE("known" * doctest::description("Known examples")) {
-    Ruckig<3> otg {0.005};
+    Ruckig<3, true> otg {0.005};
 
     InputParameter<3> input;
     input.current_position = {0.0, 0.0, 0.0};
@@ -228,6 +228,17 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {3.40137210377608, 4.04166318018487, 10.8617860610581};
     input.max_jerk = {10.9542353113865, 3.11056302676629, 0.798055744482636 + 9e-12};
     check_duration(otg, input, 4.6277455678);
+
+    input.current_position = {7.06378251402596, -2.4834697862831, -0.843847405371359};
+    input.current_velocity = {0.436985859305842, 0.0708113515655622, -0.751266816040307};
+    input.current_acceleration = {-0.80835350359544, 0, -0.355284934641626};
+    input.target_position = {4.40606827118048, -2.84629921001043, -2.91829890043522};
+    input.target_velocity = {0.555084596169823, 0, -1.24631524923535};
+    input.target_acceleration = {0.463000173872542, 0, 0};
+    input.max_velocity = {7.97399137456765, 2.68591430972239, 9.54987666746364};
+    input.max_acceleration = {5.44679859206862, 7.61752909348119, 0.473482772614085};
+    input.max_jerk = {7.88958080921515, 5.26855927512131, 0.764061581326592 - 1e-14};
+    check_duration(otg, input, 8.8739464323);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
@@ -471,7 +482,7 @@ int main(int argc, char** argv) {
     comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
-    step_through_3 = number_trajectories / 500;
+    step_through_3 = 0; // number_trajectories / 500;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
     random_3 = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3);

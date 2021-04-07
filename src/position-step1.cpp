@@ -103,7 +103,7 @@ void PositionStep1::time_vel(Profile& profile, double vMax, double aMax, double 
 }
 
 void PositionStep1::time_acc0_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
-    const double h1 = Sqrt(3)*Sqrt((aMax - aMin)*(3*Power(af,4)*aMax - 3*Power(a0,4)*aMin + 8*Power(a0,3)*aMax*aMin - 8*Power(af,3)*aMax*aMin - 24*a0*aMax*aMin*jMax*v0 - 6*Power(a0,2)*aMin*(Power(aMax,2) - 2*jMax*v0) + 24*af*aMax*aMin*jMax*vf + 6*Power(af,2)*aMax*(Power(aMin,2) - 2*jMax*vf) + 3*(Power(aMax,3)*Power(aMin,2) - 4*aMin*Power(jMax,2)*Power(v0,2) - Power(aMax,2)*(Power(aMin,3) - 4*aMin*jMax*v0) + 4*aMax*jMax*(2*aMin*jMax*(p0 - pf) - Power(aMin,2)*vf + jMax*Power(vf,2)))))*Abs(jMax)/(3*(aMax - aMin)*jMax);
+    const double h1 = Sqrt(3)*Sqrt((aMax - aMin)*(3*af_p4*aMax - 3*a0_p4*aMin + 8*a0_p3*aMax*aMin - 8*af_p3*aMax*aMin - 24*a0*aMax*aMin*jMax*v0 - 6*a0_a0*aMin*(aMax*aMax - 2*jMax*v0) + 24*af*aMax*aMin*jMax*vf + 6*af_af*aMax*(aMin*aMin - 2*jMax*vf) + 3*(Power(aMax,3)*aMin*aMin - 4*aMin*jMax*jMax*v0*v0 - aMax*aMax*(Power(aMin,3) - 4*aMin*jMax*v0) + 4*aMax*jMax*(2*aMin*jMax*(p0 - pf) - aMin*aMin*vf + jMax*vf*vf))))*Abs(jMax)/(3*(aMax - aMin)*jMax);
 
     if (!std::isnan(h1)) {
         // UDDU: Solution 2
@@ -152,13 +152,21 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double aMax, double
             continue;
         }
 
-        // Single Newton step (regarding pd)
+        // Double Newton step (regarding pd)
         {
             double h1 = jMax*t*t + v0;
             double orig = -pd + (3*(a0_p4 - af_p4) + 8*af_p3*aMin + 8*a0_p3*(-aMin + 3*jMax*t) + 24*a0*jMax*(-aMin + 2*jMax*t)*(-aMin*t + h1) + 6*a0_a0*(aMin*aMin + 2*jMax*(-4*aMin*t + 5*h1 - 4*v0)) - 24*af*aMin*jMax*vf - 6*af_af*(aMin*aMin - 2*jMax*vf) + 12*jMax*(-2*aMin*jMax*t*(h1 + v0) + aMin*aMin*(h1 + vf) + jMax*(h1*h1 - vf_vf)))/(-24*aMin*jMax_jMax);
             double deriv = -((a0 - aMin + jMax*t)*(a0_a0 - aMin*jMax*t + a0*(-aMin + 4*jMax*t) + 2*jMax*h1))/(aMin*jMax);
 
             t -= orig / deriv;
+
+            h1 = jMax*t*t + v0;
+            orig = -pd + (3*(a0_p4 - af_p4) + 8*af_p3*aMin + 8*a0_p3*(-aMin + 3*jMax*t) + 24*a0*jMax*(-aMin + 2*jMax*t)*(-aMin*t + h1) + 6*a0_a0*(aMin*aMin + 2*jMax*(-4*aMin*t + 5*h1 - 4*v0)) - 24*af*aMin*jMax*vf - 6*af_af*(aMin*aMin - 2*jMax*vf) + 12*jMax*(-2*aMin*jMax*t*(h1 + v0) + aMin*aMin*(h1 + vf) + jMax*(h1*h1 - vf_vf)))/(-24*aMin*jMax_jMax);
+            if (std::abs(orig) > 1e-9) {
+                deriv = -((a0 - aMin + jMax*t)*(a0_a0 - aMin*jMax*t + a0*(-aMin + 4*jMax*t) + 2*jMax*h1))/(aMin*jMax);
+
+                t -= orig / deriv;
+            }
         }
 
         profile.t[0] = t;
