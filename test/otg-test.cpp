@@ -239,6 +239,17 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {5.44679859206862, 7.61752909348119, 0.473482772614085};
     input.max_jerk = {7.88958080921515, 5.26855927512131, 0.764061581326592 - 1e-14};
     check_duration(otg, input, 8.8739464323);
+
+    input.current_position = {-7.962737259350095, 0, 0};
+    input.current_velocity = {-0.8844863500141733, 0, 0};
+    input.current_acceleration = {2.252932547031004, 0, 0};
+    input.target_position = {-3.547368989678775, 0, 0};
+    input.target_velocity = {0, 0, 0};
+    input.target_acceleration = {0.217242176687843, 0, 0};
+    input.max_velocity = {0.1241065584614779, 1, 1};
+    input.max_acceleration = {1.808598147153279, 1, 1};
+    input.max_jerk = {2.516849090900998 - 3e-15, 1, 1};
+    check_duration(otg, input, 38.3409477609);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {

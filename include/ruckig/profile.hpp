@@ -159,7 +159,7 @@ struct Profile {
         const double aLowLim = ((aMax > 0) ? aMin : aMax) - 1e-12;
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
-        // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << " " << to_string() << std::endl;
+        // std::cout << std::setprecision(16) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << " " << to_string() << std::endl;
         return std::abs(p[7] - pf) < 1e-8
             && std::abs(v[7] - vf) < 1e-8
             && std::abs(a[7] - af) < 1e-12 // This is not really needed, but we want to double check
