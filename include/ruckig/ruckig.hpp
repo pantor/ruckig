@@ -24,8 +24,6 @@ class Ruckig {
     InputParameter<DOFs> current_input;
 
     Result calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        current_input = input;
-
         if (!validate_input(input)) {
             return Result::ErrorInvalidInput;
         }
@@ -35,6 +33,7 @@ class Ruckig {
             return result;
         }
 
+        current_input = input;
         output.time = 0.0;
         output.new_calculation = true;
         return Result::Working;
