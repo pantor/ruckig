@@ -192,7 +192,7 @@ inline int solveResolvent(double *x, double a, double b, double c) {
     }
 }
 
-constexpr double DBL_EPSILON_SQRT {std::sqrt(DBL_EPSILON)};
+constexpr double DBL_EPSILON_SQRT {1.483e-8}; // approx std::sqrt(DBL_EPSILON)
 
 //! Calculate all roots of the monic quartic equation: x^4 + a*x^3 + b*x^2 + c*x + d = 0
 inline Set<double, 4> solveQuartMonic(double a, double b, double c, double d) {
