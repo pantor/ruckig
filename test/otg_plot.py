@@ -89,18 +89,18 @@ def plot_trajectory(t_list, out_list):
 if __name__ == '__main__':
     inp = InputParameter(3)
     # inp.interface = Interface.Velocity
-    inp.synchronization = Synchronization.Phase
+    # inp.synchronization = Synchronization.Phase
     # inp.duration_discretization = DurationDiscretization.Discrete
-    inp.current_position = [0, 0, 0]
-    inp.current_velocity = [-0.05, 0.2, -0.3]
-    inp.current_acceleration = [0, 0, 0]
-    inp.target_position = [-0.5, 2, -3]
-    inp.target_velocity = [0, 0, 0]
-    inp.target_acceleration = [0, 0, 0]
-    inp.max_velocity = [1, 1, 1]
-    # inp.min_velocity = [-1, -0.1, -1]
-    inp.max_acceleration = [1, 1, 1]
-    inp.max_jerk = [1, 1, 1]
+
+    inp.current_position = [-6.49539540831446, 6.14883133273172, -2.02636240900911]
+    inp.current_velocity = [-1.14327601654428, 0.00991019970085593, -1.00932863927626]
+    inp.current_acceleration = [-1.73501068960131, -0.584885092422228, 0]
+    inp.target_position = [4.4676187540058, 2.93367894961155, -0.646008452514058]
+    inp.target_velocity = [-0.544559915133859, 0.298517792372943, 1.6058847848484]
+    inp.target_acceleration = [-1.31832055647831, 0, 0]
+    inp.max_velocity = [8.65978706670502, 5.94921088330542, 10.7652253566829]
+    inp.max_acceleration = [3.40137210377608, 4.04166318018487, 10.8617860610581]
+    inp.max_jerk = [10.9542353113865, 3.11056302676629, 0.798055744482636 - 1e-12]
 
     # otg = Quintic(3, 0.005)
     # otg = Smoothie(3, 0.005)

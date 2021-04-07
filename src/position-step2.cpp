@@ -271,8 +271,6 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double 
         double tz_current {tz_min};
 
         for (double tz: d_extremas) {
-            
-
             if (tz <= 0.0 || tz >= tz_max) {
                 continue;
             }
@@ -281,7 +279,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double 
                 tz -= Roots::polyEval(deriv, tz) / Roots::polyEval(Roots::polyDeri(deriv), tz);
             }
 
-            const double res = 16 * std::abs(Roots::polyEval(Roots::polyDeri(deriv), tz)) * Roots::tolerance;
+            const double res = 24 * std::abs(Roots::polyEval(Roots::polyDeri(deriv), tz)) * Roots::tolerance;
             const double val_new = Roots::polyEval(polynom, tz);
             if (std::abs(val_new) < res) {
                 roots.insert(tz);
@@ -439,7 +437,7 @@ bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double aMax, d
         return profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(tf, jf, vMax, aMax, aMin, jMax);
     }
 
-    const double h1 = Sqrt(144*Power((aMax - aMin)*(-aMin*vd + aMax*(aMin*tf - vd)) - af_af*(aMax*tf - vd) + 2*af*aMin*(aMax*tf - vd) + a0_a0*(aMin*tf + v0 - vf) - 2*a0*aMax*(aMin*tf - vd),2) + 48*ad*(3*Power(a0,3) - 3*Power(af,3) + 12*aMax*aMin*(-aMax + aMin) + 4*af_af*(aMax + 2*aMin) + a0*(-3*af_af - 8*af*aMax + 6*Power(aMax,2) + 8*af*aMin + 12*aMax*aMin - 6*Power(aMin,2)) + 6*af*(Power(aMax,2) - 2*aMax*aMin - Power(aMin,2)) + a0_a0*(3*af - 4*(2*aMax + aMin)))*(2*aMin*(-pd + tf*v0) + vd*vd + aMax*(2*pd + aMin*tf*tf - 2*tf*vf)));
+    const double h1 = Sqrt(144*Power((aMax - aMin)*(-aMin*vd + aMax*(aMin*tf - vd)) - af_af*(aMax*tf - vd) + 2*af*aMin*(aMax*tf - vd) + a0_a0*(aMin*tf + v0 - vf) - 2*a0*aMax*(aMin*tf - vd),2) + 48*ad*(3*a0_p3 - 3*af_p3 + 12*aMax*aMin*(-aMax + aMin) + 4*af_af*(aMax + 2*aMin) + a0*(-3*af_af - 8*af*aMax + 6*aMax*aMax + 8*af*aMin + 12*aMax*aMin - 6*aMin*aMin) + 6*af*(aMax*aMax - 2*aMax*aMin - aMin*aMin) + a0_a0*(3*af - 4*(2*aMax + aMin)))*(2*aMin*(-pd + tf*v0) + vd*vd + aMax*(2*pd + aMin*tf*tf - 2*tf*vf)));
 
     const double jf = -(3*af_af*aMax*tf - 3*a0_a0*aMin*tf - 6*ad*aMax*aMin*tf + 3*aMax*aMin*(aMin - aMax)*tf + 3*(a0_a0 - af_af)*vd + 6*af*aMin*vd - 6*a0*aMax*vd + 3*(aMax*aMax - aMin*aMin)*vd + h1/4)/(6*(2*aMin*(p0 - pf + tf*v0) + vd*vd + aMax*(2*pd + aMin*tf_tf - 2*tf*vf)));
     profile.t[0] = (aMax - a0)/jf;
@@ -619,6 +617,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
                 polynom[2] = -(jMax_jMax*tf_p4 - 8*vd_vd + 4*jMax*tf*(-3*pd + tf*v0 + 2*tf*vf))/ph1;
                 polynom[3] = 4*(jMax*tf_tf*g1 - vd*(-2*pd - tf*v0 + 3*tf*vf))/ph1;
                 polynom[4] = -4*(jMax*g1*g1 + vd_vd*vd)/(jMax*ph1);
+
                 auto roots = Roots::solveQuartMonic(polynom);
 
                 for (double t: roots) {
@@ -745,6 +744,25 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
                 }
             }
         }
+
+        //
+        {
+            const double h0 = Sqrt(3*jMax_jMax*(a0_p4 + af_p4 - 4*af_p3*jMax*tf + 6*af_af*jMax_jMax*tf_tf - 4*a0_p3*(af - jMax*tf) + 6*a0_a0*Power(af - jMax*tf,2) + 24*af*jMax_jMax*(-pd + tf*v0) - 4*a0*(af_p3 - 3*af_af*jMax*tf + 6*jMax_jMax*(-pd + tf*vf)) - 12*jMax_jMax*(-vd_vd + jMax*tf*(-2*pd + tf*(v0 + vf)))));
+            const double h2 = 3*(a0_a0 + af_af)*jMax + 6*a0*jMax*(jMax*tf - af);
+            const double h1 = Sqrt(3*jMax*(h2 - 6*af*jMax_jMax*tf + 3*jMax_jMax*jMax*tf_tf + 2*h0));
+
+            profile.t[0] = -(h2 + h0 - 6*jMax_jMax*vd)/(6*jMax_jMax*(-ad + jMax*tf));
+            profile.t[1] = 0;
+            profile.t[2] = -(h1 + 3*ad*jMax)/(6*jMax_jMax) + tf/2;
+            profile.t[3] = 0;
+            profile.t[4] = 0;
+            profile.t[5] = h1/(3*jMax_jMax);
+            profile.t[6] = tf - (profile.t[0] + profile.t[2] + profile.t[5]);
+
+            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+                return true;
+            }
+        }
     }
 
     // Profiles with a3 != 0, Solution UDUD
@@ -805,7 +823,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
         if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
             return true;
         }
-    
+
     } else {
         const double h1 = Abs(jMax)/jMax*Sqrt(9*Power((a0 + af)*tf - 2*vd,2) + 24*ad*g2);
         const double jf = (3*(a0_a0 - af_af)*tf + ad*(6*vd - h1))/(12*g2);

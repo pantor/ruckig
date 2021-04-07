@@ -192,9 +192,35 @@ inline int solveResolvent(double *x, double a, double b, double c) {
     }
 }
 
+constexpr double DBL_EPSILON_SQRT {std::sqrt(DBL_EPSILON)};
+
 //! Calculate all roots of the monic quartic equation: x^4 + a*x^3 + b*x^2 + c*x + d = 0
 inline Set<double, 4> solveQuartMonic(double a, double b, double c, double d) {
     Set<double, 4> roots;
+
+    if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON_SQRT && std::abs(c) < DBL_EPSILON_SQRT && std::abs(d) < DBL_EPSILON) {
+        const double e0 = std::cbrt(c * c);
+        const double e1 = (b * b + 12 * d)/(9*e0);
+        const double q1 = -(4 * b)/3 - e0 - e1;
+        const double p1 = std::sqrt(-q1 - 2 * b);
+        const double q2 = 2 * c / p1;
+        double D, sqrtD;
+
+        D = q1 - q2;
+        if (D > 0.0) {
+            sqrtD = std::sqrt(D);
+            roots.insert((p1 + sqrtD) * 0.5);
+            roots.insert((p1 - sqrtD) * 0.5);
+        }
+
+        D = q1 + q2;
+        if (D > 0.0) {
+            sqrtD = std::sqrt(D);
+            roots.insert((-p1 + sqrtD) * 0.5);
+            roots.insert((-p1 - sqrtD) * 0.5);
+        }
+        return roots;
+    }
 
     const double a3 = -b;
     const double b3 = a * c - 4 * d;

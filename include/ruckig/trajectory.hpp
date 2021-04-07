@@ -69,7 +69,7 @@ class Trajectory {
                 vf_scale = inp.target_velocity[dof] / pd[dof];
                 af_scale = inp.target_acceleration[dof] / pd[dof];
                 pd_found_nonzero = true;
-            } 
+            }
         }
 
         if (!pd_found_nonzero) { // position difference is zero everywhere...
@@ -88,7 +88,7 @@ class Trajectory {
 
             const double scale = pd[dof] / pd[limiting_dof];
             const double eps_colinear {10 * eps};
-            
+
             // Are the vectors colinear?
             if (
                 std::abs(inp.current_velocity[dof] - v0_scale * pd[dof]) > eps_colinear
@@ -236,7 +236,7 @@ public:
 
                     p.t = profiles[limiting_dof].t; // Copy timing information from limiting DoF
                     p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
-                    
+
                     // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
                     switch (p.jerk_signs) {
                         case Profile::JerkSigns::UDDU: {

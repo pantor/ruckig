@@ -89,7 +89,7 @@ struct Profile {
     }
 
     template<JerkSigns jerk_signs, Limits limits>
-    bool check(double jf, double vMax, double aMax, double aMin) {        
+    bool check(double jf, double vMax, double aMax, double aMin) {
         if (t[0] < 0) {
             return false;
         }

@@ -58,6 +58,23 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
 }
 
 
+template<size_t DOFs, class OTGType>
+inline void step_through_and_check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
+    OutputParameter<DOFs> output;
+
+    check_calculation<DOFs, OTGType>(otg, input);
+
+    while (otg.update(input, output) == Result::Working) {
+        input.current_position = output.new_position;
+        input.current_velocity = output.new_velocity;
+        input.current_acceleration = output.new_acceleration;
+
+        // Or randomize input with small noise here?
+        check_calculation<DOFs, OTGType>(otg, input);
+    }
+}
+
+
 template<size_t DOFs, class OTGType, class OTGCompType>
 inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompType& otg_comparison) {
     OutputParameter<DOFs> output;
@@ -79,7 +96,7 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
 
 int seed {42};
 size_t number_trajectories {120000}; // Some user variable you want to be able to set
-size_t random_1, random_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
+size_t random_1, random_3, step_through_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
 
 std::normal_distribution<double> position_dist {0.0, 4.0};
 std::normal_distribution<double> dynamic_dist {0.0, 0.8};
@@ -178,6 +195,39 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {0.4, 0.4, 0.4};
     input.max_acceleration = {1.0, 1.0, 1.0};
     check_duration(otg, input, 5.6053274785);
+
+    input.current_position = {0.3888899206957 - 10e-14, 0.0, 0.0};
+    input.current_velocity = {0.2231429352410215, 0.0, 0.0};
+    input.current_acceleration = {-0.2987593916455, 0.0, 0.0};
+    input.target_position = {0.5, 0.0, 0.0};
+    input.target_velocity = {0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {3.0, 3.0, 3.0};
+    input.max_acceleration = {0.5, 0.5, 0.5};
+    input.max_jerk = {0.2, 0.2, 0.2};
+    check_duration(otg, input, 1.4939454556);
+
+    input.current_position = {-5.54640573838539, -2.34195463203842, 5.10070661762967};
+    input.current_velocity = {0.824843228617216, -1.03863337183304, -0.749451523227729};
+    input.current_acceleration = {-0.119403564898501, 0.923861820607788, 3.04022341347259};
+    input.target_position = {-1.58293112753888, 0.383405919465141, 5.79349604610299};
+    input.target_velocity = {-1.59453676324393, 0.0, -0.0693173526513803};
+    input.target_acceleration = {-0.664429703711622, 0.0, 0.0};
+    input.max_velocity = {12.9892953062198, 3.74169932927481, 1.42398447457303};
+    input.max_acceleration = {4.2162106624246, 10.2906731766853, 2.1869079548297};
+    input.max_jerk = {8.03496976453435, 0.200684346397485 - 1.0e-14, 0.0848503482861296};
+    check_duration(otg, input, 1921.0797627836);
+
+    input.current_position = {-6.49539540831446, 6.14883133273172, -2.02636240900911};
+    input.current_velocity = {-1.14327601654428, 0.00991019970085593, -1.00932863927626};
+    input.current_acceleration = {-1.73501068960131, -0.584885092422228, 0};
+    input.target_position = {4.4676187540058, 2.93367894961155, -0.646008452514058};
+    input.target_velocity = {-0.544559915133859, 0.298517792372943, 1.6058847848484};
+    input.target_acceleration = {-1.31832055647831, 0, 0};
+    input.max_velocity = {8.65978706670502, 5.94921088330542, 10.7652253566829};
+    input.max_acceleration = {3.40137210377608, 4.04166318018487, 10.8617860610581};
+    input.max_jerk = {10.9542353113865, 3.11056302676629, 0.798055744482636 + 9e-12};
+    check_duration(otg, input, 4.6277455678);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
@@ -421,10 +471,11 @@ int main(int argc, char** argv) {
     comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
+    step_through_3 = number_trajectories / 500;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
-    random_3 = number_trajectories - (random_1 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3);
-    std::cout << "<number_trajectories> Random 1 DoF: " << random_1 << " 3 DoF: " << random_3 << "  Comparison 1 DoF: " << comparison_1 << " 3 DoF: " << comparison_3 << " Total: " << number_trajectories << std::endl;
+    random_3 = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3);
+    std::cout << "<number_trajectories> Random (1 DoF): " << random_1 << " (3 DoF): " << random_3 << "  Step Through (3 Dof): " << step_through_3 << "  Comparison (1 DoF): " << comparison_1 << " (3 DoF): " << comparison_3 << " Total: " << number_trajectories << std::endl;
 
     return context.run();
 }
