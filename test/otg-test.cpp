@@ -5,7 +5,6 @@
 #include "randomizer.hpp"
 
 #include <ruckig/ruckig.hpp>
-#include <ruckig/alternative/quintic.hpp>
 
 #ifdef WITH_REFLEXXES
 #include <ruckig/alternative/reflexxes.hpp>
@@ -111,28 +110,6 @@ std::normal_distribution<double> dynamic_dist {0.0, 0.8};
 std::uniform_real_distribution<double> limit_dist {0.08, 12.0};
 std::uniform_real_distribution<double> min_limit_dist {-12.0, -0.08};
 
-
-TEST_CASE("quintic") {
-    InputParameter<3> input;
-    input.current_position = {0.0, 0.0, 0.0};
-    input.current_velocity = {0.0, 0.0, 0.0};
-    input.current_acceleration = {0.0, 0.0, 0.0};
-    input.target_position = {1.0, 1.0, 1.0};
-    input.target_velocity = {0.0, 0.0, 0.0};
-    input.target_acceleration = {0.0, 0.0, 0.0};
-    input.max_velocity = {1.0, 1.0, 1.0};
-    input.max_acceleration = {1.0, 1.0, 1.0};
-    input.max_jerk = {1.0, 1.0, 1.0};
-
-    Quintic<3> otg {0.005};
-    check_duration(otg, input, 3.9148676412);
-
-    input.current_position = {0.0, 0.0, 0.0};
-    input.current_velocity = {0.0, 0.0, 0.0};
-    input.current_acceleration = {0.0, 0.0, 0.0};
-    input.max_jerk = {2.0, 2.0, 2.0};
-    check_duration(otg, input, 3.107232506);
-}
 
 TEST_CASE("known" * doctest::description("Known examples")) {
     Ruckig<3, true> otg {0.005};
@@ -269,6 +246,17 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {9.49223908896113, 9.002562577262177, 1.119142029086944};
     input.max_jerk = {8.689575453772798, 0.09322235504216797, 0.1594452521517275 + 3e-15};
     check_duration(otg, input, 1135.0135089249);
+
+    input.current_position = {-4.490717417930574, 3.467236624628543, -0.7545929089757601};
+    input.current_velocity = {0.1839756723363622, -0.4356283320280516, 0.7490399525818022};
+    input.current_acceleration = {-1.057769973808928, 0, -2.368645439140517};
+    input.target_position = {-4.928244836531066, -4.821780824003112, -8.20567952461017};
+    input.target_velocity = {0.1097319156272965, -0.9272874846270881, 0};
+    input.target_acceleration = {0.03089046366221739, -0.9744054582899561, 0};
+    input.max_velocity = {6.144314006624488, 2.93258338415229, 0.1820021269527196};
+    input.max_acceleration = {5.199401036221791, 1.848176490768948, 11.11168017805234};
+    input.max_jerk = {9.940940357283978, 10.46997753899755, 0.08166297169205029};
+    check_duration(otg, input, 7295.4375633935);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {

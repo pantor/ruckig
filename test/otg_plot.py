@@ -92,20 +92,20 @@ if __name__ == '__main__':
     # inp.synchronization = Synchronization.Phase
     # inp.duration_discretization = DurationDiscretization.Discrete
 
-    inp.current_position = [-6.49539540831446, 6.14883133273172, -2.02636240900911]
-    inp.current_velocity = [-1.14327601654428, 0.00991019970085593, -1.00932863927626]
-    inp.current_acceleration = [-1.73501068960131, -0.584885092422228, 0]
-    inp.target_position = [4.4676187540058, 2.93367894961155, -0.646008452514058]
-    inp.target_velocity = [-0.544559915133859, 0.298517792372943, 1.6058847848484]
-    inp.target_acceleration = [-1.31832055647831, 0, 0]
-    inp.max_velocity = [8.65978706670502, 5.94921088330542, 10.7652253566829]
-    inp.max_acceleration = [3.40137210377608, 4.04166318018487, 10.8617860610581]
-    inp.max_jerk = [10.9542353113865, 3.11056302676629, 0.798055744482636 - 1e-12]
+    inp.current_position = [-4.490717417930574, 3.467236624628543, -0.7545929089757601]
+    inp.current_velocity = [0.1839756723363622, -0.4356283320280516, 0.7490399525818022]
+    inp.current_acceleration = [-1.057769973808928, 0, -2.368645439140517]
+    inp.target_position = [-4.928244836531066, -4.821780824003112, -8.20567952461017]
+    inp.target_velocity = [0.1097319156272965, -0.9272874846270881, 0]
+    inp.target_acceleration = [0.03089046366221739, -0.9744054582899561, 0]
+    inp.max_velocity = [6.144314006624488, 2.93258338415229, 0.1820021269527196]
+    inp.max_acceleration = [5.199401036221791, 1.848176490768948, 11.11168017805234]
+    inp.max_jerk = [9.940940357283978, 10.46997753899755, 0.08166297169205029]
 
     # otg = Quintic(3, 0.005)
     # otg = Smoothie(3, 0.005)
     # otg = Reflexxes(3, 0.005)
-    otg = Ruckig(3, 0.005)
+    otg = Ruckig(3, 0.5)
 
     t_list, out_list = walk_through_trajectory(otg, inp)
 

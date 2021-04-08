@@ -39,11 +39,11 @@ PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double 
 bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
     // Profile UDDU, Solution 1
     {
-        const double h0a = af_af - 2*af*aMin + (aMin - aMax)*aMin + 2*aMin*jMax*tf - 2*jMax*vd;
-        const double h1 = Sqrt(aMax*aMin*(3*(a0_p4 + af_p4) - 4*a0_p3*(2*aMax + aMin) - 4*af_p3*(aMax + 2*aMin) + 6*a0_a0*aMax*(aMin + aMax) + 6*a0*(2*aMax - a0)*h0a - 6*af_af*(aMax*aMax - aMin*aMin - 2*aMax*(aMin + jMax*tf) + 2*jMax*vd) + 12*af*aMin*(aMax*aMax - aMax*(aMin + 2*jMax*tf) + 2*jMax*vd) + 3*(aMax*aMax*aMax*aMin - 2*aMax*aMax*(aMin*aMin + 2*aMin*jMax*tf - 2*jMax*vd) + 4*jMax*(2*aMin*jMax*g1 - aMin*aMin*vd + jMax*vd*vd) + aMax*(aMin*aMin*aMin + 4*aMin*aMin*jMax*tf + 4*aMin*jMax_jMax*tf_tf - 8*jMax_jMax*(-pd + tf*vf))))/3) * Abs(jMax)/jMax;
+        const double h0a = af_af - 2*af*aMin + (aMin - aMax)*aMin + 2*jMax*(aMin*tf - vd);
+        const double h1 = Sqrt(aMax*aMin*(a0_p4 + af_p4 - 4*a0_p3*(2*aMax + aMin)/3 - 4*af_p3*(aMax + 2*aMin)/3 + 2*a0_a0*aMax*(aMin + aMax) + 2*a0*(2*aMax - a0)*h0a - 2*af_af*(aMax*aMax - aMin*aMin - 2*aMax*(aMin + jMax*tf) + 2*jMax*vd) + 4*af*aMin*(aMax*aMax - aMax*(aMin + 2*jMax*tf) + 2*jMax*vd) + aMax*aMax*aMax*aMin - 2*aMax*aMax*(aMin*aMin + 2*jMax*(aMin*tf - vd)) + 4*jMax*(2*aMin*jMax*g1 - aMin*aMin*vd + jMax*vd*vd) + aMax*(aMin*aMin*aMin + 4*aMin*aMin*jMax*tf + 4*aMin*jMax_jMax*tf_tf - 8*jMax_jMax*(-pd + tf*vf)))) * Abs(jMax)/jMax;
 
         profile.t[0] = (-a0 + aMax)/jMax;
-        profile.t[1] = (-((af_af - a0_a0) + 2*aMax*aMax - 2*ad*aMin - 3*aMax*aMin + aMin*aMin + 2*jMax*(aMin*tf - vd)) - h1/aMax)/(2*(aMax - aMin)*jMax);
+        profile.t[1] = (-(af_af - a0_a0 + 2*aMax*aMax - 2*ad*aMin - 3*aMax*aMin + aMin*aMin + 2*jMax*(aMin*tf - vd)) - h1/aMax)/(2*(aMax - aMin)*jMax);
         profile.t[2] = aMax/jMax;
         profile.t[3] = (aMin - aMax - h1/(aMax*aMin))/(2*jMax);
         profile.t[4] = -aMin/jMax;
