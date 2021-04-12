@@ -157,6 +157,7 @@ inline int solveResolvent(double *x, double a, double b, double c) {
     const double r2 = r * r;
     const double q3 = q * q * q;
     double A, B;
+
     if (r2 < q3) {
         double t = r / std::sqrt(q3);
         if (t < -1.0) {
@@ -172,6 +173,7 @@ inline int solveResolvent(double *x, double a, double b, double c) {
         x[1] = q * std::cos((t + M_PI * 2) / 3.0) - a;
         x[2] = q * std::cos((t - M_PI * 2) / 3.0) - a;
         return 3;
+
     } else {
         A = -std::cbrt(std::abs(r) + std::sqrt(r2 - q3));
         if (r < 0.0) {
@@ -218,6 +220,20 @@ inline Set<double, 4> solveQuartMonic(double a, double b, double c, double d) {
             sqrtD = std::sqrt(D);
             roots.insert((-p1 + sqrtD) * 0.5);
             roots.insert((-p1 - sqrtD) * 0.5);
+        }
+        return roots;
+    }
+
+    if (std::abs(c) < DBL_EPSILON && std::abs(d) < DBL_EPSILON) {
+        roots.insert(0.0);
+
+        const double D = a * a - 4 * b;
+        if (std::abs(D) < DBL_EPSILON) {
+            roots.insert(-a / 2);
+        } else if (D > 0) {
+            const double sqrtD = std::sqrt(D);
+            roots.insert((-a - sqrtD) / 2);
+            roots.insert((-a + sqrtD) / 2);
         }
         return roots;
     }

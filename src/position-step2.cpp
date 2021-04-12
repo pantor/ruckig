@@ -884,7 +884,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
 
     // 3 step profile (ak. UDU), sometimes missed because of numerical errors
     {
-        profile.t[0] = -(ad_ad + jMax*(2*(a0 + af)*tf - jMax*tf_tf - 4*vd))/(4*jMax*(-ad + jMax*tf));
+        profile.t[0] = (ad_ad/jMax + 2*(a0 + af)*tf - jMax*tf_tf - 4*vd)/(4*(ad - jMax*tf));
         profile.t[1] = 0;
         profile.t[2] = -ad/(2*jMax) + tf/2;
         profile.t[3] = 0;
@@ -893,6 +893,22 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
         profile.t[6] = tf - (profile.t[0] + profile.t[2]);
 
         if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+            return true;
+        }
+    }
+
+    // 1 step profile (ak. UDU), sometimes missed because of numerical errors
+    {
+        const double jf = ad/tf;
+        profile.t[0] = tf;
+        profile.t[1] = 0;
+        profile.t[2] = 0;
+        profile.t[3] = 0;
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = 0;
+
+        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, aMax, aMin)) {
             return true;
         }
     }

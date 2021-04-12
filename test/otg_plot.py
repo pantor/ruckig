@@ -7,7 +7,7 @@ import numpy as np
 
 path.insert(0, str(Path(__file__).parent.parent / 'build'))
 
-from ruckig import Quintic, InputParameter, OutputParameter, Result, Ruckig, Smoothie, Synchronization, Interface, DurationDiscretization
+from ruckig import InputParameter, OutputParameter, Result, Ruckig, Synchronization, Interface, DurationDiscretization
 from ruckig import Reflexxes
 
 
@@ -92,22 +92,26 @@ if __name__ == '__main__':
     # inp.synchronization = Synchronization.Phase
     # inp.duration_discretization = DurationDiscretization.Discrete
 
-    inp.current_position = [-4.490717417930574, 3.467236624628543, -0.7545929089757601]
-    inp.current_velocity = [0.1839756723363622, -0.4356283320280516, 0.7490399525818022]
-    inp.current_acceleration = [-1.057769973808928, 0, -2.368645439140517]
-    inp.target_position = [-4.928244836531066, -4.821780824003112, -8.20567952461017]
-    inp.target_velocity = [0.1097319156272965, -0.9272874846270881, 0]
-    inp.target_acceleration = [0.03089046366221739, -0.9744054582899561, 0]
-    inp.max_velocity = [6.144314006624488, 2.93258338415229, 0.1820021269527196]
-    inp.max_acceleration = [5.199401036221791, 1.848176490768948, 11.11168017805234]
-    inp.max_jerk = [9.940940357283978, 10.46997753899755, 0.08166297169205029]
 
-    # otg = Quintic(3, 0.005)
-    # otg = Smoothie(3, 0.005)
-    # otg = Reflexxes(3, 0.005)
-    otg = Ruckig(3, 0.5)
+    for i in [-299]:
+    # for i in range(200):
+        eps = (i - 100) * 1e-16
+        print(i)
 
-    t_list, out_list = walk_through_trajectory(otg, inp)
+        inp.current_position = [6.22856405025901, -3.690144255821358, 1.664557711692404]
+        inp.current_velocity = [-0.434815099852722, 0.5760942342059757, 0.459449163887151]
+        inp.current_acceleration = [0, -2.072115307337411, 0.689486369647744]
+        inp.target_position = [0.6959453258241575, 0.3766650922417908, -2.986784389954874]
+        inp.target_velocity = [0, 0.05033093271396352, -0.1453937359671692]
+        inp.target_acceleration = [1.305000072573007, 0, -0.09904524070763976]
+        inp.max_velocity = [0.434815099852722, 1.864268119408352, 2.002840733466842]
+        inp.max_acceleration = [9.112772043597223, 4.574478625381595, 10.10043773003713]
+        inp.max_jerk = [7.654313459653499, 8.328157077423564  +eps, 2.012501506433343]
+
+        # otg = Reflexxes(3, 0.005)
+        otg = Ruckig(3, 0.005)
+
+        t_list, out_list = walk_through_trajectory(otg, inp)
 
     # print(out_list[0].trajectory.get_position_extrema())
 

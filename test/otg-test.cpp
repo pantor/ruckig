@@ -60,6 +60,7 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
 template<size_t DOFs, class OTGType>
 inline size_t step_through_and_check_calculation(OTGType& otg, InputParameter<DOFs>& input, size_t max_number_checks) {
     OutputParameter<DOFs> output;
+    OTGType otg_second {0.001};
 
     check_calculation<DOFs, OTGType>(otg, input);
 
@@ -70,7 +71,7 @@ inline size_t step_through_and_check_calculation(OTGType& otg, InputParameter<DO
         input.current_acceleration = output.new_acceleration;
 
         // Or randomize input with small noise here?
-        check_calculation<DOFs, OTGType>(otg, input);
+        check_calculation<DOFs, OTGType>(otg_second, input);
 
         number_checks += 1;
         if (number_checks == max_number_checks) {
@@ -190,7 +191,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {3.0, 3.0, 3.0};
     input.max_acceleration = {0.5, 0.5, 0.5};
     input.max_jerk = {0.2, 0.2, 0.2};
-    check_duration(otg, input, 1.4939454556);
+    check_duration(otg, input, 1.4939456041);
 
     input.current_position = {-5.54640573838539, -2.34195463203842, 5.10070661762967};
     input.current_velocity = {0.824843228617216, -1.03863337183304, -0.749451523227729};
@@ -529,7 +530,7 @@ int main(int argc, char** argv) {
     comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
-    step_through_3 = 0; // number_trajectories / 20;
+    step_through_3 = 0; // number_trajectories / 100;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
     random_3 = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3);

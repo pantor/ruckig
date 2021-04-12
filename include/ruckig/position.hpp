@@ -25,8 +25,8 @@ class PositionStep1 {
     // Only a single velocity-limited profile can be valid
     bool has_up_vel {false}, has_down_vel {false};
 
-    // Max 5 valid profiles
-    std::array<Profile, 5> valid_profiles;
+    // Max 5 valid profiles + 1 spare for numerical issues
+    std::array<Profile, 6> valid_profiles;
     size_t valid_profile_counter;
 
     void time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
@@ -37,6 +37,12 @@ class PositionStep1 {
     void time_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax);
     void time_acc0(Profile& profile, double vMax, double aMax, double aMin, double jMax);
     void time_none(Profile& profile, double vMax, double aMax, double aMin, double jMax);
+
+    // Only for numerical issues
+    void time_acc0_two_step(Profile& profile, double vMax, double aMax, double aMin, double jMax);
+    void time_vel_two_step(Profile& profile, double vMax, double aMax, double aMin, double jMax);
+    void time_none_two_step(Profile& profile, double vMax, double aMax, double aMin, double jMax);
+
 
     inline void add_profile(Profile profile, double jMax) {
         profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
