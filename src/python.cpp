@@ -7,9 +7,6 @@
 
 #include <ruckig/ruckig.hpp>
 
-#include <ruckig/alternative/quintic.hpp>
-#include <ruckig/alternative/smoothie.hpp>
-
 #ifdef WITH_REFLEXXES
     #include <ruckig/alternative/reflexxes.hpp>
 #endif
@@ -79,18 +76,6 @@ struct PerDOF {
             .def_readonly_static("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
             .def("validate_input", &Ruckig<DOFs, true>::validate_input)
             .def("update", &Ruckig<DOFs, true>::update);
-
-        py::class_<Quintic<DOFs>>(m, append("Quintic", DOFs))
-            .def(py::init<double>(), "delta_time"_a)
-            .def_readonly("delta_time", &Quintic<DOFs>::delta_time)
-            .def_readonly_static("degrees_of_freedom", &Quintic<DOFs>::degrees_of_freedom)
-            .def("update", &Quintic<DOFs>::update);
-
-        py::class_<Smoothie<DOFs>>(m, append("Smoothie", DOFs))
-            .def(py::init<double>(), "delta_time"_a)
-            .def_readonly("delta_time", &Smoothie<DOFs>::delta_time)
-            .def_readonly_static("degrees_of_freedom", &Smoothie<DOFs>::degrees_of_freedom)
-            .def("update", &Smoothie<DOFs>::update);
 
     #ifdef WITH_REFLEXXES
         py::class_<Reflexxes<DOFs>>(m, append("Reflexxes", DOFs))
@@ -205,38 +190,6 @@ limited by velocity, acceleration, and jerk constraints.";
             case 8: return cast_unique<Ruckig<8, true>>(delta_time);
             case 9: return cast_unique<Ruckig<9, true>>(delta_time);
             case 10: return cast_unique<Ruckig<10, true>>(delta_time);
-            default: return handle_dof_error(dofs);
-        }
-    }, "dofs"_a, "delta_time"_a);
-
-    m.def("Quintic", [](size_t dofs, double delta_time) {
-        switch (dofs) {
-            case 1: return cast_unique<Quintic<1>>(delta_time);
-            case 2: return cast_unique<Quintic<2>>(delta_time);
-            case 3: return cast_unique<Quintic<3>>(delta_time);
-            case 4: return cast_unique<Quintic<4>>(delta_time);
-            case 5: return cast_unique<Quintic<5>>(delta_time);
-            case 6: return cast_unique<Quintic<6>>(delta_time);
-            case 7: return cast_unique<Quintic<7>>(delta_time);
-            case 8: return cast_unique<Quintic<8>>(delta_time);
-            case 9: return cast_unique<Quintic<9>>(delta_time);
-            case 10: return cast_unique<Quintic<10>>(delta_time);
-            default: return handle_dof_error(dofs);
-        }
-    }, "dofs"_a, "delta_time"_a);
-
-    m.def("Smoothie", [](size_t dofs, double delta_time) {
-        switch (dofs) {
-            case 1: return cast_unique<Smoothie<1>>(delta_time);
-            case 2: return cast_unique<Smoothie<2>>(delta_time);
-            case 3: return cast_unique<Smoothie<3>>(delta_time);
-            case 4: return cast_unique<Smoothie<4>>(delta_time);
-            case 5: return cast_unique<Smoothie<5>>(delta_time);
-            case 6: return cast_unique<Smoothie<6>>(delta_time);
-            case 7: return cast_unique<Smoothie<7>>(delta_time);
-            case 8: return cast_unique<Smoothie<8>>(delta_time);
-            case 9: return cast_unique<Smoothie<9>>(delta_time);
-            case 10: return cast_unique<Smoothie<10>>(delta_time);
             default: return handle_dof_error(dofs);
         }
     }, "dofs"_a, "delta_time"_a);
