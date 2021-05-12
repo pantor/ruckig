@@ -18,8 +18,6 @@ namespace ruckig {
 
 // Forward declare alternative OTG algorithms for friend class
 template <size_t> class Reflexxes;
-template <size_t> class Smoothie;
-template <size_t> class Quintic;
 
 
 //! Interface for the generated trajectory.
@@ -27,8 +25,6 @@ template<size_t DOFs>
 class Trajectory {
     // Allow alternative OTG algorithms to directly access members (i.e. duration)
     friend class Reflexxes<DOFs>;
-    friend class Smoothie<DOFs>;
-    friend class Quintic<DOFs>;
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
 

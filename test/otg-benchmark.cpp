@@ -5,7 +5,7 @@
 #include <ruckig/ruckig.hpp>
 
 #ifdef WITH_REFLEXXES
-#include <ruckig/alternative/reflexxes.hpp>
+#include <ruckig/reflexxes_comparison.hpp>
 #endif
 
 
