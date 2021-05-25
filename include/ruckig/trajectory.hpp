@@ -231,6 +231,7 @@ public:
                     const double t_profile = duration - p.t_brake.value_or(0.0);
 
                     p.t = profiles[limiting_dof].t; // Copy timing information from limiting DoF
+                    p.jerk_signs = profiles[limiting_dof].jerk_signs;
                     p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
 
                     // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
