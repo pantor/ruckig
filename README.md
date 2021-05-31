@@ -83,7 +83,7 @@ OutputParameter<6> output; // Number DoFs
 
 Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
 
-```
+```.cpp
 while (ruckig.update(input, output) == Result::Working) {
   // Make use of the new state here!
 
