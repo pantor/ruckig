@@ -22,7 +22,7 @@
   </a>
 </p>
 
-Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator and even supports directional velocity and acceleration limits, while also being faster on top. For robotics and machining applications, Ruckig allows both instant reactions to unforeseen events as well as simple offline trajectory planning.
+Ruckig calculates a time-optimal trajectory given a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator for arbitrary target states and even supports directional velocity and acceleration limits, while also being faster on top. For robotics and machining applications, Ruckig allows both instant reactions to unforeseen events as well as simple offline trajectory planning.
 
 More information can be found in the corresponding paper [Jerk-limited Real-time Trajectory Generation with Arbitrary Target States](https://arxiv.org/abs/2105.04830), accepted for the *Robotics: Science and Systems (RSS), 2021* conference.
 
@@ -208,7 +208,7 @@ Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos
 @article{berscheid2021jerk,
   title={Jerk-limited Real-time Trajectory Generation with Arbitrary Target States},
   author={Berscheid, Lars and Kr{\"o}ger, Torsten},
-  journal={Robotics: Science and Systems XVII (accepted)},
+  journal={Robotics: Science and Systems XVII},
   year={2021}
 }
 ```
