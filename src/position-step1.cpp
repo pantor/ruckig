@@ -415,7 +415,11 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
     valid_profile_counter = 0;
 
     if (std::abs(pf - p0) < DBL_EPSILON && std::abs(v0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
-        time_none(profile, _vMax, _aMax, _aMin, _jMax);
+        if (pf >= p0) {
+            time_none(profile, _vMax, _aMax, _aMin, _jMax);
+        } else {
+            time_none(profile, _vMin, _aMin, _aMax, -_jMax);
+        }
 
     } else {
         time_acc0_acc1_vel(profile, _vMax, _aMax, _aMin, _jMax);

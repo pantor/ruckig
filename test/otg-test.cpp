@@ -127,6 +127,9 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_jerk = {1.0, 1.0, 1.0};
     check_duration(otg, input, 0.0);
 
+    input.target_position = {0.0, 1e-17, -1e-17};
+    check_duration(otg, input, 1e-18);
+
     input.target_position = {1.0, 1.0, 1.0};
     check_duration(otg, input, 3.1748021039);
 
