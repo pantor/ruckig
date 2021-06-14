@@ -111,7 +111,7 @@ class Trajectory {
             if (
                 std::abs(old_max_vel) < std::abs(new_max_velocity[dof])
                 || std::abs(old_max_acc) < std::abs(new_max_acceleration[dof])
-                || std::abs(old_min_acc) < std::abs(new_max_acceleration[dof])
+                || std::abs(old_min_acc) < std::abs(new_min_acceleration[dof])
                 || std::abs(old_max_jerk) < std::abs(new_max_jerk[dof])
             ) {
                 return false;
