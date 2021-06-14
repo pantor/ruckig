@@ -216,7 +216,7 @@ struct Profile {
                 ext.t_min = t_sum + t_ext;
             } else if (a_ext < 0 && p_ext > ext.max) {
                 ext.max = p_ext;
-                ext.max = t_sum + t_ext;
+                ext.t_max = t_sum + t_ext;
             }
         }
     }
