@@ -367,6 +367,7 @@ public:
     }
 
     //! Get the kinematic state at a given time
+    //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
     void at_time(double time, std::array<double, DOFs>& new_position, std::array<double, DOFs>& new_velocity, std::array<double, DOFs>& new_acceleration) const {
         if (time >= duration) {
             // Keep constant acceleration
