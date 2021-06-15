@@ -112,6 +112,70 @@ std::uniform_real_distribution<double> limit_dist {0.08, 12.0};
 std::uniform_real_distribution<double> min_limit_dist {-12.0, -0.08};
 
 
+template<size_t DOFs>
+void check_array(const std::array<double, DOFs>& first, const std::array<double, DOFs>& second) {
+    for (size_t dof = 0; dof < first.size(); ++dof) {
+        CHECK( first[dof] == doctest::Approx(second[dof]) );
+    }
+}
+
+
+TEST_CASE("secondary" * doctest::description("Secondary Features")) {
+    Ruckig<3, true> otg {0.005};
+    InputParameter<3> input;
+    OutputParameter<3> output;
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {0.0, 0.3, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+
+    auto result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
+
+    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, input.current_position);
+    check_array(new_velocity, input.current_velocity);
+    check_array(new_acceleration, input.current_acceleration);
+
+    output.trajectory.at_time(output.trajectory.get_duration(), new_position, new_velocity, new_acceleration);
+    check_array(new_position, input.target_position);
+    check_array(new_velocity, input.target_velocity);
+    check_array(new_acceleration, input.target_acceleration);
+
+    output.trajectory.at_time(2.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, {0.5, -2.6871268303, 1.0});
+
+    auto independent_min_durations = output.trajectory.get_independent_min_durations();
+    CHECK( independent_min_durations[0] == doctest::Approx(3.1748021039) );
+    CHECK( independent_min_durations[1] == doctest::Approx(3.6860977315) );
+    CHECK( independent_min_durations[2] == doctest::Approx(output.trajectory.get_duration()) );
+
+    auto position_extrema = output.trajectory.get_position_extrema();
+    CHECK( position_extrema[0].t_max == doctest::Approx(4.0) );
+    CHECK( position_extrema[0].max == doctest::Approx(1.0) );
+    CHECK( position_extrema[0].t_min == doctest::Approx(0.0) );
+    CHECK( position_extrema[0].min == doctest::Approx(0.0) );
+
+    CHECK( position_extrema[1].t_max == doctest::Approx(0.0) );
+    CHECK( position_extrema[1].max == doctest::Approx(-2.0) );
+    CHECK( position_extrema[1].t_min == doctest::Approx(3.2254033308) );
+    CHECK( position_extrema[1].min == doctest::Approx(-3.1549193338) );
+
+    CHECK( position_extrema[2].t_max == doctest::Approx(4.0) );
+    CHECK( position_extrema[2].max == doctest::Approx(2.0) );
+    CHECK( position_extrema[2].t_min == doctest::Approx(0.0) );
+    CHECK( position_extrema[2].min == doctest::Approx(0.0) );
+}
+
 TEST_CASE("known" * doctest::description("Known examples")) {
     Ruckig<3, true> otg {0.005};
 

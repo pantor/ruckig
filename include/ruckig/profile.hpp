@@ -258,8 +258,13 @@ struct Profile {
                 }
             }
         }
+
+        double t_current_sum {0.0};
         for (size_t i = 0; i < 7; ++i) {
-            check_step_for_position_extremum(t_sum[i] + t_brake.value_or(0.0), t[i], p[i], v[i], a[i], j[i], extrema);
+            if (i > 0) {
+                t_current_sum = t_sum[i - 1];
+            }
+            check_step_for_position_extremum(t_current_sum + t_brake.value_or(0.0), t[i], p[i], v[i], a[i], j[i], extrema);
         }
 
         if (pf < extrema.min) {
