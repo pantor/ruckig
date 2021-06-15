@@ -497,9 +497,9 @@ TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF a
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
     Randomizer<DOFs, decltype(min_limit_dist)> min_l { min_limit_dist, seed + 5 };
 
-    // TODO!
-    // input.min_velocity = {0.0, 0.0, 0.0};
-    // input.min_acceleration = {0.0, 0.0, 0.0};
+    // To "activate" std::optional
+    input.min_velocity = {0.0, 0.0, 0.0};
+    input.min_acceleration = {0.0, 0.0, 0.0};
 
     for (size_t i = 0; i < random_direction_3; ++i) {
         p.fill(input.current_position);

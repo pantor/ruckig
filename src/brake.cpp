@@ -24,18 +24,18 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double vMin, d
         velocity_brake(v0, a0, vMax, vMin, aMax, aMin, jMax, t_brake, j_brake);
     
     } else if ((v_at_a_max < vMin && jMax > 0) || (v_at_a_max > vMin && jMax < 0)) {
-        const double t_to_v_max = -(v_at_a_max + vMax)/aMax;
-        const double t_to_v_min = -aMax/(2*jMax) - (v_at_a_max + vMin)/aMax;
+        const double t_to_v_min = -(v_at_a_max - vMin)/aMax;
+        const double t_to_v_max = -aMax/(2*jMax) - (v_at_a_max - vMax)/aMax;
 
         t_brake[0] = t_to_a_max + eps;
-        t_brake[1] = std::max(std::min(t_to_v_max, t_to_v_min - eps), 0.0);
+        t_brake[1] = std::max(std::min(t_to_v_min, t_to_v_max - eps), 0.0);
 
     } else {
         t_brake[0] = t_to_a_max + eps;
     }
 }
 
-void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
+void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, [[maybe_unused]] double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     j_brake[0] = -jMax;
     const double t_to_a_min = (a0 - aMin)/jMax;
     const double t_to_v_max = a0/jMax + std::sqrt(a0*a0 + 2 * jMax * (v0 - vMax)) / std::abs(jMax);
@@ -44,8 +44,8 @@ void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, doubl
 
     if (t_to_a_min < t_min_to_v_max) {
         const double v_at_a_min = v_at_t(v0, a0, -jMax, t_to_a_min);
-        const double t_to_v_max_with_constant = (v_at_a_min - vMax)/aMax;
-        const double t_to_v_min_with_constant = -aMax/(2*jMax) + (v_at_a_min - vMin)/aMax;
+        const double t_to_v_max_with_constant = -(v_at_a_min - vMax)/aMin;
+        const double t_to_v_min_with_constant = aMin/(2*jMax) - (v_at_a_min - vMin)/aMin;
 
         t_brake[0] = t_to_a_min - eps;
         t_brake[1] = std::max(std::min(t_to_v_max_with_constant, t_to_v_min_with_constant), 0.0);

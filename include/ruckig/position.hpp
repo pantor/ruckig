@@ -29,19 +29,19 @@ class PositionStep1 {
     std::array<Profile, 6> valid_profiles;
     size_t valid_profile_counter;
 
-    void time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_acc0_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_acc0_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_acc0(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_none(Profile& profile, double vMax, double aMax, double aMin, double jMax);
+    void time_acc0_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_acc0_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     // Only for numerical issues
-    void time_acc0_two_step(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_vel_two_step(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    void time_none_two_step(Profile& profile, double vMax, double aMax, double aMin, double jMax);
+    void time_acc0_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_none_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
 
     inline void add_profile(Profile profile, double jMax) {
@@ -82,24 +82,24 @@ class PositionStep2 {
     double jMax_jMax;
     double g1, g2;
 
-    bool time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    bool time_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    bool time_acc0_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    bool time_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    bool time_acc0_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    bool time_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    bool time_acc0(Profile& profile, double vMax, double aMax, double aMin, double jMax);
-    bool time_none(Profile& profile, double vMax, double aMax, double aMin, double jMax);
+    bool time_acc0_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_acc0_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
-    inline bool check_all(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
-        return time_acc0_acc1_vel(profile, vMax, aMax, aMin, jMax)
-            || time_acc0_vel(profile, vMax, aMax, aMin, jMax)
-            || time_acc1_vel(profile, vMax, aMax, aMin, jMax)
-            || time_vel(profile, vMax, aMax, aMin, jMax)
-            || time_acc0(profile, vMax, aMax, aMin, jMax)
-            || time_acc1(profile, vMax, aMax, aMin, jMax)
-            || time_acc0_acc1(profile, vMax, aMax, aMin, jMax)
-            || time_none(profile, vMax, aMax, aMin, jMax);
+    inline bool check_all(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+        return time_acc0_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
+            || time_acc0_vel(profile, vMax, vMin, aMax, aMin, jMax)
+            || time_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
+            || time_vel(profile, vMax, vMin, aMax, aMin, jMax)
+            || time_acc0(profile, vMax, vMin, aMax, aMin, jMax)
+            || time_acc1(profile, vMax, vMin, aMax, aMin, jMax)
+            || time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax)
+            || time_none(profile, vMax, vMin, aMax, aMin, jMax);
     }
 
 public:

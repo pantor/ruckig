@@ -37,6 +37,7 @@ struct Profile {
     //! Allow up to two segments of braking before the "correct" profile starts
     std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
 
+    // For velocity interface
     template<JerkSigns jerk_signs, Limits limits>
     bool check(double jf, double aMax, double aMin) {
         if (t[0] < 0) {
@@ -88,8 +89,9 @@ struct Profile {
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
     }
 
+    // For position interface
     template<JerkSigns jerk_signs, Limits limits>
-    bool check(double jf, double vMax, double aMax, double aMin) {
+    bool check(double jf, double vMax, double vMin, double aMax, double aMin) {
         if (t[0] < 0) {
             return false;
         }
@@ -131,7 +133,9 @@ struct Profile {
             j = {jf, 0, -jf, 0, jf, 0, -jf};
         }
 
-        const double vMaxAbs = std::abs(vMax) + 1e-12;
+        // const double vMaxAbs = std::abs(vMax) + 1e-12;
+        const double vUppLim = ((vMax > 0) ? vMax : vMin) + 1e-12;
+        const double vLowLim = ((vMax > 0) ? vMin : vMax) - 1e-12;
 
         for (size_t i = 0; i < 7; ++i) {
             a[i+1] = a[i] + t[i] * j[i];
@@ -146,7 +150,7 @@ struct Profile {
 
             if (i > 1 && a[i+1] * a[i] < -std::numeric_limits<double>::epsilon()) {
                 const double v_a_zero = v[i] - (a[i] * a[i]) / (2 * j[i]);
-                if (std::abs(v_a_zero) > vMaxAbs) {
+                if (v_a_zero > vUppLim || v_a_zero < vLowLim) {
                     return false;
                 }
             }
@@ -163,20 +167,22 @@ struct Profile {
         return std::abs(p[7] - pf) < 1e-8
             && std::abs(v[7] - vf) < 1e-8
             && std::abs(a[7] - af) < 1e-12 // This is not really needed, but we want to double check
-            && std::abs(v[3]) <= vMaxAbs && std::abs(v[4]) <= vMaxAbs && std::abs(v[5]) <= vMaxAbs && std::abs(v[6]) <= vMaxAbs
+            // && std::abs(v[3]) <= vMaxAbs && std::abs(v[4]) <= vMaxAbs && std::abs(v[5]) <= vMaxAbs && std::abs(v[6]) <= vMaxAbs
+            && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
+            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
     }
 
     template<JerkSigns jerk_signs, Limits limits>
-    inline bool check([[maybe_unused]] double tf, double jf, double vMax, double aMax, double aMin) {
+    inline bool check([[maybe_unused]] double tf, double jf, double vMax, double vMin, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
-        return check<jerk_signs, limits>(jf, vMax, aMax, aMin); // && (std::abs(t_sum[6] - tf) < 1e-8);
+        return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum[6] - tf) < 1e-8);
     }
 
     template<JerkSigns jerk_signs, Limits limits>
-    inline bool check(double tf, double jf, double vMax, double aMax, double aMin, double jMax) {
-        return (std::abs(jf) < std::abs(jMax) + 1e-12) && check<jerk_signs, limits>(tf, jf, vMax, aMax, aMin);
+    inline bool check(double tf, double jf, double vMax, double vMin, double aMax, double aMin, double jMax) {
+        return (std::abs(jf) < std::abs(jMax) + 1e-12) && check<jerk_signs, limits>(tf, jf, vMax, vMin, aMax, aMin);
     }
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.

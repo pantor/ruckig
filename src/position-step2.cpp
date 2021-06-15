@@ -36,7 +36,7 @@ PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double 
     g2 = -2*pd + tf*(v0 + vf);
 }
 
-bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // Profile UDDU, Solution 1
     {
         const double h0a = af_af - 2*af*aMin + (aMin - aMax)*aMin + 2*jMax*(aMin*tf - vd);
@@ -50,7 +50,7 @@ bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMa
         profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3] + 2*profile.t[4] + af/jMax);
         profile.t[6] = profile.t[4] + af/jMax;
 
-        if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1_VEL>(tf, jMax, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1_VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }
@@ -69,7 +69,7 @@ bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMa
         profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3] + 2*profile.t[4] - af/jMax);
         profile.t[6] = profile.t[4] - af/jMax;
 
-        if (profile.check<JerkSigns::UDUD, Limits::ACC0_ACC1_VEL>(tf, jMax, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDUD, Limits::ACC0_ACC1_VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }
@@ -77,7 +77,7 @@ bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double aMa
     return false;
 }
 
-bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // Profile UDDU
     {
         const double ph1 = a0_a0 + af_af - aMin*(a0 + 2*af) + aMin*aMin - 2*jMax*(vd - aMin*tf);
@@ -115,7 +115,7 @@ bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double aMax, do
             profile.t[5] = (h1 + aMin)/jMax;
             profile.t[6] = profile.t[4] + af/jMax;
 
-            if (profile.check<JerkSigns::UDDU, Limits::ACC1_VEL>(tf, jMax, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::ACC1_VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -151,7 +151,7 @@ bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double aMax, do
             profile.t[5] = -(h1 + aMax)/jMax;
             profile.t[6] = profile.t[4] - af/jMax;
 
-            if (profile.check<JerkSigns::UDUD, Limits::ACC1_VEL>(tf, jMax, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDUD, Limits::ACC1_VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -160,7 +160,7 @@ bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double aMax, do
     return false;
 }
 
-bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     if (tf < std::max((-a0 + aMax)/jMax, 0.0) + std::max(aMax/jMax, 0.0)) {
         return false;
     }
@@ -201,7 +201,7 @@ bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double aMax, do
             profile.t[5] = 0;
             profile.t[6] = af/jMax + t;
 
-            if (profile.check<JerkSigns::UDDU, Limits::ACC0_VEL>(tf, jMax, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::ACC0_VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -241,7 +241,7 @@ bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double aMax, do
             profile.t[5] = 0;
             profile.t[6] = -(af/jMax) + t;
 
-            if (profile.check<JerkSigns::UDUD, Limits::ACC0_VEL>(tf, jMax, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDUD, Limits::ACC0_VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -250,7 +250,7 @@ bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double aMax, do
     return false;
 }
 
-bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // Profile UDDU
     {
         const double p1 = af_af - 2*jMax*(-2*af*tf + jMax*tf_tf + 3*vd);
@@ -324,7 +324,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double 
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] + af/jMax;
 
-            if (profile.check<JerkSigns::UDDU, Limits::VEL>(tf, jMax, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -419,7 +419,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double 
             profile.t[5] = 0;
             profile.t[6] = profile.t[4] - af/jMax;
 
-            if (profile.check<JerkSigns::UDUD, Limits::VEL>(tf, jMax, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDUD, Limits::VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -428,7 +428,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double aMax, double 
     return false;
 }
 
-bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double h1 = 2*aMin*(-pd + tf*v0) + vd*vd + aMax*(2*pd + aMin*tf_tf - 2*tf*vf);
         const double h2 = ((aMax - aMin)*(-aMin*vd + aMax*(aMin*tf - vd)));
@@ -442,7 +442,7 @@ bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double aMax, d
         profile.t[5] = tf - (2*profile.t[0] + profile.t[1] + 2*profile.t[4]);
         profile.t[6] = profile.t[4];
 
-        return profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(tf, jf, vMax, aMax, aMin, jMax);
+        return profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(tf, jf, vMax, vMin, aMax, aMin, jMax);
     }
 
     const double h1 = Sqrt(144*Power((aMax - aMin)*(-aMin*vd + aMax*(aMin*tf - vd)) - af_af*(aMax*tf - vd) + 2*af*aMin*(aMax*tf - vd) + a0_a0*(aMin*tf + v0 - vf) - 2*a0*aMax*(aMin*tf - vd),2) + 48*ad*(3*a0_p3 - 3*af_p3 + 12*aMax*aMin*(-aMax + aMin) + 4*af_af*(aMax + 2*aMin) + a0*(-3*af_af - 8*af*aMax + 6*aMax*aMax + 8*af*aMin + 12*aMax*aMin - 6*aMin*aMin) + 6*af*(aMax*aMax - 2*aMax*aMin - aMin*aMin) + a0_a0*(3*af - 4*(2*aMax + aMin)))*(2*aMin*(-pd + tf*v0) + vd*vd + aMax*(2*pd + aMin*tf*tf - 2*tf*vf)));
@@ -456,14 +456,14 @@ bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double aMax, d
     profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + 2*profile.t[4] + af/jf);
     profile.t[6] = profile.t[4] + af/jf;
 
-    if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(tf, jf, vMax, aMax, aMin, jMax)) {
+    if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(tf, jf, vMax, vMin, aMax, aMin, jMax)) {
         return true;
     }
 
     return false;
 }
 
-bool PositionStep2::time_acc1(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // a3 != 0
 
     // Case UDDU, Solution 2
@@ -482,7 +482,7 @@ bool PositionStep2::time_acc1(Profile& profile, double vMax, double aMax, double
         profile.t[5] = tf - (profile.t[2] + profile.t[3] + profile.t[4] + (af - aMin)/jMax);
         profile.t[6] = (af - aMin)/jMax;
 
-        if (profile.check<JerkSigns::UDDU, Limits::ACC1>(tf, jMax, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDDU, Limits::ACC1>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }
@@ -503,14 +503,14 @@ bool PositionStep2::time_acc1(Profile& profile, double vMax, double aMax, double
         profile.t[5] = tf - (profile.t[2] + profile.t[3] + profile.t[4] + (-af + aMax)/jMax);
         profile.t[6] = (-af + aMax)/jMax;
 
-        if (profile.check<JerkSigns::UDUD, Limits::ACC1>(tf, jMax, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDUD, Limits::ACC1>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }
     return false;
 }
 
-bool PositionStep2::time_acc0(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // a3 != 0
 
     // UDDU Solution 1
@@ -528,7 +528,7 @@ bool PositionStep2::time_acc0(Profile& profile, double vMax, double aMax, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check<JerkSigns::UDDU, Limits::ACC0>(tf, jMax, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDDU, Limits::ACC0>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }
@@ -536,7 +536,7 @@ bool PositionStep2::time_acc0(Profile& profile, double vMax, double aMax, double
     return false;
 }
 
-bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double aMin, double jMax) {
+bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double h1 = Sqrt(tf_tf*vf_vf + Power(4*pd - tf*vf,2));
         const double jf = 4*(4*pd - 2*tf*vf + h1)/tf_p3;
@@ -549,7 +549,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
         profile.t[5] = 0;
         profile.t[6] = profile.t[0];
 
-        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, aMax, aMin, jMax)) {
+        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, vMin, aMax, aMin, jMax)) {
             return true;
         }
     }
@@ -568,7 +568,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
             profile.t[5] = 0;
             profile.t[6] = profile.t[4];
 
-            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, aMax, aMin, jMax)) {
+            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, vMin, aMax, aMin, jMax)) {
                 return true;
             }
         }
@@ -609,7 +609,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
                     profile.t[5] = 0;
                     profile.t[6] = 0;
 
-                    if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+                    if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
                         return true;
                     }
                 }
@@ -653,7 +653,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
                     profile.t[5] = 0;
                     profile.t[6] = tf - (t + profile.t[3] + profile.t[4]);
 
-                    if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+                    if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
                         return true;
                     }
                 }
@@ -698,7 +698,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
                 profile.t[5] = 0;
                 profile.t[6] = 0;
 
-                if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+                if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
                     return true;
                 }
             }
@@ -747,7 +747,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
                 profile.t[5] = 0;
                 profile.t[6] = tf - (t + profile.t[3] + profile.t[4]);
 
-                if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+                if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
                     return true;
                 }
             }
@@ -767,7 +767,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
             profile.t[5] = h1/(3*jMax_jMax);
             profile.t[6] = tf - (profile.t[0] + profile.t[2] + profile.t[5]);
 
-            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -809,7 +809,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
                 profile.t[5] = 0;
                 profile.t[6] = 0;
 
-                if (profile.check<JerkSigns::UDUD, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+                if (profile.check<JerkSigns::UDUD, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
                     return true;
                 }
             }
@@ -828,7 +828,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
 
@@ -846,7 +846,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
             profile.t[5] = 0;
             profile.t[6] = 0;
 
-            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -876,7 +876,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
             profile.t[5] = 0;
             profile.t[6] = tf - (profile.t[0] + profile.t[1]);
 
-            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, vMin, aMax, aMin)) {
                 return true;
             }
         }
@@ -892,7 +892,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
         profile.t[5] = 0;
         profile.t[6] = tf - (profile.t[0] + profile.t[2]);
 
-        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }
@@ -908,7 +908,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double aMax, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }
@@ -922,10 +922,10 @@ bool PositionStep2::get_profile(Profile& profile) {
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
     if (pd > tf * v0) {
-        return check_all(profile, _vMax, _aMax, _aMin, _jMax) || check_all(profile, _vMin, _aMin, _aMax, -_jMax);
+        return check_all(profile, _vMax, _vMin, _aMax, _aMin, _jMax) || check_all(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
 
     } else {
-        return check_all(profile, _vMin, _aMin, _aMax, -_jMax) || check_all(profile, _vMax, _aMax, _aMin, _jMax);
+        return check_all(profile, _vMin, _vMax, _aMin, _aMax, -_jMax) || check_all(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
     }
 }
 
