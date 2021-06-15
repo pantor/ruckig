@@ -101,10 +101,11 @@ public:
                 }
             }
 
+            // Target acceleration needs to be accessible from "above" and "below"
             if (input.interface == Interface::Position) {
-                const double max_velocity = input.min_velocity ? std::min(-input.min_velocity.value()[dof], input.max_velocity[dof]) : input.max_velocity[dof];
-                const double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (max_velocity - std::abs(input.target_velocity[dof])));
-
+                const double min_velocity = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
+                const double v_diff = std::min(std::abs(input.max_velocity[dof] - input.target_velocity[dof]), std::abs(min_velocity - input.target_velocity[dof]));
+                const double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * v_diff);
                 if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
                     return false;
                 }
