@@ -31,7 +31,7 @@ class Trajectory {
     //! Set of current profiles for each DoF
     std::array<Profile, DOFs> profiles;
 
-    double duration;
+    double duration {0.0};
     std::array<double, DOFs> independent_min_durations;
 
     //! Is the trajectory phase synchronizable?

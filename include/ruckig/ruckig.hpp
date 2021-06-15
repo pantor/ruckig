@@ -102,12 +102,9 @@ public:
             }
 
             if (input.interface == Interface::Position) {
-                double max_target_acceleration;
-                if (input.min_velocity && input.target_velocity[dof] < 0) {
-                    max_target_acceleration = std::sqrt(-2 * input.max_jerk[dof] * (input.min_velocity.value()[dof] - input.target_velocity[dof]));
-                } else {
-                    max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (input.max_velocity[dof] - std::abs(input.target_velocity[dof])));
-                }
+                const double max_velocity = input.min_velocity ? std::min(-input.min_velocity.value()[dof], input.max_velocity[dof]) : input.max_velocity[dof];
+                const double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * (max_velocity - std::abs(input.target_velocity[dof])));
+
                 if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
                     return false;
                 }
@@ -118,7 +115,7 @@ public:
     }
 
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        auto start = std::chrono::high_resolution_clock::now();
+        const auto start = std::chrono::high_resolution_clock::now();
 
         output.new_calculation = false;
 
@@ -132,7 +129,7 @@ public:
         output.time += delta_time;
         output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration);
 
-        auto stop = std::chrono::high_resolution_clock::now();
+        const auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 
         current_input.current_position = output.new_position;
