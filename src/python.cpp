@@ -32,7 +32,11 @@ struct PerDOF {
             .def_property_readonly("duration", &Trajectory<DOFs>::get_duration)
             .def_property_readonly("independent_min_durations", &Trajectory<DOFs>::get_independent_min_durations)
             .def_property_readonly("position_extrema", &Trajectory<DOFs>::get_position_extrema)
-            .def("at_time", &Trajectory<DOFs>::at_time);
+            .def("at_time", [](const Trajectory<DOFs>& traj, double time) {
+                std::array<double, DOFs> new_position, new_velocity, new_acceleration;
+                traj.at_time(time, new_position, new_velocity, new_acceleration);
+                return py::make_tuple(new_position, new_velocity, new_acceleration);
+            });
 
         py::class_<IP>(m, append("InputParameter", DOFs))
             .def(py::init<>())
