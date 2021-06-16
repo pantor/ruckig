@@ -1,10 +1,10 @@
+# Create subdirectory for patch and copy all relevant files
 mkdir patch-cpp11
 cp -r include src examples cmake test CMakeLists.txt patch-cpp11/
-
 cd patch-cpp11
-mkdir -p include/nonstd/
 
 # Download optional polyfill
+mkdir -p include/nonstd/
 wget -O include/nonstd/optional.hpp https://raw.githubusercontent.com/martinmoene/optional-lite/master/include/nonstd/optional.hpp
 
 # Replace optional, if constexpr, and C++ version
