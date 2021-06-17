@@ -5,6 +5,8 @@
 
 template<size_t DOFs, class T>
 class Randomizer {
+    template<class U> using Vector = std::array<U, DOFs>;
+
     std::default_random_engine gen;
     std::uniform_real_distribution<double> uniform_dist;
     T dist;
@@ -15,26 +17,26 @@ public:
         gen.seed(seed);
     }
 
-    void fill(std::array<double, DOFs>& input) {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+    void fill(Vector<double>& input) {
+        for (size_t dof = 0; dof < input.size(); ++dof) {
             input[dof] = dist(gen);
         }
     }
 
-    void fill_or_zero(std::array<double, DOFs>& input, double p) {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+    void fill_or_zero(Vector<double>& input, double p) {
+        for (size_t dof = 0; dof < input.size(); ++dof) {
             input[dof] = uniform_dist(gen) < p ? dist(gen) : 0.0;
         }
     }
 
-    void fill(std::array<double, DOFs>& input, const std::array<double, DOFs>& offset) {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+    void fill(Vector<double>& input, const Vector<double>& offset) {
+        for (size_t dof = 0; dof < input.size(); ++dof) {
             input[dof] = dist(gen) + std::abs(offset[dof]);
         }
     }
 
-    void fill_min(std::array<double, DOFs>& input, const std::array<double, DOFs>& offset) {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+    void fill_min(Vector<double>& input, const Vector<double>& offset) {
+        for (size_t dof = 0; dof < input.size(); ++dof) {
             input[dof] = dist(gen) - std::abs(offset[dof]);
         }
     }

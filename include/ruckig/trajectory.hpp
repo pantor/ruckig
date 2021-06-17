@@ -23,36 +23,38 @@ template <size_t> class Reflexxes;
 //! Interface for the generated trajectory.
 template<size_t DOFs>
 class Trajectory {
+    template<class T> using Vector = std::array<T, DOFs>;
+    
     // Allow alternative OTG algorithms to directly access members (i.e. duration)
     friend class Reflexxes<DOFs>;
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
 
     //! Set of current profiles for each DoF
-    std::array<Profile, DOFs> profiles;
+    Vector<Profile> profiles;
 
     double duration {0.0};
-    std::array<double, DOFs> independent_min_durations;
+    Vector<double> independent_min_durations;
 
     //! Is the trajectory phase synchronizable?
     static bool is_phase_synchronizable(
         const InputParameter<DOFs>& inp,
-        const std::array<double, DOFs>& vMax,
-        const std::array<double, DOFs>& vMin,
-        const std::array<double, DOFs>& aMax,
-        const std::array<double, DOFs>& aMin,
-        const std::array<double, DOFs>& jMax,
+        const Vector<double>& vMax,
+        const Vector<double>& vMin,
+        const Vector<double>& aMax,
+        const Vector<double>& aMin,
+        const Vector<double>& jMax,
         Profile::Direction limiting_direction,
         size_t limiting_dof,
-        std::array<double, DOFs>& new_max_velocity,
-        std::array<double, DOFs>& new_max_acceleration,
-        std::array<double, DOFs>& new_min_acceleration,
-        std::array<double, DOFs>& new_max_jerk
+        Vector<double>& new_max_velocity,
+        Vector<double>& new_max_acceleration,
+        Vector<double>& new_min_acceleration,
+        Vector<double>& new_max_jerk
     ) {
         using Direction = Profile::Direction;
 
         // Get scaling factor of first DoF
-        std::array<double, DOFs> pd;
+        Vector<double> pd;
 
         bool pd_found_nonzero {false};
         double v0_scale, a0_scale, vf_scale, af_scale;
@@ -121,7 +123,7 @@ class Trajectory {
         return true;
     }
 
-    static bool synchronize(const std::array<Block, DOFs>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, std::array<Profile, DOFs>& profiles, bool discrete_duration, double delta_time) {
+    static bool synchronize(const Vector<Block>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
         if (DOFs == 1 && !t_min && !discrete_duration) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
@@ -185,9 +187,9 @@ public:
     //! Calculate the time-optimal waypoint-based trajectory
     template<bool throw_error, bool return_error_at_maximal_duration>
     Result calculate(const InputParameter<DOFs>& inp, double delta_time) {
-        std::array<Block, DOFs> blocks;
-        std::array<double, DOFs> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
-        std::array<double, DOFs> inp_min_velocity, inp_min_acceleration;
+        Vector<Block> blocks;
+        Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
+        Vector<double> inp_min_velocity, inp_min_acceleration;
         for (size_t dof = 0; dof < DOFs; ++dof) {
             auto& p = profiles[dof];
             p.pf = inp.current_position[dof];
@@ -279,7 +281,7 @@ public:
         }
 
         if (inp.synchronization == Synchronization::Phase && inp.interface == Interface::Position) {
-            std::array<double, DOFs> new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk;
+            Vector<double> new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk;
             if (is_phase_synchronizable(inp, inp.max_velocity, inp_min_velocity, inp.max_acceleration, inp_min_acceleration, inp.max_jerk, profiles[limiting_dof].direction, limiting_dof, new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk)) {
                 bool found_time_synchronization {true};
                 for (size_t dof = 0; dof < DOFs; ++dof) {
@@ -368,7 +370,7 @@ public:
 
     //! Get the kinematic state at a given time
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
-    void at_time(double time, std::array<double, DOFs>& new_position, std::array<double, DOFs>& new_velocity, std::array<double, DOFs>& new_acceleration) const {
+    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
         if (time >= duration) {
             // Keep constant acceleration
             for (size_t dof = 0; dof < DOFs; ++dof) {
@@ -419,14 +421,14 @@ public:
     }
 
     //! Get the minimum duration of each independent DoF
-    std::array<double, DOFs> get_independent_min_durations() const {
+    Vector<double> get_independent_min_durations() const {
         return independent_min_durations;
     }
 
     //! Get the min/max values of the position for each DoF
-    std::array<PositionExtrema, DOFs> get_position_extrema() const {
-        std::array<PositionExtrema, DOFs> result;
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+    Vector<PositionExtrema> get_position_extrema() const {
+        Vector<PositionExtrema> result;
+        for (size_t dof = 0; dof < profiles.size(); ++dof) {
             result[dof] = profiles[dof].get_position_extrema();
         }
         return result;

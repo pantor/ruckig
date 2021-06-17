@@ -10,9 +10,10 @@ namespace ruckig {
 //! Output type of the OTG
 template<size_t DOFs>
 struct OutputParameter {
+    template<class T> using Vector = std::array<T, DOFs>;
     static constexpr size_t degrees_of_freedom {DOFs};
 
-    std::array<double, DOFs> new_position, new_velocity, new_acceleration;
+    Vector<double> new_position, new_velocity, new_acceleration;
 
     //! Was a new trajectory calculation performed in the last cycle?
     bool new_calculation {false};
