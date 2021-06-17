@@ -46,7 +46,7 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
     return false;
 }
 
-bool VelocityStep2::time_none([[maybe_unused]] Profile& profile, [[maybe_unused]] double aMax, [[maybe_unused]] double aMin, [[maybe_unused]] double jMax) {
+bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double jMax) {
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON && std::abs(vf - v0) < DBL_EPSILON) {
         profile.t[0] = 0;
         profile.t[1] = 0;

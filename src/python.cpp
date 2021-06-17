@@ -95,14 +95,9 @@ struct PerDOF {
 };
 
 
-template<class T>
-py::object cast_unique() {
-    return py::cast(std::make_unique<T>());
-}
-
-template<class T>
-py::object cast_unique(double delta_time) {
-    return py::cast(std::make_unique<T>(delta_time));
+template<class T, typename... Args>
+py::object cast_unique(Args&&... args) {
+    return py::cast(std::unique_ptr<T>(new T(std::forward<Args>(args)...)));
 }
 
 py::object handle_dof_error(size_t dofs) {

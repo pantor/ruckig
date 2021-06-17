@@ -175,7 +175,7 @@ struct Profile {
     }
 
     template<JerkSigns jerk_signs, Limits limits>
-    inline bool check([[maybe_unused]] double tf, double jf, double vMax, double vMin, double aMax, double aMin) {
+    inline bool check(double, double jf, double vMax, double vMin, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
         return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum[6] - tf) < 1e-8);
     }
@@ -187,11 +187,11 @@ struct Profile {
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     inline static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j) {
-        return {
+        return std::make_tuple(
             p0 + t * (v0 + t * (a0 / 2 + t * j / 6)),
             v0 + t * (a0 + t * j / 2),
-            a0 + t * j,
-        };
+            a0 + t * j
+        );
     }
 
     //! Set boundary values for the position interface
