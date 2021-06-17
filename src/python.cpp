@@ -25,7 +25,7 @@ struct PerDOF {
 
     template<size_t DOFs>
     static void define(py::module& m) {
-        /* using IP = InputParameter<DOFs>;
+        using IP = InputParameter<DOFs>;
         using OP = OutputParameter<DOFs>;
 
         py::class_<Trajectory<DOFs>>(m, append("Trajectory", DOFs))
@@ -87,7 +87,7 @@ struct PerDOF {
             .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
             .def_readonly_static("degrees_of_freedom", &Reflexxes<DOFs>::degrees_of_freedom)
             .def("update", &Reflexxes<DOFs>::update);
-    #endif */
+    #endif
 
         // Recurse upwards
         if constexpr (DOFs < MAX - 1) PerDOF<MAX>::define<DOFs+1>(m);
