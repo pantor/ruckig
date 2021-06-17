@@ -11,5 +11,4 @@ wget -O include/nonstd/optional.hpp https://raw.githubusercontent.com/martinmoen
 
 # Replace optional, if constexpr, and C++ version
 sed -i -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g' include/ruckig/*.hpp
-sed -i -e 's|if constexpr|if|g' src/*.cpp
 sed -i -e 's|cxx_std_17|cxx_std_11|g' CMakeLists.txt
