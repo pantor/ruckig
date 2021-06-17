@@ -11,16 +11,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        build-python: ['ON']
-        build-benchmark: ['ON']
-        
         include:
           - name: ubuntu-18.04-gcc-5
             os: ubuntu-18.04
             compiler: gcc
             version: 5
-            build-python: ['OFF']
-            build-benchmark: ['OFF']
 
     steps:
     - uses: actions/checkout@v2
@@ -46,7 +41,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         buildDirectory: "${{ github.workspace }}/build"
         cmakeBuildType: 'Release'
-        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=${{ matrix.build-python }} -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=${{ matrix.build-benchmark }}'
+        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON'
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
