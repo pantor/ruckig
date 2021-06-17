@@ -28,7 +28,7 @@ std::tuple<double, double> analyze(const std::vector<double>& v) {
     std::transform(v.begin(), v.end(), diff.begin(), [mean](double x) { return x - mean; });
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     double std_deviation = std::sqrt(sq_sum / v.size());
-    return {mean, std_deviation};
+    return std::make_tuple(mean, std_deviation);
 }
 
 
