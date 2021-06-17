@@ -187,11 +187,11 @@ struct Profile {
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     inline static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j) {
-        return {
+        return std::make_tuple(
             p0 + t * (v0 + t * (a0 / 2 + t * j / 6)),
             v0 + t * (a0 + t * j / 2),
-            a0 + t * j,
-        };
+            a0 + t * j
+        );
     }
 
     //! Set boundary values for the position interface
