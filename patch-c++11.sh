@@ -1,7 +1,9 @@
 # Create subdirectory for patch and copy all relevant files
-mkdir patch-cpp11
-cp -r include src examples cmake test CMakeLists.txt patch-cpp11/
-cd patch-cpp11
+if [ "$#" -eq 0 ]; then
+    mkdir patch-cpp11
+    cp -r include src examples cmake test CMakeLists.txt patch-cpp11/
+    cd patch-cpp11
+fi
 
 # Download optional polyfill
 mkdir -p include/nonstd/
