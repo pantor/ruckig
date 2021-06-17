@@ -41,9 +41,11 @@ enum class DurationDiscretization {
 //! Input type of the OTG
 template<size_t DOFs>
 class InputParameter {
-    static std::string join(const std::array<double, DOFs>& array) {
+    template<class T> using Vector = std::array<T, DOFs>;
+
+    static std::string join(const Vector<double>& array) {
         std::ostringstream ss;
-        for (size_t i = 0; i < DOFs; ++i) {
+        for (size_t i = 0; i < array.size(); ++i) {
             if (i) ss << ", ";
             ss << std::setprecision(16) << array[i];
         }
@@ -51,22 +53,26 @@ class InputParameter {
     }
 
 public:
-    using Vector = std::array<double, DOFs>;
-    static constexpr size_t degrees_of_freedom {DOFs};
+    size_t degrees_of_freedom;
 
     Interface interface {Interface::Position};
     Synchronization synchronization {Synchronization::Time};
     DurationDiscretization duration_discretization {DurationDiscretization::Continuous};
 
-    Vector current_position, current_velocity {}, current_acceleration {};
-    Vector target_position, target_velocity {}, target_acceleration {};
-    Vector max_velocity, max_acceleration, max_jerk;
-    std::optional<Vector> min_velocity, min_acceleration;
+    Vector<double> current_position, current_velocity, current_acceleration;
+    Vector<double> target_position, target_velocity, target_acceleration;
+    Vector<double> max_velocity, max_acceleration, max_jerk;
+    std::optional<Vector<double>> min_velocity, min_acceleration;
 
-    std::array<bool, DOFs> enabled;
+    Vector<bool> enabled;
     std::optional<double> minimum_duration;
 
-    InputParameter() {
+    template <class = typename std::enable_if<DOFs >= 1>::type>
+    InputParameter(): degrees_of_freedom(DOFs) {
+        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
+        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
+        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
+        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
         std::fill(enabled.begin(), enabled.end(), true);
     }
 

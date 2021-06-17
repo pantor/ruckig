@@ -43,16 +43,18 @@ public:
     // Just a shorter notation
     using Input = InputParameter<DOFs>;
     using Output = OutputParameter<DOFs>;
-    static constexpr size_t degrees_of_freedom {DOFs};
+    size_t degrees_of_freedom;
 
     //! Time step between updates (cycle time) in [s]
     const double delta_time;
 
-    explicit Ruckig() { }
-    explicit Ruckig(double delta_time): delta_time(delta_time) { }
+    explicit Ruckig(): degrees_of_freedom(DOFs) { }
+
+    template <class = typename std::enable_if<DOFs >= 1>::type>
+    explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time) { }
 
     bool validate_input(const InputParameter<DOFs>& input) const {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+        for (size_t dof = 0; dof < input.max_velocity.size(); ++dof) {
             if (input.interface == Interface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
                 return false;
             }

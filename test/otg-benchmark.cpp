@@ -32,7 +32,7 @@ std::tuple<double, double> analyze(const std::vector<double>& v) {
 }
 
 
-template<class OTGType>
+template<size_t DOFs, class OTGType>
 void benchmark(size_t n, double number_trajectories, bool verbose = true) {
     OTGType otg {0.005};
 
@@ -40,11 +40,11 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
     std::normal_distribution<double> dynamic_dist {0.0, 0.8};
     std::uniform_real_distribution<double> limit_dist {0.1, 12.0};
 
-    Randomizer<otg.degrees_of_freedom, decltype(position_dist)> p { position_dist, 42 };
-    Randomizer<otg.degrees_of_freedom, decltype(dynamic_dist)> d { dynamic_dist, 43 };
-    Randomizer<otg.degrees_of_freedom, decltype(limit_dist)> l { limit_dist, 44 };
+    Randomizer<DOFs, decltype(position_dist)> p { position_dist, 42 };
+    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, 43 };
+    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, 44 };
 
-    InputParameter<otg.degrees_of_freedom> input;
+    InputParameter<DOFs> input;
     std::vector<double> average, worst;
 
     for (size_t j = 0; j < n; ++j) {
@@ -58,7 +58,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
             d.fill_or_zero(input.current_acceleration, 0.8);
             p.fill(input.target_position);
             d.fill_or_zero(input.target_velocity, 0.7);
-            if constexpr (std::is_same<OTGType, Ruckig<otg.degrees_of_freedom, true>>::value) {
+            if constexpr (std::is_same<OTGType, Ruckig<DOFs, true>>::value) {
                 d.fill_or_zero(input.target_acceleration, 0.6);
             }
 
@@ -66,7 +66,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
             l.fill(input.max_acceleration, input.target_acceleration);
             l.fill(input.max_jerk);
 
-            if constexpr (std::is_same<OTGType, Ruckig<otg.degrees_of_freedom, true>>::value) {
+            if constexpr (std::is_same<OTGType, Ruckig<DOFs, true>>::value) {
                 if (!otg.validate_input(input)) {
                     continue;
                 }
@@ -101,24 +101,24 @@ int main() {
     const size_t number_trajectories {64 * 1024};
 
     // Main comparison
-    benchmark<Ruckig<7, true>>(n, number_trajectories);
-    // benchmark<Reflexxes<7>>(n, number_trajectories);
+    benchmark<7, Ruckig<7, true>>(n, number_trajectories);
+    // benchmark<7, Reflexxes<7>>(n, number_trajectories);
 
     // Dependence performance vs. DoFs
-    // benchmark<Ruckig<1, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<2, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<3, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<4, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<5, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<6, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<7, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<8, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<9, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<10, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<11, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<12, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<13, true>>(n, number_trajectories, false);
-    // benchmark<Ruckig<14, true>>(n, number_trajectories, false);
+    // benchmark<1, Ruckig<1, true>>(n, number_trajectories, false);
+    // benchmark<2, Ruckig<2, true>>(n, number_trajectories, false);
+    // benchmark<3, Ruckig<3, true>>(n, number_trajectories, false);
+    // benchmark<4, Ruckig<4, true>>(n, number_trajectories, false);
+    // benchmark<5, Ruckig<5, true>>(n, number_trajectories, false);
+    // benchmark<6, Ruckig<6, true>>(n, number_trajectories, false);
+    // benchmark<7, Ruckig<7, true>>(n, number_trajectories, false);
+    // benchmark<8, Ruckig<8, true>>(n, number_trajectories, false);
+    // benchmark<9, Ruckig<9, true>>(n, number_trajectories, false);
+    // benchmark<10, Ruckig<10, true>>(n, number_trajectories, false);
+    // benchmark<11, Ruckig<11, true>>(n, number_trajectories, false);
+    // benchmark<12, Ruckig<12, true>>(n, number_trajectories, false);
+    // benchmark<13, Ruckig<13, true>>(n, number_trajectories, false);
+    // benchmark<14, Ruckig<14, true>>(n, number_trajectories, false);
 
     // 1ms worst case
     // benchmark<Ruckig<82, true>>(n, number_trajectories);

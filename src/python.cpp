@@ -40,7 +40,7 @@ struct PerDOF {
 
         py::class_<IP>(m, append("InputParameter", DOFs))
             .def(py::init<>())
-            .def_readonly_static("degrees_of_freedom", &IP::degrees_of_freedom)
+            .def_readonly("degrees_of_freedom", &IP::degrees_of_freedom)
             .def_readwrite("current_position", &IP::current_position)
             .def_readwrite("current_velocity", &IP::current_velocity)
             .def_readwrite("current_acceleration", &IP::current_acceleration)
@@ -62,7 +62,7 @@ struct PerDOF {
 
         py::class_<OP>(m, append("OutputParameter", DOFs))
             .def(py::init<>())
-            .def_readonly_static("degrees_of_freedom", &IP::degrees_of_freedom)
+            .def_readonly("degrees_of_freedom", &OP::degrees_of_freedom)
             .def_readonly("new_position", &OP::new_position)
             .def_readonly("new_velocity", &OP::new_velocity)
             .def_readonly("new_acceleration", &OP::new_acceleration)
@@ -77,7 +77,7 @@ struct PerDOF {
         py::class_<Ruckig<DOFs, true>>(m, append("Ruckig", DOFs))
             .def(py::init<double>(), "delta_time"_a)
             .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
-            .def_readonly_static("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
+            .def_readonly("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
             .def("validate_input", &Ruckig<DOFs, true>::validate_input)
             .def("update", &Ruckig<DOFs, true>::update);
 
