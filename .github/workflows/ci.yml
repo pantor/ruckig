@@ -15,7 +15,7 @@ jobs:
           - name: ubuntu-18.04-gcc-5
             os: ubuntu-18.04
             compiler: gcc
-            version: "5"
+            version: 5
 
     steps:
     - uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
         cd pybind11
         git checkout v2.6.0
 
-    - name: Set older compiler version
+    - name: Set compiler version and patch C++11
       if: runner.os == 'Linux' && matrix.compiler == 'gcc' && matrix.version == '5'
       run: |
         sudo apt-get update

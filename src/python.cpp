@@ -143,7 +143,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("t_min", &PositionExtrema::t_min)
         .def_readonly("t_max", &PositionExtrema::t_max);
 
-    PerDOF<11>::define<1>(m);
+    // PerDOF<11>::define<1>(m);
 
     m.def("InputParameter", [](size_t dofs) {
         switch (dofs) {
