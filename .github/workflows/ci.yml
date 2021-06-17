@@ -11,6 +11,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - name: ubuntu-18.04-gcc-5
+            os: ubuntu-18.04
+            compiler: gcc
+            version: "5"
 
     steps:
     - uses: actions/checkout@v2
@@ -20,6 +25,16 @@ jobs:
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
         git checkout v2.6.0
+
+    - name: Set older compiler version
+      if: runner.os == 'Linux' && matrix.compiler == 'gcc' && matrix.version == '5'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++-${{ matrix.version }} g++-${{ matrix.version }}-multilib
+        echo "CC=gcc-${{ matrix.version }}" >> $GITHUB_ENV
+        echo "CXX=g++-${{ matrix.version }}" >> $GITHUB_ENV
+        sh patch-c++11.sh
+        cd patch-cpp11
 
     - name: Configure and make
       uses: lukka/run-cmake@v3
