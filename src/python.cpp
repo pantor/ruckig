@@ -19,8 +19,8 @@ using namespace ruckig;
 
 template<size_t MAX>
 struct PerDOF {
-    static const char* append(std::string name, size_t DOFs) {
-        return (name.append(std::to_string(DOFs))).c_str();
+    static std::string append(std::string name, size_t DOFs) {
+        return name.append(std::to_string(DOFs));
     }
 
     template<size_t DOFs>
@@ -28,7 +28,7 @@ struct PerDOF {
         using IP = InputParameter<DOFs>;
         using OP = OutputParameter<DOFs>;
 
-        py::class_<Trajectory<DOFs>>(m, append("Trajectory", DOFs))
+        py::class_<Trajectory<DOFs>>(m, append("Trajectory", DOFs).c_str())
             .def_property_readonly("duration", &Trajectory<DOFs>::get_duration)
             .def_property_readonly("independent_min_durations", &Trajectory<DOFs>::get_independent_min_durations)
             .def_property_readonly("position_extrema", &Trajectory<DOFs>::get_position_extrema)
@@ -38,7 +38,7 @@ struct PerDOF {
                 return py::make_tuple(new_position, new_velocity, new_acceleration);
             });
 
-        py::class_<IP>(m, append("InputParameter", DOFs))
+        py::class_<IP>(m, append("InputParameter", DOFs).c_str())
             .def(py::init<>())
             .def_readonly_static("degrees_of_freedom", &IP::degrees_of_freedom)
             .def_readwrite("current_position", &IP::current_position)
@@ -60,7 +60,7 @@ struct PerDOF {
             .def(py::self != py::self)
             .def("__repr__", static_cast<std::string (IP::*)() const>(&IP::to_string));
 
-        py::class_<OP>(m, append("OutputParameter", DOFs))
+        py::class_<OP>(m, append("OutputParameter", DOFs).c_str())
             .def(py::init<>())
             .def_readonly_static("degrees_of_freedom", &IP::degrees_of_freedom)
             .def_readonly("new_position", &OP::new_position)
@@ -74,7 +74,7 @@ struct PerDOF {
                 return OP(self);
             });
 
-        py::class_<Ruckig<DOFs, true>>(m, append("Ruckig", DOFs))
+        py::class_<Ruckig<DOFs, true>>(m, append("Ruckig", DOFs).c_str())
             .def(py::init<double>(), "delta_time"_a)
             .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
             .def_readonly_static("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
@@ -82,7 +82,7 @@ struct PerDOF {
             .def("update", &Ruckig<DOFs, true>::update);
 
     #ifdef WITH_REFLEXXES
-        py::class_<Reflexxes<DOFs>>(m, append("Reflexxes", DOFs))
+        py::class_<Reflexxes<DOFs>>(m, append("Reflexxes", DOFs).c_str())
             .def(py::init<double>(), "delta_time"_a)
             .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
             .def_readonly_static("degrees_of_freedom", &Reflexxes<DOFs>::degrees_of_freedom)
