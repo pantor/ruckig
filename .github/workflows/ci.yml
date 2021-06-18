@@ -52,10 +52,10 @@ jobs:
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        cd build
+        cd build/Debug
         ls
         .\example-position.exe
-        cd ..
+        cd ../..
         python3 .\examples\position.py
 
     - name: Test
