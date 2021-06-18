@@ -133,7 +133,6 @@ struct Profile {
             j = {jf, 0, -jf, 0, jf, 0, -jf};
         }
 
-        // const double vMaxAbs = std::abs(vMax) + 1e-12;
         const double vUppLim = ((vMax > 0) ? vMax : vMin) + 1e-12;
         const double vLowLim = ((vMax > 0) ? vMin : vMax) - 1e-12;
 
@@ -167,11 +166,10 @@ struct Profile {
         return std::abs(p[7] - pf) < 1e-8
             && std::abs(v[7] - vf) < 1e-8
             && std::abs(a[7] - af) < 1e-12 // This is not really needed, but we want to double check
-            // && std::abs(v[3]) <= vMaxAbs && std::abs(v[4]) <= vMaxAbs && std::abs(v[5]) <= vMaxAbs && std::abs(v[6]) <= vMaxAbs
-            && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
-            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
-            && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
+            && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim
+            && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
+            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim; // This is not really needed, but we want to double check
     }
 
     template<JerkSigns jerk_signs, Limits limits>
