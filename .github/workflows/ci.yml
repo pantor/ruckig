@@ -58,4 +58,4 @@ jobs:
     - name: Test
       if: matrix.os == 'ubuntu-latest'
       run: |
-        env CTEST_OUTPUT_ON_FAILURE=1 ./build/otg-test 5000
+        env CTEST_OUTPUT_ON_FAILURE=1 ./build/otg-test 500000
