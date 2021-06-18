@@ -189,7 +189,7 @@ The current test suite validates over 5.000.000.000 random trajectories. The num
 
 ## Benchmark
 
-We find that Ruckig is around twice as fast as Reflexxes Type IV and well-suited for control cycles as low as half a millisecond.
+We find that Ruckig is more than twice as fast as Reflexxes Type IV and well-suited for control cycles as low as half a millisecond.
 
 ![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/benchmark.png?raw=true)
 
