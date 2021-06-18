@@ -52,10 +52,12 @@ jobs:
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        .\build\example-position.exe
+        cd build
+        example-position.exe
+        cd ..
         python3 .\examples\position.py
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
       run: |
-        env CTEST_OUTPUT_ON_FAILURE=1 ./build/otg-test 5000000
+        env CTEST_OUTPUT_ON_FAILURE=1 ./build/otg-test 5000
