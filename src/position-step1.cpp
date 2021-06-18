@@ -375,9 +375,9 @@ void PositionStep1::time_acc0_two_step(Profile& profile, double vMax, double vMi
     {
         const double h0 = 3*(af_af - a0_a0 + 2*jMax*(v0 + vf));
         const double h1 = Sqrt(2*(2*Power2(a0_p3 + 2*af_p3 + 6*jMax_jMax*pd + 6*(af - a0)*jMax*vf - 3*a0*af_af) + h0*(a0_p4 - 6*a0_a0*(af_af + 2*jMax*vf) + 8*a0*(af_p3 + 3*jMax_jMax*pd + 3*af*jMax*vf) - 3*(af_p4 + 4*af_af*jMax*vf + 4*jMax_jMax*(vf_vf - v0_v0))))) * Abs(jMax) / jMax;
-        profile.t[0] = (4*af_p3 + 2*a0_p3 - 6*a0*af_af + 12*jMax_jMax*pd + 12*(af - a0)*jMax*vf + h1)/(2*jMax_jMax*h0);
+        profile.t[0] = (4*af_p3 + 2*a0_p3 - 6*a0*af_af + 12*jMax_jMax*pd + 12*(af - a0)*jMax*vf + h1)/(2*jMax*h0);
         profile.t[1] = -h1/(jMax*h0);
-        profile.t[2] = (-4*a0_p3 - 2*af_p3 + 6*a0_a0*af + 12*jMax_jMax*pd - 12*(af - a0)*jMax*v0 + h1)/(2*jMax_jMax*h0);
+        profile.t[2] = (-4*a0_p3 - 2*af_p3 + 6*a0_a0*af + 12*jMax_jMax*pd - 12*(af - a0)*jMax*v0 + h1)/(2*jMax*h0);
         profile.t[3] = 0;
         profile.t[4] = 0;
         profile.t[5] = 0;
