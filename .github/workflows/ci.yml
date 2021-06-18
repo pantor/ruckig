@@ -55,6 +55,7 @@ jobs:
         .\build\Debug\example-position.exe > $null
         ls build
         ls build/Debug
+        Copy-Item "D:\a\ruckig\ruckig\build\Debug\ruckig.cp37-win_amd64.pyd" -Destination "D:\a\ruckig\ruckig\build"
         python3 .\examples\position.py
 
     - name: Test
