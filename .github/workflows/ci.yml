@@ -53,9 +53,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         .\build\Debug\example-position.exe > $null
-        ls build
-        ls build/Debug
-        python3 .\examples\position.py
+        python3 .\examples\position.py > $null
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
