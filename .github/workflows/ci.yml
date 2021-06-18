@@ -43,10 +43,17 @@ jobs:
         cmakeBuildType: 'Release'
         cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON'
 
-    - name: Run Examples
+    - name: Run Examples (Unix)
+      if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-latest'
       run: |
         ./build/example-position > /dev/null
         python3 ./examples/position.py > /dev/null
+
+    - name: Run Examples (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        build/example-position.exe
+        python3 ./examples/position.py
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
