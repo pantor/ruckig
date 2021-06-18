@@ -44,7 +44,7 @@ jobs:
         cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON'
 
     - name: Run Examples (Unix)
-      if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
       run: |
         ./build/example-position > /dev/null
         python3 ./examples/position.py > /dev/null
@@ -58,4 +58,4 @@ jobs:
     - name: Test
       if: matrix.os == 'ubuntu-latest'
       run: |
-        env CTEST_OUTPUT_ON_FAILURE=1 ./build/otg-test 500000
+        env CTEST_OUTPUT_ON_FAILURE=1 ./build/otg-test 5000000

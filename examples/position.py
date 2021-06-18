@@ -4,7 +4,7 @@ from sys import path
 
 # Path to the build directory including a file similar to 'ruckig.cpython-37m-x86_64-linux-gnu'.
 build_path = Path(__file__).parent.parent / 'build'
-path.insert(0, str(build_path / 'Debug'))  # Fow windows
+path.insert(0, str(build_path / 'Debug'))  # For windows
 path.insert(0, str(build_path))
 
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
