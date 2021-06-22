@@ -400,16 +400,24 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
         }
 
         for (double t: roots) {
-            // Single Newton step (regarding pd)
+            // Double Newton step (regarding pd)
             {
-                const double h1 = (af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd);
-                const double orig = -pd + (af_p3 - a0_p3 - 12*a0*jMax_jMax*t*(t - tf) + 3*a0_a0*jMax*(-2*t + tf) - 6*af*h1)/(6*jMax_jMax) + (jMax*t*t*(-t + tf) + tf*v0) + std::pow(h1,1.5)/(jMax*Abs(jMax));
-                const double deriv_newton = -(a0 + jMax*t)*(3*jMax*Sqrt(h1)/Abs(jMax) - 2*af + (a0 + 3*jMax*t - 2*jMax*tf))/jMax;
+                double h1 = Sqrt((af_af - a0_a0)/2 - jMax*((2*a0 + jMax*t)*t - vd))/Abs(jMax);
+                double orig = -pd + (af_p3 - a0_p3 + 3*a0_a0*jMax*(tf - 2*t))/(6*jMax_jMax) + (2*a0 + jMax*t)*t*(tf - t) + (jMax*h1 - af)*h1*h1 + tf*v0;
+                double deriv_newton = (a0 + jMax*t)*(2*(af + jMax*tf) - 3*jMax*(h1 + t) - a0)/jMax;
 
                 t -= orig / deriv_newton;
+
+                h1 = Sqrt((af_af - a0_a0)/2 - jMax*((2*a0 + jMax*t)*t - vd))/Abs(jMax);
+                orig = -pd + (af_p3 - a0_p3 + 3*a0_a0*jMax*(tf - 2*t))/(6*jMax_jMax) + (2*a0 + jMax*t)*t*(tf - t) + (jMax*h1 - af)*h1*h1 + tf*v0;
+                if (std::abs(orig) > 1e-9) {
+                    deriv_newton = (a0 + jMax*t)*(2*(af + jMax*tf) - 3*jMax*(h1 + t) - a0)/jMax;
+
+                    t -= orig / deriv_newton;
+                }
             }
 
-            const double h1 = Sqrt((af_af - a0_a0)/2 - jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
+            const double h1 = Sqrt((af_af - a0_a0)/2 - jMax*((2*a0 + jMax*t)*t - vd))/Abs(jMax);
 
             profile.t[0] = t;
             profile.t[1] = 0;

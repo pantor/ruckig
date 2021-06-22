@@ -24,7 +24,7 @@ template <size_t> class Reflexxes;
 template<size_t DOFs>
 class Trajectory {
     template<class T> using Vector = std::array<T, DOFs>;
-    
+
     // Allow alternative OTG algorithms to directly access members (i.e. duration)
     friend class Reflexxes<DOFs>;
 
