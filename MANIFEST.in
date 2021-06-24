@@ -1,0 +1,7 @@
+recursive-include cmake *
+recursive-include include *
+recursive-include src *
+recursive-include test *
+recursive-include examples *
+
+include CMakeLists.txt
