@@ -45,10 +45,10 @@ class CMakeBuild(build_ext):
         build_type = os.environ.get('BUILD_TYPE', 'Release')
         build_args = ['--config', build_type]
 
-        print(extdir)
-
         cmake_args = [
+            '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
             '-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=' + extdir,
+            '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=' + extdir,
             '-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE=' + extdir,
             '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
             '-DEXAMPLE_VERSION_INFO={}'.format(self.distribution.get_version()),
