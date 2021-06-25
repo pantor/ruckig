@@ -52,7 +52,6 @@ jobs:
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        ls build
         .\build\example-position.exe > $null
         python3 .\examples\position.py > $null
 
