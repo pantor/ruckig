@@ -41,7 +41,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         buildDirectory: "${{ github.workspace }}/build"
         cmakeBuildType: 'Release'
-        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON'
+        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build'
 
     - name: Run Examples (Unix)
       if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
