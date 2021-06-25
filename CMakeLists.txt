@@ -79,6 +79,7 @@ if(BUILD_PYTHON_MODULE)
 
   set_target_properties(python_ruckig PROPERTIES OUTPUT_NAME ruckig)
   set_target_properties(python_ruckig PROPERTIES ARCHIVE_OUTPUT_NAME python_ruckig)
+  set_target_properties(python_ruckig PROPERTIES LIBRARY_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}>)
 endif()
 
 
