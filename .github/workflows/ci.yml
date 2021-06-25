@@ -41,7 +41,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         buildDirectory: "${{ github.workspace }}/build"
         cmakeBuildType: 'Release'
-        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=build -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=build -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=build'
+        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=. -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=. -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=.'
 
     - name: Run Examples (Unix)
       if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
@@ -53,7 +53,6 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         ls build
-        ls build\Debug
         .\build\Debug\example-position.exe > $null
         python3 .\examples\position.py > $null
 
