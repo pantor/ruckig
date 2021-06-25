@@ -53,6 +53,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         ls build
+        ls build\Debug
         .\build\Debug\example-position.exe > $null
         python3 .\examples\position.py > $null
 
