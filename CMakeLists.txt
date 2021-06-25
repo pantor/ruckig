@@ -42,6 +42,7 @@ target_link_libraries(ruckig PUBLIC)
 if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
   target_compile_options(ruckig PRIVATE /W4 /WX)
+  set_target_properties(ruckig PROPERTIES LIBRARY_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}>)
 
 else()
   target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
