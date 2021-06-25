@@ -64,7 +64,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='ruckig',
-    version='0.3.1',
+    version='0.3.2',
     description='Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.',
     long_description=long_description,
     long_description_content_type='text/markdown',

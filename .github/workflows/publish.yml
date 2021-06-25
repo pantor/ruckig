@@ -31,7 +31,17 @@ jobs:
         cd pybind11
         git checkout v2.6.0
 
-    - name: Build and publish
+    - name: Build and publish (windows)
+      if: matrix.os == 'windows-latest'
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python setup.py bdist_wheel
+        twine upload dist/Release/*
+
+    - name: Build and publish (macos)
+      if: matrix.os == 'macos-latest'
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
