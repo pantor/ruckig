@@ -433,6 +433,18 @@ public:
         }
         return result;
     }
+
+    //! Get the time that this trajectory passes a specific position of a given DoF the first time
+    //! If the position is passed, this method returns true, otherwise false
+    //! The Python wrapper takes `dof` and `position` as arguments and returns `time` (or `None`) instead
+    bool get_first_time_at_position(size_t dof, double position, double& time) const {
+        if (dof >= DOFs) {
+            return false;
+        }
+
+        double v, a;
+        return profiles[dof].get_first_state_at_position(position, time, v, a);
+    }
 };
 
 } // namespace ruckig

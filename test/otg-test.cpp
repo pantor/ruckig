@@ -174,6 +174,30 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( position_extrema[2].max == doctest::Approx(2.0) );
     CHECK( position_extrema[2].t_min == doctest::Approx(0.0) );
     CHECK( position_extrema[2].min == doctest::Approx(0.0) );
+
+
+    double time;
+    CHECK( output.trajectory.get_first_time_at_position(0, 0.0, time) );
+    CHECK( time == doctest::Approx(0.0) );
+
+    CHECK( output.trajectory.get_first_time_at_position(0, 0.5, time) );
+    CHECK( time == doctest::Approx(2.0) );
+
+    CHECK( output.trajectory.get_first_time_at_position(0, 1.0, time) );
+    CHECK( time == doctest::Approx(4.0) );
+
+    CHECK( output.trajectory.get_first_time_at_position(1, -3.0, time) );
+    CHECK( time == doctest::Approx(2.6004877902) );
+
+    CHECK( output.trajectory.get_first_time_at_position(1, -3.1, time) );
+    CHECK( time == doctest::Approx(2.8644154489) );
+
+    CHECK( output.trajectory.get_first_time_at_position(2, 0.05, time) );
+    CHECK( time == doctest::Approx(0.6694329501) );
+
+    CHECK_FALSE( output.trajectory.get_first_time_at_position(0, -1.0, time) );
+    CHECK_FALSE( output.trajectory.get_first_time_at_position(1, -3.4, time) );
+    CHECK_FALSE( output.trajectory.get_first_time_at_position(6, 0.0, time) );
 }
 
 TEST_CASE("known" * doctest::description("Known examples")) {

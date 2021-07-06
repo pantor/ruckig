@@ -36,6 +36,13 @@ struct PerDOF {
                 std::array<double, DOFs> new_position, new_velocity, new_acceleration;
                 traj.at_time(time, new_position, new_velocity, new_acceleration);
                 return py::make_tuple(new_position, new_velocity, new_acceleration);
+            })
+            .def("get_first_time_at_position", [](const Trajectory<DOFs>& traj, size_t dof, double position) -> py::object {
+                double time;
+                if (traj.get_first_time_at_position(dof, position, time)) {
+                    return py::cast(time);
+                }
+                return py::none();
             });
 
         py::class_<IP>(m, append("InputParameter", DOFs).c_str())

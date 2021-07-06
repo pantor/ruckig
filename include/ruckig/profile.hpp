@@ -9,6 +9,8 @@
 #include <optional>
 #include <tuple>
 
+#include <ruckig/roots.hpp>
+
 
 namespace ruckig {
 
@@ -281,6 +283,38 @@ struct Profile {
         }
 
         return extrema;
+    }
+
+    bool get_first_state_at_position(double pt, double& time, double& vt, double& at, double offset = 0.0) const {
+        for (size_t i = 0; i < 7; ++i) {
+            if (std::abs(p[i] - pt) < std::numeric_limits<double>::epsilon()) {
+                time = offset + (i > 0) ? t_sum[i-1] : 0.0;
+                vt = v[i];
+                at = a[i];
+                return true;
+            }
+
+            if (t[i] == 0.0) {
+                continue;
+            }
+
+            for (const double _t: Roots::solveCub(j[i]/6, a[i]/2, v[i], p[i]-pt)) {
+                if (0 < _t && _t <= t[i]) {
+                    time = offset + _t + ((i > 0) ? t_sum[i-1] : 0.0);
+                    std::tie(std::ignore, vt, at) = integrate(_t, p[i], v[i], a[i], j[i]);
+                    return true;
+                }
+            }
+        }
+
+        if (std::abs(pf - pt) < 1e-9) {
+            time = offset + t_sum[6];
+            vt = vf;
+            at = af;
+            return true;
+        }
+
+        return false;
     }
 
     std::string to_string() const {
