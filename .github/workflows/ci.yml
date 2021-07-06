@@ -47,13 +47,15 @@ jobs:
       if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
       run: |
         ./build/example-position > /dev/null
-        python3 ./examples/position.py > /dev/null
+        python3 ./examples/positionRealtime.py > /dev/null
+        python3 ./examples/positionFlexibleTimings.py > /dev/null
 
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         .\build\example-position.exe > $null
-        python3 .\examples\position.py > $null
+        python3 .\examples\positionRealtime.py > $null
+        python3 .\examples\positionFlexibleTimings.py > $null
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
