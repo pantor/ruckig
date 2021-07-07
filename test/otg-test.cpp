@@ -198,6 +198,28 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK_FALSE( output.trajectory.get_first_time_at_position(0, -1.0, time) );
     CHECK_FALSE( output.trajectory.get_first_time_at_position(1, -3.4, time) );
     CHECK_FALSE( output.trajectory.get_first_time_at_position(6, 0.0, time) );
+
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {2.0, 0.3, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+
+    result = otg.update(input, output);
+
+    CHECK( result == Result::ErrorInvalidInput );
+    CHECK_FALSE( output.new_calculation );
+
+    input.target_velocity = {0.2, -0.3, 0.8};
+    result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.new_calculation );
 }
 
 TEST_CASE("known" * doctest::description("Known examples")) {
