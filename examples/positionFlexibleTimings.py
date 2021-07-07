@@ -47,6 +47,7 @@ if __name__ == '__main__':
             inp.current_acceleration = new_acceleration
             inp.target_position = [1, 0, 0]
             inp.max_velocity = [1, 2, 2]
+            t_start = time.time()
             res = otg.update(inp, out)
             print(f'Calculation duration: {out.calculation_duration:0.1f} [µs]')
             print(f'Trajectory duration: {out.trajectory.duration:0.4f} [s]')
