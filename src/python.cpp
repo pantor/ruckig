@@ -29,6 +29,7 @@ struct PerDOF {
         using OP = OutputParameter<DOFs>;
 
         py::class_<Trajectory<DOFs>>(m, append("Trajectory", DOFs).c_str())
+            .def(py::init<>())
             .def_property_readonly("duration", &Trajectory<DOFs>::get_duration)
             .def_property_readonly("independent_min_durations", &Trajectory<DOFs>::get_independent_min_durations)
             .def_property_readonly("position_extrema", &Trajectory<DOFs>::get_position_extrema)
@@ -82,10 +83,12 @@ struct PerDOF {
             });
 
         py::class_<Ruckig<DOFs, true>>(m, append("Ruckig", DOFs).c_str())
+            .def(py::init<>())
             .def(py::init<double>(), "delta_time"_a)
             .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
             .def_readonly_static("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
             .def("validate_input", &Ruckig<DOFs, true>::validate_input)
+            .def("calculate", &Ruckig<DOFs, true>::calculate)
             .def("update", &Ruckig<DOFs, true>::update);
 
     #ifdef WITH_REFLEXXES
@@ -184,6 +187,22 @@ limited by velocity, acceleration, and jerk constraints.";
         }
     }, "dofs"_a);
 
+    m.def("Ruckig", [](size_t dofs) {
+        switch (dofs) {
+            case 1: return cast_unique<Ruckig<1, true>>();
+            case 2: return cast_unique<Ruckig<2, true>>();
+            case 3: return cast_unique<Ruckig<3, true>>();
+            case 4: return cast_unique<Ruckig<4, true>>();
+            case 5: return cast_unique<Ruckig<5, true>>();
+            case 6: return cast_unique<Ruckig<6, true>>();
+            case 7: return cast_unique<Ruckig<7, true>>();
+            case 8: return cast_unique<Ruckig<8, true>>();
+            case 9: return cast_unique<Ruckig<9, true>>();
+            case 10: return cast_unique<Ruckig<10, true>>();
+            default: return handle_dof_error(dofs);
+        }
+    }, "dofs"_a);
+
     m.def("Ruckig", [](size_t dofs, double delta_time) {
         switch (dofs) {
             case 1: return cast_unique<Ruckig<1, true>>(delta_time);
@@ -199,6 +218,22 @@ limited by velocity, acceleration, and jerk constraints.";
             default: return handle_dof_error(dofs);
         }
     }, "dofs"_a, "delta_time"_a);
+
+    m.def("Trajectory", [](size_t dofs) {
+        switch (dofs) {
+            case 1: return cast_unique<Trajectory<1>>();
+            case 2: return cast_unique<Trajectory<2>>();
+            case 3: return cast_unique<Trajectory<3>>();
+            case 4: return cast_unique<Trajectory<4>>();
+            case 5: return cast_unique<Trajectory<5>>();
+            case 6: return cast_unique<Trajectory<6>>();
+            case 7: return cast_unique<Trajectory<7>>();
+            case 8: return cast_unique<Trajectory<8>>();
+            case 9: return cast_unique<Trajectory<9>>();
+            case 10: return cast_unique<Trajectory<10>>();
+            default: return handle_dof_error(dofs);
+        }
+    }, "dofs"_a);
 
 #ifdef WITH_REFLEXXES
     m.def("Reflexxes", [](size_t dofs, double delta_time) {
