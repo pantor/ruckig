@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <optional>
 #include <sstream>
+#include <type_traits>
 
 
 namespace ruckig {
@@ -41,8 +42,8 @@ enum class DurationDiscretization {
 //! Input type of the OTG
 template<size_t DOFs>
 class InputParameter {
-    template<class T> using Vector = std::array<T, DOFs>;
-
+    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+  
     static std::string join(const Vector<double>& array) {
         std::ostringstream ss;
         for (size_t i = 0; i < array.size(); ++i) {
@@ -67,8 +68,28 @@ public:
     Vector<bool> enabled;
     std::optional<double> minimum_duration;
 
-    template <class = typename std::enable_if<DOFs >= 1>::type>
+    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
     InputParameter(): degrees_of_freedom(DOFs) {
+        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
+        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
+        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
+        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
+        std::fill(enabled.begin(), enabled.end(), true);
+    }
+
+    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    InputParameter(size_t dofs): degrees_of_freedom(dofs) {
+        current_position.resize(dofs);
+        current_velocity.resize(dofs);
+        current_acceleration.resize(dofs);
+        target_position.resize(dofs);
+        target_velocity.resize(dofs);
+        target_acceleration.resize(dofs);
+        max_velocity.resize(dofs);
+        max_acceleration.resize(dofs);
+        max_jerk.resize(dofs);
+        enabled.resize(dofs);
+
         std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
         std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
         std::fill(target_velocity.begin(), target_velocity.end(), 0.0);

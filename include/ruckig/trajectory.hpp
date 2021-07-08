@@ -5,6 +5,7 @@
 #include <iostream>
 #include <limits>
 #include <tuple>
+#include <type_traits>
 
 #include <ruckig/block.hpp>
 #include <ruckig/brake.hpp>
@@ -23,8 +24,8 @@ template <size_t> class Reflexxes;
 //! Interface for the generated trajectory.
 template<size_t DOFs>
 class Trajectory {
-    template<class T> using Vector = std::array<T, DOFs>;
-    template<class T> using VectorIntervals = std::array<T, 3*DOFs+1>;
+    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+    template<class T> using VectorIntervals = typename std::conditional<DOFs >= 1, std::array<T, 3*DOFs+1>, std::vector<T>>::type;
 
     // Allow alternative OTG algorithms to directly access members (i.e. duration)
     friend class Reflexxes<DOFs>;
@@ -38,6 +39,13 @@ class Trajectory {
     Vector<double> independent_min_durations;
 
     Vector<double> pd;
+
+    VectorIntervals<double> possible_t_syncs;
+    VectorIntervals<int> idx;
+
+    Vector<Block> blocks;
+    Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
+    Vector<double> inp_min_velocity, inp_min_acceleration;
 
     //! Is the trajectory phase synchronizable?
     bool is_phase_synchronizable(
@@ -121,9 +129,6 @@ class Trajectory {
         return true;
     }
 
-    VectorIntervals<double> possible_t_syncs;
-    VectorIntervals<int> idx;
-
     bool synchronize(const Vector<Block>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
         if (blocks.size() == 1 && !t_min && !discrete_duration) {
             limiting_dof = 0;
@@ -138,7 +143,7 @@ class Trajectory {
             possible_t_syncs[3 * dof + 1] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
             possible_t_syncs[3 * dof + 2] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
         }
-        possible_t_syncs[3 * DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
+        possible_t_syncs[3 * degrees_of_freedom] = t_min.value_or(std::numeric_limits<double>::infinity());
 
         if (discrete_duration) {
             for (size_t i = 0; i < possible_t_syncs.size(); ++i) {
@@ -151,14 +156,14 @@ class Trajectory {
         std::sort(idx.begin(), idx.end(), [&possible_t_syncs=possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
         // Start at last tmin (or worse)
-        for (auto i = idx.begin() + DOFs - 1; i != idx.end(); ++i) {
+        for (auto i = idx.begin() + degrees_of_freedom - 1; i != idx.end(); ++i) {
             const double possible_t_sync = possible_t_syncs[*i];
             if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](const Block& block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
                 continue;
             }
 
             t_sync = possible_t_sync;
-            if (*i == 3*DOFs) { // Optional t_min
+            if (*i == 3*degrees_of_freedom) { // Optional t_min
                 limiting_dof = -1;
                 return true;
             }
@@ -183,13 +188,26 @@ class Trajectory {
     }
 
 public:
-    template <class = typename std::enable_if<DOFs >= 1>::type>
-    Trajectory() { }
+    size_t degrees_of_freedom;
 
+    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
+    Trajectory(): degrees_of_freedom(DOFs) { }
 
-    Vector<Block> blocks;
-    Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
-    Vector<double> inp_min_velocity, inp_min_acceleration;
+    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    Trajectory(size_t dofs): degrees_of_freedom(dofs) {
+        blocks.resize(dofs);
+        p0s.resize(dofs);
+        v0s.resize(dofs);
+        a0s.resize(dofs);
+        inp_min_velocity.resize(dofs);
+        inp_min_acceleration.resize(dofs);
+        profiles.resize(dofs);
+        independent_min_durations.resize(dofs);
+        pd.resize(dofs);
+
+        possible_t_syncs.resize(3*dofs+1);
+        idx.resize(3*dofs+1);
+    }
 
     //! Calculate the time-optimal waypoint-based trajectory
     template<bool throw_error, bool return_error_at_maximal_duration>
@@ -442,7 +460,7 @@ public:
     //! If the position is passed, this method returns true, otherwise false
     //! The Python wrapper takes `dof` and `position` as arguments and returns `time` (or `None`) instead
     bool get_first_time_at_position(size_t dof, double position, double& time) const {
-        if (dof >= DOFs) {
+        if (dof >= degrees_of_freedom) {
             return false;
         }
 

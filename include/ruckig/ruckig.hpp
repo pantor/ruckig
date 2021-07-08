@@ -29,14 +29,21 @@ public:
     //! Time step between updates (cycle time) in [s]
     const double delta_time;
 
+    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
     explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0) { }
 
-    template <class = typename std::enable_if<DOFs>= 1>::type>
+    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
     explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time) { }
+
+    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), current_input(InputParameter<0>(dofs)) { }
+
+    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), current_input(InputParameter<0>(dofs)) { }
 
     //! Validate the input for the trajectory calculation
     bool validate_input(const InputParameter<DOFs>& input) const {
-        for (size_t dof = 0; dof < input.max_velocity.size(); ++dof) {
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             if (input.interface == Interface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
                 return false;
             }
