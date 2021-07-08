@@ -119,6 +119,12 @@ public:
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         const auto start = std::chrono::high_resolution_clock::now();
 
+        if constexpr (DOFs == 0) {
+            if (degrees_of_freedom != input.degrees_of_freedom || degrees_of_freedom != output.degrees_of_freedom) {
+                throw std::runtime_error("[ruckig] mismatch in degrees of freedom (vector size).");
+            }
+        }
+
         output.new_calculation = false;
 
         if (input != current_input) {

@@ -393,6 +393,12 @@ public:
     //! Get the kinematic state at a given time
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
     void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
+        if constexpr (DOFs == 0) {
+            if (degrees_of_freedom != new_position.size() || degrees_of_freedom != new_velocity.size() || degrees_of_freedom != new_acceleration.size()) {
+                throw std::runtime_error("[ruckig] mismatch in degrees of freedom (vector size).");
+            }
+        }
+
         if (time >= duration) {
             // Keep constant acceleration
             for (size_t dof = 0; dof < profiles.size(); ++dof) {
