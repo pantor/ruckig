@@ -5,6 +5,7 @@
 #include <optional>
 #include <sstream>
 #include <type_traits>
+#include <vector>
 
 
 namespace ruckig {
