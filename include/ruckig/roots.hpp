@@ -7,8 +7,8 @@
 
 namespace ruckig {
 
-inline double Power(double v, int e) {
-    return std::pow(v, e);
+inline double Power2(double v) {
+    return v * v;
 }
 
 inline double Sqrt(double v) {

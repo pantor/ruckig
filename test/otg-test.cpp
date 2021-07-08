@@ -174,6 +174,52 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( position_extrema[2].max == doctest::Approx(2.0) );
     CHECK( position_extrema[2].t_min == doctest::Approx(0.0) );
     CHECK( position_extrema[2].min == doctest::Approx(0.0) );
+
+
+    double time;
+    CHECK( output.trajectory.get_first_time_at_position(0, 0.0, time) );
+    CHECK( time == doctest::Approx(0.0) );
+
+    CHECK( output.trajectory.get_first_time_at_position(0, 0.5, time) );
+    CHECK( time == doctest::Approx(2.0) );
+
+    CHECK( output.trajectory.get_first_time_at_position(0, 1.0, time) );
+    CHECK( time == doctest::Approx(4.0) );
+
+    CHECK( output.trajectory.get_first_time_at_position(1, -3.0, time) );
+    CHECK( time == doctest::Approx(2.6004877902) );
+
+    CHECK( output.trajectory.get_first_time_at_position(1, -3.1, time) );
+    CHECK( time == doctest::Approx(2.8644154489) );
+
+    CHECK( output.trajectory.get_first_time_at_position(2, 0.05, time) );
+    CHECK( time == doctest::Approx(0.6694329501) );
+
+    CHECK_FALSE( output.trajectory.get_first_time_at_position(0, -1.0, time) );
+    CHECK_FALSE( output.trajectory.get_first_time_at_position(1, -3.4, time) );
+    CHECK_FALSE( output.trajectory.get_first_time_at_position(6, 0.0, time) );
+
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {2.0, 0.3, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+
+    result = otg.update(input, output);
+
+    CHECK( result == Result::ErrorInvalidInput );
+    CHECK_FALSE( output.new_calculation );
+
+    input.target_velocity = {0.2, -0.3, 0.8};
+    result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.new_calculation );
 }
 
 TEST_CASE("known" * doctest::description("Known examples")) {
@@ -325,6 +371,17 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {5.199401036221791, 1.848176490768948, 11.11168017805234};
     input.max_jerk = {9.940940357283978, 10.46997753899755, 0.08166297169205029};
     check_duration(otg, input, 7295.4375633935);
+
+    input.current_position = {0.01073568005271233, -0.7002627264230739, 0};
+    input.current_velocity = {0.05656281587106524, 1.011281770884991, 0};
+    input.current_acceleration = {-5.348847133445708, -3.400994300842285, 0};
+    input.target_position = {0.0698, 0.6283, 0};
+    input.target_velocity = {0, 0, 0};
+    input.target_acceleration = {0, 0, 0};
+    input.max_velocity = {1, 1, 1};
+    input.max_acceleration = {7, 7, 7};
+    input.max_jerk = {1000, 1000, 1000};
+    check_duration(otg, input, 1.403613276);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {

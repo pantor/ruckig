@@ -153,7 +153,7 @@ class Trajectory {
         // Start at last tmin (or worse)
         for (auto i = idx.begin() + DOFs - 1; i != idx.end(); ++i) {
             const double possible_t_sync = possible_t_syncs[*i];
-            if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](auto block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
+            if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](const Block& block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
                 continue;
             }
 
@@ -436,6 +436,18 @@ public:
             result[dof] = profiles[dof].get_position_extrema();
         }
         return result;
+    }
+
+    //! Get the time that this trajectory passes a specific position of a given DoF the first time
+    //! If the position is passed, this method returns true, otherwise false
+    //! The Python wrapper takes `dof` and `position` as arguments and returns `time` (or `None`) instead
+    bool get_first_time_at_position(size_t dof, double position, double& time) const {
+        if (dof >= DOFs) {
+            return false;
+        }
+
+        double v, a;
+        return profiles[dof].get_first_state_at_position(position, time, v, a);
     }
 };
 

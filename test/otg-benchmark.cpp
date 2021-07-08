@@ -28,7 +28,7 @@ std::tuple<double, double> analyze(const std::vector<double>& v) {
     std::transform(v.begin(), v.end(), diff.begin(), [mean](double x) { return x - mean; });
     double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     double std_deviation = std::sqrt(sq_sum / v.size());
-    return {mean, std_deviation};
+    return std::make_tuple(mean, std_deviation);
 }
 
 
@@ -97,7 +97,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
 
 
 int main() {
-    const size_t n {1}; // Number of iterations
+    const size_t n {5}; // Number of iterations
     const size_t number_trajectories {64 * 1024};
 
     // Main comparison

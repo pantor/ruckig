@@ -82,7 +82,7 @@ public:
         }
 
         // Find index of fastest profile
-        auto idx_min_it = std::min_element(valid_profiles.cbegin(), valid_profiles.cbegin() + valid_profile_counter, [](auto& a, auto& b) { return a.t_sum[6] + a.t_brake.value_or(0.0) < b.t_sum[6] + b.t_brake.value_or(0.0); });
+        auto idx_min_it = std::min_element(valid_profiles.cbegin(), valid_profiles.cbegin() + valid_profile_counter, [](const Profile& a, const Profile& b) { return a.t_sum[6] + a.t_brake.value_or(0.0) < b.t_sum[6] + b.t_brake.value_or(0.0); });
         size_t idx_min = std::distance(valid_profiles.cbegin(), idx_min_it);
 
         block = Block(valid_profiles[idx_min]);

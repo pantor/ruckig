@@ -47,10 +47,15 @@ class CMakeBuild(build_ext):
 
         cmake_args = [
             '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
+            '-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=' + extdir,
+            '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=' + extdir,
+            '-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE=' + extdir,
             '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
             '-DEXAMPLE_VERSION_INFO={}'.format(self.distribution.get_version()),
             '-DCMAKE_BUILD_TYPE=' + build_type,
             '-DBUILD_PYTHON_MODULE=ON',
+            '-DBUILD_EXAMPLES=OFF',
+            '-DBUILD_TESTS=OFF',
             '-DBUILD_SHARED_LIBS=OFF',
             '-DCMAKE_POSITION_INDEPENDENT_CODE=ON',
         ]
@@ -64,7 +69,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='ruckig',
-    version='0.3.0',
+    version='0.3.3',
     description='Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.',
     long_description=long_description,
     long_description_content_type='text/markdown',

@@ -189,7 +189,7 @@ The current test suite validates over 5.000.000.000 random trajectories. The num
 
 ## Benchmark
 
-We find that Ruckig is around twice as fast as Reflexxes Type IV and well-suited for control cycles as low as half a millisecond.
+We find that Ruckig is more than twice as fast as Reflexxes Type IV and well-suited for control cycles as low as half a millisecond.
 
 ![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/benchmark.png?raw=true)
 
@@ -201,7 +201,7 @@ Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos
 - Doctest v2.4 (only for testing)
 - Pybind11 v2.6 (only for python wrapper)
 
-If you still need to use C++11, you can patch Ruckig by calling `sh patch-c++11.sh`. Note that this will result in a performance drop of a few percent.
+If you still need to use C++11, you can patch Ruckig by calling `sh patch-c++11.sh`. Note that this will result in a performance drop of a few percent. Moreover, the Python module is not supported.
 
 
 ## Citation

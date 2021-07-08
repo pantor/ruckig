@@ -19,8 +19,8 @@ using namespace ruckig;
 
 template<size_t MAX>
 struct PerDOF {
-    static const char* append(std::string name, size_t DOFs) {
-        return (name.append(std::to_string(DOFs))).c_str();
+    static std::string append(std::string name, size_t DOFs) {
+        return name.append(std::to_string(DOFs));
     }
 
     template<size_t DOFs>
@@ -28,7 +28,8 @@ struct PerDOF {
         using IP = InputParameter<DOFs>;
         using OP = OutputParameter<DOFs>;
 
-        py::class_<Trajectory<DOFs>>(m, append("Trajectory", DOFs))
+        py::class_<Trajectory<DOFs>>(m, append("Trajectory", DOFs).c_str())
+            .def(py::init<>())
             .def_property_readonly("duration", &Trajectory<DOFs>::get_duration)
             .def_property_readonly("independent_min_durations", &Trajectory<DOFs>::get_independent_min_durations)
             .def_property_readonly("position_extrema", &Trajectory<DOFs>::get_position_extrema)
@@ -36,9 +37,16 @@ struct PerDOF {
                 std::array<double, DOFs> new_position, new_velocity, new_acceleration;
                 traj.at_time(time, new_position, new_velocity, new_acceleration);
                 return py::make_tuple(new_position, new_velocity, new_acceleration);
+            })
+            .def("get_first_time_at_position", [](const Trajectory<DOFs>& traj, size_t dof, double position) -> py::object {
+                double time;
+                if (traj.get_first_time_at_position(dof, position, time)) {
+                    return py::cast(time);
+                }
+                return py::none();
             });
 
-        py::class_<IP>(m, append("InputParameter", DOFs))
+        py::class_<IP>(m, append("InputParameter", DOFs).c_str())
             .def(py::init<>())
             .def_readonly("degrees_of_freedom", &IP::degrees_of_freedom)
             .def_readwrite("current_position", &IP::current_position)
@@ -60,7 +68,7 @@ struct PerDOF {
             .def(py::self != py::self)
             .def("__repr__", static_cast<std::string (IP::*)() const>(&IP::to_string));
 
-        py::class_<OP>(m, append("OutputParameter", DOFs))
+        py::class_<OP>(m, append("OutputParameter", DOFs).c_str())
             .def(py::init<>())
             .def_readonly("degrees_of_freedom", &OP::degrees_of_freedom)
             .def_readonly("new_position", &OP::new_position)
@@ -74,15 +82,17 @@ struct PerDOF {
                 return OP(self);
             });
 
-        py::class_<Ruckig<DOFs, true>>(m, append("Ruckig", DOFs))
+        py::class_<Ruckig<DOFs, true>>(m, append("Ruckig", DOFs).c_str())
+            .def(py::init<>())
             .def(py::init<double>(), "delta_time"_a)
             .def_readonly("delta_time", &Ruckig<DOFs, true>::delta_time)
             .def_readonly("degrees_of_freedom", &Ruckig<DOFs, true>::degrees_of_freedom)
             .def("validate_input", &Ruckig<DOFs, true>::validate_input)
+            .def("calculate", &Ruckig<DOFs, true>::calculate)
             .def("update", &Ruckig<DOFs, true>::update);
 
     #ifdef WITH_REFLEXXES
-        py::class_<Reflexxes<DOFs>>(m, append("Reflexxes", DOFs))
+        py::class_<Reflexxes<DOFs>>(m, append("Reflexxes", DOFs).c_str())
             .def(py::init<double>(), "delta_time"_a)
             .def_readonly("delta_time", &Reflexxes<DOFs>::delta_time)
             .def_readonly_static("degrees_of_freedom", &Reflexxes<DOFs>::degrees_of_freedom)
@@ -95,14 +105,9 @@ struct PerDOF {
 };
 
 
-template<class T>
-py::object cast_unique() {
-    return py::cast(std::make_unique<T>());
-}
-
-template<class T>
-py::object cast_unique(double delta_time) {
-    return py::cast(std::make_unique<T>(delta_time));
+template<class T, typename... Args>
+py::object cast_unique(Args&&... args) {
+    return py::cast(std::unique_ptr<T>(new T(std::forward<Args>(args)...)));
 }
 
 py::object handle_dof_error(size_t dofs) {
@@ -182,6 +187,22 @@ limited by velocity, acceleration, and jerk constraints.";
         }
     }, "dofs"_a);
 
+    m.def("Ruckig", [](size_t dofs) {
+        switch (dofs) {
+            case 1: return cast_unique<Ruckig<1, true>>();
+            case 2: return cast_unique<Ruckig<2, true>>();
+            case 3: return cast_unique<Ruckig<3, true>>();
+            case 4: return cast_unique<Ruckig<4, true>>();
+            case 5: return cast_unique<Ruckig<5, true>>();
+            case 6: return cast_unique<Ruckig<6, true>>();
+            case 7: return cast_unique<Ruckig<7, true>>();
+            case 8: return cast_unique<Ruckig<8, true>>();
+            case 9: return cast_unique<Ruckig<9, true>>();
+            case 10: return cast_unique<Ruckig<10, true>>();
+            default: return handle_dof_error(dofs);
+        }
+    }, "dofs"_a);
+
     m.def("Ruckig", [](size_t dofs, double delta_time) {
         switch (dofs) {
             case 1: return cast_unique<Ruckig<1, true>>(delta_time);
@@ -197,6 +218,22 @@ limited by velocity, acceleration, and jerk constraints.";
             default: return handle_dof_error(dofs);
         }
     }, "dofs"_a, "delta_time"_a);
+
+    m.def("Trajectory", [](size_t dofs) {
+        switch (dofs) {
+            case 1: return cast_unique<Trajectory<1>>();
+            case 2: return cast_unique<Trajectory<2>>();
+            case 3: return cast_unique<Trajectory<3>>();
+            case 4: return cast_unique<Trajectory<4>>();
+            case 5: return cast_unique<Trajectory<5>>();
+            case 6: return cast_unique<Trajectory<6>>();
+            case 7: return cast_unique<Trajectory<7>>();
+            case 8: return cast_unique<Trajectory<8>>();
+            case 9: return cast_unique<Trajectory<9>>();
+            case 10: return cast_unique<Trajectory<10>>();
+            default: return handle_dof_error(dofs);
+        }
+    }, "dofs"_a);
 
 #ifdef WITH_REFLEXXES
     m.def("Reflexxes", [](size_t dofs, double delta_time) {

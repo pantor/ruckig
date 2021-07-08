@@ -23,36 +23,18 @@ class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
-    Result calculate(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        if (!validate_input(input)) {
-            return Result::ErrorInvalidInput;
-        }
-
-        Result result = output.trajectory.template calculate<throw_error, return_error_at_maximal_duration>(input, delta_time);
-        if (result != Result::Working) {
-            return result;
-        }
-
-        current_input = input;
-        output.time = 0.0;
-        output.new_calculation = true;
-        return Result::Working;
-    }
-
 public:
-    // Just a shorter notation
-    using Input = InputParameter<DOFs>;
-    using Output = OutputParameter<DOFs>;
     size_t degrees_of_freedom;
 
     //! Time step between updates (cycle time) in [s]
     const double delta_time;
 
-    explicit Ruckig(): degrees_of_freedom(DOFs) { }
+    explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0) { }
 
-    template <class = typename std::enable_if<DOFs >= 1>::type>
+    template <class = typename std::enable_if<DOFs>= 1>::type>
     explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time) { }
 
+    //! Validate the input for the trajectory calculation
     bool validate_input(const InputParameter<DOFs>& input) const {
         for (size_t dof = 0; dof < input.max_velocity.size(); ++dof) {
             if (input.interface == Interface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
@@ -117,16 +99,30 @@ public:
         return true;
     }
 
+    //! Calculate a new trajectory for the given input
+    Result calculate(const InputParameter<DOFs>& input, Trajectory<DOFs>& trajectory) {
+        if (!validate_input(input)) {
+            return Result::ErrorInvalidInput;
+        }
+
+        return trajectory.template calculate<throw_error, return_error_at_maximal_duration>(input, delta_time);
+    }
+
+    //! Get the next output state (with step delta_time) along the calculated trajectory for the given input
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         const auto start = std::chrono::high_resolution_clock::now();
 
         output.new_calculation = false;
 
         if (input != current_input) {
-            auto result = calculate(input, output);
+            Result result = calculate(input, output.trajectory);
             if (result != Result::Working) {
                 return result;
             }
+
+            current_input = input;
+            output.time = 0.0;
+            output.new_calculation = true;
         }
 
         output.time += delta_time;

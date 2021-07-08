@@ -35,7 +35,7 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double vMin, d
     }
 }
 
-void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, [[maybe_unused]] double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
+void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, double, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     j_brake[0] = -jMax;
     const double t_to_a_min = (a0 - aMin)/jMax;
     const double t_to_v_max = a0/jMax + std::sqrt(a0*a0 + 2 * jMax * (v0 - vMax)) / std::abs(jMax);

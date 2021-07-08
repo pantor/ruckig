@@ -9,6 +9,8 @@
 #include <optional>
 #include <tuple>
 
+#include <ruckig/roots.hpp>
+
 
 namespace ruckig {
 
@@ -133,7 +135,6 @@ struct Profile {
             j = {jf, 0, -jf, 0, jf, 0, -jf};
         }
 
-        // const double vMaxAbs = std::abs(vMax) + 1e-12;
         const double vUppLim = ((vMax > 0) ? vMax : vMin) + 1e-12;
         const double vLowLim = ((vMax > 0) ? vMin : vMax) - 1e-12;
 
@@ -167,15 +168,14 @@ struct Profile {
         return std::abs(p[7] - pf) < 1e-8
             && std::abs(v[7] - vf) < 1e-8
             && std::abs(a[7] - af) < 1e-12 // This is not really needed, but we want to double check
-            // && std::abs(v[3]) <= vMaxAbs && std::abs(v[4]) <= vMaxAbs && std::abs(v[5]) <= vMaxAbs && std::abs(v[6]) <= vMaxAbs
-            && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
-            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
-            && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
+            && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim
+            && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
+            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim; // This is not really needed, but we want to double check
     }
 
     template<JerkSigns jerk_signs, Limits limits>
-    inline bool check([[maybe_unused]] double tf, double jf, double vMax, double vMin, double aMax, double aMin) {
+    inline bool check(double, double jf, double vMax, double vMin, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
         return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum[6] - tf) < 1e-8);
     }
@@ -187,11 +187,11 @@ struct Profile {
 
     //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
     inline static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j) {
-        return {
+        return std::make_tuple(
             p0 + t * (v0 + t * (a0 / 2 + t * j / 6)),
             v0 + t * (a0 + t * j / 2),
-            a0 + t * j,
-        };
+            a0 + t * j
+        );
     }
 
     //! Set boundary values for the position interface
@@ -283,6 +283,38 @@ struct Profile {
         }
 
         return extrema;
+    }
+
+    bool get_first_state_at_position(double pt, double& time, double& vt, double& at, double offset = 0.0) const {
+        for (size_t i = 0; i < 7; ++i) {
+            if (std::abs(p[i] - pt) < std::numeric_limits<double>::epsilon()) {
+                time = offset + ((i > 0) ? t_sum[i-1] : 0.0);
+                vt = v[i];
+                at = a[i];
+                return true;
+            }
+
+            if (t[i] == 0.0) {
+                continue;
+            }
+
+            for (const double _t: Roots::solveCub(j[i]/6, a[i]/2, v[i], p[i]-pt)) {
+                if (0 < _t && _t <= t[i]) {
+                    time = offset + _t + ((i > 0) ? t_sum[i-1] : 0.0);
+                    std::tie(std::ignore, vt, at) = integrate(_t, p[i], v[i], a[i], j[i]);
+                    return true;
+                }
+            }
+        }
+
+        if (std::abs(pf - pt) < 1e-9) {
+            time = offset + t_sum[6];
+            vt = vf;
+            at = af;
+            return true;
+        }
+
+        return false;
     }
 
     std::string to_string() const {
