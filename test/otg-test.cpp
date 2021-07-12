@@ -51,7 +51,7 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
     CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.get_duration() < 0.005)) );
     CHECK( output.trajectory.get_duration() >= 0.0 );
 
-    for (size_t dof = 0; dof < DOFs; ++dof) {
+    for (size_t dof = 0; dof < otg.degrees_of_freedom; ++dof) {
         CHECK_FALSE( (std::isnan(output.new_position[dof]) || std::isnan(output.new_velocity[dof]) || std::isnan(output.new_acceleration[dof])) );
     }
 }
@@ -112,8 +112,8 @@ std::uniform_real_distribution<double> limit_dist {0.08, 12.0};
 std::uniform_real_distribution<double> min_limit_dist {-12.0, -0.08};
 
 
-template<size_t DOFs>
-void check_array(const std::array<double, DOFs>& first, const std::array<double, DOFs>& second) {
+template<class T>
+void check_array(const T& first, const T& second) {
     for (size_t dof = 0; dof < first.size(); ++dof) {
         CHECK( first[dof] == doctest::Approx(second[dof]) );
     }
@@ -220,6 +220,33 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
 
     CHECK( result == Result::Working );
     CHECK( output.new_calculation );
+}
+
+TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
+    Ruckig<0, true> otg {3, 0.005};
+    InputParameter<0> input {3};
+    OutputParameter<0> output {3};
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {0.0, 0.3, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+
+    auto result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
+
+    std::vector<double> new_position(3), new_velocity(3), new_acceleration(3);
+    output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, input.current_position);
+    check_array(new_velocity, input.current_velocity);
+    check_array(new_acceleration, input.current_acceleration);
 }
 
 TEST_CASE("known" * doctest::description("Known examples")) {

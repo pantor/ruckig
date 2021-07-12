@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <optional>
 #include <sstream>
+#include <type_traits>
+#include <vector>
 
 
 namespace ruckig {
@@ -41,7 +43,7 @@ enum class DurationDiscretization {
 //! Input type of the OTG
 template<size_t DOFs>
 class InputParameter {
-    template<class T> using Vector = std::array<T, DOFs>;
+    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
 
     static std::string join(const Vector<double>& array) {
         std::ostringstream ss;
@@ -53,21 +55,46 @@ class InputParameter {
     }
 
 public:
-    static constexpr size_t degrees_of_freedom {DOFs};
+    size_t degrees_of_freedom;
 
     Interface interface {Interface::Position};
     Synchronization synchronization {Synchronization::Time};
     DurationDiscretization duration_discretization {DurationDiscretization::Continuous};
 
-    Vector<double> current_position, current_velocity {}, current_acceleration {};
-    Vector<double> target_position, target_velocity {}, target_acceleration {};
+    Vector<double> current_position, current_velocity, current_acceleration;
+    Vector<double> target_position, target_velocity, target_acceleration;
     Vector<double> max_velocity, max_acceleration, max_jerk;
     std::optional<Vector<double>> min_velocity, min_acceleration;
 
     Vector<bool> enabled;
     std::optional<double> minimum_duration;
 
-    InputParameter() {
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    InputParameter(): degrees_of_freedom(DOFs) {
+        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
+        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
+        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
+        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
+        std::fill(enabled.begin(), enabled.end(), true);
+    }
+
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    InputParameter(size_t dofs): degrees_of_freedom(dofs) {
+        current_position.resize(dofs);
+        current_velocity.resize(dofs);
+        current_acceleration.resize(dofs);
+        target_position.resize(dofs);
+        target_velocity.resize(dofs);
+        target_acceleration.resize(dofs);
+        max_velocity.resize(dofs);
+        max_acceleration.resize(dofs);
+        max_jerk.resize(dofs);
+        enabled.resize(dofs);
+
+        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
+        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
+        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
+        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
         std::fill(enabled.begin(), enabled.end(), true);
     }
 
