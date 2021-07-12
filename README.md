@@ -192,7 +192,7 @@ InputParameter<0> input {6};
 OutputParameter<0> output {6};
 ```
 
-However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using the dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
+However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
 
 
 
