@@ -22,7 +22,7 @@ template <size_t> class Reflexxes;
 
 
 //! Interface for the generated trajectory.
-template<size_t DOFs = 0>
+template<size_t DOFs>
 class Trajectory {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
     template<class T> using VectorIntervals = typename std::conditional<DOFs >= 1, std::array<T, 3*DOFs+1>, std::vector<T>>::type;

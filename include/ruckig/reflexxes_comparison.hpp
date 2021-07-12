@@ -15,7 +15,7 @@
 namespace ruckig {
 
 //! Wrapper around Reflexxes as an alternative OTG algorithm (for comparison)
-template<size_t DOFs = 0>
+template<size_t DOFs>
 class Reflexxes {
     InputParameter<DOFs> current_input;
     std::shared_ptr<ReflexxesAPI> rml;

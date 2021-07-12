@@ -9,7 +9,7 @@
 namespace ruckig {
 
 //! Output type of the OTG
-template<size_t DOFs = 0>
+template<size_t DOFs>
 struct OutputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
     size_t degrees_of_freedom;

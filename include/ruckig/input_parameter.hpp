@@ -41,7 +41,7 @@ enum class DurationDiscretization {
 
 
 //! Input type of the OTG
-template<size_t DOFs = 0>
+template<size_t DOFs>
 class InputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
 

@@ -224,8 +224,8 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
 
 TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
     Ruckig<0, true> otg {3, 0.005};
-    InputParameter input {3};
-    OutputParameter output {3};
+    InputParameter<0> input {3};
+    OutputParameter<0> output {3};
 
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0};
