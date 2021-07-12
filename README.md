@@ -182,6 +182,20 @@ std::array<double, DOFs> independent_min_durations; // Time-optimal profile for 
 Again, we refer to the [API documentation](https://pantor.github.io/ruckig/) for the exact signatures.
 
 
+### Dynamical Degrees of Freedom
+
+So far, we have told Ruckig the number of DoFs as a C++ template parameter. If you don't know the number of DoFs at compile-time, you can also set the template parameter to zero and pass the DoFs as an argument in the constructor:
+
+```.cpp
+Ruckig<0> otg {6, 0.001};
+InputParameter<0> input {6};
+OutputParameter<0> output {6};
+```
+
+However, we recommend to use the template parameter when possible: First, it is a few percent faster. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using the dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
+
+
+
 ## Tests and Numerical Stability
 
 The current test suite validates over 5.000.000.000 random trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the velocity, acceleration and jerk limit to be within `1e-12`, and for the final acceleration as well to be within a numerical error of `1e-12`. The maximal supported trajectory duration is `7e3`, which sounds short but should suffice for most applications seeking for time-optimality. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
