@@ -18,7 +18,7 @@
 namespace ruckig {
 
 //! Main class for the Ruckig algorithm.
-template<size_t DOFs, bool throw_error = false, bool return_error_at_maximal_duration = true>
+template<size_t DOFs = 0, bool throw_error = false, bool return_error_at_maximal_duration = true>
 class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
@@ -29,16 +29,16 @@ public:
     //! Time step between updates (cycle time) in [s]
     const double delta_time;
 
-    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0) { }
 
-    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time) { }
 
-    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), current_input(InputParameter<0>(dofs)) { }
 
-    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), current_input(InputParameter<0>(dofs)) { }
 
     //! Validate the input for the trajectory calculation

@@ -101,6 +101,7 @@ int main() {
     const size_t number_trajectories {64 * 1024};
 
     // Main comparison
+    // benchmark<0, Ruckig<0, true>>(n, number_trajectories);
     benchmark<7, Ruckig<7, true>>(n, number_trajectories);
     // benchmark<7, Reflexxes<7>>(n, number_trajectories);
 

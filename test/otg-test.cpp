@@ -51,7 +51,7 @@ inline void check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
     CHECK( (result == Result::Working || (result == Result::Finished && output.trajectory.get_duration() < 0.005)) );
     CHECK( output.trajectory.get_duration() >= 0.0 );
 
-    for (size_t dof = 0; dof < DOFs; ++dof) {
+    for (size_t dof = 0; dof < otg.degrees_of_freedom; ++dof) {
         CHECK_FALSE( (std::isnan(output.new_position[dof]) || std::isnan(output.new_velocity[dof]) || std::isnan(output.new_acceleration[dof])) );
     }
 }
@@ -224,8 +224,8 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
 
 TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
     Ruckig<0, true> otg {3, 0.005};
-    InputParameter<0> input {3};
-    OutputParameter<0> output {3};
+    InputParameter input {3};
+    OutputParameter output {3};
 
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0};

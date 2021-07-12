@@ -117,11 +117,11 @@ limited by velocity, acceleration, and jerk constraints.";
         .def("calculate", &Ruckig<0, true>::calculate)
         .def("update", &Ruckig<0, true>::update);
 
-    // #ifdef WITH_REFLEXXES
-    //     py::class_<Reflexxes<0>>(m, "Reflexxes")
-    //         .def(py::init<size_t, double>(), "dofs"_a, "delta_time"_a)
-    //         .def_readonly("delta_time", &Reflexxes<0>::delta_time)
-    //         .def_readonly_static("degrees_of_freedom", &Reflexxes<0>::degrees_of_freedom)
-    //         .def("update", &Reflexxes<0>::update);
-    // #endif
+#ifdef WITH_REFLEXXES
+    py::class_<Reflexxes<0>>(m, "Reflexxes")
+        .def(py::init<size_t, double>(), "dofs"_a, "delta_time"_a)
+        .def_readonly("degrees_of_freedom", &Reflexxes<0>::degrees_of_freedom)
+        .def_readonly("delta_time", &Reflexxes<0>::delta_time)
+        .def("update", &Reflexxes<0>::update);
+#endif
 }

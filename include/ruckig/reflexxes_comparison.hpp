@@ -15,7 +15,7 @@
 namespace ruckig {
 
 //! Wrapper around Reflexxes as an alternative OTG algorithm (for comparison)
-template<size_t DOFs>
+template<size_t DOFs = 0>
 class Reflexxes {
     InputParameter<DOFs> current_input;
     std::shared_ptr<ReflexxesAPI> rml;
@@ -29,12 +29,14 @@ class Reflexxes {
     RMLVelocityFlags vel_flags;
 
 public:
-    static constexpr size_t degrees_of_freedom {DOFs};
+    size_t degrees_of_freedom;
 
     double delta_time;
 
     explicit Reflexxes() { }
-    explicit Reflexxes(double delta_time): delta_time(delta_time) {
+
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    explicit Reflexxes(double delta_time): delta_time(delta_time), degrees_of_freedom(DOFs) {
         rml = std::make_shared<ReflexxesAPI>(DOFs, delta_time);
         input_parameters = std::make_shared<RMLPositionInputParameters>(DOFs);
         output_parameters = std::make_shared<RMLPositionOutputParameters>(DOFs);
@@ -45,13 +47,25 @@ public:
         vel_flags.SynchronizationBehavior = RMLVelocityFlags::PHASE_SYNCHRONIZATION_IF_POSSIBLE;
     }
 
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    explicit Reflexxes(size_t dofs, double delta_time): delta_time(delta_time), degrees_of_freedom(dofs), current_input(InputParameter<0>(dofs)) {
+        rml = std::make_shared<ReflexxesAPI>(dofs, delta_time);
+        input_parameters = std::make_shared<RMLPositionInputParameters>(dofs);
+        output_parameters = std::make_shared<RMLPositionOutputParameters>(dofs);
+        input_vel_parameters = std::make_shared<RMLVelocityInputParameters>(dofs);
+        output_vel_parameters = std::make_shared<RMLVelocityOutputParameters>(dofs);
+
+        flags.SynchronizationBehavior = RMLPositionFlags::PHASE_SYNCHRONIZATION_IF_POSSIBLE;
+        vel_flags.SynchronizationBehavior = RMLVelocityFlags::PHASE_SYNCHRONIZATION_IF_POSSIBLE;
+    }
+
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         if (input != current_input) {
             current_input = input;
 
-            for (size_t dof = 0; dof < DOFs; ++dof) {
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                 if (input.target_acceleration[dof] != 0.0) {
-                    return Result::Error;
+                    return Result::ErrorInvalidInput;
                 }
             }
 
@@ -61,7 +75,9 @@ public:
                     input_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value());
                 }
 
-                input_parameters->SetSelectionVector(input.enabled.data());
+                for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+                    input_parameters->SetSelectionVectorElement(input.enabled[dof], dof); // Because of vector<bool> specialization
+                }
                 input_parameters->SetCurrentPositionVector(input.current_position.data());
                 input_parameters->SetCurrentVelocityVector(input.current_velocity.data());
                 input_parameters->SetCurrentAccelerationVector(input.current_acceleration.data());
@@ -76,7 +92,9 @@ public:
                     input_vel_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value());
                 }
 
-                input_vel_parameters->SetSelectionVector(input.enabled.data());
+                for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+                    input_vel_parameters->SetSelectionVectorElement(input.enabled[dof], dof); // Because of vector<bool> specialization
+                }
                 input_vel_parameters->SetCurrentPositionVector(input.current_position.data());
                 input_vel_parameters->SetCurrentVelocityVector(input.current_velocity.data());
                 input_vel_parameters->SetCurrentAccelerationVector(input.current_acceleration.data());
@@ -93,7 +111,7 @@ public:
         case Interface::Position: {
             result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);
 
-            for (size_t dof = 0; dof < DOFs; ++dof) {
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                 output.new_position[dof] = output_parameters->NewPositionVector->VecData[dof];
                 output.new_velocity[dof] = output_parameters->NewVelocityVector->VecData[dof];
                 output.new_acceleration[dof] = output_parameters->NewAccelerationVector->VecData[dof];
@@ -104,7 +122,7 @@ public:
         case Interface::Velocity: {
             result_value = rml->RMLVelocity(*input_vel_parameters, output_vel_parameters.get(), vel_flags);
 
-            for (size_t dof = 0; dof < DOFs; ++dof) {
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                 output.new_position[dof] = output_vel_parameters->NewPositionVector->VecData[dof];
                 output.new_velocity[dof] = output_vel_parameters->NewVelocityVector->VecData[dof];
                 output.new_acceleration[dof] = output_vel_parameters->NewAccelerationVector->VecData[dof];
@@ -114,8 +132,13 @@ public:
         } break;
         }
 
+        if (output.new_calculation) {
+            output.time = 0.0;
+        }
+
         auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
+        output.time += delta_time;
 
         if (result_value == ReflexxesAPI::RML_FINAL_STATE_REACHED) {
             return Result::Finished;
@@ -130,7 +153,7 @@ public:
         case Interface::Position: {
             rml->RMLPositionAtAGivenSampleTime(time, output_parameters.get());
 
-            for (size_t dof = 0; dof < DOFs; dof += 1) {
+            for (size_t dof = 0; dof < degrees_of_freedom; dof += 1) {
                 output.new_position[dof] = output_parameters->NewPositionVector->VecData[dof];
                 output.new_velocity[dof] = output_parameters->NewVelocityVector->VecData[dof];
                 output.new_acceleration[dof] = output_parameters->NewAccelerationVector->VecData[dof];
@@ -139,7 +162,7 @@ public:
         case Interface::Velocity: {
             rml->RMLVelocityAtAGivenSampleTime(time, output_vel_parameters.get());
 
-            for (size_t dof = 0; dof < DOFs; dof += 1) {
+            for (size_t dof = 0; dof < degrees_of_freedom; dof += 1) {
                 output.new_position[dof] = output_vel_parameters->NewPositionVector->VecData[dof];
                 output.new_velocity[dof] = output_vel_parameters->NewVelocityVector->VecData[dof];
                 output.new_acceleration[dof] = output_vel_parameters->NewAccelerationVector->VecData[dof];

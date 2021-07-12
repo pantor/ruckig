@@ -9,7 +9,7 @@
 namespace ruckig {
 
 //! Output type of the OTG
-template<size_t DOFs>
+template<size_t DOFs = 0>
 struct OutputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
     size_t degrees_of_freedom;
@@ -28,10 +28,10 @@ struct OutputParameter {
     //! Current time on trajectory
     double time;
 
-    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     OutputParameter(): degrees_of_freedom(DOFs) { }
 
-    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     OutputParameter(size_t dofs): degrees_of_freedom(dofs), trajectory(Trajectory<0>(dofs)) {
         new_position.resize(dofs);
         new_velocity.resize(dofs);

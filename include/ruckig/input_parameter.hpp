@@ -41,10 +41,10 @@ enum class DurationDiscretization {
 
 
 //! Input type of the OTG
-template<size_t DOFs>
+template<size_t DOFs = 0>
 class InputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
-  
+
     static std::string join(const Vector<double>& array) {
         std::ostringstream ss;
         for (size_t i = 0; i < array.size(); ++i) {
@@ -69,7 +69,7 @@ public:
     Vector<bool> enabled;
     std::optional<double> minimum_duration;
 
-    template <size_t T = DOFs, typename std::enable_if<T >= 1, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     InputParameter(): degrees_of_freedom(DOFs) {
         std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
         std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
@@ -78,7 +78,7 @@ public:
         std::fill(enabled.begin(), enabled.end(), true);
     }
 
-    template <size_t T = DOFs, typename std::enable_if<T == 0, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     InputParameter(size_t dofs): degrees_of_freedom(dofs) {
         current_position.resize(dofs);
         current_velocity.resize(dofs);
