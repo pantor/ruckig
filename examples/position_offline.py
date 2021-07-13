@@ -21,13 +21,13 @@ if __name__ == '__main__':
     inp.max_acceleration = [0.2, 2, 2]
     inp.max_jerk = [3, 4, 5]
 
-    otg = Ruckig(3, 0.05)  #TODO timing is irrelevant in this usecase, could we add constructor without this parameter?
+    otg = Ruckig(3)
 
     out = OutputParameter(3)
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
-    res = otg.update(inp, out)
+    trajectory = otg.calculate(inp)
     print(f'Calculation duration: {out.calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {out.trajectory.duration:0.4f} [s]')
 
@@ -53,6 +53,6 @@ if __name__ == '__main__':
             print(f'Trajectory duration: {out.trajectory.duration:0.4f} [s]')
 
         time.sleep(0.02)  # limit output and calculation rate
-        
-    # verify that totally consumed time roughly matches trajectory.duration    
+
+    # verify that totally consumed time roughly matches trajectory.duration
     print(f'total time elapsed: {(time.time() - t_start)}')
