@@ -48,12 +48,14 @@ jobs:
       run: |
         ./build/example-position > /dev/null
         python3 ./examples/position.py > /dev/null
+        python3 ./examples/position_offline.py > /dev/null
 
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         .\build\example-position.exe > $null
         python3 .\examples\position.py > $null
+        python3 .\examples\position_offline.py > $null
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
