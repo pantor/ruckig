@@ -5,6 +5,7 @@
 #include <iostream>
 #include <limits>
 #include <tuple>
+#include <type_traits>
 
 #include <ruckig/block.hpp>
 #include <ruckig/brake.hpp>
@@ -23,7 +24,8 @@ template <size_t> class Reflexxes;
 //! Interface for the generated trajectory.
 template<size_t DOFs>
 class Trajectory {
-    template<class T> using Vector = std::array<T, DOFs>;
+    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+    template<class T> using VectorIntervals = typename std::conditional<DOFs >= 1, std::array<T, 3*DOFs+1>, std::vector<T>>::type;
 
     // Allow alternative OTG algorithms to directly access members (i.e. duration)
     friend class Reflexxes<DOFs>;
@@ -36,29 +38,33 @@ class Trajectory {
     double duration {0.0};
     Vector<double> independent_min_durations;
 
+    Vector<double> pd;
+
+    VectorIntervals<double> possible_t_syncs;
+    VectorIntervals<int> idx;
+
+    Vector<Block> blocks;
+    Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
+    Vector<double> inp_min_velocity, inp_min_acceleration;
+
     //! Is the trajectory phase synchronizable?
-    static bool is_phase_synchronizable(
+    bool is_phase_synchronizable(
         const InputParameter<DOFs>& inp,
-        const Vector<double>& vMax,
-        const Vector<double>& vMin,
-        const Vector<double>& aMax,
-        const Vector<double>& aMin,
+        const Vector<double>& vMax, const Vector<double>& vMin,
+        const Vector<double>& aMax, const Vector<double>& aMin,
         const Vector<double>& jMax,
         Profile::Direction limiting_direction,
         size_t limiting_dof,
         Vector<double>& new_max_velocity,
-        Vector<double>& new_max_acceleration,
-        Vector<double>& new_min_acceleration,
+        Vector<double>& new_max_acceleration, Vector<double>& new_min_acceleration,
         Vector<double>& new_max_jerk
     ) {
         using Direction = Profile::Direction;
 
         // Get scaling factor of first DoF
-        Vector<double> pd;
-
         bool pd_found_nonzero {false};
         double v0_scale, a0_scale, vf_scale, af_scale;
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+        for (size_t dof = 0; dof < pd.size(); ++dof) {
             pd[dof] = inp.target_position[dof] - inp.current_position[dof];
 
             if (!pd_found_nonzero && std::abs(pd[dof]) > eps) {
@@ -79,7 +85,7 @@ class Trajectory {
         const double max_acc_limiting = (limiting_direction == Direction::UP) ? aMax[limiting_dof] : aMin[limiting_dof];
         const double min_acc_limiting = (limiting_direction == Direction::UP) ? aMin[limiting_dof] : aMax[limiting_dof];
 
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+        for (size_t dof = 0; dof < pd.size(); ++dof) {
             if (dof == limiting_dof) {
                 continue;
             }
@@ -123,8 +129,8 @@ class Trajectory {
         return true;
     }
 
-    static bool synchronize(const Vector<Block>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
-        if (DOFs == 1 && !t_min && !discrete_duration) {
+    bool synchronize(const Vector<Block>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
+        if (blocks.size() == 1 && !t_min && !discrete_duration) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
             profiles[0] = blocks[0].p_min;
@@ -132,34 +138,32 @@ class Trajectory {
         }
 
         // Possible t_syncs are the start times of the intervals and optional t_min
-        std::array<double, 3*DOFs+1> possible_t_syncs;
-        std::array<int, 3*DOFs+1> idx;
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+        for (size_t dof = 0; dof < blocks.size(); ++dof) {
             possible_t_syncs[3 * dof] = blocks[dof].t_min;
             possible_t_syncs[3 * dof + 1] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
             possible_t_syncs[3 * dof + 2] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
         }
-        possible_t_syncs[3 * DOFs] = t_min.value_or(std::numeric_limits<double>::infinity());
+        possible_t_syncs[3 * degrees_of_freedom] = t_min.value_or(std::numeric_limits<double>::infinity());
 
         if (discrete_duration) {
-            for (size_t i = 0; i < 3*DOFs+1; ++i) {
+            for (size_t i = 0; i < possible_t_syncs.size(); ++i) {
                 possible_t_syncs[i] = std::ceil(possible_t_syncs[i] / delta_time) * delta_time;
             }
         }
 
         // Test them in sorted order
         std::iota(idx.begin(), idx.end(), 0);
-        std::sort(idx.begin(), idx.end(), [&possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
+        std::sort(idx.begin(), idx.end(), [&possible_t_syncs=possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
         // Start at last tmin (or worse)
-        for (auto i = idx.begin() + DOFs - 1; i != idx.end(); ++i) {
+        for (auto i = idx.begin() + degrees_of_freedom - 1; i != idx.end(); ++i) {
             const double possible_t_sync = possible_t_syncs[*i];
             if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](const Block& block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
                 continue;
             }
 
             t_sync = possible_t_sync;
-            if (*i == 3*DOFs) { // Optional t_min
+            if (*i == 3*degrees_of_freedom) { // Optional t_min
                 limiting_dof = -1;
                 return true;
             }
@@ -184,13 +188,31 @@ class Trajectory {
     }
 
 public:
+    size_t degrees_of_freedom;
+
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    Trajectory(): degrees_of_freedom(DOFs) { }
+
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    Trajectory(size_t dofs): degrees_of_freedom(dofs) {
+        blocks.resize(dofs);
+        p0s.resize(dofs);
+        v0s.resize(dofs);
+        a0s.resize(dofs);
+        inp_min_velocity.resize(dofs);
+        inp_min_acceleration.resize(dofs);
+        profiles.resize(dofs);
+        independent_min_durations.resize(dofs);
+        pd.resize(dofs);
+
+        possible_t_syncs.resize(3*dofs+1);
+        idx.resize(3*dofs+1);
+    }
+
     //! Calculate the time-optimal waypoint-based trajectory
     template<bool throw_error, bool return_error_at_maximal_duration>
     Result calculate(const InputParameter<DOFs>& inp, double delta_time) {
-        Vector<Block> blocks;
-        Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
-        Vector<double> inp_min_velocity, inp_min_acceleration;
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+        for (size_t dof = 0; dof < profiles.size(); ++dof) {
             auto& p = profiles[dof];
             p.pf = inp.current_position[dof];
             p.vf = inp.current_velocity[dof];
@@ -270,7 +292,7 @@ public:
         }
 
         if (inp.synchronization == Synchronization::None) {
-            for (size_t dof = 0; dof < DOFs; ++dof) {
+            for (size_t dof = 0; dof < blocks.size(); ++dof) {
                 if (!inp.enabled[dof] || dof == limiting_dof) {
                     continue;
                 }
@@ -284,7 +306,7 @@ public:
             Vector<double> new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk;
             if (is_phase_synchronizable(inp, inp.max_velocity, inp_min_velocity, inp.max_acceleration, inp_min_acceleration, inp.max_jerk, profiles[limiting_dof].direction, limiting_dof, new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk)) {
                 bool found_time_synchronization {true};
-                for (size_t dof = 0; dof < DOFs; ++dof) {
+                for (size_t dof = 0; dof < profiles.size(); ++dof) {
                     if (!inp.enabled[dof] || dof == limiting_dof) {
                         continue;
                     }
@@ -320,7 +342,7 @@ public:
         }
 
         // The general case
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+        for (size_t dof = 0; dof < profiles.size(); ++dof) {
             if (!inp.enabled[dof] || dof == limiting_dof) {
                 continue;
             }
@@ -371,15 +393,21 @@ public:
     //! Get the kinematic state at a given time
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
     void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
+        if constexpr (DOFs == 0) {
+            if (degrees_of_freedom != new_position.size() || degrees_of_freedom != new_velocity.size() || degrees_of_freedom != new_acceleration.size()) {
+                throw std::runtime_error("[ruckig] mismatch in degrees of freedom (vector size).");
+            }
+        }
+
         if (time >= duration) {
             // Keep constant acceleration
-            for (size_t dof = 0; dof < DOFs; ++dof) {
+            for (size_t dof = 0; dof < profiles.size(); ++dof) {
                 std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(time - duration, profiles[dof].pf, profiles[dof].vf, profiles[dof].af, 0);
             }
             return;
         }
 
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+        for (size_t dof = 0; dof < profiles.size(); ++dof) {
             const Profile& p = profiles[dof];
 
             double t_diff = time;
@@ -438,7 +466,7 @@ public:
     //! If the position is passed, this method returns true, otherwise false
     //! The Python wrapper takes `dof` and `position` as arguments and returns `time` (or `None`) instead
     bool get_first_time_at_position(size_t dof, double position, double& time) const {
-        if (dof >= DOFs) {
+        if (dof >= degrees_of_freedom) {
             return false;
         }
 

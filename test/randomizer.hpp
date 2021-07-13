@@ -2,10 +2,12 @@
 
 #include <array>
 #include <random>
+#include <type_traits>
+
 
 template<size_t DOFs, class T>
 class Randomizer {
-    template<class U> using Vector = std::array<U, DOFs>;
+    template<class U> using Vector = typename std::conditional<DOFs >= 1, std::array<U, DOFs>, std::vector<U>>::type;
 
     std::default_random_engine gen;
     std::uniform_real_distribution<double> uniform_dist;

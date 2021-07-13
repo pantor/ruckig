@@ -288,7 +288,7 @@ struct Profile {
     bool get_first_state_at_position(double pt, double& time, double& vt, double& at, double offset = 0.0) const {
         for (size_t i = 0; i < 7; ++i) {
             if (std::abs(p[i] - pt) < std::numeric_limits<double>::epsilon()) {
-                time = offset + (i > 0) ? t_sum[i-1] : 0.0;
+                time = offset + ((i > 0) ? t_sum[i-1] : 0.0);
                 vt = v[i];
                 at = a[i];
                 return true;
