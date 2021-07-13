@@ -6,7 +6,7 @@ from sys import path
 build_path = Path(__file__).parent.parent / 'build'
 path.insert(0, str(build_path))
 
-from ruckig import InputParameter, OutputParameter, Ruckig
+from ruckig import InputParameter, Ruckig, Trajectory, Result
 
 
 if __name__ == '__main__':
@@ -21,38 +21,20 @@ if __name__ == '__main__':
     inp.max_acceleration = [0.2, 2, 2]
     inp.max_jerk = [3, 4, 5]
 
+    # We don't need to pass the control rate (cycle time) when using only offline features
     otg = Ruckig(3)
+    trajectory = Trajectory(3)
 
-    out = OutputParameter(3)
+    # We now calculate the trajectory in an offline manner
+    result = otg.calculate(inp, trajectory)
+    if result == Result.ErrorInvalidInput:
+        raise Exception('Invalid input!')
 
-    print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
+    print(f'Trajectory duration: {trajectory.duration:0.4f} [s]')
 
-    trajectory = otg.calculate(inp)
-    print(f'Calculation duration: {out.calculation_duration:0.1f} [µs]')
-    print(f'Trajectory duration: {out.trajectory.duration:0.4f} [s]')
+    new_time = 1.0
 
-    pos_updated = False
-    t_start = time.time()
-    t_now = time.time()-t_start
-    while t_now < out.trajectory.duration:
-        t_now = time.time()-t_start
-        new_position, new_velocity, new_acceleration = out.trajectory.at_time(t_now)
+    # Then, we can calculate the kinematic state at a given time
+    new_position, new_velocity, new_acceleration = trajectory.at_time(new_time)
 
-        print('\t'.join([f'{t_now:0.3f}'] + [f'{p:0.3f}' for p in new_position]))
-
-        if new_position[1] < -0.7 and not pos_updated:  # change target values on the fly and update trajectory
-            pos_updated = True
-            inp.current_position = new_position
-            inp.current_velocity = new_velocity
-            inp.current_acceleration = new_acceleration
-            inp.target_position = [1, 0, 0]
-            inp.max_velocity = [1, 2, 2]
-            t_start = time.time()
-            res = otg.update(inp, out)
-            print(f'Calculation duration: {out.calculation_duration:0.1f} [µs]')
-            print(f'Trajectory duration: {out.trajectory.duration:0.4f} [s]')
-
-        time.sleep(0.02)  # limit output and calculation rate
-
-    # verify that totally consumed time roughly matches trajectory.duration
-    print(f'total time elapsed: {(time.time() - t_start)}')
+    print(f'Position at time {new_time:0.4f} [s]: {new_position}')
