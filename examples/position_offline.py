@@ -38,3 +38,4 @@ if __name__ == '__main__':
     new_position, new_velocity, new_acceleration = trajectory.at_time(new_time)
 
     print(f'Position at time {new_time:0.4f} [s]: {new_position}')
+    print(f'Position extremas are {trajectory.position_extrema}')

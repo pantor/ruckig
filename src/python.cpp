@@ -52,7 +52,10 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("min", &PositionExtrema::min)
         .def_readonly("max", &PositionExtrema::max)
         .def_readonly("t_min", &PositionExtrema::t_min)
-        .def_readonly("t_max", &PositionExtrema::t_max);
+        .def_readonly("t_max", &PositionExtrema::t_max)
+        .def("__repr__", [](const PositionExtrema& ext) {
+            return "[" + std::to_string(ext.min) + ", " + std::to_string(ext.max) + "]";
+        });
 
     py::class_<Trajectory<0>>(m, "Trajectory")
         .def(py::init<size_t>(), "dofs"_a)

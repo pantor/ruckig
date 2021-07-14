@@ -47,6 +47,8 @@ class Trajectory {
     Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
     Vector<double> inp_min_velocity, inp_min_acceleration;
 
+    Vector<PositionExtrema> position_extrema;
+
     //! Is the trajectory phase synchronizable?
     bool is_phase_synchronizable(
         const InputParameter<DOFs>& inp,
@@ -204,6 +206,8 @@ public:
         profiles.resize(dofs);
         independent_min_durations.resize(dofs);
         pd.resize(dofs);
+
+        position_extrema.resize(dofs);
 
         possible_t_syncs.resize(3*dofs+1);
         idx.resize(3*dofs+1);
@@ -454,12 +458,11 @@ public:
     }
 
     //! Get the min/max values of the position for each DoF
-    Vector<PositionExtrema> get_position_extrema() const {
-        Vector<PositionExtrema> result;
+    Vector<PositionExtrema> get_position_extrema() {
         for (size_t dof = 0; dof < profiles.size(); ++dof) {
-            result[dof] = profiles[dof].get_position_extrema();
+            position_extrema[dof] = profiles[dof].get_position_extrema();
         }
-        return result;
+        return position_extrema;
     }
 
     //! Get the time that this trajectory passes a specific position of a given DoF the first time
