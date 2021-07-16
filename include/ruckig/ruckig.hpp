@@ -44,6 +44,14 @@ public:
     //! Validate the input for the trajectory calculation
     bool validate_input(const InputParameter<DOFs>& input) const {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            if (input.interface == Interface::Position && std::isnan(input.current_position[dof])) {
+                return false;
+            }
+
+            if (input.interface == Interface::Position && std::isnan(input.max_velocity[dof])) {
+                return false;
+            }
+
             if (input.interface == Interface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
                 return false;
             }
@@ -52,11 +60,19 @@ public:
                 return false;
             }
 
+            if (std::isnan(input.max_acceleration[dof])) {
+                return false;
+            }
+
             if (input.max_acceleration[dof] <= std::numeric_limits<double>::min()) {
                 return false;
             }
 
             if (input.min_acceleration && input.min_acceleration.value()[dof] >= -std::numeric_limits<double>::min()) {
+                return false;
+            }
+
+            if (std::isnan(input.max_jerk[dof])) {
                 return false;
             }
 
@@ -119,7 +135,7 @@ public:
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
         const auto start = std::chrono::high_resolution_clock::now();
 
-        if constexpr (DOFs == 0) {
+        if constexpr (DOFs == 0 && throw_error) {
             if (degrees_of_freedom != input.degrees_of_freedom || degrees_of_freedom != output.degrees_of_freedom) {
                 throw std::runtime_error("[ruckig] mismatch in degrees of freedom (vector size).");
             }

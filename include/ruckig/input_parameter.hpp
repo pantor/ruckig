@@ -54,6 +54,14 @@ class InputParameter {
         return ss.str();
     }
 
+    void initialize() {
+        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
+        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
+        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
+        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
+        std::fill(enabled.begin(), enabled.end(), true);
+    }
+
 public:
     size_t degrees_of_freedom;
 
@@ -71,11 +79,7 @@ public:
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     InputParameter(): degrees_of_freedom(DOFs) {
-        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
-        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
-        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
-        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
-        std::fill(enabled.begin(), enabled.end(), true);
+        initialize();
     }
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
@@ -91,11 +95,7 @@ public:
         max_jerk.resize(dofs);
         enabled.resize(dofs);
 
-        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
-        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
-        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
-        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
-        std::fill(enabled.begin(), enabled.end(), true);
+        initialize();
     }
 
     bool operator!=(const InputParameter<DOFs>& rhs) const {

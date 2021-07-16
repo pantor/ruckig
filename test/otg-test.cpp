@@ -489,6 +489,8 @@ TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF an
     Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
 
+    input.current_position = {0.0, 0.0, 0.0};
+
     for (size_t i = 0; i < velocity_random_3; ++i) {
         d.fill_or_zero(input.current_velocity, 0.9);
         d.fill_or_zero(input.current_acceleration, 0.8);
