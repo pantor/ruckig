@@ -3,7 +3,7 @@ from pathlib import Path
 from sys import path
 
 # Path to the build directory including a file similar to 'ruckig.cpython-37m-x86_64-linux-gnu'.
-build_path = Path(__file__).parent.parent / 'build'
+build_path = Path(__file__).parent.absolute().parent / 'build'
 path.insert(0, str(build_path))
 
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
