@@ -157,12 +157,12 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
         }
 
         // Double Newton step (regarding pd)
-        {
+        if (t > DBL_EPSILON) {
             double h1 = jMax*t*t + v0;
             double orig = -pd + (3*(a0_p4 - af_p4) + 8*af_p3*aMin + 8*a0_p3*(-aMin + 3*jMax*t) + 24*a0*jMax*(-aMin + 2*jMax*t)*(-aMin*t + h1) + 6*a0_a0*(aMin*aMin + 2*jMax*(-4*aMin*t + 5*h1 - 4*v0)) - 24*af*aMin*jMax*vf - 6*af_af*(aMin*aMin - 2*jMax*vf) + 12*jMax*(-2*aMin*jMax*t*(h1 + v0) + aMin*aMin*(h1 + vf) + jMax*(h1*h1 - vf_vf)))/(-24*aMin*jMax_jMax);
             double deriv = -((a0 - aMin + jMax*t)*(a0_a0 - aMin*jMax*t + a0*(-aMin + 4*jMax*t) + 2*jMax*h1))/(aMin*jMax);
 
-            t -= orig / deriv;
+            t -= std::min(orig / deriv, t);
 
             h1 = jMax*t*t + v0;
             orig = -pd + (3*(a0_p4 - af_p4) + 8*af_p3*aMin + 8*a0_p3*(-aMin + 3*jMax*t) + 24*a0*jMax*(-aMin + 2*jMax*t)*(-aMin*t + h1) + 6*a0_a0*(aMin*aMin + 2*jMax*(-4*aMin*t + 5*h1 - 4*v0)) - 24*af*aMin*jMax*vf - 6*af_af*(aMin*aMin - 2*jMax*vf) + 12*jMax*(-2*aMin*jMax*t*(h1 + v0) + aMin*aMin*(h1 + vf) + jMax*(h1*h1 - vf_vf)))/(-24*aMin*jMax_jMax);
@@ -204,9 +204,9 @@ void PositionStep1::time_acc0(Profile& profile, double vMax, double vMin, double
         }
 
         // Single Newton step (regarding pd)
-        {
+        if (t > DBL_EPSILON) {
             double orig = (3*(af_p4 - a0_p4) + 8*(a0_p3 - af_p3)*aMax + 24*aMax*jMax*(af*vf - a0*v0) - 6*a0_a0*(aMax*aMax - 2*jMax*v0) + 6*af_af*(aMax*aMax - 2*jMax*(jMax*t*t + vf)) + 12*jMax*(-2*aMax*jMax*(pd + jMax*t*t*t) + aMax*aMax*(jMax*t*t + v0 - vf) + jMax*(jMax*t*t*(jMax*t*t + 2*vf) + vf_vf - v0_v0)))/(24*aMax*jMax_jMax);
-            double deriv = (t*(-af_af + aMax*aMax - 3*aMax*jMax*t + 2*jMax*(jMax*t*t + vf)))/aMax;
+            double deriv = t*(-af_af + aMax*aMax - 3*aMax*jMax*t + 2*jMax*(jMax*t*t + vf))/aMax;
 
             t -= orig / deriv;
         }
