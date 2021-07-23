@@ -304,7 +304,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
         for (double t: roots) {
             // Single Newton step (regarding pd)
             {
-                const double h1 = Sqrt((a0_a0 + af_af)/2 + jMax*(2*a0*t + jMax*t*t - vd))/Abs(jMax);
+                const double h1 = Sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (2*a0*t + jMax*t*t - vd)/jMax);
                 const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(h1 + t - tf)) + 6*a0_a0*(af + jMax*(2*t - tf)) + 6*(a0_a0 + af_af)*jMax*h1 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(h1 + t - tf) - tf*v0 - h1*vd))/(12*jMax_jMax);
                 const double deriv_newton = -(a0 + jMax*t)*(3*(h1 + t) - 2*tf + (a0 + 2*af)/jMax);
                 t -= orig / deriv_newton;
@@ -314,7 +314,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
                 continue;
             }
 
-            const double h1 = Sqrt((a0_a0 + af_af)/2 + jMax*(t*(2*a0 + jMax*t) - vd))/Abs(jMax);
+            const double h1 = Sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (t*(2*a0 + jMax*t) - vd)/jMax);
 
             profile.t[0] = t;
             profile.t[1] = 0;
@@ -402,13 +402,13 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
         for (double t: roots) {
             // Double Newton step (regarding pd)
             {
-                double h1 = Sqrt((af_af - a0_a0)/2 - jMax*((2*a0 + jMax*t)*t - vd))/Abs(jMax);
+                double h1 = Sqrt((af_af - a0_a0)/(2*jMax_jMax) - ((2*a0 + jMax*t)*t - vd)/jMax);
                 double orig = -pd + (af_p3 - a0_p3 + 3*a0_a0*jMax*(tf - 2*t))/(6*jMax_jMax) + (2*a0 + jMax*t)*t*(tf - t) + (jMax*h1 - af)*h1*h1 + tf*v0;
                 double deriv_newton = (a0 + jMax*t)*(2*(af + jMax*tf) - 3*jMax*(h1 + t) - a0)/jMax;
 
                 t -= orig / deriv_newton;
 
-                h1 = Sqrt((af_af - a0_a0)/2 - jMax*((2*a0 + jMax*t)*t - vd))/Abs(jMax);
+                h1 = Sqrt((af_af - a0_a0)/(2*jMax_jMax) - ((2*a0 + jMax*t)*t - vd)/jMax);
                 orig = -pd + (af_p3 - a0_p3 + 3*a0_a0*jMax*(tf - 2*t))/(6*jMax_jMax) + (2*a0 + jMax*t)*t*(tf - t) + (jMax*h1 - af)*h1*h1 + tf*v0;
                 if (std::abs(orig) > 1e-9) {
                     deriv_newton = (a0 + jMax*t)*(2*(af + jMax*tf) - 3*jMax*(h1 + t) - a0)/jMax;
@@ -417,7 +417,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
                 }
             }
 
-            const double h1 = Sqrt((af_af - a0_a0)/2 - jMax*((2*a0 + jMax*t)*t - vd))/Abs(jMax);
+            const double h1 = Sqrt((af_af - a0_a0)/(2*jMax_jMax) - ((2*a0 + jMax*t)*t - vd)/jMax);
 
             profile.t[0] = t;
             profile.t[1] = 0;
@@ -643,14 +643,14 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
 
                     // Single Newton step (regarding pd)
                     {
-                        const double h1 = Sqrt(jMax*(jMax*t*(t - tf) - vd))/Abs(jMax);
+                        const double h1 = Sqrt((jMax*t*(t - tf) - vd)/jMax);
                         const double orig = (-2*pd + jMax*t*(t - tf)*tf + 2*tf*v0)/2 - (h1*h1*h1)/jMax - t*(jMax*t*(t - tf) - vd);
                         const double deriv = (jMax*(-2*t + tf)*(6*h1 - 2*tf) - 4*jMax*t*(3*t - 2*tf))/4 + vd;
 
                         t -= orig / deriv;
                     }
 
-                    const double h1 = Sqrt(jMax*(jMax*t*(t - tf) - vd))/Abs(jMax);
+                    const double h1 = Sqrt((jMax*t*(t - tf) - vd)/jMax);
 
                     // Solution 2 with aPlat
                     profile.t[0] = 0;
@@ -807,7 +807,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
                     continue;
                 }
 
-                double h1 = Sqrt(ad_ad/2 + jMax*(a0*(t + tf) - af*t + jMax*t*tf - vd))/Abs(jMax);
+                double h1 = Sqrt(ad_ad/(2*jMax_jMax) + (a0*(t + tf) - af*t + jMax*t*tf - vd)/jMax);
 
                 profile.t[0] = t;
                 profile.t[1] = tf - ad/jMax - 2*h1;

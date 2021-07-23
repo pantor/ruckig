@@ -34,15 +34,15 @@ if __name__ == '__main__':
     # inp.synchronization = Synchronization.Phase
     # inp.duration_discretization = DurationDiscretization.Discrete
 
-    inp.current_position = [0.0001215]
-    inp.current_velocity = [0.00405]
-    inp.current_acceleration = [0.09]
-    inp.target_position = [0.1421083333333333]
-    inp.target_velocity = [0.37]
-    inp.target_acceleration = [0.5]
-    inp.max_velocity = [1]
-    inp.max_acceleration = [0.5]
-    inp.max_jerk = [1]
+    inp.current_position = [0]
+    inp.current_velocity = [0]
+    inp.current_acceleration = [0]
+    inp.target_position = [4000000000]
+    inp.target_velocity = [0]
+    inp.target_acceleration = [0]
+    inp.max_velocity = [18000000000]
+    inp.max_acceleration = [200000000000]
+    inp.max_jerk = [2000000000000]
 
     # otg = Reflexxes(inp.degrees_of_freedom, 0.005)
     otg = Ruckig(inp.degrees_of_freedom, 0.005)

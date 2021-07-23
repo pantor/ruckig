@@ -45,7 +45,7 @@ void PositionStep1::time_acc1_vel(Profile& profile, double vMax, double vMin, do
         return;
     }
 
-    const double h1 = Sqrt(a0_a0/2 + jMax*(vMax - v0))/Abs(jMax);
+    const double h1 = Sqrt(a0_a0/(2*jMax_jMax) + (vMax - v0)/jMax);
 
     profile.t[0] = -a0/jMax + h1;
     profile.t[1] = 0;
@@ -69,7 +69,7 @@ void PositionStep1::time_acc0_vel(Profile& profile, double vMax, double vMin, do
         return;
     }
 
-    const double h1 = Sqrt(af_af/2 + jMax*(vMax - vf))/Abs(jMax);
+    const double h1 = Sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
 
     profile.t[0] = (-a0 + aMax)/jMax;
     profile.t[1] = (a0_a0/2 - aMax*aMax - jMax*(v0 - vMax))/(aMax*jMax);
@@ -89,8 +89,8 @@ void PositionStep1::time_vel(Profile& profile, double vMax, double vMin, double 
         return;
     }
 
-    const double h1 = Sqrt(af_af/2 + jMax*(vMax - vf))/Abs(jMax);
-    const double h2 = Sqrt(a0_a0/2 + jMax*(vMax - v0))/Abs(jMax);
+    const double h1 = Sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
+    const double h2 = Sqrt(a0_a0/(2*jMax_jMax) + (vMax - v0)/jMax);
 
     // Solution 3/4
     profile.t[0] = h2 - a0/jMax;
@@ -393,7 +393,7 @@ void PositionStep1::time_acc0_two_step(Profile& profile, double vMax, double vMi
 void PositionStep1::time_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // Four step
     {
-        const double h1 = Sqrt(af_af/2 + jMax*(vMax - vf))/Abs(jMax);
+        const double h1 = Sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
 
         profile.t[0] = 0;
         profile.t[1] = 0;

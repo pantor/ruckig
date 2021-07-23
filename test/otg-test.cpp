@@ -420,6 +420,17 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {0.5, 0.5, 0.5};
     input.max_jerk = {1, 1, 1};
     check_duration(otg, input, 0.9);
+
+    input.current_position = {0, 0, 0};
+    input.current_velocity = {0, 0, 0};
+    input.current_acceleration = {0, 0, 0};
+    input.target_position = {400, 4000, 40000};
+    input.target_velocity = {0, 0, 0};
+    input.target_acceleration = {0, 0, 0};
+    input.max_velocity = {1800, 18000, 180000};
+    input.max_acceleration = {20000, 200000, 2000000};
+    input.max_jerk = {200000, 2000000, 20000000};
+    check_duration(otg, input, 0.4119588818);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
@@ -545,6 +556,21 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
         l.fill(input.max_velocity, input.target_velocity);
         l.fill(input.max_acceleration, input.target_acceleration);
         l.fill(input.max_jerk);
+
+        // if (i % 1000 == 0) {
+        //     const double factor = 1e3;
+        //     for (size_t d = 0; d < DOFs; ++d) {
+        //         input.current_position[d] *= factor;
+        //         input.current_velocity[d] *= factor;
+        //         input.current_acceleration[d] *= factor;
+        //         input.target_position[d] *= factor;
+        //         input.target_velocity[d] *= factor;
+        //         input.target_acceleration[d] *= factor;
+        //         input.max_velocity[d] *= factor;
+        //         input.max_acceleration[d] *= factor;
+        //         input.max_jerk[d] *= factor;
+        //     }
+        // }
 
         if (!otg.validate_input(input)) {
             --i;
