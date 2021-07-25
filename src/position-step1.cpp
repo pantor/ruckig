@@ -282,7 +282,7 @@ void PositionStep1::time_none(Profile& profile, double vMax, double vMin, double
 
     // UDDU / UDUD modern, this one is in particular prone to numerical issues
     {
-        const double h0 = (a0_a0 - af_af + 2*jMax*(vf - v0))/(2*jMax_jMax);
+        const double h2 = (a0_a0 - af_af + 2*jMax*(vf - v0))/(2*jMax_jMax);
         
         // UDUD Strategy: t7 == 0 (equals UDDU)
         std::array<double, 5> polynom;
@@ -290,7 +290,7 @@ void PositionStep1::time_none(Profile& profile, double vMax, double vMin, double
         polynom[1] = 0;
         polynom[2] = (-2*(a0_a0 + af_af - 2*jMax*(v0 + vf)))/jMax_jMax;
         polynom[3] = (4*(a0_p3 - af_p3 + 3*jMax*(af*vf - a0*v0 - jMax*pd)))/(3*jMax*jMax_jMax);
-        polynom[4] = -h0*h0;
+        polynom[4] = -h2*h2;
 
         auto roots = Roots::solveQuartMonic(polynom);
         for (double t: roots) {
