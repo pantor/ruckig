@@ -35,13 +35,13 @@ if __name__ == '__main__':
     # inp.duration_discretization = DurationDiscretization.Discrete
 
     inp.current_position = [0, 0, 0]
-    inp.current_velocity = [0.2, 0.4, 0.6]
-    inp.current_acceleration = [-0.1, -0.2, -0.3]
-    inp.target_position = [1, 2, 3]
+    inp.current_velocity = [0.2, -0.4, 0.6]
+    inp.current_acceleration = [0, 0, 0]
+    inp.target_position = [1, -2, 3]
     inp.target_velocity = [0, 0, 0]
     inp.target_acceleration = [0, 0, 0]
     inp.max_velocity = [2, 2, 2]
-    inp.max_acceleration = [2, 2, 2]
+    inp.max_acceleration = [1, 1, 1]
     inp.max_jerk = [2, 2, 2]
 
     # otg = Reflexxes(inp.degrees_of_freedom, 0.005)

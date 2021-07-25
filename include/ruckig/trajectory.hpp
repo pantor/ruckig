@@ -47,7 +47,7 @@ class Trajectory {
     Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
     Vector<double> inp_min_velocity, inp_min_acceleration;
 
-    Vector<double> new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk; // For phase synchronization
+    Vector<double> new_max_velocity, new_min_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk; // For phase synchronization
 
     Vector<PositionExtrema> position_extrema;
 
@@ -59,7 +59,7 @@ class Trajectory {
         const Vector<double>& jMax,
         Profile::Direction limiting_direction,
         size_t limiting_dof,
-        Vector<double>& new_max_velocity,
+        Vector<double>& new_max_velocity, Vector<double>& new_min_velocity,
         Vector<double>& new_max_acceleration, Vector<double>& new_min_acceleration,
         Vector<double>& new_max_jerk
     ) {
@@ -86,6 +86,7 @@ class Trajectory {
 
         const double max_jerk_limiting = (limiting_direction == Direction::UP) ? jMax[limiting_dof] : -jMax[limiting_dof];
         const double max_vel_limiting = (limiting_direction == Direction::UP) ? vMax[limiting_dof] : vMin[limiting_dof];
+        const double min_vel_limiting = (limiting_direction == Direction::UP) ? vMin[limiting_dof] : vMax[limiting_dof];
         const double max_acc_limiting = (limiting_direction == Direction::UP) ? aMax[limiting_dof] : aMin[limiting_dof];
         const double min_acc_limiting = (limiting_direction == Direction::UP) ? aMin[limiting_dof] : aMax[limiting_dof];
 
@@ -112,16 +113,19 @@ class Trajectory {
             const Direction new_direction = ((limiting_direction == Direction::UP && scale >= 0.0) || (limiting_direction == Direction::DOWN && scale <= 0.0)) ? Direction::UP : Direction::DOWN;
             const double old_max_jerk = (new_direction == Direction::UP) ? jMax[dof] : -jMax[dof];
             const double old_max_vel = (new_direction == Direction::UP) ? vMax[dof] : vMin[dof];
+            const double old_min_vel = (new_direction == Direction::UP) ? vMin[dof] : vMax[dof];
             const double old_max_acc = (new_direction == Direction::UP) ? aMax[dof] : aMin[dof];
             const double old_min_acc = (new_direction == Direction::UP) ? aMin[dof] : aMax[dof];
 
             new_max_velocity[dof] = scale * max_vel_limiting;
+            new_min_velocity[dof] = scale * min_vel_limiting;
             new_max_acceleration[dof] = scale * max_acc_limiting;
             new_min_acceleration[dof] = scale * min_acc_limiting;
             new_max_jerk[dof] = scale * max_jerk_limiting;
 
             if (
                 std::abs(old_max_vel) < std::abs(new_max_velocity[dof])
+                || std::abs(old_min_vel) < std::abs(new_min_velocity[dof])
                 || std::abs(old_max_acc) < std::abs(new_max_acceleration[dof])
                 || std::abs(old_min_acc) < std::abs(new_min_acceleration[dof])
                 || std::abs(old_max_jerk) < std::abs(new_max_jerk[dof])
@@ -210,6 +214,7 @@ public:
         pd.resize(dofs);
 
         new_max_velocity.resize(dofs);
+        new_min_velocity.resize(dofs);
         new_max_acceleration.resize(dofs);
         new_min_acceleration.resize(dofs);
         new_max_jerk.resize(dofs);
@@ -314,7 +319,7 @@ public:
         }
 
         if (inp.synchronization == Synchronization::Phase && inp.interface == Interface::Position) {
-            if (is_phase_synchronizable(inp, inp.max_velocity, inp_min_velocity, inp.max_acceleration, inp_min_acceleration, inp.max_jerk, profiles[limiting_dof].direction, limiting_dof, new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk)) {
+            if (is_phase_synchronizable(inp, inp.max_velocity, inp_min_velocity, inp.max_acceleration, inp_min_acceleration, inp.max_jerk, profiles[limiting_dof].direction, limiting_dof, new_max_velocity, new_min_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk)) {
                 bool found_time_synchronization {true};
                 for (size_t dof = 0; dof < profiles.size(); ++dof) {
                     if (!inp.enabled[dof] || dof == limiting_dof) {
@@ -331,12 +336,12 @@ public:
                     // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
                     switch (p.jerk_signs) {
                         case Profile::JerkSigns::UDDU: {
-                            if (!p.check<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
+                            if (!p.check<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_min_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
                                 found_time_synchronization = false;
                             }
                         } break;
                         case Profile::JerkSigns::UDUD: {
-                            if (!p.check<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
+                            if (!p.check<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_min_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
                                 found_time_synchronization = false;
                             }
                         } break;
