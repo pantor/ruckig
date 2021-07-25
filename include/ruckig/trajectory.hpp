@@ -336,12 +336,12 @@ public:
                     // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
                     switch (p.jerk_signs) {
                         case Profile::JerkSigns::UDDU: {
-                            if (!p.check<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_min_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
+                            if (!p.check_with_timing<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_min_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
                                 found_time_synchronization = false;
                             }
                         } break;
                         case Profile::JerkSigns::UDUD: {
-                            if (!p.check<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_min_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
+                            if (!p.check_with_timing<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], new_max_velocity[dof], new_min_velocity[dof], new_max_acceleration[dof], new_min_acceleration[dof])) {
                                 found_time_synchronization = false;
                             }
                         } break;

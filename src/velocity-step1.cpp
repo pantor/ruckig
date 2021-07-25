@@ -17,7 +17,7 @@ void VelocityStep1::time_acc0(Profile& profile, double aMax, double aMin, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check<JerkSigns::UDDU, Limits::ACC0>(jMax, aMax, aMin)) {
+        if (profile.check_for_velocity<JerkSigns::UDDU, Limits::ACC0>(jMax, aMax, aMin)) {
             add_profile(profile, jMax);
         }
     }
@@ -32,7 +32,7 @@ void VelocityStep1::time_acc0(Profile& profile, double aMax, double aMin, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check<JerkSigns::UDUD, Limits::ACC0>(jMax, aMax, aMin)) {
+        if (profile.check_for_velocity<JerkSigns::UDUD, Limits::ACC0>(jMax, aMax, aMin)) {
             add_profile(profile, jMax);
         }
     }
@@ -51,7 +51,7 @@ void VelocityStep1::time_none(Profile& profile, double aMax, double aMin, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check<JerkSigns::UDDU, Limits::NONE>(jMax, aMax, aMin)) {
+        if (profile.check_for_velocity<JerkSigns::UDDU, Limits::NONE>(jMax, aMax, aMin)) {
             add_profile(profile, jMax);
         }
     }
@@ -66,7 +66,7 @@ void VelocityStep1::time_none(Profile& profile, double aMax, double aMin, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check<JerkSigns::UDDU, Limits::NONE>(jMax, aMax, aMin)) {
+        if (profile.check_for_velocity<JerkSigns::UDDU, Limits::NONE>(jMax, aMax, aMin)) {
             add_profile(profile, jMax);
         }
     }
