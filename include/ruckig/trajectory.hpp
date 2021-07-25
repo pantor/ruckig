@@ -47,6 +47,8 @@ class Trajectory {
     Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
     Vector<double> inp_min_velocity, inp_min_acceleration;
 
+    Vector<double> new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk; // For phase synchronization
+
     Vector<PositionExtrema> position_extrema;
 
     //! Is the trajectory phase synchronizable?
@@ -207,6 +209,11 @@ public:
         independent_min_durations.resize(dofs);
         pd.resize(dofs);
 
+        new_max_velocity.resize(dofs);
+        new_max_acceleration.resize(dofs);
+        new_min_acceleration.resize(dofs);
+        new_max_jerk.resize(dofs);
+
         position_extrema.resize(dofs);
 
         possible_t_syncs.resize(3*dofs+1);
@@ -307,7 +314,6 @@ public:
         }
 
         if (inp.synchronization == Synchronization::Phase && inp.interface == Interface::Position) {
-            Vector<double> new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk;
             if (is_phase_synchronizable(inp, inp.max_velocity, inp_min_velocity, inp.max_acceleration, inp_min_acceleration, inp.max_jerk, profiles[limiting_dof].direction, limiting_dof, new_max_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk)) {
                 bool found_time_synchronization {true};
                 for (size_t dof = 0; dof < profiles.size(); ++dof) {

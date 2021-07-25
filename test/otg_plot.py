@@ -29,20 +29,20 @@ def walk_through_trajectory(otg, inp):
 
 
 if __name__ == '__main__':
-    inp = InputParameter(1)
+    inp = InputParameter(3)
     # inp.interface = Interface.Velocity
-    # inp.synchronization = Synchronization.Phase
+    inp.synchronization = Synchronization.Phase
     # inp.duration_discretization = DurationDiscretization.Discrete
 
-    inp.current_position = [0]
-    inp.current_velocity = [0]
-    inp.current_acceleration = [0]
-    inp.target_position = [4000000000]
-    inp.target_velocity = [0]
-    inp.target_acceleration = [0]
-    inp.max_velocity = [18000000000]
-    inp.max_acceleration = [200000000000]
-    inp.max_jerk = [2000000000000]
+    inp.current_position = [0, 0, 0]
+    inp.current_velocity = [0.2, 0.4, 0.6]
+    inp.current_acceleration = [-0.1, -0.2, -0.3]
+    inp.target_position = [1, 2, 3]
+    inp.target_velocity = [0, 0, 0]
+    inp.target_acceleration = [0, 0, 0]
+    inp.max_velocity = [2, 2, 2]
+    inp.max_acceleration = [2, 2, 2]
+    inp.max_jerk = [2, 2, 2]
 
     # otg = Reflexxes(inp.degrees_of_freedom, 0.005)
     otg = Ruckig(inp.degrees_of_freedom, 0.005)
