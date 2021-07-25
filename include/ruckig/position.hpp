@@ -100,6 +100,16 @@ class PositionStep2 {
             || time_acc1(profile, vMax, vMin, aMax, aMin, jMax)
             || time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax)
             || time_none(profile, vMax, vMin, aMax, aMin, jMax);
+
+        // This order improves performance by around 30%, however the vel profile is generelly preferred
+        // return time_acc0_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
+        //     || time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax)
+        //     || time_acc0(profile, vMax, vMin, aMax, aMin, jMax)
+        //     || time_acc1(profile, vMax, vMin, aMax, aMin, jMax)
+        //     || time_none(profile, vMax, vMin, aMax, aMin, jMax)
+        //     || time_acc0_vel(profile, vMax, vMin, aMax, aMin, jMax)
+        //     || time_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
+        //     || time_vel(profile, vMax, vMin, aMax, aMin, jMax);
     }
 
 public:
