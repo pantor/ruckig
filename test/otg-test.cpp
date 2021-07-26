@@ -108,8 +108,9 @@ size_t random_1, random_3, step_through_3, random_discrete_3, random_direction_3
 
 std::normal_distribution<double> position_dist {0.0, 4.0};
 std::normal_distribution<double> dynamic_dist {0.0, 0.8};
-std::uniform_real_distribution<double> limit_dist {0.08, 12.0};
-std::uniform_real_distribution<double> min_limit_dist {-12.0, -0.08};
+std::uniform_real_distribution<double> limit_dist {0.08, 16.0};
+// std::uniform_real_distribution<double> limit_dist {800.0, 160000.0};
+std::uniform_real_distribution<double> min_limit_dist {-16.0, -0.08};
 
 
 template<class T>

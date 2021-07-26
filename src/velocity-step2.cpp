@@ -9,9 +9,9 @@ VelocityStep2::VelocityStep2(double tf, double p0, double v0, double a0, double 
 bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double jMax) {
     // UD Solution 1/2
     {
-        const double h1 = Sqrt(-a0*a0 - af*af + 2*(a0 + af)*jMax*tf + 2*a0*af + jMax*(jMax*tf*tf - 4*(vf - v0)))/Abs(jMax);
+        const double h1 = Sqrt((-a0*a0 - af*af + 2*a0*af + 2*jMax*((a0 + af)*tf - 2*(vf - v0)))/(jMax*jMax) + tf*tf);
         
-        profile.t[0] = (af - a0 + jMax*tf - jMax*h1)/(2*jMax);
+        profile.t[0] = (af - a0)/(2*jMax) + (tf - h1)/2;
         profile.t[1] = h1;
         profile.t[2] = tf - (profile.t[0] + h1);
         profile.t[3] = 0;
