@@ -39,6 +39,7 @@ class PositionStep1 {
     void time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     // Only for numerical issues
+    void time_acc1_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_acc0_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_none_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);

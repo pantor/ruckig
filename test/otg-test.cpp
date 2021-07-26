@@ -724,7 +724,7 @@ int main(int argc, char** argv) {
     comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
-    step_through_3 = 0; // number_trajectories / 100;
+    step_through_3 = 0; // number_trajectories / 20;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
     random_3 = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3);
