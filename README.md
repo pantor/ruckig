@@ -182,14 +182,14 @@ std::array<double, DOFs> independent_min_durations; // Time-optimal profile for 
 Again, we refer to the [API documentation](https://pantor.github.io/ruckig/) for the exact signatures.
 
 
-### Dynamical Number of Degrees of Freedom
+### Dynamic Number of Degrees of Freedom
 
-So far, we have told Ruckig the number of DoFs as a template parameter. If you don't know the number of DoFs at compile-time, you can set the template parameter to zero and pass the DoFs to the constructor:
+So far, we have told Ruckig the number of DoFs as a template parameter. If you don't know the number of DoFs at compile-time, you can set the template parameter to `DynamicDOFs` and pass the DoFs to the constructor:
 
 ```.cpp
-Ruckig<0> otg {6, 0.001};
-InputParameter<0> input {6};
-OutputParameter<0> output {6};
+Ruckig<DynamicDOFs> otg {6, 0.001};
+InputParameter<DynamicDOFs> input {6};
+OutputParameter<DynamicDOFs> output {6};
 ```
 
 However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.

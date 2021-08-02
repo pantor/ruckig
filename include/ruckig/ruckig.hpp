@@ -17,6 +17,8 @@
 
 namespace ruckig {
 
+constexpr static size_t DynamicDOFs {0};
+
 //! Main class for the Ruckig algorithm.
 template<size_t DOFs = 0, bool throw_error = false, bool return_error_at_maximal_duration = true>
 class Ruckig {
