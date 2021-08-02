@@ -463,6 +463,11 @@ public:
         return duration;
     }
 
+    //! Get the durations when the intermediate waypoints are reached
+    std::vector<double> get_intermediate_durations() const {
+        return {duration};
+    }
+
     //! Get the minimum duration of each independent DoF
     Vector<double> get_independent_min_durations() const {
         return independent_min_durations;

@@ -60,6 +60,7 @@ limited by velocity, acceleration, and jerk constraints.";
     py::class_<Trajectory<DynamicDOFs>>(m, "Trajectory")
         .def(py::init<size_t>(), "dofs"_a)
         .def_property_readonly("duration", &Trajectory<DynamicDOFs>::get_duration)
+        .def_property_readonly("intermediate_durations", &Trajectory<DynamicDOFs>::get_intermediate_durations)
         .def_property_readonly("independent_min_durations", &Trajectory<DynamicDOFs>::get_independent_min_durations)
         .def_property_readonly("position_extrema", &Trajectory<DynamicDOFs>::get_position_extrema)
         .def("at_time", [](const Trajectory<DynamicDOFs>& traj, double time) {
@@ -89,6 +90,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("max_jerk", &InputParameter<DynamicDOFs>::max_jerk)
         .def_readwrite("min_velocity", &InputParameter<DynamicDOFs>::min_velocity)
         .def_readwrite("min_acceleration", &InputParameter<DynamicDOFs>::min_acceleration)
+        .def_readwrite("intermediate_positions", &InputParameter<DynamicDOFs>::intermediate_positions)
         .def_readwrite("enabled", &InputParameter<DynamicDOFs>::enabled)
         .def_readwrite("interface", &InputParameter<DynamicDOFs>::interface)
         .def_readwrite("synchronization", &InputParameter<DynamicDOFs>::synchronization)

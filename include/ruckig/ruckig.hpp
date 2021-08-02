@@ -121,6 +121,10 @@ public:
             }
         }
 
+        if (!input.intermediate_positions.empty()) {
+            return false;
+        }
+
         return true;
     }
 
