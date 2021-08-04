@@ -98,7 +98,7 @@ struct Profile {
     }
 
     // For position interface
-    template<JerkSigns jerk_signs, Limits limits>
+    template<JerkSigns jerk_signs, Limits limits, bool set_limits = false>
     bool check(double jf, double vMax, double vMin, double aMax, double aMin) {
         if (t[0] < 0) {
             return false;
@@ -152,6 +152,14 @@ struct Profile {
             if constexpr (limits == Limits::ACC0_ACC1_VEL || limits == Limits::ACC0_ACC1 || limits == Limits::ACC0_VEL || limits == Limits::ACC1_VEL || limits == Limits::VEL) {
                 if (i == 2) {
                     a[3] = 0.0;
+                }
+            }
+
+            if constexpr (set_limits) {
+                if constexpr (limits == Limits::ACC1) {
+                    if (i == 2) {
+                        a[3] = aMin;
+                    }
                 }
             }
 

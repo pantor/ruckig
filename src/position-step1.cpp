@@ -181,7 +181,7 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
         profile.t[5] = -((a0_a0 + af_af)/2 - aMin*aMin + jMax*t*(2*a0 + jMax*t) - jMax*(vf - v0))/(aMin*jMax);
         profile.t[6] = (af - aMin)/jMax;
 
-        if (profile.check<JerkSigns::UDDU, Limits::ACC1>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile.check<JerkSigns::UDDU, Limits::ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile, jMax);
         }
     }

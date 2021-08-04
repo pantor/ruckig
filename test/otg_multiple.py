@@ -4,7 +4,7 @@ from sys import path
 
 from plotter import Plotter
 
-path.insert(0, str(Path(__file__).parent.parent / 'build'))
+path.insert(0, str(Path(__file__).parent.absolute().parent / 'build'))
 
 from ruckig import InputParameter, OutputParameter, Result, Ruckig, Synchronization, Interface, DurationDiscretization
 from ruckig import Reflexxes

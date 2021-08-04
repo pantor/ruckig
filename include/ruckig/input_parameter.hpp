@@ -82,7 +82,10 @@ public:
     //! Intermediate waypoints
     std::vector<Vector<double>> intermediate_positions;
 
+    //! Is the DoF considered for calculation?
     Vector<bool> enabled;
+
+    //! Optional minimum trajectory duration
     std::optional<double> minimum_duration;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>

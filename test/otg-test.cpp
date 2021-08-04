@@ -104,7 +104,7 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
 
 int seed {42};
 size_t number_trajectories {120000}; // Some user variable you want to be able to set
-size_t random_1, random_3, step_through_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
+size_t random_1, random_3, random_3_high, step_through_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
 
 std::normal_distribution<double> position_dist {0.0, 4.0};
 std::normal_distribution<double> dynamic_dist {0.0, 0.8};
@@ -527,62 +527,6 @@ TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF an
     }
 }
 
-TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration")) {
-    constexpr size_t DOFs {3};
-    Ruckig<DOFs, true> otg {0.005};
-    InputParameter<DOFs> input;
-
-    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
-    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
-    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
-
-    for (size_t i = 0; i < random_3; ++i) {
-        if (i < random_3 / 2) {
-            input.synchronization = Synchronization::Phase;
-        } else {
-            input.synchronization = Synchronization::Time;
-        }
-
-        if (i < random_3 / 20) {
-            input.duration_discretization = DurationDiscretization::Discrete;
-        } else {
-            input.duration_discretization = DurationDiscretization::Continuous;
-        }
-
-        p.fill(input.current_position);
-        d.fill_or_zero(input.current_velocity, 0.9);
-        d.fill_or_zero(input.current_acceleration, 0.8);
-        p.fill(input.target_position);
-        d.fill_or_zero(input.target_velocity, 0.7);
-        d.fill_or_zero(input.target_acceleration, 0.6);
-        l.fill(input.max_velocity, input.target_velocity);
-        l.fill(input.max_acceleration, input.target_acceleration);
-        l.fill(input.max_jerk);
-
-        // if (i % 1000 == 0) {
-        //     const double factor = 1e3;
-        //     for (size_t d = 0; d < DOFs; ++d) {
-        //         input.current_position[d] *= factor;
-        //         input.current_velocity[d] *= factor;
-        //         input.current_acceleration[d] *= factor;
-        //         input.target_position[d] *= factor;
-        //         input.target_velocity[d] *= factor;
-        //         input.target_acceleration[d] *= factor;
-        //         input.max_velocity[d] *= factor;
-        //         input.max_acceleration[d] *= factor;
-        //         input.max_jerk[d] *= factor;
-        //     }
-        // }
-
-        if (!otg.validate_input(input)) {
-            --i;
-            continue;
-        }
-
-        check_calculation(otg, input);
-    }
-}
-
 TEST_CASE("random_3_high" * doctest::description("Random input with 3 DoF and target velocity, acceleration and high limits")) {
     constexpr size_t DOFs {3};
     Ruckig<DOFs, true> otg {0.005};
@@ -592,7 +536,7 @@ TEST_CASE("random_3_high" * doctest::description("Random input with 3 DoF and ta
     Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
     Randomizer<DOFs, decltype(limit_dist_high)> l { limit_dist_high, seed + 5 };
 
-    for (size_t i = 0; i < 128; ++i) {
+    for (size_t i = 0; i < random_3_high; ++i) {
         p.fill(input.current_position);
         d.fill_or_zero(input.current_velocity, 0.1);
         d.fill_or_zero(input.current_acceleration, 0.1);
@@ -667,6 +611,62 @@ TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF a
         l.fill(input.max_jerk);
         min_l.fill_min(*input.min_velocity, input.target_velocity);
         min_l.fill_min(*input.min_acceleration, input.target_acceleration);
+
+        if (!otg.validate_input(input)) {
+            --i;
+            continue;
+        }
+
+        check_calculation(otg, input);
+    }
+}
+
+TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration")) {
+    constexpr size_t DOFs {3};
+    Ruckig<DOFs, true> otg {0.005};
+    InputParameter<DOFs> input;
+
+    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
+    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };
+    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 5 };
+
+    for (size_t i = 0; i < random_3; ++i) {
+        if (i < random_3 / 2) {
+            input.synchronization = Synchronization::Phase;
+        } else {
+            input.synchronization = Synchronization::Time;
+        }
+
+        if (i < random_3 / 20) {
+            input.duration_discretization = DurationDiscretization::Discrete;
+        } else {
+            input.duration_discretization = DurationDiscretization::Continuous;
+        }
+
+        p.fill(input.current_position);
+        d.fill_or_zero(input.current_velocity, 0.9);
+        d.fill_or_zero(input.current_acceleration, 0.8);
+        p.fill(input.target_position);
+        d.fill_or_zero(input.target_velocity, 0.7);
+        d.fill_or_zero(input.target_acceleration, 0.6);
+        l.fill(input.max_velocity, input.target_velocity);
+        l.fill(input.max_acceleration, input.target_acceleration);
+        l.fill(input.max_jerk);
+
+        // if (i % 1000 == 0) {
+        //     const double factor = 1e3;
+        //     for (size_t d = 0; d < DOFs; ++d) {
+        //         input.current_position[d] *= factor;
+        //         input.current_velocity[d] *= factor;
+        //         input.current_acceleration[d] *= factor;
+        //         input.target_position[d] *= factor;
+        //         input.target_velocity[d] *= factor;
+        //         input.target_acceleration[d] *= factor;
+        //         input.max_velocity[d] *= factor;
+        //         input.max_acceleration[d] *= factor;
+        //         input.max_jerk[d] *= factor;
+        //     }
+        // }
 
         if (!otg.validate_input(input)) {
             --i;
@@ -758,8 +758,10 @@ int main(int argc, char** argv) {
     step_through_3 = 0; // number_trajectories / 20;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
-    random_3 = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3); // 1. Normal, 2. High
-    std::cout << "<number_trajectories> Random (1 DoF): " << random_1 << " (3 DoF): " << random_3 << "  Step Through (3 Dof): " << step_through_3 << "  Comparison (1 DoF): " << comparison_1 << " (3 DoF): " << comparison_3 << " Total: " << number_trajectories << std::endl;
+    const size_t remainder = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3); // 1. Normal, 2. High
+    random_3 = (size_t)(remainder * 95/100);
+    random_3_high = (size_t)(remainder * 5/100);
+    std::cout << "<number_trajectories> Random (1 DoF): " << random_1 << " (3 DoF): " << random_3 << " High Limits (3 DoF): " << random_3_high << "  Step Through (3 Dof): " << step_through_3 << "  Comparison (1 DoF): " << comparison_1 << " (3 DoF): " << comparison_3 << " Total: " << number_trajectories << std::endl;
 
     return context.run();
 }

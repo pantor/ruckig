@@ -285,6 +285,7 @@ public:
             }
 
             independent_min_durations[dof] = blocks[dof].t_min;
+            // std::cout << dof << " profile step1: " << blocks[dof].to_string() << std::endl;
         }
 
         int limiting_dof; // The DoF that doesn't need step 2
