@@ -149,7 +149,7 @@ struct Profile {
             v[i+1] = v[i] + t[i] * (a[i] + t[i] * j[i] / 2);
             p[i+1] = p[i] + t[i] * (v[i] + t[i] * (a[i] / 2 + t[i] * j[i] / 6));
 
-            if constexpr (limits == Limits::ACC0_ACC1_VEL || limits == Limits::ACC0_VEL || limits == Limits::ACC1_VEL || limits == Limits::VEL) {
+            if constexpr (limits == Limits::ACC0_ACC1_VEL || limits == Limits::ACC0_ACC1 || limits == Limits::ACC0_VEL || limits == Limits::ACC1_VEL || limits == Limits::VEL) {
                 if (i == 2) {
                     a[3] = 0.0;
                 }

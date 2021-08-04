@@ -107,17 +107,17 @@ void PositionStep1::time_vel(Profile& profile, double vMax, double vMin, double 
 }
 
 void PositionStep1::time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
-    const double h1 = Sqrt(3*(aMax - aMin)*(3*(af_p4*aMax - a0_p4*aMin) + 8*(a0_p3 - af_p3)*aMax*aMin + 24*aMax*aMin*jMax*(af*vf - a0*v0) + 6*af_af*aMax*(aMin*aMin - 2*jMax*vf) - 6*a0_a0*aMin*(aMax*aMax - 2*jMax*v0) + 3*(aMax*aMax*aMax*aMin*aMin - 4*aMin*jMax_jMax*v0_v0 - aMax*aMax*aMin*(aMin*aMin - 4*jMax*v0) + 4*aMax*jMax*(-2*aMin*jMax*pd - aMin*aMin*vf + jMax*vf_vf))))*Abs(jMax)/(3*(aMax - aMin)*jMax);
+    const double h1 = Sqrt((3*(af_p4*aMax - a0_p4*aMin) + 8*(a0_p3 - af_p3)*aMax*aMin + 3*aMax*aMin*(aMax*aMin*(aMax - aMin) + 2*aMin*af_af - 2*aMax*a0_a0) + 12*jMax*(aMax*aMin*((aMax - 2*a0)*v0 - (aMin - 2*af)*vf) + aMin*a0_a0*v0 - aMax*af_af*vf))/(3*(aMax - aMin)*jMax_jMax) + 4*(aMax*vf_vf - aMin*v0_v0 - 2*aMin*aMax*pd)/(aMax - aMin))*Abs(jMax)/(jMax);
 
     if (!std::isnan(h1)) {
         // UDDU: Solution 2
         {
             profile.t[0] = (-a0 + aMax)/jMax;
-            profile.t[1] = (a0_a0 + aMax*aMin - 2*(aMax*aMax + jMax*v0) - h1)/(2*aMax*jMax);
+            profile.t[1] = a0_a0/(2*aMax*jMax) + (aMin - 2*aMax)/(2*jMax) - (h1 + 2*v0)/(2*aMax);
             profile.t[2] = aMax/jMax;
             profile.t[3] = 0;
             profile.t[4] = -aMin/jMax;
-            profile.t[5] = -(af_af + aMax*aMin - 2*(aMin*aMin + jMax*vf) - h1)/(2*aMin*jMax);
+            profile.t[5] = -af_af/(2*aMin*jMax) - (aMax - 2*aMin)/(2*jMax) + (h1 + 2*vf)/(2*aMin);
             profile.t[6] = profile.t[4] + af/jMax;
 
             if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(jMax, vMax, vMin, aMax, aMin)) {
@@ -128,11 +128,11 @@ void PositionStep1::time_acc0_acc1(Profile& profile, double vMax, double vMin, d
         // UDDU: Solution 1
         {
             profile.t[0] = (-a0 + aMax)/jMax;
-            profile.t[1] = (a0_a0 + aMax*aMin - 2*(aMax*aMax + jMax*v0) + h1)/(2*aMax*jMax);
+            profile.t[1] = a0_a0/(2*aMax*jMax) + (aMin - 2*aMax)/(2*jMax) + (h1 - 2*v0)/(2*aMax);
             profile.t[2] = aMax/jMax;
             profile.t[3] = 0;
             profile.t[4] = -aMin/jMax;
-            profile.t[5] = -(af_af + aMax*aMin - 2*(aMin*aMin + jMax*vf) + h1)/(2*aMin*jMax);
+            profile.t[5] = -af_af/(2*aMin*jMax) - (aMax - 2*aMin)/(2*jMax) - (h1 - 2*vf)/(2*aMin);
             profile.t[6] = profile.t[4] + af/jMax;
 
             if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(jMax, vMax, vMin, aMax, aMin)) {
@@ -283,7 +283,7 @@ void PositionStep1::time_none(Profile& profile, double vMax, double vMin, double
     // UDDU / UDUD modern, this one is in particular prone to numerical issues
     {
         const double h2 = (a0_a0 - af_af + 2*jMax*(vf - v0))/(2*jMax_jMax);
-        
+
         // UDUD Strategy: t7 == 0 (equals UDDU)
         std::array<double, 5> polynom;
         polynom[0] = 1.0;
@@ -303,7 +303,7 @@ void PositionStep1::time_none(Profile& profile, double vMax, double vMin, double
                 const double h1 = (a0_a0 - af_af)/(2*jMax) + (vf - v0);
                 const double orig = (-h1*h1 + 4*h1*t*(af + jMax*t))/(4*jMax*t) + (4*a0_p3 + 2*af_p3 - 6*a0_a0*(af + 2*jMax*t) + 12*(af - a0)*jMax*v0 + 3*jMax_jMax*(-4*pd + jMax*t*t*t + 8*t*v0))/(12*jMax_jMax);
                 const double deriv = h1 + 2*v0 - a0_a0/jMax + h1*h1/(4*jMax*t*t) + (3*jMax*t*t)/4;
-                
+
                 t -= orig / deriv;
             }
 

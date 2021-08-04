@@ -287,7 +287,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
                 tz -= Roots::polyEval(deriv, tz) / Roots::polyEval(Roots::polyDeri(deriv), tz);
             }
 
-            const double res = 32 * std::abs(Roots::polyEval(Roots::polyDeri(deriv), tz)) * Roots::tolerance;
+            const double res = 64 * std::abs(Roots::polyEval(Roots::polyDeri(deriv), tz)) * Roots::tolerance;
             const double val_new = Roots::polyEval(polynom, tz);
             if (std::abs(val_new) < res) {
                 roots.insert(tz);
@@ -386,7 +386,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
                 continue;
             }
 
-            const double res = 10 * std::abs(Roots::polyEval(dderiv, tz)) * Roots::tolerance;
+            const double res = 64 * std::abs(Roots::polyEval(dderiv, tz)) * Roots::tolerance;
             const double p_val = Roots::polyEval(polynom, tz);
             if (std::abs(p_val) < res) {
                 roots.insert(tz);
@@ -739,13 +739,13 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
         }
     }
 
-    // UDUD
+    // UDUD T 0246
     {
         const double h0 = Sqrt(2*jMax_jMax*(2*Power2(a0_p3 - af_p3 - 3*af_af*jMax*tf + 9*af*jMax_jMax*tf_tf - 3*a0_a0*(af + jMax*tf) + 3*a0*Power2(af + jMax*tf) + 3*jMax_jMax*(8*pd + jMax*tf_tf*tf - 8*tf*vf)) - 3*(a0_a0 + af_af - 2*af*jMax*tf - 2*a0*(af + jMax*tf) - jMax*(jMax*tf_tf + 4*v0 - 4*vf))*(a0_p4 + af_p4 + 4*af_p3*jMax*tf + 6*af_af*jMax_jMax*tf_tf - 3*jMax_jMax*jMax_jMax*tf_tf*tf_tf - 4*a0_p3*(af + jMax*tf) + 6*a0_a0*Power2(af + jMax*tf) - 12*af*jMax_jMax*(8*pd + jMax*tf_tf*tf - 8*tf*v0) + 48*jMax_jMax*vd_vd + 48*jMax_jMax*jMax*tf*(-2*pd + tf*(v0 + vf)) - 4*a0*(af_p3 + 3*af_af*jMax*tf - 9*af*jMax_jMax*tf_tf - 3*jMax_jMax*(8*pd + jMax*tf_tf*tf - 8*tf*vf)))))/jMax;
         const double h1 = 12*jMax*(-a0_a0 - af_af + 2*af*jMax*tf + 2*a0*(af + jMax*tf) + jMax*(jMax*tf_tf + 4*v0 - 4*vf));
         const double h2 = -4*a0_p3 + 4*af_p3 + 12*a0_a0*af - 12*a0*af_af + 48*jMax_jMax*pd + 12*(a0_a0 - af_af)*jMax*tf - 24*jMax_jMax*tf*(v0 + vf) + 24*ad*jMax*vd;
         const double h3 = 2*a0_p3 - 2*af_p3 - 6*a0_a0*af + 6*a0*af_af;
-        
+
         profile.t[0] = (h3 - 48*jMax_jMax*(tf*vf - pd) - 6*(a0_a0 + af_af)*jMax*tf + 12*a0*af*jMax*tf + 6*(a0 + 3*af + jMax*tf)*tf_tf*jMax_jMax - h0)/h1;
         profile.t[1] = 0;
         profile.t[2] = (h2 + h0)/h1;
@@ -761,7 +761,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
 
     // Profiles with a3 != 0, Solution UDDU
     {
-        // First acc, then constant
+        // T 0234
         {
             const double ph1 = af + jMax*tf;
 
@@ -803,7 +803,26 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
             }
         }
 
-        // First constant, then acc
+        // T 3456
+        {
+            const double h1 = 3*jMax*(ad_ad + 2*jMax*(a0*tf - vd));
+            const double h2 = ad_ad + 2*jMax*(a0*tf - vd);
+            const double h0 = Sqrt(4*Power2(2*(a0_p3 - af_p3) - 6*a0_a0*(af - jMax*tf) + 6*jMax_jMax*(-pd + tf*v0) + 3*a0*(2*af_af - 2*jMax*af*tf + jMax_jMax*tf_tf) + 6*ad*jMax*vd) - 18*h2*h2*h2)/h1 * Abs(jMax)/jMax;
+
+            profile.t[0] = 0;
+            profile.t[1] = 0;
+            profile.t[2] = 0;
+            profile.t[3] = (af_p3 - a0_p3 + 3*(af_af - a0_a0)*jMax*tf - 3*ad*(a0*af + 2*jMax*vd) - 6*jMax_jMax*(-2*pd + tf*(v0 + vf)))/h1;
+            profile.t[4] = (tf - profile.t[3] - h0)/2 - ad/(2*jMax);
+            profile.t[5] = h0;
+            profile.t[6] = (tf - profile.t[3] + ad/jMax - h0)/2;
+
+            if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
+                return true;
+            }
+        }
+
+        // T 2346
         {
             const double ph1 = ad_ad + 2*(af + a0)*jMax*tf - jMax*(jMax*tf_tf + 4*vd);
             const double ph2 = jMax*tf_tf*g1 - vd*(-2*pd - tf*v0 + 3*tf*vf);
@@ -855,7 +874,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
 
     // Profiles with a3 != 0, Solution UDUD
     {
-        // First constant, then acc
+        // T 0124
         {
             const double ph0 = -2*pd - tf*v0 + 3*tf*vf;
             const double ph1 = -ad + jMax*tf;
@@ -896,7 +915,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
         }
     }
 
-    // 3 step profile (ak. UZD), sometimes missed because of numerical errors
+    // 3 step profile (ak. UZD), sometimes missed because of numerical errors T 012
     if (std::abs(af - a0) < DBL_EPSILON) {
         const double h1 = Sqrt(4*(a0*tf - vd)/jMax + tf_tf);
 
