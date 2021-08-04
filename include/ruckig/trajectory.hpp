@@ -243,11 +243,11 @@ public:
             inp_min_acceleration[dof] = inp.min_acceleration ? inp.min_acceleration.value()[dof] : -inp.max_acceleration[dof];
 
             // Calculate brake (if input exceeds or will exceed limits)
-            switch (inp.interface) {
-                case Interface::Position: {
+            switch (inp.control_interface) {
+                case ControlInterface::Position: {
                     Brake::get_position_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
                 } break;
-                case Interface::Velocity: {
+                case ControlInterface::Velocity: {
                     Brake::get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
                 } break;
             }
@@ -266,12 +266,12 @@ public:
             }
 
             bool found_profile;
-            switch (inp.interface) {
-                case Interface::Position: {
+            switch (inp.control_interface) {
+                case ControlInterface::Position: {
                     PositionStep1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_profile = step1.get_profile(p, blocks[dof]);
                 } break;
-                case Interface::Velocity: {
+                case ControlInterface::Velocity: {
                     VelocityStep1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_profile = step1.get_profile(p, blocks[dof]);
                 } break;
@@ -319,7 +319,7 @@ public:
             return Result::Working;
         }
 
-        if (inp.synchronization == Synchronization::Phase && inp.interface == Interface::Position) {
+        if (inp.synchronization == Synchronization::Phase && inp.control_interface == ControlInterface::Position) {
             if (is_phase_synchronizable(inp, inp.max_velocity, inp_min_velocity, inp.max_acceleration, inp_min_acceleration, inp.max_jerk, profiles[limiting_dof].direction, limiting_dof, new_max_velocity, new_min_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk)) {
                 bool found_time_synchronization {true};
                 for (size_t dof = 0; dof < profiles.size(); ++dof) {
@@ -384,12 +384,12 @@ public:
             }
 
             bool found_time_synchronization;
-            switch (inp.interface) {
-                case Interface::Position: {
+            switch (inp.control_interface) {
+                case ControlInterface::Position: {
                     PositionStep2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_time_synchronization = step2.get_profile(p);
                 } break;
-                case Interface::Velocity: {
+                case ControlInterface::Velocity: {
                     VelocityStep2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_time_synchronization = step2.get_profile(p);
                 } break;

@@ -22,9 +22,9 @@ PYBIND11_MODULE(ruckig, m) {
 given a target waypoint with position, velocity, and acceleration, starting from any initial state \
 limited by velocity, acceleration, and jerk constraints.";
 
-    py::enum_<Interface>(m, "Interface")
-        .value("Position", Interface::Position)
-        .value("Velocity", Interface::Velocity)
+    py::enum_<ControlInterface>(m, "ControlInterface")
+        .value("Position", ControlInterface::Position)
+        .value("Velocity", ControlInterface::Velocity)
         .export_values();
 
     py::enum_<Synchronization>(m, "Synchronization")
@@ -92,7 +92,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("min_acceleration", &InputParameter<DynamicDOFs>::min_acceleration)
         .def_readwrite("intermediate_positions", &InputParameter<DynamicDOFs>::intermediate_positions)
         .def_readwrite("enabled", &InputParameter<DynamicDOFs>::enabled)
-        .def_readwrite("interface", &InputParameter<DynamicDOFs>::interface)
+        .def_readwrite("control_interface", &InputParameter<DynamicDOFs>::control_interface)
         .def_readwrite("synchronization", &InputParameter<DynamicDOFs>::synchronization)
         .def_readwrite("duration_discretization", &InputParameter<DynamicDOFs>::duration_discretization)
         .def_readwrite("minimum_duration", &InputParameter<DynamicDOFs>::minimum_duration)

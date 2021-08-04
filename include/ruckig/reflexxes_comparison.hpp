@@ -69,8 +69,8 @@ public:
                 }
             }
 
-            switch (input.interface) {
-            case Interface::Position: {
+            switch (input.control_interface) {
+            case ControlInterface::Position: {
                 if (input.minimum_duration) {
                     input_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value());
                 }
@@ -87,7 +87,7 @@ public:
                 input_parameters->SetMaxAccelerationVector(input.max_acceleration.data());
                 input_parameters->SetMaxJerkVector(input.max_jerk.data());
             } break;
-            case Interface::Velocity: {
+            case ControlInterface::Velocity: {
                 if (input.minimum_duration) {
                     input_vel_parameters->SetMinimumSynchronizationTime(input.minimum_duration.value());
                 }
@@ -107,8 +107,8 @@ public:
 
         auto start = std::chrono::high_resolution_clock::now();
 
-        switch (input.interface) {
-        case Interface::Position: {
+        switch (input.control_interface) {
+        case ControlInterface::Position: {
             result_value = rml->RMLPosition(*input_parameters, output_parameters.get(), flags);
 
             for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
@@ -119,7 +119,7 @@ public:
             output.trajectory.duration = output_parameters->GetSynchronizationTime();
             output.new_calculation = output_parameters->WasACompleteComputationPerformedDuringTheLastCycle();
         } break;
-        case Interface::Velocity: {
+        case ControlInterface::Velocity: {
             result_value = rml->RMLVelocity(*input_vel_parameters, output_vel_parameters.get(), vel_flags);
 
             for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
@@ -149,8 +149,8 @@ public:
     }
 
     void at_time(double time, OutputParameter<DOFs>& output) {
-        switch (current_input.interface) {
-        case Interface::Position: {
+        switch (current_input.control_interface) {
+        case ControlInterface::Position: {
             rml->RMLPositionAtAGivenSampleTime(time, output_parameters.get());
 
             for (size_t dof = 0; dof < degrees_of_freedom; dof += 1) {
@@ -159,7 +159,7 @@ public:
                 output.new_acceleration[dof] = output_parameters->NewAccelerationVector->VecData[dof];
             }
         } break;
-        case Interface::Velocity: {
+        case ControlInterface::Velocity: {
             rml->RMLVelocityAtAGivenSampleTime(time, output_vel_parameters.get());
 
             for (size_t dof = 0; dof < degrees_of_freedom; dof += 1) {

@@ -121,7 +121,7 @@ std::optional<Vector> min_acceleration; // If not given, the negative maximum ac
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 
-Interface interface; // The default position interface controls the full kinematic state.
+ControlInterface control_interface; // The default position interface controls the full kinematic state.
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
 DurationDiscretization duration_discretization; // Whether the duration should be a discrete multiple of the control cycle (off by default)
 ```

@@ -22,7 +22,7 @@ enum Result {
 };
 
 
-enum class Interface {
+enum class ControlInterface {
     Position, ///< Position-control: Full control over the entire kinematic state (Default)
     Velocity, ///< Velocity-control: Ignores the current position, target position, and velocity limits
 };
@@ -65,7 +65,7 @@ class InputParameter {
 public:
     size_t degrees_of_freedom;
 
-    Interface interface {Interface::Position};
+    ControlInterface control_interface {ControlInterface::Position};
     Synchronization synchronization {Synchronization::Time};
     DurationDiscretization duration_discretization {DurationDiscretization::Continuous};
 
@@ -124,7 +124,7 @@ public:
             || minimum_duration != rhs.minimum_duration
             || min_velocity != rhs.min_velocity
             || min_acceleration != rhs.min_acceleration
-            || interface != rhs.interface
+            || control_interface != rhs.control_interface
             || synchronization != rhs.synchronization
             || duration_discretization != rhs.duration_discretization
         );

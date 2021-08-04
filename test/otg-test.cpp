@@ -503,11 +503,11 @@ TEST_CASE("random_1" * doctest::description("Random input with 1 DoF and target 
     }
 }
 
-TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration in velocity interface")) {
+TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration in velocity control")) {
     constexpr size_t DOFs {3};
     Ruckig<DOFs, true> otg {0.005};
     InputParameter<DOFs> input;
-    input.interface = Interface::Velocity;
+    input.control_interface = ControlInterface::Velocity;
 
     Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 3 };
     Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 4 };

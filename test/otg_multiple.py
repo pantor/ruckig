@@ -6,8 +6,7 @@ from plotter import Plotter
 
 path.insert(0, str(Path(__file__).parent.absolute().parent / 'build'))
 
-from ruckig import InputParameter, OutputParameter, Result, Ruckig, Synchronization, Interface, DurationDiscretization
-from ruckig import Reflexxes
+from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 def walk_through_trajectory(otg, inp, intermediate_targets):

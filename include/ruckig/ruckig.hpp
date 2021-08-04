@@ -46,15 +46,15 @@ public:
     //! Validate the input for the trajectory calculation
     bool validate_input(const InputParameter<DOFs>& input) const {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
-            if (input.interface == Interface::Position && std::isnan(input.current_position[dof])) {
+            if (input.control_interface == ControlInterface::Position && std::isnan(input.current_position[dof])) {
                 return false;
             }
 
-            if (input.interface == Interface::Position && std::isnan(input.max_velocity[dof])) {
+            if (input.control_interface == ControlInterface::Position && std::isnan(input.max_velocity[dof])) {
                 return false;
             }
 
-            if (input.interface == Interface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
+            if (input.control_interface == ControlInterface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
                 return false;
             }
 
@@ -82,11 +82,11 @@ public:
                 return false;
             }
 
-            if (input.interface == Interface::Position && std::isnan(input.target_position[dof])) {
+            if (input.control_interface == ControlInterface::Position && std::isnan(input.target_position[dof])) {
                 return false;
             }
 
-            if (input.interface == Interface::Position) {
+            if (input.control_interface == ControlInterface::Position) {
                 if (input.min_velocity) {
                     if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
                         return false;
@@ -111,7 +111,7 @@ public:
             }
 
             // Target acceleration needs to be accessible from "above" and "below"
-            if (input.interface == Interface::Position) {
+            if (input.control_interface == ControlInterface::Position) {
                 const double min_velocity = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
                 const double v_diff = std::min(std::abs(input.max_velocity[dof] - input.target_velocity[dof]), std::abs(min_velocity - input.target_velocity[dof]));
                 const double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * v_diff);
