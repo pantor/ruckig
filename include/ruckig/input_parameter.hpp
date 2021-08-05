@@ -120,6 +120,7 @@ public:
             || max_velocity != rhs.max_velocity
             || max_acceleration != rhs.max_acceleration
             || max_jerk != rhs.max_jerk
+            || intermediate_positions != rhs.intermediate_positions
             || enabled != rhs.enabled
             || minimum_duration != rhs.minimum_duration
             || min_velocity != rhs.min_velocity

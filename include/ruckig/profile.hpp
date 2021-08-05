@@ -30,6 +30,9 @@ struct Profile {
     std::array<double, 7> t, t_sum, j;
     std::array<double, 8> a, v, p;
 
+    //! Helper variable for faster calculation
+    double polynomial_root;
+
     //! Target (final) kinematic state
     double pf, vf, af;
 
