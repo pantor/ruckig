@@ -10,7 +10,7 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
     // UD Solution 1/2
     {
         const double h1 = Sqrt((-a0*a0 - af*af + 2*a0*af + 2*jMax*((a0 + af)*tf - 2*(vf - v0)))/(jMax*jMax) + tf*tf);
-        
+
         profile.t[0] = (af - a0)/(2*jMax) + (tf - h1)/2;
         profile.t[1] = h1;
         profile.t[2] = tf - (profile.t[0] + h1);
@@ -61,9 +61,9 @@ bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double
             return true;
         }
     }
-    
+
     // UD Solution 1/2
-    {        
+    {
         profile.t[0] = -(2*(af*tf + v0 - vf))/(a0 - af);
         profile.t[1] = tf - profile.t[0];
         profile.t[2] = 0;
@@ -79,7 +79,7 @@ bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double
             return true;
         }
     }
-    
+
     return false;
 }
 

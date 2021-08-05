@@ -59,6 +59,7 @@ limited by velocity, acceleration, and jerk constraints.";
 
     py::class_<Trajectory<DynamicDOFs>>(m, "Trajectory")
         .def(py::init<size_t>(), "dofs"_a)
+        .def_readonly("degrees_of_freedom", &Trajectory<DynamicDOFs>::degrees_of_freedom)
         .def_property_readonly("duration", &Trajectory<DynamicDOFs>::get_duration)
         .def_property_readonly("intermediate_durations", &Trajectory<DynamicDOFs>::get_intermediate_durations)
         .def_property_readonly("independent_min_durations", &Trajectory<DynamicDOFs>::get_independent_min_durations)
