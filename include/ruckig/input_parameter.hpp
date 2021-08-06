@@ -148,6 +148,13 @@ public:
         if (min_acceleration) {
             ss << "inp.min_acceleration = [" << this->join(min_acceleration.value()) << "]\n";
         }
+        if (!intermediate_positions.empty()) {
+            ss << "inp.intermediate_positions = [\n";
+            for (auto p: intermediate_positions) {
+                ss << "    [" << this->join(p) << "],\n";
+            }
+            ss << "]\n";
+        }
         return ss.str();
     }
 };

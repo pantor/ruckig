@@ -3,7 +3,7 @@
 <package format="2">
   <name>ruckig</name>
   <version>0.3.3</version>
-  <description>Online Trajectory Generation. Real-time. Time-optimal. Jerk-constrained.</description>
+  <description>Online Trajectory Generation. Real-time. Jerk-constrained. Time-optimal.</description>
   <author>Lars Berscheid</author>
   <maintainer email="lars.berscheid@kit.edu">Lars Berscheid</maintainer>
   <license>MIT</license>
