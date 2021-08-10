@@ -19,7 +19,7 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif()
 
 
-find_package(Reflexxes)
+find_package(Reflexxes QUIET)
 
 
 add_library(ruckig
