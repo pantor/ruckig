@@ -121,6 +121,7 @@ public:
             }
         }
 
+        // Check for intermediate waypoints here
         if (!input.intermediate_positions.empty()) {
             return false;
         }

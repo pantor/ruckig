@@ -406,6 +406,12 @@ public:
         return Result::Working;
     }
 
+    //! Continue the trajectory calculation
+    template<bool throw_error, bool return_error_at_maximal_duration>
+    Result continue_calculation(const InputParameter<DOFs>&, double) {
+        return Result::Error;
+    }
+
     //! Get the kinematic state at a given time
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
     void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
