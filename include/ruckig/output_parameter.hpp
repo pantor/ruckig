@@ -19,6 +19,9 @@ struct OutputParameter {
     //! Was a new trajectory calculation performed in the last cycle?
     bool new_calculation {false};
 
+    //! Was the trajectory calculation interrupted? (not yet used)
+    bool was_calculation_interrupted {false};
+
     //! Computational duration of the last update call
     double calculation_duration; // [µs]
 

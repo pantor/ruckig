@@ -79,7 +79,7 @@ public:
     Vector<double> max_velocity, max_acceleration, max_jerk;
     std::optional<Vector<double>> min_velocity, min_acceleration;
 
-    //! Intermediate waypoints
+    //! Intermediate waypoints (not yet used)
     std::vector<Vector<double>> intermediate_positions;
 
     //! Is the DoF considered for calculation?
@@ -87,6 +87,9 @@ public:
 
     //! Optional minimum trajectory duration
     std::optional<double> minimum_duration;
+
+    //! Optional duration [s] after which the trajectory calculation is (softly) interrupted (not yet used)
+    std::optional<double> interrupt_calculation_duration;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     InputParameter(): degrees_of_freedom(DOFs) {

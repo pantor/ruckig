@@ -12,7 +12,10 @@ from ruckig import OutputParameter, Result
 
 class Plotter:
     @staticmethod
-    def plot_trajectory(filename, otg, inp, t_list, out_list, show=False, plot_jerk=True):
+    def plot_trajectory(filename, otg, inp, out_list, show=False, plot_jerk=True, time_offsets=None):
+        taxis = np.array(list(map(lambda x: x.time, out_list)))
+        if time_offsets:
+            taxis += np.array(time_offsets)
         qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
         dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
         ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
@@ -26,22 +29,17 @@ class Plotter:
             global_max = np.max([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof]])
             global_min = np.min([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof]])
 
+            plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
+            plt.plot(taxis, qaxis[:, dof], label=f'Position {dof+1}')
+            plt.plot(taxis, dqaxis[:, dof], label=f'Velocity {dof+1}')
+            plt.plot(taxis, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
             if plot_jerk:
-                global_max = max(global_max, np.max(dddqaxis[:, dof]))
-                global_min = min(global_max, np.min(dddqaxis[:, dof]))
+                plt.plot(taxis, dddqaxis[:, dof], label=f'Jerk {dof+1}')
 
             # Plot sections
             if hasattr(out_list[0], 'trajectory'):
                 for t in out_list[0].trajectory.intermediate_durations:
                     plt.axvline(x=t, color='black', linestyle='--', linewidth=1.1)
-
-            plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
-            plt.plot(t_list, qaxis[:, dof], label=f'Position {dof+1}')
-            plt.plot(t_list, dqaxis[:, dof], label=f'Velocity {dof+1}')
-            plt.plot(t_list, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
-
-            if plot_jerk:
-                plt.plot(t_list, dddqaxis[:, dof], label=f'Jerk {dof+1}')
 
             # Plot limit lines
             if inp.max_velocity[dof] < 1.4 * global_max:

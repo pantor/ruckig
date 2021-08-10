@@ -9,29 +9,30 @@ path.insert(0, str(Path(__file__).parent.absolute().parent / 'build'))
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
-def walk_through_trajectory(otg, inp, intermediate_targets):
-    t_list, out_list = [], []
+def walk_through_trajectory(otg, inp, waypoints):
+    out_list = []
     out = OutputParameter(inp.degrees_of_freedom)
 
-    old_target = inp.target_position, inp.target_velocity, inp.target_acceleration
-    intermediate_targets.append(old_target)
+    waypoints.append((inp.target_position, inp.target_velocity, inp.target_acceleration))
 
     time_offset = 0.0
-    for inp.target_position, inp.target_velocity, inp.target_acceleration in intermediate_targets:
+    time_offsets = []
+    for waypoint in waypoints:
         res = Result.Working
         while res == Result.Working:
+            inp.target_position, inp.target_velocity, inp.target_acceleration = waypoint
             res = otg.update(inp, out)
 
             inp.current_position = out.new_position
             inp.current_velocity = out.new_velocity
             inp.current_acceleration = out.new_acceleration
 
-            t_list.append(time_offset + out.time)
+            time_offsets.append(copy(time_offset))
             out_list.append(copy(out))
 
-        time_offset += out.trajectory.duration
+        time_offset += out_list[-1].trajectory.duration
 
-    return t_list, out_list, time_offset
+    return out_list, time_offsets, time_offset
 
 
 if __name__ == '__main__':
@@ -39,25 +40,25 @@ if __name__ == '__main__':
     inp.current_position = [0, 0, 0]
     inp.current_velocity = [0, 0, 0]
     inp.current_acceleration = [0, 0, 0]
-    inp.target_position = [1, 0, 0]
+    inp.target_position = [1, 1, 1]
     inp.target_velocity = [0, 0, 0]
     inp.target_acceleration = [0, 0, 0]
     inp.max_velocity = [100, 100, 100]
     inp.max_acceleration = [100, 100, 100]
     inp.max_jerk = [1, 1, 1]
 
-    intermediate_targets = [(
-        [0.7, 0.0, 0.0],
-        [0.56, 0.0, 0.0],
+    intermediate_waypoints = [(
+        [0.7, 0.2, 0.1],
+        [0.56, 0.1, 0.1],
         [-0.3, 0, 0],
     )]
 
     otg = Ruckig(inp.degrees_of_freedom, 0.005)
 
-    t_list, out_list, duration = walk_through_trajectory(otg, inp, intermediate_targets)
+    out_list, time_offsets, duration = walk_through_trajectory(otg, inp, intermediate_waypoints)
 
 
     print(f'Calculation duration: {out_list[0].calculation_duration:0.1f} [µs]')
-    print(f'Trajectory duration: {duration:0.4f} [s]')
+    print(f'Trajectory duration: {duration:0.6f} [s]')
 
-    Plotter.plot_trajectory('otg_trajectory.png', otg, inp, t_list, out_list)
+    Plotter.plot_trajectory('otg_multiple.png', otg, inp, out_list, plot_jerk=False, time_offsets=time_offsets)
