@@ -28,8 +28,8 @@ class PositionStep1 {
     // Pre-calculated expressions
     double pd;
     double v0_v0, vf_vf;
-    double a0_a0, a0_p3, a0_p4, a0_p5, a0_p6;
-    double af_af, af_p3, af_p4, af_p5, af_p6;
+    double a0_a0, a0_p3, a0_p4;
+    double af_af, af_p3, af_p4;
     double jMax_jMax;
 
     // Only a single velocity-limited profile can be valid
