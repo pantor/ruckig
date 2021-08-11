@@ -151,10 +151,6 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
 
     auto roots = Roots::solveQuartMonic(polynom);
     for (double t: roots) {
-        if (t < 0.0) {
-            continue;
-        }
-
         // Double Newton step (regarding pd)
         if (t > DBL_EPSILON) {
             double h1 = jMax*t*t + v0;
@@ -195,10 +191,6 @@ void PositionStep1::time_acc0(Profile& profile, double vMax, double vMin, double
 
     auto roots = Roots::solveQuartMonic(polynom);
     for (double t: roots) {
-        if (t < 0.0) {
-            continue;
-        }
-
         // Single Newton step (regarding pd)
         if (t > DBL_EPSILON) {
             const double h1 = jMax*t*t;
@@ -290,10 +282,6 @@ void PositionStep1::time_none(Profile& profile, double vMax, double vMin, double
 
         auto roots = Roots::solveQuartMonic(polynom);
         for (double t: roots) {
-            if (t < 0.0) {
-                continue;
-            }
-
             // Single Newton-step (regarding pd)
             {
                 const double h1 = jMax*t*t;

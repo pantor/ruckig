@@ -27,6 +27,7 @@ namespace Roots {
 // Use own set class on stack for real-time capability
 template<typename T, size_t N>
 class Set {
+protected:
     typedef typename std::array<T, N> Container;
     typedef typename Container::iterator iterator;
 
@@ -44,16 +45,28 @@ public:
         return data.begin() + size;
     }
 
-    void insert(T value) {
+    inline void insert(T value) {
         data[size] = value;
         ++size;
     }
 };
 
 
+// Set that only inserts positive values
+template<typename T, size_t N>
+class PositiveSet: public Set<T, N> {
+public:
+    inline void insert(T value) {
+        if (value >= 0) {
+            Set<T, N>::insert(value);
+        }
+    }
+};
+
+
 //! Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
-inline Set<double, 4> solveCub(double a, double b, double c, double d) {
-    Set<double, 4> roots;
+inline PositiveSet<double, 4> solveCub(double a, double b, double c, double d) {
+    PositiveSet<double, 4> roots;
 
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;
@@ -197,8 +210,8 @@ inline int solveResolvent(double *x, double a, double b, double c) {
 constexpr double DBL_EPSILON_SQRT {1.483e-8}; // approx std::sqrt(DBL_EPSILON)
 
 //! Calculate all roots of the monic quartic equation: x^4 + a*x^3 + b*x^2 + c*x + d = 0
-inline Set<double, 4> solveQuartMonic(double a, double b, double c, double d) {
-    Set<double, 4> roots;
+inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, double d) {
+    PositiveSet<double, 4> roots;
 
     if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON_SQRT && std::abs(c) < DBL_EPSILON_SQRT && std::abs(d) < DBL_EPSILON) {
         const double e0 = std::cbrt(c * c);
@@ -307,7 +320,7 @@ inline Set<double, 4> solveQuartMonic(double a, double b, double c, double d) {
 }
 
 //! Calculate the quartic equation: x^4 + b*x^3 + c*x^2 + d*x + e = 0
-inline Set<double, 4> solveQuartMonic(const std::array<double, 5>& polynom) {
+inline PositiveSet<double, 4> solveQuartMonic(const std::array<double, 5>& polynom) {
     return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
 }
 
