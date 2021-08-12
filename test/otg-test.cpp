@@ -758,6 +758,7 @@ int main(int argc, char** argv) {
     step_through_3 = 0; // number_trajectories / 20;
     random_direction_3 = number_trajectories / 50;
     velocity_random_3 = number_trajectories / 10;
+
     const size_t remainder = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3); // 1. Normal, 2. High
     random_3 = (size_t)(remainder * 95/100);
     random_3_high = (size_t)(remainder * 5/100);
