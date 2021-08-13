@@ -164,6 +164,16 @@ struct Profile {
                         a[3] = aMin;
                     }
                 }
+
+                if constexpr (limits == Limits::ACC0_ACC1) {
+                    if (i == 0) {
+                        a[1] = aMax;
+                    }
+
+                    if (i == 4) {
+                        a[5] = aMin;
+                    }
+                }
             }
 
             if (i > 1 && a[i+1] * a[i] < -std::numeric_limits<double>::epsilon()) {

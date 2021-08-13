@@ -120,7 +120,7 @@ void PositionStep1::time_acc0_acc1(Profile& profile, double vMax, double vMin, d
             profile.t[5] = h3 + h1/aMin;
             profile.t[6] = profile.t[4] + af/jMax;
 
-            if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(jMax, vMax, vMin, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
                 add_profile(profile, jMax);
             }
         }
@@ -135,7 +135,7 @@ void PositionStep1::time_acc0_acc1(Profile& profile, double vMax, double vMin, d
             profile.t[5] = h3 - h1/aMin;
             profile.t[6] = profile.t[4] + af/jMax;
 
-            if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1>(jMax, vMax, vMin, aMax, aMin)) {
+            if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
                 add_profile(profile, jMax);
             }
         }
