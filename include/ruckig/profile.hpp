@@ -16,13 +16,17 @@ namespace ruckig {
 
 //! Information about the position extrema
 struct PositionExtrema {
+    //! The extreme position
     double min, max;
+
+    //! Time when the positions are reached
     double t_min, t_max;
 };
 
 
 //! The state profile for position, velocity, acceleration and jerk for a single DoF
-struct Profile {
+class Profile {
+public:
     enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
     enum class Direction { UP, DOWN } direction;
     enum class JerkSigns { UDDU, UDUD } jerk_signs;
@@ -88,8 +92,7 @@ struct Profile {
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
         // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << " " << to_string() << std::endl;
-        return std::abs(v[7] - vf) < 1e-8
-            && std::abs(a[7] - af) < 1e-10 // This is not really needed, but we want to double check
+        return std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-10
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
     }
@@ -192,13 +195,11 @@ struct Profile {
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
         // std::cout << std::setprecision(16) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << " " << to_string() << std::endl;
-        return std::abs(p[7] - pf) < 1e-8
-            && std::abs(v[7] - vf) < 1e-8
-            && std::abs(a[7] - af) < 1e-10 // This is not really needed, but we want to double check
+        return std::abs(p[7] - pf) < 1e-8 && std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-10
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim
             && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
-            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim; // This is not really needed, but we want to double check
+            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim;
     }
 
     template<JerkSigns jerk_signs, Limits limits>

@@ -251,7 +251,40 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
     const double tz_max = std::min(tf, (aMax - a0)/jMax);
 
     // Profile UDDU
-    {
+    if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
+        std::array<double, 4> polynom;
+        polynom[0] = 1;
+        polynom[1] = -tf/2;
+        polynom[2] = 0;
+        polynom[3] = pd/(2*jMax);
+        auto roots = Roots::solveCub(polynom[0], polynom[1], polynom[2], polynom[3]);
+
+        for (double t: roots) {
+            if (t > tf/4) {
+                continue;
+            }
+
+            // Single Newton step (regarding pd)
+            if (t > DBL_EPSILON) {
+                const double orig = -pd + jMax*t*t*(tf - 2*t);
+                const double deriv = 2*jMax*t*(tf - 3*t);
+                t -= orig / deriv;
+            }
+
+            profile.t[0] = t;
+            profile.t[1] = 0;
+            profile.t[2] = t;
+            profile.t[3] = tf - 4*t;
+            profile.t[4] = t;
+            profile.t[5] = 0;
+            profile.t[6] = t;
+
+            if (profile.check_with_timing<JerkSigns::UDDU, Limits::VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
+                return true;
+            }
+        }
+
+    } else {
         const double p1 = af_af - 2*jMax*(-2*af*tf + jMax*tf_tf + 3*vd);
         const double ph1 = af_p3 - 3*jMax_jMax*g1 - 3*af*jMax*vd;
         const double ph2 = af_p4 + 8*af_p3*jMax*tf + 12*jMax*(3*jMax*vd_vd - af_af*vd + 2*af*jMax*(g1 - tf*vd) - 2*jMax_jMax*tf*g1);

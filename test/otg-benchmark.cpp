@@ -47,6 +47,14 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
     InputParameter<DOFs> input;
     std::vector<double> average, worst;
 
+    // Initial warm-up calculation
+    p.fill(input.current_position);
+    p.fill(input.target_position);
+    l.fill(input.max_velocity, input.target_velocity);
+    l.fill(input.max_acceleration, input.target_acceleration);
+    l.fill(input.max_jerk);
+    check_calculation(otg, input);
+
     for (size_t j = 0; j < n; ++j) {
         double average_ = 0.0;
         double worst_ = 0.0;

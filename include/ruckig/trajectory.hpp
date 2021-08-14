@@ -32,7 +32,7 @@ class Trajectory {
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
 
-    //! Set of current profiles for each DoF
+    // Set of current profiles for each DoF
     Vector<Profile> profiles;
 
     double duration {0.0};
@@ -413,6 +413,7 @@ public:
     }
 
     //! Get the kinematic state at a given time
+
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
     void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
         if constexpr (DOFs == 0) {
@@ -489,6 +490,7 @@ public:
     }
 
     //! Get the time that this trajectory passes a specific position of a given DoF the first time
+
     //! If the position is passed, this method returns true, otherwise false
     //! The Python wrapper takes `dof` and `position` as arguments and returns `time` (or `None`) instead
     bool get_first_time_at_position(size_t dof, double position, double& time) const {
