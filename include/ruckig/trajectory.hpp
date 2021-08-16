@@ -138,7 +138,7 @@ class Trajectory {
     }
 
     bool synchronize(const Vector<Block>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
-        if (blocks.size() == 1 && !t_min && !discrete_duration) {
+        if (degrees_of_freedom == 1 && !t_min && !discrete_duration) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
             profiles[0] = blocks[0].p_min;
@@ -146,12 +146,15 @@ class Trajectory {
         }
 
         // Possible t_syncs are the start times of the intervals and optional t_min
-        for (size_t dof = 0; dof < blocks.size(); ++dof) {
-            possible_t_syncs[3 * dof] = blocks[dof].t_min;
-            possible_t_syncs[3 * dof + 1] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
-            possible_t_syncs[3 * dof + 2] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
+        bool any_interval {false};
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            possible_t_syncs[dof] = blocks[dof].t_min;
+            possible_t_syncs[degrees_of_freedom + dof] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
+            possible_t_syncs[2 * degrees_of_freedom + dof] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
+            any_interval |= blocks[dof].a || blocks[dof].b;
         }
         possible_t_syncs[3 * degrees_of_freedom] = t_min.value_or(std::numeric_limits<double>::infinity());
+        any_interval |= t_min.has_value();
 
         if (discrete_duration) {
             for (size_t i = 0; i < possible_t_syncs.size(); ++i) {
@@ -160,11 +163,12 @@ class Trajectory {
         }
 
         // Test them in sorted order
-        std::iota(idx.begin(), idx.end(), 0);
-        std::sort(idx.begin(), idx.end(), [&possible_t_syncs=possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
+        auto idx_end = any_interval ? idx.end() : idx.begin() + degrees_of_freedom;
+        std::iota(idx.begin(), idx_end, 0);
+        std::sort(idx.begin(), idx_end, [&possible_t_syncs=possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
         // Start at last tmin (or worse)
-        for (auto i = idx.begin() + degrees_of_freedom - 1; i != idx.end(); ++i) {
+        for (auto i = idx.begin() + degrees_of_freedom - 1; i != idx_end; ++i) {
             const double possible_t_sync = possible_t_syncs[*i];
             if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](const Block& block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
                 continue;
@@ -176,9 +180,9 @@ class Trajectory {
                 return true;
             }
 
-            const auto div = std::div(*i, 3);
-            limiting_dof = div.quot;
-            switch (div.rem) {
+            const auto div = std::div(*i, degrees_of_freedom);
+            limiting_dof = div.rem;
+            switch (div.quot) {
                 case 0: {
                     profiles[limiting_dof] = blocks[limiting_dof].p_min;
                 } break;

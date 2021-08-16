@@ -222,6 +222,13 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
 
     CHECK( result == Result::Working );
     CHECK( output.new_calculation );
+
+
+    input.minimum_duration = 12.0;
+    result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(12.0) );
 }
 
 TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {

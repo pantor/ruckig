@@ -108,17 +108,6 @@ class PositionStep2 {
     bool time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     bool time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
-    inline bool check_all(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
-        return time_acc0_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
-            || time_vel(profile, vMax, vMin, aMax, aMin, jMax)
-            || time_acc0_vel(profile, vMax, vMin, aMax, aMin, jMax)
-            || time_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
-            || time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax)
-            || time_acc0(profile, vMax, vMin, aMax, aMin, jMax)
-            || time_acc1(profile, vMax, vMin, aMax, aMin, jMax)
-            || time_none(profile, vMax, vMin, aMax, aMin, jMax);
-    }
-
 public:
     explicit PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
     explicit PositionStep2(double tf, const KinematicState& s0, const KinematicState& sf, const KinematicLimits& limits): PositionStep2(tf, s0.p, s0.v, s0.a, sf.p, sf.v, sf.a, limits.v, -limits.v, limits.a, -limits.a, limits.j) {}

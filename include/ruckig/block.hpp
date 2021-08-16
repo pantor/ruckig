@@ -126,7 +126,7 @@ public:
     inline bool is_blocked(double t) const {
         return (t < t_min) || (a && a->left < t && t < a->right) || (b && b->left < t && t < b->right);
     }
-    
+
     std::string to_string() const {
         std::string result = "[" + std::to_string(t_min) + " ";
         if (a) {
