@@ -84,11 +84,11 @@ bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double vMin, do
         polynom[2] = (4*a0_a0 + ph1 - 3*a0*aMin)/jMax_jMax;
         polynom[3] = (2*a0*ph1)/(jMax_jMax*jMax);
         polynom[4] = (3*(a0_p4 + af_p4) - 4*(a0_p3 + 2*af_p3)*aMin + 6*af_af*(aMin*aMin - 2*jMax*vd) + 12*jMax*ph2 + 6*a0_a0*ph3)/(12*jMax_jMax*jMax_jMax);
-        auto roots = Roots::solveQuartMonic(polynom);
 
         const double t_min = -a0/jMax;
-        const double t_max = std::min(tf + aMin/jMax, (aMax - a0)/jMax);
+        const double t_max = std::min((tf + 2*aMin/jMax - (a0 + af)/jMax)/2, (aMax - a0)/jMax);
 
+        auto roots = Roots::solveQuartMonic(polynom);
         for (double t: roots) {
             if (t < t_min || t > t_max) {
                 continue;
@@ -132,9 +132,12 @@ bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double vMin, do
         polynom[3] = (2*a0*ph1)/(jMax_jMax*jMax);
         polynom[4] = (3*(a0_p4 + af_p4) - 4*(a0_p3 + 2*af_p3)*aMax - 24*af*aMax*jMax*vd + 12*jMax*ph4 - 6*a0_a0*ph3 + 6*af_af*ph2)/(12*jMax_jMax*jMax_jMax);
 
+        const double t_min = -a0/jMax;
+        const double t_max = std::min((tf + ad/jMax - 2*aMax/jMax)/2, (aMax - a0)/jMax);
+
         auto roots = Roots::solveQuartMonic(polynom);
         for (double t: roots) {
-            if (t > tf - aMax/jMax || t > (aMax - a0)/jMax) {
+            if (t > t_max || t < t_min) {
                 continue;
             }
 
@@ -142,7 +145,7 @@ bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double vMin, do
 
             profile.t[0] = t;
             profile.t[1] = 0;
-            profile.t[2] = profile.t[0] + a0/jMax;
+            profile.t[2] = t + a0/jMax;
             profile.t[3] = tf + (h1 + ad - aMax)/jMax - 2*t;
             profile.t[4] = aMax/jMax;
             profile.t[5] = -(h1 + aMax)/jMax;
@@ -173,7 +176,7 @@ bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double vMin, do
         polynom[4] = -(-3*(a0_p4 + af_p4) + 4*(af_p3 + 2*a0_p3)*aMax - 12*a0*aMax*(af_af - 2*jMax*vd) + 6*a0_a0*(af_af - aMax*aMax - 2*jMax*vd) + 6*af_af*(aMax*aMax - 2*aMax*jMax*tf + 2*jMax*vd) + ph1)/(12*jMax_jMax*jMax_jMax);
 
         const double t_min = -af/jMax;
-        const double t_max = std::min(tf - aMax/jMax, -aMin/jMax);
+        const double t_max = std::min(tf - (2*aMax - a0)/jMax, -aMin/jMax);
 
         auto roots = Roots::solveQuartMonic(polynom);
         for (double t: roots) {
@@ -262,8 +265,8 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
         polynom[1] = -tf/2;
         polynom[2] = 0;
         polynom[3] = pd/(2*jMax);
-        auto roots = Roots::solveCub(polynom[0], polynom[1], polynom[2], polynom[3]);
 
+        auto roots = Roots::solveCub(polynom[0], polynom[1], polynom[2], polynom[3]);
         for (double t: roots) {
             if (t > tf/4) {
                 continue;
@@ -692,8 +695,8 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
                 polynom[2] = 2*vd/jMax + tf_tf;
                 polynom[3] = 4*(pd - tf*vf)/jMax;
                 polynom[4] = (vd_vd + jMax*tf*g2)/(jMax_jMax);
-                auto roots = Roots::solveQuartMonic(polynom);
 
+                auto roots = Roots::solveQuartMonic(polynom);
                 for (double t: roots) {
                     if (t > tf/2 || t > (aMax - a0)/jMax) {
                         continue;
@@ -734,7 +737,6 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
                 polynom[4] = -4*(jMax*g1*g1 + vd_vd*vd)/(jMax*ph1);
 
                 auto roots = Roots::solveQuartMonic(polynom);
-
                 for (double t: roots) {
                     if (t > tf || t > (aMax - aMin)/jMax) {
                         continue;
@@ -799,11 +801,11 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
             polynom[2] = 2*(a0_a0 + af_af + jMax*(af*tf + vd) - 2*a0*ph1)/jMax_jMax + tf_tf;
             polynom[3] = 2*(a0_p3 - af_p3 - 3*af_af*jMax*tf + 3*a0*ph1*(ph1 - a0) - 6*jMax_jMax*(-pd + tf*vf))/(3*jMax_jMax*jMax);
             polynom[4] = (a0_p4 + af_p4 + 4*af_p3*jMax*tf - 4*a0_p3*ph1 + 6*a0_a0*ph1*ph1 + 24*jMax_jMax*af*g1 - 4*a0*(af_p3 + 3*af_af*jMax*tf + 6*jMax_jMax*(-pd + tf*vf)) + 6*jMax_jMax*af_af*tf_tf + 12*jMax_jMax*(vd_vd + jMax*tf*g2))/(12*jMax_jMax*jMax_jMax);
-            auto roots = Roots::solveQuartMonic(polynom);
 
             const double t_min = ad/jMax;
             const double t_max = std::min((aMax - a0)/jMax, (ad/jMax + tf) / 2);
 
+            auto roots = Roots::solveQuartMonic(polynom);
             for (double t: roots) {
                 if (t < t_min || t > t_max) {
                     continue;
@@ -868,10 +870,9 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
             polynom[3] = -(a0_p5 - af_p5 + af_p4*jMax*tf - 5*a0_p4*(af - jMax*tf) + 2*a0_p3*ph3 + 4*af_p3*jMax*(jMax*tf_tf + vd) + 12*jMax_jMax*af*ph6 - 2*a0_a0*(5*af_p3 - 9*af_af*jMax*tf - 6*af*jMax*vd + 6*jMax_jMax*(-2*pd - tf*v0 + 3*tf*vf)) - 12*jMax_jMax*jMax*ph2 + a0*ph5)/(3*jMax_jMax*jMax*ph1);
             polynom[4] = -(-a0_p6 - af_p6 + 6*a0_p5*(af - jMax*tf) - 48*af_p3*jMax_jMax*g1 + 72*jMax_jMax*jMax*(jMax*g1*g1 + vd_vd*vd + 2*af*g1*vd) - 3*a0_p4*ph3 - 36*af_af*jMax_jMax*vd_vd + 6*af_p4*jMax*vd + 4*a0_p3*(5*af_p3 - 9*af_af*jMax*tf - 6*af*jMax*vd + 6*jMax_jMax*(-2*pd - tf*v0 + 3*tf*vf)) - 3*a0_a0*ph5 + 6*a0*(af_p5 - af_p4*jMax*tf - 4*af_p3*jMax*(jMax*tf_tf + vd) + 12*jMax_jMax*(-af*ph6 + jMax*ph2)))/(18*jMax_jMax*jMax_jMax*ph1);
 
-            auto roots = Roots::solveQuartMonic(polynom);
-
             const double t_max = (a0 - aMin)/jMax;
 
+            auto roots = Roots::solveQuartMonic(polynom);
             for (double t: roots) {
                 if (t > t_max) {
                     continue;
@@ -923,8 +924,8 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
             polynom[2] = (-2*(a0_p4 + af_p4) + 8*af_p3*jMax*tf + 6*af_af*jMax_jMax*tf_tf + 8*a0_p3*(af - jMax*tf) - 12*a0_a0*(af - jMax*tf)*(af - jMax*tf) - 12*af*jMax_jMax*(-pd + jMax*tf_p3 - 2*tf*v0 + 3*tf*vf) + 2*a0*(4*af_p3 - 12*af_af*jMax*tf + 9*af*jMax_jMax*tf_tf - 3*jMax_jMax*(2*pd + jMax*tf_p3 - 2*tf*vf)) + 3*jMax_jMax*(jMax_jMax*tf_p4 + 4*vd_vd - 4*jMax*tf*(pd + tf*v0 - 2*tf*vf)))/ph7;
             polynom[3] = (-a0_p5 + af_p5 - af_p4*jMax*tf + 5*a0_p4*(af - jMax*tf) - 2*a0_p3*ph3 - 4*af_p3*jMax*(jMax*tf_tf + vd) + 12*af_af*jMax_jMax*g2 - 12*af*jMax_jMax*ph6 + 2*a0_a0*(5*af_p3 - 9*af_af*jMax*tf - 6*af*jMax*vd + 6*jMax_jMax*ph0) + 12*jMax_jMax*jMax*ph2 + a0*(-5*af_p4 + 8*af_p3*jMax*tf + 12*af_af*jMax*(jMax*tf_tf + vd) - 24*af*jMax_jMax*(-2*pd + jMax*tf_p3 + 2*tf*vf) + 6*jMax_jMax*ph4))/(jMax*ph7);
             polynom[4] = -(a0_p6 + af_p6 - 6*a0_p5*(af - jMax*tf) + 48*af_p3*jMax_jMax*g1 - 72*jMax_jMax*jMax*(jMax*g1*g1 + vd_vd*vd + 2*af*g1*vd) + 3*a0_p4*ph3 - 6*af_p4*jMax*vd + 36*af_af*jMax_jMax*vd_vd - 4*a0_p3*(5*af_p3 - 9*af_af*jMax*tf - 6*af*jMax*vd + 6*jMax_jMax*ph0) + 3*a0_a0*ph5 - 6*a0*(af_p5 - af_p4*jMax*tf - 4*af_p3*jMax*(jMax*tf_tf + vd) + 12*jMax_jMax*(af_af*g2 - af*ph6 + jMax*ph2)))/(6*jMax_jMax*ph7);
-            auto roots = Roots::solveQuartMonic(polynom);
 
+            auto roots = Roots::solveQuartMonic(polynom);
             for (double t: roots) {
                 if (t > tf || t > (aMax - a0)/jMax) {
                     continue;
@@ -990,8 +991,8 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
         polynom[1] = ad_ad*tf;
         polynom[2] = (a0_a0 + af_af + 10*a0*af)*tf_tf + 24*(tf*(af*v0 - a0*vf) - pd*ad) + 12*vd_vd;
         polynom[3] = -3*tf*((a0_a0 + af_af + 2*a0*af)*tf_tf - 4*vd*(a0 + af)*tf + 4*vd_vd);
-        auto roots = Roots::solveCub(polynom[0], polynom[1], polynom[2], polynom[3]);
 
+        auto roots = Roots::solveCub(polynom[0], polynom[1], polynom[2], polynom[3]);
         for (double t: roots) {
             if (t > tf) {
                 continue;

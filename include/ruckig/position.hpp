@@ -10,14 +10,6 @@ using Limits = Profile::Limits;
 using JerkSigns = Profile::JerkSigns;
 
 
-struct KinematicState {
-    double p, v, a;
-};
-
-struct KinematicLimits {
-    double v, a, j;
-};
-
 
 //! Mathematical equations for Step 1 in position interface: Extremal profiles
 class PositionStep1 {
@@ -71,14 +63,9 @@ class PositionStep1 {
 
 public:
     explicit PositionStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
-    explicit PositionStep1(const KinematicState& s0, const KinematicState& sf, const KinematicLimits& limits): PositionStep1(s0.p, s0.v, s0.a, sf.p, sf.v, sf.a, limits.v, -limits.v, limits.a, -limits.a, limits.j) {}
 
     bool get_profile(const Profile& input, Block& block);
 
-    bool get_block(Block& block) {
-        Profile profile;
-        return get_profile(profile, block);
-    }
 };
 
 
@@ -110,7 +97,6 @@ class PositionStep2 {
 
 public:
     explicit PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
-    explicit PositionStep2(double tf, const KinematicState& s0, const KinematicState& sf, const KinematicLimits& limits): PositionStep2(tf, s0.p, s0.v, s0.a, sf.p, sf.v, sf.a, limits.v, -limits.v, limits.a, -limits.a, limits.j) {}
 
     bool get_profile(Profile& profile);
 };

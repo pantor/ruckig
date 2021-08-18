@@ -85,6 +85,12 @@ public:
     //! Is the DoF considered for calculation?
     Vector<bool> enabled;
 
+    //! Per-DoF control_interface (overwrites global synchronization, not yet used)
+    // std::optional<Vector<ControlInterface>> per_dof_control_interface;
+
+    //! Per-DoF synchronization (overwrites global synchronization, not yet used)
+    // std::optional<Vector<Synchronization>> per_dof_synchronization;
+
     //! Optional minimum trajectory duration
     std::optional<double> minimum_duration;
 

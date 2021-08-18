@@ -65,8 +65,8 @@ public:
 
 
 //! Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
-inline PositiveSet<double, 4> solveCub(double a, double b, double c, double d) {
-    PositiveSet<double, 4> roots;
+inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
+    PositiveSet<double, 3> roots;
 
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;

@@ -143,6 +143,17 @@ void PositionStep1::time_acc0_acc1(Profile& profile, double vMax, double vMin, d
 }
 
 void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+    const double h3 = -(a0_a0 + af_af)/(2*jMax*aMin) + aMin/jMax + (vf - v0)/aMin;
+    const double t_max = (aMax - a0)/jMax;
+
+    // double h4 = a0_a0/(aMin*aMin) + h3*jMax/aMin;
+    // if (a0*aMin > 0 && h4 > 0) {
+    //     h4 = Sqrt(h4);
+    //     if (t_max < -(a0 - aMin*h4)/jMax) {
+    //         return;
+    //     }
+    // }
+
     const double h0 = 3*(a0_p4 - af_p4) + 8*(af_p3 - a0_p3)*aMin + 6*(a0_a0 - af_af)*aMin*aMin + 12*jMax*(af_af*vf + a0_a0*v0 + 2*aMin*(jMax*pd - a0*v0 - af*vf) + aMin*aMin*(v0 + vf) + jMax*(v0_v0 - vf_vf));
     const double h2 = a0_a0 - a0*aMin + 2*jMax*v0;
 
@@ -153,7 +164,6 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
     polynom[4] = h0/(12*jMax_jMax*jMax_jMax);
 
     const double t_min = -(a0 - aMin)/jMax;
-    const double t_max = (aMax - a0)/jMax;
 
     auto roots = Roots::solveQuartMonic(polynom);
     for (double t: roots) {
@@ -183,7 +193,7 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
         profile.t[2] = (a0 - aMin)/jMax + t;
         profile.t[3] = 0;
         profile.t[4] = 0;
-        profile.t[5] = -((a0_a0 + af_af)/2 - aMin*aMin + jMax*t*(2*a0 + jMax*t) - jMax*(vf - v0))/(aMin*jMax);
+        profile.t[5] = h3 - 2*a0/aMin*t - jMax/aMin*t*t;
         profile.t[6] = (af - aMin)/jMax;
 
         if (profile.check<JerkSigns::UDDU, Limits::ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
@@ -193,6 +203,16 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
 }
 
 void PositionStep1::time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+    const double h3 = (a0_a0 - af_af)/(2*aMax*jMax) + (vf - v0)/aMax;
+    const double t_max = (aMax - aMin)/jMax;
+
+    // if (h3 < 0) {
+    //     const double h4 = Sqrt(1 - h3 * jMax/aMax);
+    //     if (t_max < (1 + h4)/(jMax/aMax) - DBL_EPSILON) {
+    //         return;
+    //     }
+    // }
+
     const double h0 = 3*(af_p4 - a0_p4) + 8*(a0_p3 - af_p3)*aMax + 24*aMax*jMax*(af*vf - a0*v0) - 6*a0_a0*(aMax*aMax - 2*jMax*v0) + 6*af_af*(aMax*aMax - 2*jMax*vf) + 12*jMax*(jMax*(vf_vf - v0_v0 - 2*aMax*pd) - aMax*aMax*(vf - v0));
     const double h2 = -af_af + aMax*aMax + 2*jMax*vf;
 
@@ -202,8 +222,7 @@ void PositionStep1::time_acc0(Profile& profile, double vMax, double vMin, double
     polynom[3] = 0;
     polynom[4] = h0/(12*jMax_jMax*jMax_jMax);
 
-    const double t_min = -(af - aMax)/jMax;
-    const double t_max = (aMax - aMin)/jMax;
+    const double t_min = (aMax - af)/jMax;
 
     auto roots = Roots::solveQuartMonic(polynom);
     for (double t: roots) {
@@ -221,7 +240,7 @@ void PositionStep1::time_acc0(Profile& profile, double vMax, double vMin, double
         }
 
         profile.t[0] = (-a0 + aMax)/jMax;
-        profile.t[1] = (a0_a0 - af_af)/(2*aMax*jMax) + (vf - v0)/aMax - 2*t + jMax*t*t/aMax;
+        profile.t[1] = h3 - 2*t + jMax/aMax*t*t;
         profile.t[2] = t;
         profile.t[3] = 0;
         profile.t[4] = 0;
@@ -311,7 +330,7 @@ void PositionStep1::time_none(Profile& profile, double vMax, double vMin, double
             }
 
             // Single Newton-step (regarding pd)
-            {
+            if (t > DBL_EPSILON) {
                 const double h1 = jMax*t*t;
                 const double orig = -h2_h2/(4*jMax*t) + h2*(af/jMax + t) + (4*a0_p3 + 2*af_p3 - 6*a0_a0*(af + 2*jMax*t) + 12*(af - a0)*jMax*v0 + 3*jMax_jMax*(-4*pd + (h1 + 8*v0)*t))/(12*jMax_jMax);
                 const double deriv = h2 + 2*v0 - a0_a0/jMax + h2_h2/(4*h1) + (3*h1)/4;
