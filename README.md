@@ -101,7 +101,7 @@ During the update step, you'll need to copy the new kinematic state into the cur
 To go into more detail, the *InputParameter* type has following members:
 
 ```.cpp
-using Vector = std::array<double, DOFs>;
+using Vector = std::array<double, DOFs>; // By default
 
 Vector current_position;
 Vector current_velocity; // Initialized to zero
@@ -139,9 +139,9 @@ We refer to the [API documentation](https://pantor.github.io/ruckig/namespaceruc
 
 ### Input Validation
 
-Note that there are range constraints of the input due to numerical reasons, see below for more details. To check the input before a calculation step, 
+Note that there are range constraints of the input due to numerical reasons, see below for more details. To check the input before a calculation step,
 ```.cpp
-ruckig.validate_input(input)
+ruckig.validate_input(input); // returns boolean
 ```
 returns `false` if an input is not valid. Of course, the target state needs to be within the given kinematic limits. Additionally, the target acceleration needs to fulfil
 ```

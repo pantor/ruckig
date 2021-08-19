@@ -97,6 +97,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("synchronization", &InputParameter<DynamicDOFs>::synchronization)
         .def_readwrite("duration_discretization", &InputParameter<DynamicDOFs>::duration_discretization)
         .def_readwrite("minimum_duration", &InputParameter<DynamicDOFs>::minimum_duration)
+        .def_readwrite("interrupt_calculation_duration", &InputParameter<DynamicDOFs>::interrupt_calculation_duration)
         .def(py::self != py::self)
         .def("__repr__", static_cast<std::string (InputParameter<DynamicDOFs>::*)() const>(&InputParameter<DynamicDOFs>::to_string));
 
