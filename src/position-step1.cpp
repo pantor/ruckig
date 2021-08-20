@@ -22,7 +22,8 @@ PositionStep1::PositionStep1(double p0, double v0, double a0, double pf, double 
     jMax_jMax = jMax * jMax;
 }
 
-void PositionStep1::time_acc0_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+void PositionStep1::time_all_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+    // ACC0_ACC1_VEL
     profile.t[0] = (-a0 + aMax)/jMax;
     profile.t[1] = (a0_a0/2 - aMax*aMax - jMax*(v0 - vMax))/(aMax*jMax);
     profile.t[2] = aMax/jMax;
@@ -33,23 +34,19 @@ void PositionStep1::time_acc0_acc1_vel(Profile& profile, double vMax, double vMi
 
     if (profile.check<JerkSigns::UDDU, Limits::ACC0_ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile, jMax);
-    }
-}
-
-void PositionStep1::time_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
-    if ((jMax > 0 && has_up_vel) || (jMax < 0 && has_down_vel)) {
         return;
     }
 
-    const double h1 = Sqrt(a0_a0/(2*jMax_jMax) + (vMax - v0)/jMax);
+    // ACC1_VEL
+    const double t_acc0 = Sqrt(a0_a0/(2*jMax_jMax) + (vMax - v0)/jMax);
 
-    profile.t[0] = h1 - a0/jMax;
+    profile.t[0] = t_acc0 - a0/jMax;
     profile.t[1] = 0;
-    profile.t[2] = h1;
-    profile.t[3] = -(3*af_p4 - 8*aMin*(af_p3 - a0_p3) - 24*aMin*jMax*(a0*v0 - af*vf) + 6*af_af*(aMin*aMin - 2*jMax*vf) - 12*jMax*(2*aMin*jMax*pd + aMin*aMin*(vf + vMax) + jMax*(vMax*vMax - vf_vf) + aMin*h1*(a0_a0 - 2*jMax*(v0 + vMax))))/(24*aMin*jMax_jMax*vMax);
-    profile.t[4] = -aMin/jMax;
-    profile.t[5] = -(af_af/2 - aMin*aMin + jMax*(vMax - vf))/(aMin*jMax);
-    profile.t[6] = profile.t[4] + af/jMax;
+    profile.t[2] = t_acc0;
+    profile.t[3] = -(3*af_p4 - 8*aMin*(af_p3 - a0_p3) - 24*aMin*jMax*(a0*v0 - af*vf) + 6*af_af*(aMin*aMin - 2*jMax*vf) - 12*jMax*(2*aMin*jMax*pd + aMin*aMin*(vf + vMax) + jMax*(vMax*vMax - vf_vf) + aMin*t_acc0*(a0_a0 - 2*jMax*(v0 + vMax))))/(24*aMin*jMax_jMax*vMax);
+    // profile.t[4] = -aMin/jMax;
+    // profile.t[5] = -(af_af/2 - aMin*aMin + jMax*(vMax - vf))/(aMin*jMax);
+    // profile.t[6] = profile.t[4] + af/jMax;
 
     if (std::abs(profile.t[0]) < DBL_EPSILON && profile.t[0] < 0.0) {
         profile.t[0] = 0;
@@ -57,45 +54,34 @@ void PositionStep1::time_acc1_vel(Profile& profile, double vMax, double vMin, do
 
     if (profile.check<JerkSigns::UDDU, Limits::ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile, jMax);
-    }
-}
-
-void PositionStep1::time_acc0_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
-    if ((jMax > 0 && has_up_vel) || (jMax < 0 && has_down_vel)) {
         return;
     }
 
-    const double h1 = Sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
+    // ACC0_VEL
+    const double t_acc1 = Sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
 
     profile.t[0] = (-a0 + aMax)/jMax;
     profile.t[1] = (a0_a0/2 - aMax*aMax - jMax*(v0 - vMax))/(aMax*jMax);
     profile.t[2] = aMax/jMax;
-    profile.t[3] = (3*a0_p4 + 8*(af_p3 - a0_p3)*aMax + 24*aMax*jMax*(a0*v0 - af*vf) + 6*a0_a0*(aMax*aMax - 2*jMax*v0) - 12*jMax*(-2*aMax*jMax*pd + aMax*aMax*(v0 + vMax) + jMax*(vMax*vMax - v0_v0) + (2*(vf + vMax)*jMax - af_af)*aMax*h1))/(24*aMax*jMax_jMax*vMax);
-    profile.t[4] = h1;
+    profile.t[3] = (3*a0_p4 + 8*(af_p3 - a0_p3)*aMax + 24*aMax*jMax*(a0*v0 - af*vf) + 6*a0_a0*(aMax*aMax - 2*jMax*v0) - 12*jMax*(-2*aMax*jMax*pd + aMax*aMax*(v0 + vMax) + jMax*(vMax*vMax - v0_v0) + (2*(vf + vMax)*jMax - af_af)*aMax*t_acc1))/(24*aMax*jMax_jMax*vMax);
+    profile.t[4] = t_acc1;
     profile.t[5] = 0;
-    profile.t[6] = h1 + af/jMax;
+    profile.t[6] = t_acc1 + af/jMax;
 
     if (profile.check<JerkSigns::UDDU, Limits::ACC0_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile, jMax);
-    }
-}
-
-void PositionStep1::time_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
-    if ((jMax > 0 && has_up_vel) || (jMax < 0 && has_down_vel)) {
         return;
     }
 
-    const double h1 = Sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
-    const double h2 = Sqrt(a0_a0/(2*jMax_jMax) + (vMax - v0)/jMax);
-
+    // VEL
     // Solution 3/4
-    profile.t[0] = h2 - a0/jMax;
+    profile.t[0] = t_acc0 - a0/jMax;
     profile.t[1] = 0;
-    profile.t[2] = h2;
-    profile.t[3] = (af_p3 - a0_p3)/(3*jMax_jMax*vMax) + (a0*v0 - af*vf + (af_af*h1 + a0_a0*h2)/2)/(jMax*vMax) - (v0/vMax + 1.0)*h2 - (vf/vMax + 1.0)*h1 + pd/vMax;
-    profile.t[4] = h1;
-    profile.t[5] = 0;
-    profile.t[6] = h1 + af/jMax;
+    profile.t[2] = t_acc0;
+    profile.t[3] = (af_p3 - a0_p3)/(3*jMax_jMax*vMax) + (a0*v0 - af*vf + (af_af*t_acc1 + a0_a0*t_acc0)/2)/(jMax*vMax) - (v0/vMax + 1.0)*t_acc0 - (vf/vMax + 1.0)*t_acc1 + pd/vMax;
+    // profile.t[4] = t_acc1;
+    // profile.t[5] = 0;
+    // profile.t[6] = t_acc1 + af/jMax;
 
     if (profile.check<JerkSigns::UDDU, Limits::VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile, jMax);
@@ -144,7 +130,7 @@ void PositionStep1::time_acc0_acc1(Profile& profile, double vMax, double vMin, d
 
 void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     const double h3 = -(a0_a0 + af_af)/(2*jMax*aMin) + aMin/jMax + (vf - v0)/aMin;
-    const double t_max = (aMax - a0)/jMax;
+    const double t_max = (-a0 + aMax)/jMax;
 
     // double h4 = a0_a0/(aMin*aMin) + h3*jMax/aMin;
     // if (a0*aMin > 0 && h4 > 0) {
@@ -497,13 +483,7 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
 
         } else {
             // There is no blocked interval when vf==0 && af==0, so return after first found profile
-            time_acc0_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
-            time_vel(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
-            time_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
-            time_acc0_vel(profile, vMax, vMin, aMax, aMin, jMax);
+            time_all_vel(profile, vMax, vMin, aMax, aMin, jMax);
             if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
             time_none(profile, vMax, vMin, aMax, aMin, jMax);
             if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
@@ -514,13 +494,7 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
             time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax);
             if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
 
-            time_acc0_acc1_vel(profile, vMin, vMax, aMin, aMax, -jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
-            time_vel(profile, vMin, vMax, aMin, aMax, -jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
-            time_acc1_vel(profile, vMin, vMax, aMin, aMax, -jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
-            time_acc0_vel(profile, vMin, vMax, aMin, aMax, -jMax);
+            time_all_vel(profile, vMin, vMax, aMin, aMax, -jMax);
             if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
             time_none(profile, vMin, vMax, aMin, aMax, -jMax);
             if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
@@ -532,14 +506,8 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
         }
 
     } else {
-        time_acc0_acc1_vel(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        time_acc0_acc1_vel(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        time_acc1_vel(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        time_acc1_vel(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        time_acc0_vel(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        time_acc0_vel(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        time_vel(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        time_vel(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
+        time_all_vel(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
+        time_all_vel(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
         time_none(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
         time_acc0(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
         time_acc1(profile, _vMax, _vMin, _aMax, _aMin, _jMax);

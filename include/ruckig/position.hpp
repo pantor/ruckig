@@ -24,17 +24,11 @@ class PositionStep1 {
     double af_af, af_p3, af_p4;
     double jMax_jMax;
 
-    // Only a single velocity-limited profile can be valid
-    bool has_up_vel {false}, has_down_vel {false};
-
     // Max 5 valid profiles + 1 spare for numerical issues
     std::array<Profile, 6> valid_profiles;
     size_t valid_profile_counter;
 
-    void time_acc0_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_acc0_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_all_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
@@ -49,14 +43,6 @@ class PositionStep1 {
 
     inline void add_profile(Profile profile, double jMax) {
         profile.direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
-
-        if (profile.limits == Limits::ACC0_ACC1_VEL || profile.limits == Limits::ACC0_VEL || profile.limits == Limits::ACC1_VEL || profile.limits == Limits::VEL) {
-            switch (profile.direction) {
-                case Profile::Direction::UP: has_up_vel = true; break;
-                case Profile::Direction::DOWN: has_down_vel = true; break;
-            }
-        }
-
         valid_profiles[valid_profile_counter] = profile;
         ++valid_profile_counter;
     }
