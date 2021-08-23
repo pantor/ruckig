@@ -32,16 +32,22 @@ public:
     const double delta_time;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
-    explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0) { }
+    explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0) {
+    }
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
-    explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time) { }
+    explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time) {
+    }
+
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), current_input(InputParameter<0>(dofs)) { }
+    explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), current_input(InputParameter<0>(dofs)) {
+    }
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), current_input(InputParameter<0>(dofs)) { }
+    explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), current_input(InputParameter<0>(dofs)) {
+    }
+
 
     //! Validate the input for the trajectory calculation
     bool validate_input(const InputParameter<DOFs>& input) const {
