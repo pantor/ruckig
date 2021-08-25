@@ -137,11 +137,17 @@ public:
 
     //! Calculate a new trajectory for the given input
     Result calculate(const InputParameter<DOFs>& input, Trajectory<DOFs>& trajectory) {
+        bool was_interrupted {false};
+        return calculate(input, trajectory, was_interrupted);
+    }
+
+    //! Calculate a new trajectory for the given input and check for interruption
+    Result calculate(const InputParameter<DOFs>& input, Trajectory<DOFs>& trajectory, bool& was_interrupted) {
         if (!validate_input(input)) {
             return Result::ErrorInvalidInput;
         }
 
-        return trajectory.template calculate<throw_error, return_error_at_maximal_duration>(input, delta_time);
+        return trajectory.template calculate<throw_error, return_error_at_maximal_duration>(input, delta_time, was_interrupted);
     }
 
     //! Get the next output state (with step delta_time) along the calculated trajectory for the given input
@@ -157,7 +163,7 @@ public:
         output.new_calculation = false;
 
         if (input != current_input) {
-            Result result = calculate(input, output.trajectory);
+            Result result = calculate(input, output.trajectory, output.was_calculation_interrupted);
             if (result != Result::Working) {
                 return result;
             }

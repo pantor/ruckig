@@ -137,7 +137,13 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     input.max_acceleration = {1.0, 1.0, 1.0};
     input.max_jerk = {1.0, 1.0, 1.0};
 
-    auto result = otg.update(input, output);
+    Trajectory<3> traj;
+    auto result = otg.calculate(input, traj);
+
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(4.0) );
+
+    result = otg.update(input, output);
 
     CHECK( result == Result::Working );
     CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );

@@ -103,6 +103,7 @@ limited by velocity, acceleration, and jerk constraints.";
 
     py::class_<OutputParameter<DynamicDOFs>>(m, "OutputParameter")
         .def(py::init<size_t>(), "dofs"_a)
+        .def_readonly("intermediate_section", &OutputParameter<DynamicDOFs>::intermediate_section)
         .def_readonly("degrees_of_freedom", &OutputParameter<DynamicDOFs>::degrees_of_freedom)
         .def_readonly("new_position", &OutputParameter<DynamicDOFs>::new_position)
         .def_readonly("new_velocity", &OutputParameter<DynamicDOFs>::new_velocity)
@@ -121,9 +122,10 @@ limited by velocity, acceleration, and jerk constraints.";
         .def(py::init<size_t, double>(), "dofs"_a, "delta_time"_a)
         .def_readonly("delta_time", &Ruckig<0, true>::delta_time)
         .def_readonly("degrees_of_freedom", &Ruckig<0, true>::degrees_of_freedom)
-        .def("validate_input", &Ruckig<0, true>::validate_input)
-        .def("calculate", &Ruckig<0, true>::calculate)
-        .def("update", &Ruckig<0, true>::update);
+        .def("validate_input", &Ruckig<0, true>::validate_input, "input"_a)
+        .def("calculate", static_cast<Result (Ruckig<0, true>::*)(const InputParameter<0>&, Trajectory<0>&)>(&Ruckig<0, true>::calculate), "input"_a, "trajectory"_a)
+        .def("calculate", static_cast<Result (Ruckig<0, true>::*)(const InputParameter<0>&, Trajectory<0>&, bool&)>(&Ruckig<0, true>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
+        .def("update", &Ruckig<0, true>::update, "input"_a, "output"_a);
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DynamicDOFs>>(m, "Reflexxes")

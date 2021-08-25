@@ -231,7 +231,9 @@ public:
 
     //! Calculate the time-optimal waypoint-based trajectory
     template<bool throw_error, bool return_error_at_maximal_duration>
-    Result calculate(const InputParameter<DOFs>& inp, double delta_time) {
+    Result calculate(const InputParameter<DOFs>& inp, double delta_time, bool& was_interrupted) {
+        was_interrupted = false;
+
         for (size_t dof = 0; dof < profiles.size(); ++dof) {
             auto& p = profiles[dof];
             p.pf = inp.current_position[dof];
@@ -412,7 +414,7 @@ public:
 
     //! Continue the trajectory calculation
     template<bool throw_error, bool return_error_at_maximal_duration>
-    Result continue_calculation(const InputParameter<DOFs>&, double) {
+    Result continue_calculation(const InputParameter<DOFs>&, double, bool&) {
         return Result::Error;
     }
 

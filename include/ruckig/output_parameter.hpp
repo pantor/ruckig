@@ -16,6 +16,9 @@ struct OutputParameter {
 
     Vector<double> new_position, new_velocity, new_acceleration;
 
+    //! Index of section between intermediate positions (not yet used)
+    size_t intermediate_section {0};
+
     //! Was a new trajectory calculation performed in the last cycle?
     bool new_calculation {false};
 
