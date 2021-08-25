@@ -372,7 +372,23 @@ void PositionStep1::time_acc0_two_step(Profile& profile, double vMax, double vMi
         }
     }
 
-    // Three step
+    // Three step - Removed pf
+    {
+        profile.t[0] = (-a0 + aMax)/jMax;
+        profile.t[1] = (a0_a0 + af_af - 2*aMax*aMax + 2*jMax*(vf - v0))/(2*aMax*jMax);
+        profile.t[2] = (-af + aMax)/jMax;
+        profile.t[3] = 0;
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = 0;
+
+        if (profile.check<JerkSigns::UDDU, Limits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
+            add_profile(profile, jMax);
+            return;
+        }
+    }
+
+    // Three step - Removed aMax
     {
         const double h0 = 3*(af_af - a0_a0 + 2*jMax*(v0 + vf));
         const double h2 = a0_p3 + 2*af_p3 + 6*jMax_jMax*pd + 6*(af - a0)*jMax*vf - 3*a0*af_af;
@@ -516,10 +532,11 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
         time_acc0(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
         time_acc1(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
         time_acc0_acc1(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
+    }
 
-        if (valid_profile_counter == 0 || valid_profile_counter == 2 || valid_profile_counter == 4) {
-            time_none_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        }
+    if (valid_profile_counter == 0 || valid_profile_counter == 2 || valid_profile_counter == 4) {
+        time_none_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
+
         if (valid_profile_counter == 0 || valid_profile_counter == 2 || valid_profile_counter == 4) {
             time_none_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
         }
