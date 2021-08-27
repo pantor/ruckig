@@ -48,10 +48,6 @@ void PositionStep1::time_all_vel(Profile& profile, double vMax, double vMin, dou
     // profile.t[5] = -(af_af/2 - aMin*aMin + jMax*(vMax - vf))/(aMin*jMax);
     // profile.t[6] = profile.t[4] + af/jMax;
 
-    if (std::abs(profile.t[0]) < DBL_EPSILON && profile.t[0] < 0.0) {
-        profile.t[0] = 0;
-    }
-
     if (profile.check<JerkSigns::UDDU, Limits::ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile, jMax);
         return;
@@ -534,30 +530,22 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
         time_acc0_acc1(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
     }
 
-    if (valid_profile_counter == 0 || valid_profile_counter == 2 || valid_profile_counter == 4) {
+    if (valid_profile_counter == 0) {
         time_none_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-
-        if (valid_profile_counter == 0 || valid_profile_counter == 2 || valid_profile_counter == 4) {
-            time_none_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        }
-        if (valid_profile_counter == 0 || valid_profile_counter == 2) {
-            time_acc0_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        }
-        if (valid_profile_counter == 0 || valid_profile_counter == 2) {
-            time_acc0_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        }
-        if (valid_profile_counter == 0 || valid_profile_counter == 2) {
-            time_vel_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        }
-        if (valid_profile_counter == 0 || valid_profile_counter == 2) {
-            time_vel_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        }
-        if (valid_profile_counter == 0 || valid_profile_counter == 2) {
-            time_acc1_vel_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        }
-        if (valid_profile_counter == 0 || valid_profile_counter == 2) {
-            time_acc1_vel_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        }
+        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        time_none_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
+        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        time_acc0_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
+        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        time_acc0_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
+        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        time_vel_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
+        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        time_vel_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
+        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        time_acc1_vel_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
+        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        time_acc1_vel_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
     }
 
     return Block::calculate_block(block, valid_profiles, valid_profile_counter);

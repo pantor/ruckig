@@ -70,7 +70,7 @@ class CMakeBuild(build_ext):
 setup(
     name='ruckig',
     version='0.4.0',
-    description='Online Trajectory Generation. Real-time. Jerk-constrained. Time-optimal.',
+    description='Instantaneous Motion Generation. Real-time. Jerk-constrained. Time-optimal.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Lars Berscheid',
@@ -82,7 +82,7 @@ setup(
     cmdclass=dict(build_ext=CMakeBuild),
     keywords=['robotics', 'trajectory-generation', 'real-time', 'jerk-constrained', 'time-optimal'],
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: MIT License',

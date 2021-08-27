@@ -1,7 +1,8 @@
 <div align="center">
   <h1 align="center">Ruckig</h1>
   <h3 align="center">
-    Online Trajectory Generation. Real-time. Jerk-constrained. Time-optimal.
+    Instantaneous Motion Generation for Robots and Machines.<br>
+    Real-time. Jerk-constrained. Time-optimal.
   </h3>
 </div>
 <p align="center">
