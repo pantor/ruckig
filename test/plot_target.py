@@ -28,25 +28,28 @@ def walk_through_trajectory(otg, inp):
 
 
 if __name__ == '__main__':
-    inp = InputParameter(1)
-    # inp.control_interface = ControlInterface.Velocity
-    # inp.synchronization = Synchronization.Phase
+    inp = InputParameter(3)
+    # # inp.control_interface = ControlInterface.Velocity
+    # inp.synchronization = Synchronization.No
     # inp.duration_discretization = DurationDiscretization.Discrete
 
-    inp.current_position = [1.6]
-    inp.current_velocity = [0.0]
-    inp.current_acceleration = [0.0]
-    inp.target_position = [1.0]
-    # inp.target_velocity = [-1.15544]
-    # inp.target_acceleration = [-1.011693]
-    inp.target_velocity = [0.0]
-    inp.target_acceleration = [0.0]
-    inp.max_velocity = [1000]
-    inp.max_acceleration = [1000]
-    inp.max_jerk = [2]
+    inp.current_position = [0.0, 0.0, 0.5]
+    inp.current_velocity = [0.0, -2.2, -0.5]
+    inp.current_acceleration = [0.0, 2.5, -0.5]
+
+    inp.target_position = [-5.0, -2.0, -3.5]
+    inp.target_velocity = [0.0, -0.5, -2.0]
+    inp.target_acceleration = [0.0, 0.0, 0.5]
+
+    inp.max_velocity = [3.0, 1.0, 3.0]
+    inp.max_acceleration = [3.0, 2.0, 1.0]
+    inp.max_jerk = [4.0, 3.0, 2.0]
+
+    # inp.minimum_duration = 5.0
+
 
     # otg = Reflexxes(inp.degrees_of_freedom, 0.005)
-    otg = Ruckig(inp.degrees_of_freedom, 0.005)
+    otg = Ruckig(inp.degrees_of_freedom, 0.001)
 
     out_list = walk_through_trajectory(otg, inp)
 
@@ -55,4 +58,4 @@ if __name__ == '__main__':
     print(f'Calculation duration: {out_list[0].calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {out_list[0].trajectory.duration:0.4f} [s]')
 
-    Plotter.plot_trajectory('otg_trajectory.png', otg, inp, out_list)
+    Plotter.plot_trajectory('otg_trajectory.png', otg, inp, out_list, plot_jerk=False)

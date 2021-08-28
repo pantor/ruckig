@@ -50,7 +50,7 @@ When using CMake, the Python module can be built using the `BUILD_PYTHON_MODULE`
 
 ## Tutorial
 
-Furthermore, we will explain the basics to get started with online generated trajectories within your application. Some working examples can be found in the `examples` directory, for example `position.cpp` for C++. A time-optimal trajectory for a single degree of freedom is shown in the figure below.
+Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a collection of examples (in the `examples` directory) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. We also added plots for the resulting trajectories of all examples. Let's get started!
 
 ![Trajectory Profile](https://github.com/pantor/ruckig/raw/master/doc/example_profile.png?raw=true)
 
@@ -87,6 +87,7 @@ Given all input and output resources, we can iterate over the trajectory at each
 ```.cpp
 while (ruckig.update(input, output) == Result::Working) {
   // Make use of the new state here!
+  // e.g. robot->setJointPositions(output.new_position);
 
   input.current_position = output.new_position;
   input.current_velocity = output.new_velocity;

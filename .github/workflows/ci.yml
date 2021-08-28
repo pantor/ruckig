@@ -46,16 +46,36 @@ jobs:
     - name: Run Examples (Unix)
       if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
       run: |
-        ./build/example-position > /dev/null
-        python3 ./examples/position.py > /dev/null
-        python3 ./examples/position_offline.py > /dev/null
+        ./build/example-1_position > /dev/null
+        ./build/example-2_position > /dev/null
+        ./build/example-5_position > /dev/null
+        ./build/example-6_position > /dev/null
+        ./build/example-7_position > /dev/null
+        ./build/example-8_position > /dev/null
+        python3 ./examples/1_position.py > /dev/null
+        python3 ./examples/2_position.py > /dev/null
+        python3 ./examples/5_position.py > /dev/null
+        python3 ./examples/6_position.py > /dev/null
+        python3 ./examples/7_position.py > /dev/null
+        python3 ./examples/8_position.py > /dev/null
 
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        .\build\example-position.exe > $null
-        python3 .\examples\position.py > $null
-        python3 .\examples\position_offline.py > $null
+        .\build\example-1_position.exe > $null
+        .\build\example-2_position.exe > $null
+        .\build\example-4_position.exe > $null
+        .\build\example-5_position.exe > $null
+        .\build\example-6_position.exe > $null
+        .\build\example-7_position.exe > $null
+        .\build\example-8_position.exe > $null
+        python3 .\examples\1_position.py > $null
+        python3 .\examples\2_position.py > $null
+        python3 .\examples\4_position.py > $null
+        python3 .\examples\5_position.py > $null
+        python3 .\examples\6_position.py > $null
+        python3 .\examples\7_position.py > $null
+        python3 .\examples\8_position.py > $null
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'

@@ -29,7 +29,12 @@ class Plotter:
             global_max = np.max([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof]])
             global_min = np.min([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof]])
 
+            if plot_jerk:
+                global_max = max(global_max, np.max(dddqaxis[:, dof]))
+                global_min = min(global_min, np.min(dddqaxis[:, dof]))
+
             plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
+            plt.ylabel(f'DoF {dof+1}')
             plt.plot(taxis, qaxis[:, dof], label=f'Position {dof+1}')
             plt.plot(taxis, dqaxis[:, dof], label=f'Velocity {dof+1}')
             plt.plot(taxis, ddqaxis[:, dof], label=f'Acceleration {dof+1}')

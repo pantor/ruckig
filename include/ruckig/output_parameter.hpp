@@ -10,13 +10,22 @@ namespace ruckig {
 
 //! Output type of the OTG
 template<size_t DOFs>
-struct OutputParameter {
+class OutputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+
+public:
     size_t degrees_of_freedom;
 
+    //! Current trajectory
+    Trajectory<DOFs> trajectory;
+
+    // Current kinematic state
     Vector<double> new_position, new_velocity, new_acceleration;
 
-    //! Index of section between intermediate positions (not yet used)
+    //! Current time on trajectory
+    double time;
+
+    //! Current index of intermediate position (not yet used)
     size_t intermediate_section {0};
 
     //! Was a new trajectory calculation performed in the last cycle?
@@ -27,12 +36,6 @@ struct OutputParameter {
 
     //! Computational duration of the last update call
     double calculation_duration; // [µs]
-
-    //! Current trajectory
-    Trajectory<DOFs> trajectory;
-
-    //! Current time on trajectory
-    double time;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     OutputParameter(): degrees_of_freedom(DOFs) { }

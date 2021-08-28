@@ -69,13 +69,13 @@ public:
     Synchronization synchronization {Synchronization::Time};
     DurationDiscretization duration_discretization {DurationDiscretization::Continuous};
 
-    //! Current state
+    // Current state
     Vector<double> current_position, current_velocity, current_acceleration;
 
-    //! Target state
+    // Target state
     Vector<double> target_position, target_velocity, target_acceleration;
 
-    //! Kinematic constraints
+    // Kinematic constraints
     Vector<double> max_velocity, max_acceleration, max_jerk;
     std::optional<Vector<double>> min_velocity, min_acceleration;
 
