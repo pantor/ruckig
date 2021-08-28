@@ -47,35 +47,33 @@ jobs:
       if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
       run: |
         ./build/example-1_position > /dev/null
-        ./build/example-2_position > /dev/null
-        ./build/example-5_position > /dev/null
-        ./build/example-6_position > /dev/null
-        ./build/example-7_position > /dev/null
-        ./build/example-8_position > /dev/null
+        ./build/example-2_position_offline > /dev/null
+        ./build/example-5_velocity > /dev/null
+        ./build/example-6_stop > /dev/null
+        ./build/example-7_minimum_duration > /dev/null
+        ./build/example-8_dynamic_dofs > /dev/null
         python3 ./examples/1_position.py > /dev/null
-        python3 ./examples/2_position.py > /dev/null
-        python3 ./examples/5_position.py > /dev/null
-        python3 ./examples/6_position.py > /dev/null
-        python3 ./examples/7_position.py > /dev/null
-        python3 ./examples/8_position.py > /dev/null
+        python3 ./examples/2_position_offline.py > /dev/null
+        python3 ./examples/5_velocity.py > /dev/null
+        python3 ./examples/6_stop.py > /dev/null
+        python3 ./examples/7_minimum_duration.py > /dev/null
+        python3 ./examples/8_dynamic_dofs.py > /dev/null
 
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         .\build\example-1_position.exe > $null
-        .\build\example-2_position.exe > $null
-        .\build\example-4_position.exe > $null
-        .\build\example-5_position.exe > $null
-        .\build\example-6_position.exe > $null
-        .\build\example-7_position.exe > $null
-        .\build\example-8_position.exe > $null
+        .\build\example-2_position_offline.exe > $null
+        .\build\example-5_velocity.exe > $null
+        .\build\example-6_stop.exe > $null
+        .\build\example-7_minimum_duration.exe > $null
+        .\build\example-8_dynamic_dofs.exe > $null
         python3 .\examples\1_position.py > $null
-        python3 .\examples\2_position.py > $null
-        python3 .\examples\4_position.py > $null
-        python3 .\examples\5_position.py > $null
-        python3 .\examples\6_position.py > $null
-        python3 .\examples\7_position.py > $null
-        python3 .\examples\8_position.py > $null
+        python3 .\examples\2_position_offline.py > $null
+        python3 .\examples\5_velocity.py > $null
+        python3 .\examples\6_stop.py > $null
+        python3 .\examples\7_minimum_duration.py > $null
+        python3 .\examples\8_dynamic_dofs.py > $null
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
