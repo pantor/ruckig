@@ -136,7 +136,7 @@ On top of the current state, target state, and constraints, Ruckig allows for a 
 - Different synchronization behaviors (i.a. phase, time, or no synchonization) are implemented.
 - The trajectory duration might be constrained to a multiple of the control cycle. This way, the *exact* state can be reached at a control loop execution.
 
-We refer to the [API documentation](https://pantor.github.io/ruckig/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
+We refer to the [API documentation](https://docs.ruckig.com/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
 
 
 ### Input Validation
@@ -189,7 +189,7 @@ std::array<double, DOFs> independent_min_durations; // Time-optimal profile for 
 <...> at_time(double time); // Get the kinematic state of the trajectory at a given time
 <...> get_position_extrema(); // Returns information about the position extrema and their times
 ```
-Again, we refer to the [API documentation](https://pantor.github.io/ruckig/) for the exact signatures.
+Again, we refer to the [API documentation](https://docs.ruckig.com) for the exact signatures.
 
 
 ### Dynamic Number of Degrees of Freedom
