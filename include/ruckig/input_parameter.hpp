@@ -10,7 +10,7 @@
 
 namespace ruckig {
 
-//! Result type of the OTGs update function
+//! Result type of Ruckig's update function
 enum Result {
     Working = 0, ///< The trajectory is calculated normally
     Finished = 1, ///< Trajectory has reached its final position
@@ -40,7 +40,7 @@ enum class DurationDiscretization {
 };
 
 
-//! Input type of the OTG
+//! Input type of Ruckig
 template<size_t DOFs>
 class InputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
@@ -79,7 +79,7 @@ public:
     Vector<double> max_velocity, max_acceleration, max_jerk;
     std::optional<Vector<double>> min_velocity, min_acceleration;
 
-    //! Intermediate waypoints (not yet used)
+    //! Intermediate waypoints (only in Ruckig Pro)
     std::vector<Vector<double>> intermediate_positions;
 
     //! Is the DoF considered for calculation?
@@ -94,7 +94,7 @@ public:
     //! Optional minimum trajectory duration
     std::optional<double> minimum_duration;
 
-    //! Optional duration [s] after which the trajectory calculation is (softly) interrupted (not yet used)
+    //! Optional duration [s] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
     std::optional<double> interrupt_calculation_duration;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>

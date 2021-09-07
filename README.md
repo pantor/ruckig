@@ -82,6 +82,17 @@ input.max_jerk = {4.0, ...};
 OutputParameter<6> output; // Number DoFs
 ```
 
+The Ruckig Pro Version also supports a list of intermediate waypoints
+```.cpp
+input.intermediate_positions = {
+  {0.3, ...},
+  {0.5, ...},
+  {-0.2, ...}
+}
+```
+Then, the constructor of the OutputParameter needs the maximum number of intermediate waypoints to allocate the necessary memory beforehand.
+
+
 Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
 
 ```.cpp
@@ -109,6 +120,8 @@ Vector current_position;
 Vector current_velocity; // Initialized to zero
 Vector current_acceleration; // Initialized to zero
 
+std::vector<Vector> intermediate_positions; // only in Ruckig Pro
+
 Vector target_position;
 Vector target_velocity; // Initialized to zero
 Vector target_acceleration; // Initialized to zero
@@ -122,6 +135,7 @@ std::optional<Vector> min_acceleration; // If not given, the negative maximum ac
 
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
+std::optional<double> interrupt_calculation_duration; // only in Ruckig Pro
 
 ControlInterface control_interface; // The default position interface controls the full kinematic state.
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
@@ -137,6 +151,8 @@ On top of the current state, target state, and constraints, Ruckig allows for a 
 - The trajectory duration might be constrained to a multiple of the control cycle. This way, the *exact* state can be reached at a control loop execution.
 
 We refer to the [API documentation](https://docs.ruckig.com/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
+
+When using *intermediate positions*, the underlying calculation switches to an iterative process for optimizing the trajectory duration. Therefore setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum kinematic limits are supported when using intermediate positions.
 
 
 ### Input Validation
@@ -175,6 +191,7 @@ Vector new_velocity;
 Vector new_acceleration;
 
 bool new_calculation; // Whether a new calculation was performed in the last cycle
+bool was_calculation_interrupted; // Was the trajectory calculation interrupted? (only in Ruckig Pro)
 double calculation_duration; // Duration of the calculation in the last cycle [µs]
 
 Trajectory trajectory; // The current trajectory

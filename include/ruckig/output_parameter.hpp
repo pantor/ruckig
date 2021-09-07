@@ -8,7 +8,7 @@
 
 namespace ruckig {
 
-//! Output type of the OTG
+//! Output type of Ruckig
 template<size_t DOFs>
 class OutputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
@@ -25,13 +25,13 @@ public:
     //! Current time on trajectory
     double time;
 
-    //! Current index of intermediate position (not yet used)
+    //! Current index of intermediate position (only in Ruckig Pro)
     size_t intermediate_section {0};
 
     //! Was a new trajectory calculation performed in the last cycle?
     bool new_calculation {false};
 
-    //! Was the trajectory calculation interrupted? (not yet used)
+    //! Was the trajectory calculation interrupted? (only in Ruckig Pro)
     bool was_calculation_interrupted {false};
 
     //! Computational duration of the last update call
