@@ -8,3 +8,7 @@
 ### Python
 
 \include 5_velocity.py
+
+### Output Trajectory
+
+\image html 5_trajectory.png width=600px

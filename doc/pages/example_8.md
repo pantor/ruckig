@@ -8,3 +8,7 @@
 ### Python
 
 \include 8_dynamic_dofs.py
+
+### Output Trajectory
+
+\image html 8_trajectory.png width=600px

@@ -8,3 +8,7 @@
 ### Python
 
 \include 1_position.py
+
+### Output Trajectory
+
+\image html 1_trajectory.png width=600px

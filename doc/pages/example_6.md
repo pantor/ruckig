@@ -8,3 +8,7 @@
 ### Python
 
 \include 6_stop.py
+
+### Output Trajectory
+
+\image html 6_trajectory.png width=600px

@@ -8,3 +8,7 @@
 ### Python
 
 \include 4_waypoints_online.py
+
+### Output Trajectory
+
+\image html 4_trajectory.png width=600px

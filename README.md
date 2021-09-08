@@ -1,8 +1,7 @@
 <div align="center">
   <h1 align="center">Ruckig</h1>
   <h3 align="center">
-    Instantaneous Motion Generation for Robots and Machines.<br>
-    Real-time. Jerk-constrained. Time-optimal.
+    Instantaneous Motion Generation for Robots and Machines.
   </h3>
 </div>
 <p align="center">
@@ -23,7 +22,7 @@
   </a>
 </p>
 
-Ruckig calculates a time-optimal trajectory to a *target* waypoint with position, velocity, and acceleration starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Ruckig is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator for arbitrary target states and even supports directional velocity and acceleration limits, while also being faster on top. For robotics and machining applications, Ruckig allows both instant reactions to unforeseen events as well as simple offline trajectory planning.
+Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input. Ruckig calculates a trajectory to a *target* waypoint (with position, velocity, and acceleration) starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Besides the target state, the Ruckig *Pro Version* allows to define intermediate positions for waypoint following. For state-to-state motions, Ruckig guarantees a time-optimal solution. With intermediate waypoints, Ruckig calculates the path and its time parametrization jointly, resulting in significantly faster trajectories compared to traditional methods. The Ruckig *Community Version* is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator for arbitrary target states and even supports directional velocity and acceleration limits, while also being faster on top.
 
 More information can be found in the corresponding paper [Jerk-limited Real-time Trajectory Generation with Arbitrary Target States](https://arxiv.org/abs/2105.04830), accepted for the *Robotics: Science and Systems (RSS), 2021* conference.
 
@@ -41,7 +40,7 @@ make
 
 To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`.
 
-Ruckig is also available as a Python module, in particular for development or debugging purposes. It can be installed from [PyPI](https://pypi.org/project/ruckig/) via
+Ruckig is also available as a Python module, in particular for development or debugging purposes. The Ruckig *Community Version* can be installed from [PyPI](https://pypi.org/project/ruckig/) via
 ```bash
 pip install ruckig
 ```
@@ -50,7 +49,7 @@ When using CMake, the Python module can be built using the `BUILD_PYTHON_MODULE`
 
 ## Tutorial
 
-Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a collection of examples (in the `examples` directory) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. We also added plots for the resulting trajectories of all examples. Let's get started!
+Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a [collection of examples](https://docs.ruckig.com/pages.html) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. We also added plots for the resulting trajectories of all examples. Let's get started!
 
 ![Trajectory Profile](https://github.com/pantor/ruckig/raw/master/doc/example_profile.png?raw=true)
 
@@ -82,15 +81,15 @@ input.max_jerk = {4.0, ...};
 OutputParameter<6> output; // Number DoFs
 ```
 
-The Ruckig Pro Version also supports a list of intermediate waypoints
+The Ruckig *Pro Version* also supports a list of intermediate positions
 ```.cpp
 input.intermediate_positions = {
   {0.3, ...},
   {0.5, ...},
   {-0.2, ...}
-}
+};
 ```
-Then, the constructor of the OutputParameter needs the maximum number of intermediate waypoints to allocate the necessary memory beforehand.
+Then, the constructor of the OutputParameter requires a maximum number of intermediate waypoints to allocate the necessary memory beforehand.
 
 
 Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
@@ -152,7 +151,7 @@ On top of the current state, target state, and constraints, Ruckig allows for a 
 
 We refer to the [API documentation](https://docs.ruckig.com/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
 
-When using *intermediate positions*, the underlying calculation switches to an iterative process for optimizing the trajectory duration. Therefore setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum kinematic limits are supported when using intermediate positions.
+When using *intermediate positions*, the underlying calculation switches to an iterative process for optimizing the trajectory duration. Therefore setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum kinematic limits or minimum durations are supported when using intermediate positions.
 
 
 ### Input Validation
@@ -251,7 +250,7 @@ Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos
 - Doctest v2.4 (only for testing)
 - Pybind11 v2.6 (only for python wrapper)
 
-If you still need to use C++11, you can patch Ruckig by calling `sh patch-c++11.sh`. Note that this will result in a performance drop of a few percent. Moreover, the Python module is not supported.
+If you still need to use C++11, you can patch the Ruckig *Community Version* by calling `sh patch-c++11.sh`. Note that this will result in a performance drop of a few percent. Moreover, the Python module is not supported.
 
 
 ## Users
