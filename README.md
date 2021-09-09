@@ -238,9 +238,14 @@ The current test suite validates over 5.000.000.000 random trajectories. The num
 
 ## Benchmark
 
-We find that Ruckig is more than twice as fast as Reflexxes Type IV and well-suited for control cycles as low as half a millisecond.
+We find that Ruckig is more than twice as fast as Reflexxes Type IV for state-to-state motions and well-suited for control cycles as low as 250 microseconds.
 
 ![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/benchmark.png?raw=true)
+
+For trajectories with intermediate waypoints, we compare Ruckig to [Toppra](https://github.com/hungpham2511/toppra), a state-of-the-art library for robotic motion planning. Ruckig is able to improve the trajectory duration on average by around 10%, as the path planning and time parametrization are calculated jointly. Moreover, Ruckig is real-time capable and supports jerk-constraints.
+
+![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/ruckig_toppra_example.png?raw=true)
+
 
 
 ## Development
@@ -253,9 +258,8 @@ Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos
 If you still need to use C++11, you can patch the Ruckig *Community Version* by calling `sh patch-c++11.sh`. Note that this will result in a performance drop of a few percent. Moreover, the Python module is not supported.
 
 
-## Users
+## Used By
 
-Ruckig is used by:
 - [CoppeliaSim](https://www.coppeliarobotics.com/) in their upcoming release.
 - [MoveIt 2](https://github.com/ros-planning/moveit2/pull/571) for trajectory smoothing.
 - [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Restructered Text for usage on PLCs.
