@@ -11,13 +11,13 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 if __name__ == '__main__':
     # Create instances: the Ruckig OTG as well as input and output parameters
-    otg = Ruckig(3, 0.01)
-    inp = InputParameter(3)
-    out = OutputParameter(3)
+    otg = Ruckig(3, 0.01)  # DoFs, control cycle rate
+    inp = InputParameter(3)  # DoFs
+    out = OutputParameter(3, 10)  # DoFs, Maximum number of intermediate waypoints for memory allocation
 
-    inp.current_position = [0.2, 0, -1]
+    inp.current_position = [0.2, 0, -0.3]
     inp.current_velocity = [0, 0.2, 0]
-    inp.current_acceleration = [0, 1, 0]
+    inp.current_acceleration = [0, 0.6, 0]
 
     inp.intermediate_positions = [
         [1.4, -1.6, 1.0],
@@ -26,15 +26,15 @@ if __name__ == '__main__':
         [0.8, 1.8, -0.1]
     ]
 
-    inp.target_position = [0, -1, -1]
-    inp.target_velocity = [0.2, 0, 0]
+    inp.target_position = [0.5, 1, 0]
+    inp.target_velocity = [0.2, 0, 0.3]
     inp.target_acceleration = [0, 0.1, -0.1]
 
-    inp.max_velocity = [2, 1, 1]
-    inp.max_acceleration = [0.2, 2, 2]
-    inp.max_jerk = [3, 4, 5]
+    inp.max_velocity = [1, 2, 1]
+    inp.max_acceleration = [3, 2, 2]
+    inp.max_jerk = [6, 10, 20]
 
-    inp.interrupt_calculation_duration = 0.0008  # [s]
+    inp.interrupt_calculation_duration = 500  # [µs]
 
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))

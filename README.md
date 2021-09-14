@@ -134,7 +134,7 @@ std::optional<Vector> min_acceleration; // If not given, the negative maximum ac
 
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
-std::optional<double> interrupt_calculation_duration; // only in Ruckig Pro
+std::optional<double> interrupt_calculation_duration; // [µs], only in Ruckig Pro
 
 ControlInterface control_interface; // The default position interface controls the full kinematic state.
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
