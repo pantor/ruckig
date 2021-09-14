@@ -3,7 +3,7 @@
 <package format="2">
   <name>ruckig</name>
   <version>0.4.0</version>
-  <description>Instantaneous Motion Generation. Real-time. Jerk-constrained. Time-optimal.</description>
+  <description>Instantaneous Motion Generation for Robots and Machines.</description>
   <author>Lars Berscheid</author>
   <maintainer email="lars.berscheid@kit.edu">Lars Berscheid</maintainer>
   <license>MIT</license>

@@ -70,7 +70,7 @@ class CMakeBuild(build_ext):
 setup(
     name='ruckig',
     version='0.4.0',
-    description='Instantaneous Motion Generation. Real-time. Jerk-constrained. Time-optimal.',
+    description='Instantaneous Motion Generation for Robots and Machines.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Lars Berscheid',
