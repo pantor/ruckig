@@ -159,8 +159,13 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     check_array(new_velocity, input.target_velocity);
     check_array(new_acceleration, input.target_acceleration);
 
-    output.trajectory.at_time(2.0, new_position, new_velocity, new_acceleration);
+    size_t new_section;
+    output.trajectory.at_time(2.0, new_position, new_velocity, new_acceleration, new_section);
     check_array(new_position, {0.5, -2.6871268303, 1.0});
+    CHECK( new_section == 0 );
+
+    output.trajectory.at_time(5.0, new_position, new_velocity, new_acceleration, new_section);
+    CHECK( new_section == 1 );
 
     auto independent_min_durations = output.trajectory.get_independent_min_durations();
     CHECK( independent_min_durations[0] == doctest::Approx(3.1748021039) );

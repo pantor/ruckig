@@ -496,24 +496,24 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
         } else {
             // There is no blocked interval when vf==0 && af==0, so return after first found profile
             time_all_vel(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_none(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_acc0(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_acc1(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
 
             time_all_vel(profile, vMin, vMax, aMin, aMax, -jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_none(profile, vMin, vMax, aMin, aMax, -jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_acc0(profile, vMin, vMax, aMin, aMax, -jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_acc1(profile, vMin, vMax, aMin, aMax, -jMax);
-            if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+            if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
             time_acc0_acc1(profile, vMin, vMax, aMin, aMax, -jMax);
         }
 
@@ -532,19 +532,19 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
 
     if (valid_profile_counter == 0) {
         time_none_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
         time_none_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
         time_acc0_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
         time_acc0_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
         time_vel_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
         time_vel_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
-        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
         time_acc1_vel_two_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax);
-        if (valid_profile_counter > 0) return Block::calculate_block(block, valid_profiles, valid_profile_counter);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
         time_acc1_vel_two_step(profile, _vMin, _vMax, _aMin, _aMax, -_jMax);
     }
 

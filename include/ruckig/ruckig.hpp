@@ -174,7 +174,7 @@ public:
         }
 
         output.time += delta_time;
-        output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration);
+        output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration, output.new_section);
 
         const auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;

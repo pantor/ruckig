@@ -421,7 +421,7 @@ public:
     //! Get the kinematic state at a given time
 
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
-    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
+    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration, size_t& new_section) const {
         if constexpr (DOFs == 0) {
             if (degrees_of_freedom != new_position.size() || degrees_of_freedom != new_velocity.size() || degrees_of_freedom != new_acceleration.size()) {
                 throw std::runtime_error("[ruckig] mismatch in degrees of freedom (vector size).");
@@ -430,12 +430,14 @@ public:
 
         if (time >= duration) {
             // Keep constant acceleration
+            new_section = 1;
             for (size_t dof = 0; dof < profiles.size(); ++dof) {
                 std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(time - duration, profiles[dof].pf, profiles[dof].vf, profiles[dof].af, 0);
             }
             return;
         }
 
+        new_section = 0;
         for (size_t dof = 0; dof < profiles.size(); ++dof) {
             const Profile& p = profiles[dof];
 
@@ -470,6 +472,12 @@ public:
 
             std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, p.p[index], p.v[index], p.a[index], p.j[index]);
         }
+    }
+
+    //! Get the kinematic state and current section at a given time
+    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
+        size_t new_section;
+        at_time(time, new_position, new_velocity, new_acceleration, new_section);
     }
 
     //! Get the duration of the (synchronized) trajectory

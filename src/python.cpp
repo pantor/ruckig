@@ -64,18 +64,22 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_property_readonly("intermediate_durations", &Trajectory<DynamicDOFs>::get_intermediate_durations)
         .def_property_readonly("independent_min_durations", &Trajectory<DynamicDOFs>::get_independent_min_durations)
         .def_property_readonly("position_extrema", &Trajectory<DynamicDOFs>::get_position_extrema)
-        .def("at_time", [](const Trajectory<DynamicDOFs>& traj, double time) {
+        .def("at_time", [](const Trajectory<DynamicDOFs>& traj, double time, bool return_section=false) {
             std::vector<double> new_position(traj.degrees_of_freedom), new_velocity(traj.degrees_of_freedom), new_acceleration(traj.degrees_of_freedom);
-            traj.at_time(time, new_position, new_velocity, new_acceleration);
+            size_t new_section;
+            traj.at_time(time, new_position, new_velocity, new_acceleration, new_section);
+            if (return_section) {
+                return py::make_tuple(new_position, new_velocity, new_acceleration, new_section);
+            }
             return py::make_tuple(new_position, new_velocity, new_acceleration);
-        })
+        }, "time"_a, "return_section"_a=false)
         .def("get_first_time_at_position", [](const Trajectory<DynamicDOFs>& traj, size_t dof, double position) -> py::object {
             double time;
             if (traj.get_first_time_at_position(dof, position, time)) {
                 return py::cast(time);
             }
             return py::none();
-        });
+        }, "dof"_a, "position"_a);
 
     py::class_<InputParameter<DynamicDOFs>>(m, "InputParameter")
         .def(py::init<size_t>(), "dofs"_a)
@@ -103,11 +107,11 @@ limited by velocity, acceleration, and jerk constraints.";
 
     py::class_<OutputParameter<DynamicDOFs>>(m, "OutputParameter")
         .def(py::init<size_t>(), "dofs"_a)
-        .def_readonly("intermediate_section", &OutputParameter<DynamicDOFs>::intermediate_section)
         .def_readonly("degrees_of_freedom", &OutputParameter<DynamicDOFs>::degrees_of_freedom)
         .def_readonly("new_position", &OutputParameter<DynamicDOFs>::new_position)
         .def_readonly("new_velocity", &OutputParameter<DynamicDOFs>::new_velocity)
         .def_readonly("new_acceleration", &OutputParameter<DynamicDOFs>::new_acceleration)
+        .def_readonly("new_section", &OutputParameter<DynamicDOFs>::new_section)
         .def_readonly("trajectory", &OutputParameter<DynamicDOFs>::trajectory)
         .def_readonly("time", &OutputParameter<DynamicDOFs>::time)
         .def_readonly("new_calculation", &OutputParameter<DynamicDOFs>::new_calculation)
