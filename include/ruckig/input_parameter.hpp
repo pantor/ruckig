@@ -35,8 +35,8 @@ enum class Synchronization {
 };
 
 enum class DurationDiscretization {
-    Continuous, ///< Every trajectory duration is allowed (Default)
-    Discrete, ///< The trajectory duration must be a multiple of the control cycle
+    Continuous, ///< Every trajectory synchronization duration is allowed (Default)
+    Discrete, ///< The trajectory synchronization duration must be a multiple of the control cycle
 };
 
 
@@ -85,11 +85,11 @@ public:
     //! Is the DoF considered for calculation?
     Vector<bool> enabled;
 
-    //! Per-DoF control_interface (overwrites global synchronization, not yet used)
-    // std::optional<Vector<ControlInterface>> per_dof_control_interface;
+    //! Per-DoF control_interface (overwrites global control_interface)
+    std::optional<Vector<ControlInterface>> per_dof_control_interface;
 
-    //! Per-DoF synchronization (overwrites global synchronization, not yet used)
-    // std::optional<Vector<Synchronization>> per_dof_synchronization;
+    //! Per-DoF synchronization (overwrites global synchronization)
+    std::optional<Vector<Synchronization>> per_dof_synchronization;
 
     //! Optional minimum trajectory duration
     std::optional<double> minimum_duration;
@@ -137,6 +137,8 @@ public:
             || control_interface != rhs.control_interface
             || synchronization != rhs.synchronization
             || duration_discretization != rhs.duration_discretization
+            || per_dof_control_interface != rhs.per_dof_control_interface
+            || per_dof_synchronization != rhs.per_dof_synchronization
         );
     }
 

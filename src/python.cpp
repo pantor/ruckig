@@ -100,6 +100,8 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("control_interface", &InputParameter<DynamicDOFs>::control_interface)
         .def_readwrite("synchronization", &InputParameter<DynamicDOFs>::synchronization)
         .def_readwrite("duration_discretization", &InputParameter<DynamicDOFs>::duration_discretization)
+        .def_readwrite("per_dof_control_interface", &InputParameter<DynamicDOFs>::per_dof_control_interface)
+        .def_readwrite("per_dof_synchronization", &InputParameter<DynamicDOFs>::per_dof_synchronization)
         .def_readwrite("minimum_duration", &InputParameter<DynamicDOFs>::minimum_duration)
         .def_readwrite("interrupt_calculation_duration", &InputParameter<DynamicDOFs>::interrupt_calculation_duration)
         .def(py::self != py::self)

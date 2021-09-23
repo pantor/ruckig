@@ -139,6 +139,9 @@ std::optional<double> interrupt_calculation_duration; // [µs], only in Ruckig P
 ControlInterface control_interface; // The default position interface controls the full kinematic state.
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
 DurationDiscretization duration_discretization; // Whether the duration should be a discrete multiple of the control cycle (off by default)
+
+std::optional<Vector<ControlInterface>> per_dof_control_interface; // Sets the control interface for each DoF individually, overwrites global control_interface
+std::optional<Vector<Synchronization>> per_dof_synchronization; // Sets the synchronization for each DoF individually, overwrites global synchronization
 ```
 
 On top of the current state, target state, and constraints, Ruckig allows for a few more advanced settings:

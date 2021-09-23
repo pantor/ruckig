@@ -242,6 +242,82 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( output.trajectory.get_duration() == doctest::Approx(12.0) );
 }
 
+TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
+    Ruckig<3, true> otg {0.005};
+    InputParameter<3> input;
+    Trajectory<3> traj;
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {0.0, 0.3, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+
+    auto result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(4.0) );
+
+    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    traj.at_time(2.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, {0.5, -2.6871268303, 1.0});
+
+
+    input.control_interface = ControlInterface::Velocity;
+
+    result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(1.095445115) );
+
+    traj.at_time(1.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, {0.0, -1.8641718534, 0.0});
+
+
+    input.per_dof_control_interface = {ControlInterface::Position, ControlInterface::Velocity, ControlInterface::Position};
+
+    result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(4.0) );
+
+    traj.at_time(2.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, {0.5, -1.8528486838, 1.0});
+
+
+    input.per_dof_synchronization = {Synchronization::Time, Synchronization::None, Synchronization::Time};
+
+    result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(4.0) );
+
+    traj.at_time(2.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, {0.5, -1.5643167673, 1.0});
+
+
+    input.control_interface = ControlInterface::Position;
+    input.per_dof_control_interface = std::nullopt;
+    input.per_dof_synchronization = {Synchronization::None, Synchronization::Time, Synchronization::Time};
+
+
+    result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(4.0) );
+
+    traj.at_time(2.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, {0.7482143874, -2.6871268303, 1.0});
+
+
+    auto independent_min_durations = traj.get_independent_min_durations();
+    traj.at_time(independent_min_durations[0], new_position, new_velocity, new_acceleration);
+    CHECK( new_position[0] == doctest::Approx(input.target_position[0]) );
+    traj.at_time(independent_min_durations[1], new_position, new_velocity, new_acceleration);
+    CHECK( new_position[1] == doctest::Approx(-3.0890156397) );
+    traj.at_time(independent_min_durations[2], new_position, new_velocity, new_acceleration);
+    CHECK( new_position[2] == doctest::Approx(input.target_position[2]) );
+}
+
 TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
     Ruckig<DynamicDOFs, true> otg {3, 0.005};
     InputParameter<DynamicDOFs> input {3};
