@@ -329,12 +329,12 @@ public:
                 profiles[dof] = blocks[dof].p_min;
             }
         }
-        if (std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](auto s){ return s == Synchronization::None; })) {
+        if (std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::None; })) {
             return Result::Working;
         }
 
         // Phase Synchronization
-        if (std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](auto s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](auto s){ return s == ControlInterface::Position; })) {
+        if (std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
             if (is_phase_synchronizable(inp, inp.max_velocity, inp_min_velocity, inp.max_acceleration, inp_min_acceleration, inp.max_jerk, profiles[limiting_dof].direction, limiting_dof, new_max_velocity, new_min_velocity, new_max_acceleration, new_min_acceleration, new_max_jerk)) {
                 bool found_time_synchronization {true};
                 for (size_t dof = 0; dof < profiles.size(); ++dof) {
@@ -366,7 +366,7 @@ public:
                     p.limits = profiles[limiting_dof].limits; // After check method call to set correct limits
                 }
 
-                if (found_time_synchronization && std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](auto s){ return s == Synchronization::Phase || s == Synchronization::None; })) {
+                if (found_time_synchronization && std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase || s == Synchronization::None; })) {
                     return Result::Working;
                 }
             }
