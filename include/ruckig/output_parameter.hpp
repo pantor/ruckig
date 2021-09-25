@@ -28,6 +28,9 @@ public:
     //! Index of the current section between two intermediate positions (only relevant in Ruckig Pro)
     size_t new_section {0};
 
+    //! Was an intermediate position reached in the last cycle? (only relevant in Ruckig Pro)
+    bool did_section_change {false};
+
     //! Was a new trajectory calculation performed in the last cycle?
     bool new_calculation {false};
 
@@ -45,6 +48,17 @@ public:
         new_position.resize(dofs);
         new_velocity.resize(dofs);
         new_acceleration.resize(dofs);
+    }
+
+    void pass_to_input(InputParameter<DOFs>& input) const {
+        input.current_position = new_position;
+        input.current_velocity = new_velocity;
+        input.current_acceleration = new_acceleration;
+
+        // Remove first intermediate waypoint if section did change
+        if (did_section_change && !input.intermediate_positions.empty()) {
+            input.intermediate_positions.erase(input.intermediate_positions.begin());
+        }
     }
 };
 

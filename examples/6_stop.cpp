@@ -44,9 +44,7 @@ int main() {
             input.max_jerk = {12.0, 10.0, 8.0};
         }
 
-        input.current_position = output.new_position;
-        input.current_velocity = output.new_velocity;
-        input.current_acceleration = output.new_acceleration;
+        output.pass_to_input(input);
     }
 
     std::cout << "Stop trajectory duration: " << output.trajectory.get_duration() << " [s]." << std::endl;

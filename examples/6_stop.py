@@ -51,9 +51,7 @@ if __name__ == '__main__':
             inp.target_acceleration = [0.0, 0.0, 0.0]
             inp.max_jerk = [12.0, 10.0, 8.0]
 
-        inp.current_position = out.new_position
-        inp.current_velocity = out.new_velocity
-        inp.current_acceleration = out.new_acceleration
+        out.pass_to_input(inp)
 
         if not first_output:
             first_output = copy(out)

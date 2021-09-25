@@ -41,9 +41,7 @@ if __name__ == '__main__':
 
         print('\t'.join([f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
 
-        inp.current_position = out.new_position
-        inp.current_velocity = out.new_velocity
-        inp.current_acceleration = out.new_acceleration
+        out.pass_to_input(inp)
 
         if not first_output:
             first_output = copy(out)

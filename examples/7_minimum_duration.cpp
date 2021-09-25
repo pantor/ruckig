@@ -33,9 +33,7 @@ int main() {
         auto& p = output.new_position;
         std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << " " << std::endl;
 
-        input.current_position = output.new_position;
-        input.current_velocity = output.new_velocity;
-        input.current_acceleration = output.new_acceleration;
+        output.pass_to_input(input);
     }
 
     std::cout << "Trajectory duration: " << output.trajectory.get_duration() << " [s]." << std::endl;

@@ -99,13 +99,11 @@ while (ruckig.update(input, output) == Result::Working) {
   // Make use of the new state here!
   // e.g. robot->setJointPositions(output.new_position);
 
-  input.current_position = output.new_position;
-  input.current_velocity = output.new_velocity;
-  input.current_acceleration = output.new_acceleration;
+  output.pass_to_input(input); // Don't forget this!
 }
 ```
 
-During the update step, you'll need to copy the new kinematic state into the current state. If the current state is not the expected, pre-calculated trajectory, ruckig will calculate a new trajectory with the novel input. When the trajectory has reached the target state, the `update` function will return `Result::Finished`.
+Within the control loop, you need to update the *current state* of the input parameter according to the calculated trajectory. Therefore, the `pass_to_input` method copies the new kinematic state of the output to the current kinematic state of the input parameter. If (in the next step) the current state is not the expected, pre-calculated trajectory, Ruckig will calculate a new trajectory based on the novel input. When the trajectory has reached the target state, the `update` function will return `Result::Finished`.
 
 
 ### Input Parameter
@@ -154,7 +152,7 @@ On top of the current state, target state, and constraints, Ruckig allows for a 
 
 We refer to the [API documentation](https://docs.ruckig.com/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
 
-When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum kinematic limits or minimum durations are supported when using intermediate positions.
+When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum kinematic limits, minimum, or discrete durations are supported when using intermediate positions.
 
 
 ### Input Validation

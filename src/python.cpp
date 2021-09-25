@@ -114,11 +114,13 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("new_velocity", &OutputParameter<DynamicDOFs>::new_velocity)
         .def_readonly("new_acceleration", &OutputParameter<DynamicDOFs>::new_acceleration)
         .def_readonly("new_section", &OutputParameter<DynamicDOFs>::new_section)
+        .def_readonly("did_section_change", &OutputParameter<DynamicDOFs>::did_section_change)
         .def_readonly("trajectory", &OutputParameter<DynamicDOFs>::trajectory)
         .def_readonly("time", &OutputParameter<DynamicDOFs>::time)
         .def_readonly("new_calculation", &OutputParameter<DynamicDOFs>::new_calculation)
         .def_readonly("was_calculation_interrupted", &OutputParameter<DynamicDOFs>::was_calculation_interrupted)
         .def_readonly("calculation_duration", &OutputParameter<DynamicDOFs>::calculation_duration)
+        .def("pass_to_input", &OutputParameter<DynamicDOFs>::pass_to_input, "input"_a)
         .def("__copy__",  [](const OutputParameter<DynamicDOFs> &self) {
             return OutputParameter<DynamicDOFs>(self);
         });

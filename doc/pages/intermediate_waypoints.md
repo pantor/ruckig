@@ -1,4 +1,4 @@
-## Background Information about Intermediate Waypoints
+## Background Information on Intermediate Waypoints
 
 In comparison to the Community Version, Ruckig Pro allows to generate more complex trajectories defined by *intermediate waypoints*. Therefore, Ruckig takes a list of positions as input and calculates a trajectory reaching them successively before moving to the target state. As this is a much harder problem than solving state-to-state motions (as the Community Version does), Ruckig Pro is not able to guarantee for a *time-optimal* trajectory. In fact, trajectory planning with intermediate waypoints is a non-convex problem and therefore NP-hard. However, Ruckig calculates much faster trajectories than other approaches, primarily due to the joint calculation of the path and time parametrization. On top, Ruckig is real-time capable and considers jerk-constraints.
 

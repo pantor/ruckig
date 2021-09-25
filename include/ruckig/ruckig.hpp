@@ -127,6 +127,24 @@ public:
             }
         }
 
+        if (!input.intermediate_positions.empty() && input.control_interface == ControlInterface::Position) {
+            if (input.minimum_duration) {
+                return false;
+            }
+
+            if (input.duration_discretization != DurationDiscretization::Continuous) {
+                return false;
+            }
+
+            if (input.per_dof_control_interface || input.per_dof_synchronization) {
+                return false;
+            }
+
+            if (input.min_velocity || input.min_acceleration) {
+                return false;
+            }
+        }
+
         // Check for intermediate waypoints here
         if (!input.intermediate_positions.empty()) {
             return false;
@@ -173,15 +191,15 @@ public:
             output.new_calculation = true;
         }
 
+        size_t old_section = output.new_section;
         output.time += delta_time;
         output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration, output.new_section);
+        output.did_section_change = (output.new_section != old_section);
 
         const auto stop = std::chrono::high_resolution_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 
-        current_input.current_position = output.new_position;
-        current_input.current_velocity = output.new_velocity;
-        current_input.current_acceleration = output.new_acceleration;
+        output.pass_to_input(current_input);
 
         if (output.time > output.trajectory.get_duration()) {
             return Result::Finished;
