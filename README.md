@@ -190,12 +190,15 @@ Vector new_position;
 Vector new_velocity;
 Vector new_acceleration;
 
+Trajectory trajectory; // The current trajectory
+double time; // The current, auto-incremented time. Reset to 0 at a new calculation.
+
+size_t new_section; // Index of the section between two intermediate positions (only in Ruckig Pro)
+bool did_section_change; // Was an intermediate position reached in the last cycle? (only in Ruckig Pro)
+
 bool new_calculation; // Whether a new calculation was performed in the last cycle
 bool was_calculation_interrupted; // Was the trajectory calculation interrupted? (only in Ruckig Pro)
 double calculation_duration; // Duration of the calculation in the last cycle [µs]
-
-Trajectory trajectory; // The current trajectory
-double time; // The current, auto-incremented time. Reset to 0 at a new calculation.
 ```
 Moreover, the **trajectory** class has a range of useful parameters and methods.
 

@@ -191,7 +191,7 @@ public:
             output.new_calculation = true;
         }
 
-        size_t old_section = output.new_section;
+        const size_t old_section = output.new_section;
         output.time += delta_time;
         output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration, output.new_section);
         output.did_section_change = (output.new_section != old_section);
