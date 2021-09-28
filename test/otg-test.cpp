@@ -242,6 +242,46 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( output.trajectory.get_duration() == doctest::Approx(12.0) );
 }
 
+TEST_CASE("phase-synchronization" * doctest::description("Phase Synchronization")) {
+    Ruckig<3, true> otg {0.005};
+    InputParameter<3> input;
+    OutputParameter<3> output;
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+    input.synchronization = Synchronization::Phase;
+
+    Trajectory<3> traj;
+    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    auto result = otg.calculate(input, traj);
+
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(4.0) );
+
+    result = otg.update(input, output);
+    output.trajectory.at_time(1.0, new_position, new_velocity, new_acceleration);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
+    check_array(new_position, {0.0833333333, -2.0833333333, 0.1666666667});
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.target_position = {10.0, -3.0, 2.0};
+    input.max_velocity = {10.0, 2.0, 1.0};
+    input.max_acceleration = {10.0, 2.0, 1.0};
+    input.max_jerk = {10.0, 2.0, 1.0};
+
+    result = otg.update(input, output);
+    output.trajectory.at_time(1.0, new_position, new_velocity, new_acceleration);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
+    check_array(new_position, {0.8333333333, -2.0833333333, 0.1666666667});
+}
+
 TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
     Ruckig<3, true> otg {0.005};
     InputParameter<3> input;
