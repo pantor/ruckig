@@ -68,9 +68,6 @@ public:
 inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
     PositiveSet<double, 3> roots;
 
-    constexpr double cos120 = -0.50;
-    constexpr double sin120 = 0.866025403784438646764;
-
     if (std::abs(d) < DBL_EPSILON) {
         // First solution is x = 0
         roots.insert(0.0);
@@ -105,10 +102,13 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
         const double inva = 1.0 / a;
         const double invaa = inva * inva;
         const double bb = b * b;
-        const double bover3a = b * (1.0 / 3.0) * inva;
-        const double p = (3.0 * a * c - bb) * (1.0 / 3.0) * invaa;
-        const double halfq = (2 * bb * b - 9.0 * a * b * c + 27.0 * a * a * d) * (0.5 / 27.0) * invaa * inva;
-        const double yy = p * p * p / 27.0 + halfq * halfq;
+        const double bover3a = b * inva / 3;
+        const double p = (a * c - bb / 3) * invaa;
+        const double halfq = (2 * bb * b - 9 * a * b * c + 27 * a * a * d) * (0.5 / 27) * invaa * inva;
+        const double yy = p * p * p / 27 + halfq * halfq;
+
+        constexpr double cos120 = -0.50;
+        constexpr double sin120 = 0.866025403784438646764;
 
         if (yy > DBL_EPSILON) {
             // Sqrt is positive: one real solution
@@ -117,15 +117,14 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
             const double vvv = -halfq - y;
             const double www = std::abs(uuu) > std::abs(vvv) ? uuu : vvv;
             const double w = std::cbrt(www);
-            roots.insert(w - p / (3.0 * w) - bover3a);
+            roots.insert(w - p / (3 * w) - bover3a);
         } else if (yy < -DBL_EPSILON) {
             // Sqrt is negative: three real solutions
             const double x = -halfq;
             const double y = std::sqrt(-yy);
             double theta;
             double r;
-            double ux;
-            double uyi;
+
             // Convert to polar form
             if (std::abs(x) > DBL_EPSILON) {
                 theta = (x > 0.0) ? std::atan(y / x) : (std::atan(y / x) + M_PI);
@@ -136,25 +135,22 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
                 r = y;
             }
             // Calculate cube root
-            theta /= 3.0;
-            r = std::cbrt(r);
+            theta /= 3;
+            r = 2 * std::cbrt(r);
             // Convert to complex coordinate
-            ux = std::cos(theta) * r;
-            uyi = std::sin(theta) * r;
-            // First solution
-            roots.insert(ux + ux - bover3a);
-            // Second solution, rotate +120 degrees
-            roots.insert(2 * (ux * cos120 - uyi * sin120) - bover3a);
-            // Third solution, rotate -120 degrees
-            roots.insert(2 * (ux * cos120 + uyi * sin120) - bover3a);
+            const double ux = std::cos(theta) * r;
+            const double uyi = std::sin(theta) * r;
+
+            roots.insert(ux - bover3a);
+            roots.insert(ux * cos120 - uyi * sin120 - bover3a);
+            roots.insert(ux * cos120 + uyi * sin120 - bover3a);
         } else {
             // Sqrt is zero: two real solutions
             const double www = -halfq;
-            const double w = std::cbrt(www);
-            // First solution
-            roots.insert(w + w - bover3a);
-            // Second solution, rotate +120 degrees
-            roots.insert(2 * w * cos120 - bover3a);
+            const double w = 2 * std::cbrt(www);
+
+            roots.insert(w - bover3a);
+            roots.insert(w * cos120 - bover3a);
         }
     }
     return roots;
@@ -164,9 +160,13 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
 // The input x must be of length 3
 // Number of zeros are returned
 inline int solveResolvent(double *x, double a, double b, double c) {
+    constexpr double cos120 = -0.50;
+    constexpr double sin120 = 0.866025403784438646764;
+    
+    const double aover3 = a / 3;
     const double a2 = a * a;
-    double q = (a2 - 3.0 * b) / 9.0;
-    const double r = (a * (2 * a2 - 9.0 * b) + 27.0 * c) / 54.0;
+    double q = (a2 - 3 * b) / 9;
+    const double r = a * (2 * a2 - 9 * b) / 54 + c / 2;
     const double r2 = r * r;
     const double q3 = q * q * q;
     double A, B;
@@ -179,12 +179,14 @@ inline int solveResolvent(double *x, double a, double b, double c) {
         if (t > 1.0) {
             t = 1.0;
         }
-        t = std::acos(t);
-        a /= 3.0;
         q = -2 * std::sqrt(q);
-        x[0] = q * std::cos(t / 3.0) - a;
-        x[1] = q * std::cos((t + M_PI * 2) / 3.0) - a;
-        x[2] = q * std::cos((t - M_PI * 2) / 3.0) - a;
+
+        const double theta = std::acos(t) / 3;
+        const double ux = std::cos(theta) * q;
+        const double uyi = std::sin(theta) * q;
+        x[0] = ux - aover3;
+        x[1] = ux * cos120 - uyi * sin120 - aover3;
+        x[2] = ux * cos120 + uyi * sin120 - aover3;
         return 3;
 
     } else {
@@ -194,10 +196,9 @@ inline int solveResolvent(double *x, double a, double b, double c) {
         }
         B = (0.0 == A ? 0.0 : q / A);
 
-        a /= 3.0;
-        x[0] = (A + B) - a;
-        x[1] = -0.5 * (A + B) - a;
-        x[2] = 0.5 * std::sqrt(3.0) * (A - B);
+        x[0] = (A + B) - aover3;
+        x[1] = -(A + B) / 2 - aover3;
+        x[2] = std::sqrt(3) * (A - B) / 2;
         if (std::abs(x[2]) < DBL_EPSILON) {
             x[2] = x[1];
             return 2;
@@ -215,8 +216,8 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
 
     if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON_SQRT && std::abs(c) < DBL_EPSILON_SQRT && std::abs(d) < DBL_EPSILON) {
         const double e0 = std::cbrt(c * c);
-        const double e1 = (b * b + 12 * d)/(9*e0);
-        const double q1 = -(4 * b)/3 - e0 - e1;
+        const double e1 = (b * b + 12 * d) / (9 * e0);
+        const double q1 = -(4 * b) / 3 - e0 - e1;
         const double p1 = std::sqrt(-q1 - 2 * b);
         const double q2 = 2 * c / p1;
         double D, sqrtD;
@@ -224,15 +225,15 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
         D = q1 - q2;
         if (D > 0.0) {
             sqrtD = std::sqrt(D);
-            roots.insert((p1 + sqrtD) * 0.5);
-            roots.insert((p1 - sqrtD) * 0.5);
+            roots.insert((p1 + sqrtD) / 2);
+            roots.insert((p1 - sqrtD) / 2);
         }
 
         D = q1 + q2;
         if (D > 0.0) {
             sqrtD = std::sqrt(D);
-            roots.insert((-p1 + sqrtD) * 0.5);
-            roots.insert((-p1 - sqrtD) * 0.5);
+            roots.insert((-p1 + sqrtD) / 2);
+            roots.insert((-p1 - sqrtD) / 2);
         }
         return roots;
     }
@@ -275,20 +276,20 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
     // h1 + h2 = y && h1*h2 = d  <=>  h^2 - y*h + d = 0    (h === q)
     D = y * y - 4 * d;
     if (std::abs(D) < DBL_EPSILON) {
-        q1 = q2 = y * 0.5;
+        q1 = q2 = y / 2;
         // g1 + g2 = a && g1 + g2 = b - y   <=>   g^2 - a*g + b - y = 0    (p === g)
-        D = a * a - 4.0 * (b - y);
+        D = a * a - 4 * (b - y);
         if (std::abs(D) < DBL_EPSILON) {
-            p1 = p2 = a * 0.5;
+            p1 = p2 = a / 2;
         } else {
             sqrtD = std::sqrt(D);
-            p1 = (a + sqrtD) * 0.5;
-            p2 = (a - sqrtD) * 0.5;
+            p1 = (a + sqrtD) / 2;
+            p2 = (a - sqrtD) / 2;
         }
     } else {
         sqrtD = std::sqrt(D);
-        q1 = (y + sqrtD) * 0.5;
-        q2 = (y - sqrtD) * 0.5;
+        q1 = (y + sqrtD) / 2;
+        q2 = (y - sqrtD) / 2;
         // g1 + g2 = a && g1*h2 + g2*h1 = c   ( && g === p )  Krammer
         p1 = (a * q1 - c) / (q1 - q2);
         p2 = (c - a * q2) / (q1 - q2);
@@ -299,21 +300,21 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
     // Solve the quadratic equation: x^2 + p1*x + q1 = 0
     D = p1 * p1 - 4 * q1;
     if (std::abs(D) < eps) {
-        roots.insert(-p1 * 0.5);
+        roots.insert(-p1 / 2);
     } else if (D > 0.0) {
         sqrtD = std::sqrt(D);
-        roots.insert((-p1 + sqrtD) * 0.5);
-        roots.insert((-p1 - sqrtD) * 0.5);
+        roots.insert((-p1 + sqrtD) / 2);
+        roots.insert((-p1 - sqrtD) / 2);
     }
 
     // Solve the quadratic equation: x^2 + p2*x + q2 = 0
     D = p2 * p2 - 4 * q2;
     if (std::abs(D) < eps) {
-        roots.insert(-p2 * 0.5);
+        roots.insert(-p2 / 2);
     } else if (D > 0.0) {
         sqrtD = std::sqrt(D);
-        roots.insert((-p2 + sqrtD) * 0.5);
-        roots.insert((-p2 - sqrtD) * 0.5);
+        roots.insert((-p2 + sqrtD) / 2);
+        roots.insert((-p2 - sqrtD) / 2);
     }
 
     return roots;
@@ -327,7 +328,7 @@ inline PositiveSet<double, 4> solveQuartMonic(const std::array<double, 5>& polyn
 
 //! Evaluate a polynomial of order N at x
 template<size_t N>
-inline double polyEval(std::array<double, N> p, double x) {
+inline double polyEval(const std::array<double, N>& p, double x) {
     double retVal = 0.0;
 
     if constexpr (N > 0) {
@@ -390,7 +391,7 @@ inline double shrinkInterval(const std::array<double, N>& p, double l, double h)
         std::swap(l, h);
     }
 
-    double rts = 0.5 * (l + h);
+    double rts = (l + h) / 2;
     double dxold = std::abs(h - l);
     double dx = dxold;
     double f = polyEval(p, rts);
@@ -399,7 +400,7 @@ inline double shrinkInterval(const std::array<double, N>& p, double l, double h)
     for (size_t j = 0; j < maxIts; j++) {
         if ((((rts - h) * df - f) * ((rts - l) * df - f) > 0.0) || (std::abs(2 * f) > std::abs(dxold * df))) {
             dxold = dx;
-            dx = 0.5 * (h - l);
+            dx = (h - l) / 2;
             rts = l + dx;
             if (l == rts) {
                 break;
