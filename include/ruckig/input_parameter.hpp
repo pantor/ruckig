@@ -16,7 +16,8 @@ enum Result {
     Finished = 1, ///< Trajectory has reached its final position
     Error = -1, ///< Unclassified error
     ErrorInvalidInput = -100, ///< Error in the input parameter
-    ErrorTrajectoryDuration = -101, ///< The trajectory duration exceed the numeral limits
+    ErrorTrajectoryDuration = -101, ///< The trajectory duration exceeds its numerical limits
+    ErrorPositionalLimits = -102, ///< The trajectory exceeds the given positional limits (only in Ruckig Pro)
     ErrorExecutionTimeCalculation = -110, ///< Error during the extremel time calculation (Step 1)
     ErrorSynchronizationCalculation = -111, ///< Error during the synchronization calculation (Step 2)
 };
@@ -82,6 +83,9 @@ public:
     //! Intermediate waypoints (only in Ruckig Pro)
     std::vector<Vector<double>> intermediate_positions;
 
+    // Positional constraints (only in Ruckig Pro)
+    std::optional<Vector<double>> max_position, min_position;
+
     //! Is the DoF considered for calculation?
     Vector<bool> enabled;
 
@@ -130,6 +134,8 @@ public:
             || max_acceleration != rhs.max_acceleration
             || max_jerk != rhs.max_jerk
             || intermediate_positions != rhs.intermediate_positions
+            || max_position != rhs.max_position
+            || min_position != rhs.min_position
             || enabled != rhs.enabled
             || minimum_duration != rhs.minimum_duration
             || min_velocity != rhs.min_velocity

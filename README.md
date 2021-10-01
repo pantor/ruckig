@@ -130,6 +130,9 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
+std::optional<Vector> min_position; // only in Ruckig Pro
+std::optional<Vector> max_position; // only in Ruckig Pro
+
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
 std::optional<double> interrupt_calculation_duration; // [µs], only in Ruckig Pro
@@ -177,6 +180,7 @@ Finished                        | 1
 Error                           | -1
 ErrorInvalidInput               | -100
 ErrorTrajectoryDuration         | -101
+ErrorPositionalLimits           | -102
 ErrorExecutionTimeCalculation   | -110
 ErrorSynchronizationCalculation | -111
 

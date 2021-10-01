@@ -157,7 +157,8 @@ public:
             return Result::ErrorInvalidInput;
         }
 
-        return trajectory.template calculate<throw_error, return_error_at_maximal_duration>(input, delta_time, was_interrupted);
+        const Result result = trajectory.template calculate<throw_error, return_error_at_maximal_duration>(input, delta_time, was_interrupted);
+        return result;
     }
 
     //! Get the next output state (with step delta_time) along the calculated trajectory for the given input

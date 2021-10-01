@@ -44,6 +44,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .value("Finished", Result::Finished)
         .value("Error", Result::Error)
         .value("ErrorInvalidInput", Result::ErrorInvalidInput)
+        .value("ErrorPositionalLimits", Result::ErrorPositionalLimits)
         .value("ErrorExecutionTimeCalculation", Result::ErrorExecutionTimeCalculation)
         .value("ErrorSynchronizationCalculation", Result::ErrorSynchronizationCalculation)
         .export_values();
@@ -96,6 +97,8 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("min_velocity", &InputParameter<DynamicDOFs>::min_velocity)
         .def_readwrite("min_acceleration", &InputParameter<DynamicDOFs>::min_acceleration)
         .def_readwrite("intermediate_positions", &InputParameter<DynamicDOFs>::intermediate_positions)
+        .def_readwrite("max_position", &InputParameter<DynamicDOFs>::max_position)
+        .def_readwrite("min_position", &InputParameter<DynamicDOFs>::min_position)
         .def_readwrite("enabled", &InputParameter<DynamicDOFs>::enabled)
         .def_readwrite("control_interface", &InputParameter<DynamicDOFs>::control_interface)
         .def_readwrite("synchronization", &InputParameter<DynamicDOFs>::synchronization)
