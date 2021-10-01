@@ -128,19 +128,11 @@ public:
         }
 
         if (!input.intermediate_positions.empty() && input.control_interface == ControlInterface::Position) {
-            if (input.minimum_duration) {
-                return false;
-            }
-
-            if (input.duration_discretization != DurationDiscretization::Continuous) {
+            if (input.minimum_duration || input.duration_discretization != DurationDiscretization::Continuous) {
                 return false;
             }
 
             if (input.per_dof_control_interface || input.per_dof_synchronization) {
-                return false;
-            }
-
-            if (input.min_velocity || input.min_acceleration) {
                 return false;
             }
         }
