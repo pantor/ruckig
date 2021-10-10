@@ -108,7 +108,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("minimum_duration", &InputParameter<DynamicDOFs>::minimum_duration)
         .def_readwrite("interrupt_calculation_duration", &InputParameter<DynamicDOFs>::interrupt_calculation_duration)
         .def(py::self != py::self)
-        .def("__repr__", static_cast<std::string (InputParameter<DynamicDOFs>::*)() const>(&InputParameter<DynamicDOFs>::to_string));
+        .def("__repr__", &InputParameter<DynamicDOFs>::to_string);
 
     py::class_<OutputParameter<DynamicDOFs>>(m, "OutputParameter")
         .def(py::init<size_t>(), "dofs"_a)
@@ -124,6 +124,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("was_calculation_interrupted", &OutputParameter<DynamicDOFs>::was_calculation_interrupted)
         .def_readonly("calculation_duration", &OutputParameter<DynamicDOFs>::calculation_duration)
         .def("pass_to_input", &OutputParameter<DynamicDOFs>::pass_to_input, "input"_a)
+        .def("__repr__", &OutputParameter<DynamicDOFs>::to_string)
         .def("__copy__",  [](const OutputParameter<DynamicDOFs> &self) {
             return OutputParameter<DynamicDOFs>(self);
         });
