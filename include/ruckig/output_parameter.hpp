@@ -1,9 +1,11 @@
 #pragma once
 
 #include <array>
+#include <iomanip>
 #include <type_traits>
 
 #include <ruckig/trajectory.hpp>
+#include <ruckig/utils.hpp>
 
 
 namespace ruckig {
@@ -59,6 +61,16 @@ public:
         if (did_section_change && !input.intermediate_positions.empty()) {
             input.intermediate_positions.erase(input.intermediate_positions.begin());
         }
+    }
+
+    std::string to_string() const {
+        std::stringstream ss;
+        ss << "\nout.new_position = [" << join(new_position) << "]\n";
+        ss << "out.new_velocity = [" << join(new_velocity) << "]\n";
+        ss << "out.new_acceleration = [" << join(new_acceleration) << "]\n";
+        ss << "out.time = [" << std::setprecision(16) << time << "]\n";
+        ss << "out.calculation_duration = [" << std::setprecision(16) << calculation_duration << "]\n";
+        return ss.str();
     }
 };
 

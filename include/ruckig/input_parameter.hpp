@@ -7,6 +7,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <ruckig/utils.hpp>
 
 namespace ruckig {
 
@@ -45,15 +46,6 @@ enum class DurationDiscretization {
 template<size_t DOFs>
 class InputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
-
-    static std::string join(const Vector<double>& array) {
-        std::ostringstream ss;
-        for (size_t i = 0; i < array.size(); ++i) {
-            if (i) ss << ", ";
-            ss << std::setprecision(16) << array[i];
-        }
-        return ss.str();
-    }
 
     void initialize() {
         std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
@@ -150,25 +142,25 @@ public:
 
     std::string to_string() const {
         std::stringstream ss;
-        ss << "\ninp.current_position = [" << this->join(current_position) << "]\n";
-        ss << "inp.current_velocity = [" << this->join(current_velocity) << "]\n";
-        ss << "inp.current_acceleration = [" << this->join(current_acceleration) << "]\n";
-        ss << "inp.target_position = [" << this->join(target_position) << "]\n";
-        ss << "inp.target_velocity = [" << this->join(target_velocity) << "]\n";
-        ss << "inp.target_acceleration = [" << this->join(target_acceleration) << "]\n";
-        ss << "inp.max_velocity = [" << this->join(max_velocity) << "]\n";
-        ss << "inp.max_acceleration = [" << this->join(max_acceleration) << "]\n";
-        ss << "inp.max_jerk = [" << this->join(max_jerk) << "]\n";
+        ss << "\ninp.current_position = [" << join(current_position) << "]\n";
+        ss << "inp.current_velocity = [" << join(current_velocity) << "]\n";
+        ss << "inp.current_acceleration = [" << join(current_acceleration) << "]\n";
+        ss << "inp.target_position = [" << join(target_position) << "]\n";
+        ss << "inp.target_velocity = [" << join(target_velocity) << "]\n";
+        ss << "inp.target_acceleration = [" << join(target_acceleration) << "]\n";
+        ss << "inp.max_velocity = [" << join(max_velocity) << "]\n";
+        ss << "inp.max_acceleration = [" << join(max_acceleration) << "]\n";
+        ss << "inp.max_jerk = [" << join(max_jerk) << "]\n";
         if (min_velocity) {
-            ss << "inp.min_velocity = [" << this->join(min_velocity.value()) << "]\n";
+            ss << "inp.min_velocity = [" << join(min_velocity.value()) << "]\n";
         }
         if (min_acceleration) {
-            ss << "inp.min_acceleration = [" << this->join(min_acceleration.value()) << "]\n";
+            ss << "inp.min_acceleration = [" << join(min_acceleration.value()) << "]\n";
         }
         if (!intermediate_positions.empty()) {
             ss << "inp.intermediate_positions = [\n";
             for (auto p: intermediate_positions) {
-                ss << "    [" << this->join(p) << "],\n";
+                ss << "    [" << join(p) << "],\n";
             }
             ss << "]\n";
         }

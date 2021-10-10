@@ -20,6 +20,12 @@ namespace ruckig {
         os << value.to_string();
         return os;
     }
+
+    template<size_t DOFs>
+    std::ostream& operator<< (std::ostream& os, const OutputParameter<DOFs>& value) {
+        os << value.to_string();
+        return os;
+    }
 }
 
 
