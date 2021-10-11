@@ -38,7 +38,7 @@ void PositionStep1::time_all_vel(Profile& profile, double vMax, double vMin, dou
     }
 
     // ACC1_VEL
-    const double t_acc0 = Sqrt(a0_a0/(2*jMax_jMax) + (vMax - v0)/jMax);
+    const double t_acc0 = std::sqrt(a0_a0/(2*jMax_jMax) + (vMax - v0)/jMax);
 
     profile.t[0] = t_acc0 - a0/jMax;
     profile.t[1] = 0;
@@ -54,7 +54,7 @@ void PositionStep1::time_all_vel(Profile& profile, double vMax, double vMin, dou
     }
 
     // ACC0_VEL
-    const double t_acc1 = Sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
+    const double t_acc1 = std::sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
 
     profile.t[0] = (-a0 + aMax)/jMax;
     profile.t[1] = (a0_a0/2 - aMax*aMax - jMax*(v0 - vMax))/(aMax*jMax);
@@ -130,8 +130,7 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
 
     // double h4 = a0_a0/(aMin*aMin) + h3*jMax/aMin;
     // if (a0*aMin > 0 && h4 > 0) {
-    //     h4 = Sqrt(h4);
-    //     if (t_max < -(a0 - aMin*h4)/jMax) {
+    //     if (t_max < -(a0 - aMin*std::sqrt(h4))/jMax) {
     //         return;
     //     }
     // }
@@ -186,15 +185,12 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
 
 void PositionStep1::time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     const double h3 = (a0_a0 - af_af)/(2*aMax*jMax) + (vf - v0)/aMax;
-    const double t_max = (aMax - aMin)/jMax;
 
-    // if (h3 < 0) {
-    //     const double h4 = Sqrt(1 - h3 * jMax/aMax);
-    //     if (t_max < (1 + h4)/(jMax/aMax) - DBL_EPSILON) {
-    //         return;
-    //     }
+    // if (h3 < (aMax*aMax - aMin*aMin)/(jMax*aMax)) {
+    //     return;
     // }
 
+    const double t_max = (aMax - aMin)/jMax;
     const double h0 = 3*(af_p4 - a0_p4) + 8*(a0_p3 - af_p3)*aMax + 24*aMax*jMax*(af*vf - a0*v0) - 6*a0_a0*(aMax*aMax - 2*jMax*v0) + 6*af_af*(aMax*aMax - 2*jMax*vf) + 12*jMax*(jMax*(vf_vf - v0_v0 - 2*aMax*pd) - aMax*aMax*(vf - v0));
     const double h2 = -af_af + aMax*aMax + 2*jMax*vf;
 
