@@ -20,12 +20,6 @@ namespace ruckig {
         os << value.to_string();
         return os;
     }
-
-    template<size_t DOFs>
-    std::ostream& operator<< (std::ostream& os, const OutputParameter<DOFs>& value) {
-        os << value.to_string();
-        return os;
-    }
 }
 
 
@@ -109,7 +103,7 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
 
 
 int seed {42};
-size_t number_trajectories {120000}; // Some user variable you want to be able to set
+size_t number_trajectories {150000}; // Some user variable you want to be able to set
 size_t random_1, random_3, random_3_high, step_through_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
 
 std::normal_distribution<double> position_dist {0.0, 4.0};
@@ -246,6 +240,34 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
 
     CHECK( result == Result::Working );
     CHECK( output.trajectory.get_duration() == doctest::Approx(12.0) );
+}
+
+TEST_CASE("enabled" * doctest::description("Enabled DoF")) {
+    Ruckig<3, true> otg {0.005};
+    InputParameter<3> input;
+    OutputParameter<3> output;
+
+    input.enabled = {true, false, false};
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.0, 0.1, 0.0};
+    input.current_acceleration = {0.0, 0.0, -0.2};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+
+    Result result = otg.update(input, output);
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(3.1748021039) );
+
+    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
+    check_array(new_position, input.current_position);
+    check_array(new_velocity, input.current_velocity);
+    check_array(new_acceleration, input.current_acceleration);
+
+    output.trajectory.at_time(output.trajectory.get_duration(), new_position, new_velocity, new_acceleration);
+    check_array(new_position, {input.target_position[0], -1.6825197896, -1.0079368399});
 }
 
 TEST_CASE("phase-synchronization" * doctest::description("Phase Synchronization")) {

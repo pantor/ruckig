@@ -201,11 +201,10 @@ public:
 
         for (size_t dof = 0; dof < profiles.size(); ++dof) {
             auto& p = profiles[dof];
-            p.pf = inp.current_position[dof];
-            p.vf = inp.current_velocity[dof];
-            p.af = inp.current_acceleration[dof];
-
             if (!inp.enabled[dof]) {
+                p.pf = inp.current_position[dof];
+                p.vf = inp.current_velocity[dof];
+                p.af = inp.current_acceleration[dof];
                 p.t_sum[6] = 0.0;
                 continue;
             }
@@ -399,7 +398,8 @@ public:
             // Keep constant acceleration
             new_section = 1;
             for (size_t dof = 0; dof < profiles.size(); ++dof) {
-                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(time - duration, profiles[dof].pf, profiles[dof].vf, profiles[dof].af, 0);
+                const double t_diff = time - (profiles[dof].t_brake.value_or(0.0) + profiles[dof].t_sum[6]);
+                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, profiles[dof].pf, profiles[dof].vf, profiles[dof].af, 0);
             }
             return;
         }
