@@ -9,6 +9,7 @@
 #include <optional>
 #include <tuple>
 
+#include <ruckig/brake.hpp>
 #include <ruckig/roots.hpp>
 
 
@@ -37,11 +38,8 @@ public:
     //! Target (final) kinematic state
     double pf, vf, af;
 
-    //! Total time of the braking segments
-    std::optional<double> t_brake;
-
-    //! Allow up to two segments of braking before the "correct" profile starts
-    std::array<double, 2> t_brakes, j_brakes, a_brakes, v_brakes, p_brakes;
+    //! Brake sub-profile
+    BrakeProfile brake;
 
     // For velocity interface
     template<JerkSigns jerk_signs, Limits limits>
@@ -280,12 +278,12 @@ public:
         extrema.min = std::numeric_limits<double>::infinity();
         extrema.max = -std::numeric_limits<double>::infinity();
 
-        if (t_brake) {
-            if (t_brakes[0] > 0.0) {
-                check_step_for_position_extremum(0.0, t_brakes[0], p_brakes[0], v_brakes[0], a_brakes[0], j_brakes[0], extrema);
+        if (brake.duration > 0.0) {
+            if (brake.t[0] > 0.0) {
+                check_step_for_position_extremum(0.0, brake.t[0], brake.p[0], brake.v[0], brake.a[0], brake.j[0], extrema);
 
-                if (t_brakes[1] > 0.0) {
-                    check_step_for_position_extremum(t_brakes[0], t_brakes[1], p_brakes[1], v_brakes[1], a_brakes[1], j_brakes[1], extrema);
+                if (brake.t[1] > 0.0) {
+                    check_step_for_position_extremum(brake.t[0], brake.t[1], brake.p[1], brake.v[1], brake.a[1], brake.j[1], extrema);
                 }
             }
         }
@@ -295,16 +293,16 @@ public:
             if (i > 0) {
                 t_current_sum = t_sum[i - 1];
             }
-            check_step_for_position_extremum(t_current_sum + t_brake.value_or(0.0), t[i], p[i], v[i], a[i], j[i], extrema);
+            check_step_for_position_extremum(t_current_sum + brake.duration, t[i], p[i], v[i], a[i], j[i], extrema);
         }
 
         if (pf < extrema.min) {
             extrema.min = pf;
-            extrema.t_min = t_sum[6] + t_brake.value_or(0.0);
+            extrema.t_min = t_sum[6] + brake.duration;
         }
         if (pf > extrema.max) {
             extrema.max = pf;
-            extrema.t_max = t_sum[6] + t_brake.value_or(0.0);
+            extrema.t_max = t_sum[6] + brake.duration;
         }
 
         return extrema;

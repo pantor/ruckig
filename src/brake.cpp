@@ -11,7 +11,7 @@ inline double v_at_a_zero(double v0, double a0, double j) {
     return v0 + (a0 * a0)/(2 * j);
 }
 
-void Brake::acceleration_brake(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
+void BrakeProfile::acceleration_brake(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     j_brake[0] = -jMax;
 
     const double t_to_a_max = (a0 - aMax) / jMax;
@@ -35,7 +35,7 @@ void Brake::acceleration_brake(double v0, double a0, double vMax, double vMin, d
     }
 }
 
-void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, double, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
+void BrakeProfile::velocity_brake(double v0, double a0, double vMax, double vMin, double, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     j_brake[0] = -jMax;
     const double t_to_a_min = (a0 - aMin)/jMax;
     const double t_to_v_max = a0/jMax + std::sqrt(a0*a0 + 2 * jMax * (v0 - vMax)) / std::abs(jMax);
@@ -55,7 +55,7 @@ void Brake::velocity_brake(double v0, double a0, double vMax, double vMin, doubl
     }
 }
 
-void Brake::get_position_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
+void BrakeProfile::get_position_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     t_brake[0] = 0.0;
     t_brake[1] = 0.0;
     j_brake[0] = 0.0;
@@ -75,7 +75,7 @@ void Brake::get_position_brake_trajectory(double v0, double a0, double vMax, dou
     }
 }
 
-void Brake::get_velocity_brake_trajectory(double a0, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
+void BrakeProfile::get_velocity_brake_trajectory(double a0, double aMax, double aMin, double jMax, std::array<double, 2>& t_brake, std::array<double, 2>& j_brake) {
     t_brake[0] = 0.0;
     t_brake[1] = 0.0;
     j_brake[0] = 0.0;

@@ -217,24 +217,24 @@ public:
             // Calculate brake (if input exceeds or will exceed limits)
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
-                    Brake::get_position_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
+                    BrakeProfile::get_position_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.brake.t, p.brake.j);
                 } break;
                 case ControlInterface::Velocity: {
-                    Brake::get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.t_brakes, p.j_brakes);
+                    BrakeProfile::get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.brake.t, p.brake.j);
                 } break;
             }
 
-            p.t_brake = p.t_brakes[0] + p.t_brakes[1];
+            p.brake.duration = p.brake.t[0] + p.brake.t[1];
             p0s[dof] = inp.current_position[dof];
             v0s[dof] = inp.current_velocity[dof];
             a0s[dof] = inp.current_acceleration[dof];
 
             // Integrate brake pre-trajectory
-            for (size_t i = 0; i < 2 && p.t_brakes[i] > 0; ++i) {
-                p.p_brakes[i] = p0s[dof];
-                p.v_brakes[i] = v0s[dof];
-                p.a_brakes[i] = a0s[dof];
-                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.t_brakes[i], p0s[dof], v0s[dof], a0s[dof], p.j_brakes[i]);
+            for (size_t i = 0; i < 2 && p.brake.t[i] > 0; ++i) {
+                p.brake.p[i] = p0s[dof];
+                p.brake.v[i] = v0s[dof];
+                p.brake.a[i] = a0s[dof];
+                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.brake.t[i], p0s[dof], v0s[dof], a0s[dof], p.brake.j[i]);
             }
 
             bool found_profile;
@@ -256,7 +256,7 @@ public:
                 return Result::ErrorExecutionTimeCalculation;
             }
 
-            independent_min_durations[dof] = blocks[dof].t_min;
+            independent_min_durations[dof] = blocks[dof].p_min.brake.duration + blocks[dof].t_min;
             // std::cout << dof << " profile step1: " << blocks[dof].to_string() << std::endl;
         }
 
@@ -300,7 +300,7 @@ public:
                     }
 
                     Profile& p = profiles[dof];
-                    const double t_profile = duration - p.t_brake.value_or(0.0);
+                    const double t_profile = duration - p.brake.duration;
 
                     p.t = profiles[limiting_dof].t; // Copy timing information from limiting DoF
                     p.jerk_signs = profiles[limiting_dof].jerk_signs;
@@ -336,7 +336,7 @@ public:
             }
 
             Profile& p = profiles[dof];
-            const double t_profile = duration - p.t_brake.value_or(0.0);
+            const double t_profile = duration - p.brake.duration;
 
             if (inp_per_dof_synchronization[dof] == Synchronization::TimeIfNecessary && std::abs(inp.target_velocity[dof]) < eps && std::abs(inp.target_acceleration[dof]) < eps) {
                 p = blocks[dof].p_min;
@@ -398,7 +398,7 @@ public:
             // Keep constant acceleration
             new_section = 1;
             for (size_t dof = 0; dof < profiles.size(); ++dof) {
-                const double t_diff = time - (profiles[dof].t_brake.value_or(0.0) + profiles[dof].t_sum[6]);
+                const double t_diff = time - (profiles[dof].brake.duration + profiles[dof].t_sum[6]);
                 std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, profiles[dof].pf, profiles[dof].vf, profiles[dof].af, 0);
             }
             return;
@@ -409,17 +409,17 @@ public:
             const Profile& p = profiles[dof];
 
             double t_diff = time;
-            if (p.t_brake) {
-                if (t_diff < p.t_brake.value()) {
-                    const size_t index = (t_diff < p.t_brakes[0]) ? 0 : 1;
+            if (p.brake.duration > 0) {
+                if (t_diff < p.brake.duration) {
+                    const size_t index = (t_diff < p.brake.t[0]) ? 0 : 1;
                     if (index > 0) {
-                        t_diff -= p.t_brakes[index - 1];
+                        t_diff -= p.brake.t[index - 1];
                     }
 
-                    std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, p.p_brakes[index], p.v_brakes[index], p.a_brakes[index], p.j_brakes[index]);
+                    std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, p.brake.p[index], p.brake.v[index], p.brake.a[index], p.brake.j[index]);
                     continue;
                 } else {
-                    t_diff -= p.t_brake.value();
+                    t_diff -= p.brake.duration;
                 }
             }
 

@@ -21,8 +21,8 @@ class Block {
     };
 
     inline static void add_interval(std::optional<Block::Interval>& interval, const Profile& left, const Profile& right) {
-        const double left_duration = left.t_sum[6] + left.t_brake.value_or(0.0);
-        const double right_duraction = right.t_sum[6] + right.t_brake.value_or(0.0);
+        const double left_duration = left.t_sum[6] + left.brake.duration;
+        const double right_duraction = right.t_sum[6] + right.brake.duration;
         if (left_duration < right_duraction) {
             interval = Block::Interval(left_duration, right_duraction, right);
         } else {
@@ -46,7 +46,7 @@ public:
     std::optional<Interval> a, b;
 
     explicit Block() { }
-    explicit Block(const Profile& p_min): p_min(p_min), t_min(p_min.t_sum[6] + p_min.t_brake.value_or(0.0)) { }
+    explicit Block(const Profile& p_min): p_min(p_min), t_min(p_min.t_sum[6] + p_min.brake.duration) { }
 
     template<size_t N, bool numerical_robust = true>
     static bool calculate_block(Block& block, std::array<Profile, N>& valid_profiles, size_t valid_profile_counter) {

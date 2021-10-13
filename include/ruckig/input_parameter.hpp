@@ -19,6 +19,7 @@ enum Result {
     ErrorInvalidInput = -100, ///< Error in the input parameter
     ErrorTrajectoryDuration = -101, ///< The trajectory duration exceeds its numerical limits
     ErrorPositionalLimits = -102, ///< The trajectory exceeds the given positional limits (only in Ruckig Pro)
+    // ErrorNoPhaseSynchronization = -103, ///< The trajectory cannot be phase synchronized
     ErrorExecutionTimeCalculation = -110, ///< Error during the extremel time calculation (Step 1)
     ErrorSynchronizationCalculation = -111, ///< Error during the synchronization calculation (Step 2)
 };
@@ -30,9 +31,10 @@ enum class ControlInterface {
 };
 
 enum class Synchronization {
-    Phase, ///< Phase synchronize the DoFs when possible, else fallback to "Time" strategy
     Time, ///< Always synchronize the DoFs to reach the target at the same time (Default)
     TimeIfNecessary, ///< Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
+    Phase, ///< Phase synchronize the DoFs when possible, else fallback to "Time" strategy
+    // PhaseOnly, ///< Always phase synchronize the DoFs (even when this is not time-optimal), else returns "ErrorNoPhaseSynchronization"
     None, ///< Calculate every DoF independently
 };
 
