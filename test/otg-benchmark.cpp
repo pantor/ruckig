@@ -107,6 +107,10 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
 int main() {
     const size_t n {5}; // Number of iterations
     const size_t number_trajectories {64 * 1024};
+    
+    std::cout << "Block size: " << sizeof(Block) << " Byte" << std::endl;
+    std::cout << "Profile size: " << sizeof(Profile) << " Byte" << std::endl;
+    std::cout << "Trajectory<3> size: " << sizeof(Trajectory<3>) << " Byte" << std::endl;
 
     // Main comparison
     // benchmark<0, Ruckig<0, true>>(n, number_trajectories);

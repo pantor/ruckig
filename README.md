@@ -22,7 +22,7 @@
   </a>
 </p>
 
-Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input. Ruckig calculates a trajectory to a *target* waypoint (with position, velocity, and acceleration) starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Besides the target state, the Ruckig *Pro Version* allows to define intermediate positions for waypoint following. For state-to-state motions, Ruckig guarantees a time-optimal solution. With intermediate waypoints, Ruckig calculates the path and its time parametrization jointly, resulting in significantly faster trajectories compared to traditional methods. The Ruckig *Community Version* is a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator for arbitrary target states and even supports directional velocity and acceleration limits, while also being faster on top.
+Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input. Ruckig calculates a trajectory to a *target* waypoint (with position, velocity, and acceleration) starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Besides the target state, Ruckig allows to define intermediate positions for waypoint following. For state-to-state motions, Ruckig guarantees a time-optimal solution. With intermediate waypoints, Ruckig calculates the path and its time parametrization jointly, resulting in significantly faster trajectories compared to traditional methods. 
 
 More information can be found at [ruckig.com](https://ruckig.com) and in the corresponding paper [Jerk-limited Real-time Trajectory Generation with Arbitrary Target States](https://arxiv.org/abs/2105.04830), accepted for the *Robotics: Science and Systems (RSS), 2021* conference.
 
@@ -81,17 +81,6 @@ input.max_jerk = {4.0, ...};
 OutputParameter<6> output; // Number DoFs
 ```
 
-The Ruckig *Pro Version* also supports a list of intermediate positions
-```.cpp
-input.intermediate_positions = {
-  {0.3, ...},
-  {0.5, ...},
-  {-0.2, ...}
-};
-```
-Then, the constructor of the OutputParameter requires a maximum number of intermediate waypoints to allocate the necessary memory beforehand.
-
-
 Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
 
 ```.cpp
@@ -117,7 +106,7 @@ Vector current_position;
 Vector current_velocity; // Initialized to zero
 Vector current_acceleration; // Initialized to zero
 
-std::vector<Vector> intermediate_positions; // only in Ruckig Pro
+std::vector<Vector> intermediate_positions; // (only in Pro Version)
 
 Vector target_position;
 Vector target_velocity; // Initialized to zero
@@ -130,12 +119,12 @@ Vector max_jerk;
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
 
-std::optional<Vector> min_position; // only in Ruckig Pro
-std::optional<Vector> max_position; // only in Ruckig Pro
+std::optional<Vector> min_position; // (only in Pro Version)
+std::optional<Vector> max_position; // (only in Pro Version)
 
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;
-std::optional<double> interrupt_calculation_duration; // [µs], only in Ruckig Pro
+std::optional<double> interrupt_calculation_duration; // [µs], (only in Pro Version)
 
 ControlInterface control_interface; // The default position interface controls the full kinematic state.
 Synchronization synchronization; // Synchronization behavior of multiple DoFs
@@ -150,7 +139,7 @@ On top of the current state, target state, and constraints, Ruckig allows for a 
 - If a DoF is not *enabled*, it will be ignored in the calculation. Ruckig will output a trajectory with constant acceleration for those DoFs.
 - A *minimum duration* can be optionally given. Note that Ruckig can not guarantee an exact, but only a minimum duration of the trajectory.
 - The control interface (position or velocity control) can be switched easily. For example, a stop trajectory or visual servoing can be easily implemented with the velocity interface.
-- Different synchronization behaviors (i.a. phase, time, or no synchonization) are implemented.
+- Different synchronization behaviors (i.a. phase, time, or no synchonization) are implemented. Phase synchronization results in straight-line motions.
 - The trajectory duration might be constrained to a multiple of the control cycle. This way, the *exact* state can be reached at a control loop execution.
 
 We refer to the [API documentation](https://docs.ruckig.com/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
@@ -197,11 +186,11 @@ Vector new_acceleration;
 Trajectory trajectory; // The current trajectory
 double time; // The current, auto-incremented time. Reset to 0 at a new calculation.
 
-size_t new_section; // Index of the section between two intermediate positions (only in Ruckig Pro)
-bool did_section_change; // Was an intermediate position reached in the last cycle? (only in Ruckig Pro)
+size_t new_section; // Index of the section between two intermediate positions (only in Pro Version)
+bool did_section_change; // Was an intermediate position reached in the last cycle? (only in Pro Version)
 
 bool new_calculation; // Whether a new calculation was performed in the last cycle
-bool was_calculation_interrupted; // Was the trajectory calculation interrupted? (only in Ruckig Pro)
+bool was_calculation_interrupted; // Was the trajectory calculation interrupted? (only in Pro Version)
 double calculation_duration; // Duration of the calculation in the last cycle [µs]
 ```
 Moreover, the **trajectory** class has a range of useful parameters and methods.
@@ -246,7 +235,7 @@ The current test suite validates over 5.000.000.000 random trajectories. The num
 
 ## Benchmark
 
-We find that Ruckig is more than twice as fast as Reflexxes Type IV for state-to-state motions and well-suited for control cycles as low as 250 microseconds.
+We find that Ruckig is more than twice as fast as Reflexxes Type IV for state-to-state motions and well-suited for control cycles as low as 250 microseconds. The Ruckig *Community Version* is in general a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator for arbitrary target states and even supports directional velocity and acceleration limits, while also being faster on top.
 
 ![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/benchmark.png?raw=true)
 
@@ -269,7 +258,7 @@ If you still need to use C++11, you can patch the Ruckig *Community Version* by 
 ## Used By
 
 - [CoppeliaSim](https://www.coppeliarobotics.com/) in their upcoming release.
-- [MoveIt 2](https://github.com/ros-planning/moveit2/pull/571) for trajectory smoothing.
+- [MoveIt 2](https://moveit.ros.org) for trajectory smoothing.
 - [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Restructered Text for usage on PLCs.
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
 - and others!
