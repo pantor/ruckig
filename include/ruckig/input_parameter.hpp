@@ -57,6 +57,19 @@ class InputParameter {
         std::fill(enabled.begin(), enabled.end(), true);
     }
 
+    void resize(size_t dofs) {
+        current_position.resize(dofs);
+        current_velocity.resize(dofs);
+        current_acceleration.resize(dofs);
+        target_position.resize(dofs);
+        target_velocity.resize(dofs);
+        target_acceleration.resize(dofs);
+        max_velocity.resize(dofs);
+        max_acceleration.resize(dofs);
+        max_jerk.resize(dofs);
+        enabled.resize(dofs);
+    }
+
 public:
     size_t degrees_of_freedom;
 
@@ -102,17 +115,7 @@ public:
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     InputParameter(size_t dofs): degrees_of_freedom(dofs) {
-        current_position.resize(dofs);
-        current_velocity.resize(dofs);
-        current_acceleration.resize(dofs);
-        target_position.resize(dofs);
-        target_velocity.resize(dofs);
-        target_acceleration.resize(dofs);
-        max_velocity.resize(dofs);
-        max_acceleration.resize(dofs);
-        max_jerk.resize(dofs);
-        enabled.resize(dofs);
-
+        resize(dofs);
         initialize();
     }
 

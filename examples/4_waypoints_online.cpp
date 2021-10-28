@@ -6,10 +6,14 @@
 using namespace ruckig;
 
 int main() {
+    const double control_cycle {0.01};
+    const size_t DOFs {3};
+    const size_t max_number_of_waypoints {10};  // for memory allocation
+
     // Create instances: the Ruckig OTG as well as input and output parameters
-    Ruckig<3> otg {0.01};  // control cycle
-    InputParameter<3> input;
-    OutputParameter<3> output;
+    Ruckig<DOFs> otg {control_cycle, max_number_of_waypoints};
+    InputParameter<DOFs> input;
+    OutputParameter<DOFs> output {max_number_of_waypoints};
 
     // Set input parameters
     input.current_position = {0.2, 0.0, -0.3};
@@ -34,7 +38,7 @@ int main() {
     input.interrupt_calculation_duration = 500; // [µs]
 
     std::cout << "t | p1 | p2 | p3" << std::endl;
-    double calculation_duration;
+    double calculation_duration {0.0};
     while (otg.update(input, output) == Result::Working) {
         auto& p = output.new_position;
         std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << std::endl;

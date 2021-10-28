@@ -25,6 +25,8 @@ class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
+    const size_t max_number_of_waypoints;
+
 public:
     size_t degrees_of_freedom;
 
@@ -32,20 +34,20 @@ public:
     const double delta_time;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
-    explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0) {
+    explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0), max_number_of_waypoints(0) {
     }
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
-    explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time) {
+    explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time), max_number_of_waypoints(0) {
     }
 
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), current_input(InputParameter<0>(dofs)) {
+    explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
     }
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), current_input(InputParameter<0>(dofs)) {
+    explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
     }
 
 
@@ -128,6 +130,10 @@ public:
         }
 
         if (!input.intermediate_positions.empty() && input.control_interface == ControlInterface::Position) {
+            if (input.intermediate_positions.size() > max_number_of_waypoints) {
+                return false;
+            }
+            
             if (input.minimum_duration || input.duration_discretization != DurationDiscretization::Continuous) {
                 return false;
             }
@@ -135,11 +141,6 @@ public:
             if (input.per_dof_control_interface || input.per_dof_synchronization) {
                 return false;
             }
-        }
-
-        // Check for intermediate waypoints here
-        if (!input.intermediate_positions.empty()) {
-            return false;
         }
 
         return true;

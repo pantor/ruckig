@@ -15,6 +15,12 @@ template<size_t DOFs>
 class OutputParameter {
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
 
+    void resize(size_t dofs) {
+        new_position.resize(dofs);
+        new_velocity.resize(dofs);
+        new_acceleration.resize(dofs);
+    }
+
 public:
     size_t degrees_of_freedom;
 
@@ -47,9 +53,7 @@ public:
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     OutputParameter(size_t dofs): degrees_of_freedom(dofs), trajectory(Trajectory<0>(dofs)) {
-        new_position.resize(dofs);
-        new_velocity.resize(dofs);
-        new_acceleration.resize(dofs);
+        resize(dofs);
     }
 
     void pass_to_input(InputParameter<DOFs>& input) const {
