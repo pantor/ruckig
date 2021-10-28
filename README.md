@@ -144,8 +144,6 @@ On top of the current state, target state, and constraints, Ruckig allows for a 
 
 We refer to the [API documentation](https://docs.ruckig.com/namespaceruckig.html) of the enumerations within the `ruckig` namespace for all available options.
 
-When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
-
 
 ### Input Validation
 
@@ -203,6 +201,21 @@ std::array<double, DOFs> independent_min_durations; // Time-optimal profile for 
 <...> get_position_extrema(); // Returns information about the position extrema and their times
 ```
 Again, we refer to the [API documentation](https://docs.ruckig.com) for the exact signatures.
+
+
+### Intermediate Waypoints
+
+To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
+```.cpp
+Ruckig<6> otg {0.001, 8};
+InputParameter<6> input {8};
+OutputParameter<6> output {8};
+```
+The `InputParameter` class takes the number of waypoints as an optional input, however usually you will fill in the values (and therefore reserve its memory) yourself.
+
+When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
+
+We are working on introducing a parameter for limiting the maximum distance between the calculated trajectory and a linear interpolation of the waypoints. This way, collision avoidance and safety guarantees become trivial to integrate!
 
 
 ### Dynamic Number of Degrees of Freedom
