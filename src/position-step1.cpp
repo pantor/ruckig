@@ -154,21 +154,21 @@ void PositionStep1::time_acc1(Profile& profile, double vMax, double vMin, double
 
         // Double Newton step (regarding pd)
         if (t > DBL_EPSILON) {
-            const double h3 = a0_p3 + 2*jMax*a0*v0;
+            const double h5 = a0_p3 + 2*jMax*a0*v0;
             double h1 = jMax*t;
-            double orig = -(h0/2 + h1*(h3 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
+            double orig = -(h0/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
             double deriv = (aMin - a0 - h1)*(h2 + h1*(4*a0 - aMin + 2*h1))/(aMin*jMax);
             t -= std::min(orig / deriv, t);
 
             h1 = jMax*t;
-            orig = -(h0/2 + h1*(h3 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
+            orig = -(h0/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
             
             if (std::abs(orig) > 1e-9) {
                 deriv = (aMin - a0 - h1)*(h2 + h1*(4*a0 - aMin + 2*h1))/(aMin*jMax);
                 t -= orig / deriv;
 
                 h1 = jMax*t;
-                orig = -(h0/2 + h1*(h3 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
+                orig = -(h0/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
                 
                 if (std::abs(orig) > 1e-9) {
                     deriv = (aMin - a0 - h1)*(h2 + h1*(4*a0 - aMin + 2*h1))/(aMin*jMax);
