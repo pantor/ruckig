@@ -51,7 +51,6 @@ public:
     explicit PositionStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(const Profile& input, Block& block);
-
 };
 
 

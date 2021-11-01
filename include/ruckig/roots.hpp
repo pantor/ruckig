@@ -36,12 +36,12 @@ protected:
 
 public:
     // Sort when accessing the elements
-    iterator begin() {
+    const iterator begin() {
         std::sort(data.begin(), data.begin() + size);
-        return data.begin() + 0;
+        return data.begin();
     }
 
-    iterator end() {
+    const iterator end() {
         return data.begin() + size;
     }
 
@@ -321,8 +321,8 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
 }
 
 //! Calculate the quartic equation: x^4 + b*x^3 + c*x^2 + d*x + e = 0
-inline PositiveSet<double, 4> solveQuartMonic(const std::array<double, 5>& polynom) {
-    return solveQuartMonic(polynom[1], polynom[2], polynom[3], polynom[4]);
+inline PositiveSet<double, 4> solveQuartMonic(const std::array<double, 4>& polynom) {
+    return solveQuartMonic(polynom[0], polynom[1], polynom[2], polynom[3]);
 }
 
 

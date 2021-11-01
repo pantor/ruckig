@@ -14,13 +14,15 @@
 using namespace ruckig;
 
 
-namespace ruckig {
-    template<size_t DOFs>
-    std::ostream& operator<< (std::ostream& os, const InputParameter<DOFs>& value) {
-        os << value.to_string();
-        return os;
-    }
-}
+int seed {42};
+size_t number_trajectories {150000}; // Some user variable you want to be able to set
+size_t random_1, random_3, random_3_high, step_through_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
+
+std::normal_distribution<double> position_dist {0.0, 4.0};
+std::normal_distribution<double> dynamic_dist {0.0, 0.8};
+std::uniform_real_distribution<double> limit_dist {0.08, 16.0};
+std::uniform_real_distribution<double> limit_dist_high {10.0, 1000000.0};
+std::uniform_real_distribution<double> min_limit_dist {-16.0, -0.08};
 
 
 template<size_t DOFs, class OTGType>
@@ -102,20 +104,8 @@ inline void check_comparison(OTGType& otg, InputParameter<DOFs>& input, OTGCompT
 }
 
 
-int seed {42};
-size_t number_trajectories {150000}; // Some user variable you want to be able to set
-size_t random_1, random_3, random_3_high, step_through_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
-
-std::normal_distribution<double> position_dist {0.0, 4.0};
-std::normal_distribution<double> dynamic_dist {0.0, 0.8};
-std::uniform_real_distribution<double> limit_dist {0.08, 16.0};
-std::uniform_real_distribution<double> limit_dist_high {10.0, 1000000.0};
-// std::uniform_real_distribution<double> limit_dist {800.0, 160000.0};
-std::uniform_real_distribution<double> min_limit_dist {-16.0, -0.08};
-
-
 template<class T>
-void check_array(const T& first, const T& second) {
+inline void check_array(const T& first, const T& second) {
     for (size_t dof = 0; dof < first.size(); ++dof) {
         CHECK( first[dof] == doctest::Approx(second[dof]) );
     }
@@ -606,6 +596,19 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {4.25, 4.25, 4.25};
     input.max_jerk = {85.00000000000001, 85.00000000000001, 85.00000000000001};
     check_duration(otg, input, 0.2281604414);
+
+    input.current_position = {0.0, 0.0, 0.3736320740840176};
+    input.current_velocity = {0.0, 0.0, -0.60486324450823};
+    input.current_acceleration = {0.0, 0.0, -0.4953501898933239};
+    input.target_position = {0.0, 0.0, 0.233562911156468};
+    input.target_velocity = {0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 10.01369296498101};
+    input.max_acceleration = {1.0, 1.0, 14.72621077848741};
+    input.max_jerk = {1.0, 1.0, 7.770133554060553};
+    input.min_velocity = {-1.0, -1.0, -1.94898305867544};
+    input.min_acceleration = {-1.0, -1.0, -0.6829625196960336};
+    check_duration(otg, input, 1.08732372);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
