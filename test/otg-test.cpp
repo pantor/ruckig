@@ -374,6 +374,24 @@ TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
     CHECK( new_position[1] == doctest::Approx(-3.0890156397) );
     traj.at_time(independent_min_durations[2], new_position, new_velocity, new_acceleration);
     CHECK( new_position[2] == doctest::Approx(input.target_position[2]) );
+
+
+    input.current_position = {0.0, 0.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+
+    input.target_position = {35, 35, 35};
+    input.target_velocity = {125, 125, 100};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+
+    input.max_velocity = {125, 125, 100};
+    input.max_acceleration = {2000, 2000, 2000};
+    input.max_jerk = {20000, 20000, 20000};
+    input.per_dof_synchronization = {Synchronization::Time, Synchronization::Time, Synchronization::None};
+
+    result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(0.359056941) );
 }
 
 TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {

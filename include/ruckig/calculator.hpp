@@ -90,7 +90,7 @@ class Calculator {
         return true;
     }
 
-    bool synchronize(const Vector<Block>& blocks, std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
+    bool synchronize(std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
         if (degrees_of_freedom == 1 && !t_min && !discrete_duration) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
@@ -101,6 +101,13 @@ class Calculator {
         // Possible t_syncs are the start times of the intervals and optional t_min
         bool any_interval {false};
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            if (inp_per_dof_synchronization[dof] == Synchronization::None) {
+                possible_t_syncs[dof] = 0.0;
+                possible_t_syncs[degrees_of_freedom + dof] = std::numeric_limits<double>::infinity();
+                possible_t_syncs[2 * degrees_of_freedom + dof] = std::numeric_limits<double>::infinity();
+                continue;
+            }
+
             possible_t_syncs[dof] = blocks[dof].t_min;
             possible_t_syncs[degrees_of_freedom + dof] = blocks[dof].a ? blocks[dof].a->right : std::numeric_limits<double>::infinity();
             possible_t_syncs[2 * degrees_of_freedom + dof] = blocks[dof].b ? blocks[dof].b->right : std::numeric_limits<double>::infinity();
@@ -122,8 +129,18 @@ class Calculator {
 
         // Start at last tmin (or worse)
         for (auto i = idx.begin() + degrees_of_freedom - 1; i != idx_end; ++i) {
-            const double possible_t_sync = possible_t_syncs[*i];
-            if (std::any_of(blocks.begin(), blocks.end(), [possible_t_sync](const Block& block){ return block.is_blocked(possible_t_sync); }) || possible_t_sync < t_min.value_or(0.0)) {
+            const double possible_t_sync = possible_t_syncs[*i];            
+            bool is_blocked {false};
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+                if (inp_per_dof_synchronization[dof] == Synchronization::None) {
+                    continue; // inner dof loop
+                }
+                if (blocks[dof].is_blocked(possible_t_sync)) {
+                    is_blocked = true;
+                    break; // inner dof loop
+                }
+            }
+            if (is_blocked || possible_t_sync < t_min.value_or(0.0)) {
                 continue;
             }
 
@@ -244,7 +261,7 @@ public:
 
         int limiting_dof; // The DoF that doesn't need step 2
         const bool discrete_duration = (inp.duration_discretization == DurationDiscretization::Discrete);
-        const bool found_synchronization = synchronize(blocks, inp.minimum_duration, traj.duration, limiting_dof, traj.profiles, discrete_duration, delta_time);
+        const bool found_synchronization = synchronize(inp.minimum_duration, traj.duration, limiting_dof, traj.profiles, discrete_duration, delta_time);
         if (!found_synchronization) {
             if constexpr (throw_error) {
                 throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(traj.duration));
