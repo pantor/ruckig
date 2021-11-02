@@ -10,6 +10,7 @@
 #include <optional>
 #include <tuple>
 
+#include <ruckig/calculator.hpp>
 #include <ruckig/input_parameter.hpp>
 #include <ruckig/output_parameter.hpp>
 #include <ruckig/trajectory.hpp>
@@ -25,6 +26,10 @@ class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
+    //! Calculator for new trajectories
+    Calculator<DOFs> calculator;
+
+    //! Max number of intermediate waypoints
     const size_t max_number_of_waypoints;
 
 public:
@@ -41,13 +46,12 @@ public:
     explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time), max_number_of_waypoints(0) {
     }
 
-
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
+    explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), calculator(Calculator<0>(dofs)), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
     }
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
+    explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), calculator(Calculator<0>(dofs)), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
     }
 
 
@@ -158,7 +162,7 @@ public:
             return Result::ErrorInvalidInput;
         }
 
-        const Result result = trajectory.template calculate<throw_error, return_error_at_maximal_duration>(input, delta_time, was_interrupted);
+        const Result result = calculator.template calculate<throw_error, return_error_at_maximal_duration>(input, trajectory, delta_time, was_interrupted);
         return result;
     }
 
