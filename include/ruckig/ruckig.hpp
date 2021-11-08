@@ -162,8 +162,7 @@ public:
             return Result::ErrorInvalidInput;
         }
 
-        const Result result = calculator.template calculate<throw_error, return_error_at_maximal_duration>(input, trajectory, delta_time, was_interrupted);
-        return result;
+        return calculator.template calculate<throw_error, return_error_at_maximal_duration>(input, trajectory, delta_time, was_interrupted);
     }
 
     //! Get the next output state (with step delta_time) along the calculated trajectory for the given input

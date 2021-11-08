@@ -101,6 +101,7 @@ class Calculator {
         // Possible t_syncs are the start times of the intervals and optional t_min
         bool any_interval {false};
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            // Ignore DoFs without synchronization here
             if (inp_per_dof_synchronization[dof] == Synchronization::None) {
                 possible_t_syncs[dof] = 0.0;
                 possible_t_syncs[degrees_of_freedom + dof] = std::numeric_limits<double>::infinity();
@@ -173,10 +174,10 @@ public:
     size_t degrees_of_freedom;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
-    Calculator(): degrees_of_freedom(DOFs) { }
+    explicit Calculator(): degrees_of_freedom(DOFs) { }
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    Calculator(size_t dofs): degrees_of_freedom(dofs) {
+    explicit Calculator(size_t dofs): degrees_of_freedom(dofs) {
         blocks.resize(dofs);
         p0s.resize(dofs);
         v0s.resize(dofs);
@@ -198,13 +199,16 @@ public:
     Result calculate(const InputParameter<DOFs>& inp, Trajectory<DOFs>& traj, double delta_time, bool& was_interrupted) {
         was_interrupted = false;
 
-        for (size_t dof = 0; dof < traj.profiles.size(); ++dof) {
-            auto& p = traj.profiles[dof];
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            auto& p = traj.profiles[0][dof];
             if (!inp.enabled[dof]) {
                 p.pf = inp.current_position[dof];
                 p.vf = inp.current_velocity[dof];
                 p.af = inp.current_acceleration[dof];
                 p.t_sum[6] = 0.0;
+                blocks[dof].t_min = 0.0;
+                blocks[dof].a = std::nullopt;
+                blocks[dof].b = std::nullopt;
                 continue;
             }
 
@@ -261,13 +265,25 @@ public:
 
         int limiting_dof; // The DoF that doesn't need step 2
         const bool discrete_duration = (inp.duration_discretization == DurationDiscretization::Discrete);
-        const bool found_synchronization = synchronize(inp.minimum_duration, traj.duration, limiting_dof, traj.profiles, discrete_duration, delta_time);
+        const bool found_synchronization = synchronize(inp.minimum_duration, traj.duration, limiting_dof, traj.profiles[0], discrete_duration, delta_time);
         if (!found_synchronization) {
             if constexpr (throw_error) {
                 throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(traj.duration));
             }
             return Result::ErrorSynchronizationCalculation;
         }
+
+        // None Synchronization
+        for (size_t dof = 0; dof < blocks.size(); ++dof) {
+            if (inp.enabled[dof] && inp_per_dof_synchronization[dof] == Synchronization::None) {
+                traj.profiles[0][dof] = blocks[dof].p_min;
+                if (blocks[dof].t_min > traj.duration) {
+                    traj.duration = blocks[dof].t_min;
+                    limiting_dof = dof;
+                }
+            }
+        }
+        traj.cumulative_times[0] = traj.duration;
 
         if constexpr (return_error_at_maximal_duration) {
             if (traj.duration > 7.6e3) {
@@ -279,30 +295,25 @@ public:
             return Result::Working;
         }
 
-        // None Synchronization
-        for (size_t dof = 0; dof < blocks.size(); ++dof) {
-            if (inp.enabled[dof] && dof != limiting_dof && inp_per_dof_synchronization[dof] == Synchronization::None) {
-                traj.profiles[dof] = blocks[dof].p_min;
-            }
-        }
         if (std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::None; })) {
             return Result::Working;
         }
 
         // Phase Synchronization
         if (std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
-            if (is_input_collinear(inp, inp.max_jerk, traj.profiles[limiting_dof].direction, limiting_dof, new_max_jerk)) {
+            const Profile& p_limiting = traj.profiles[0][limiting_dof];
+            if (is_input_collinear(inp, inp.max_jerk, p_limiting.direction, limiting_dof, new_max_jerk)) {
                 bool found_time_synchronization {true};
-                for (size_t dof = 0; dof < traj.profiles.size(); ++dof) {
+                for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                     if (!inp.enabled[dof] || dof == limiting_dof || inp_per_dof_synchronization[dof] != Synchronization::Phase) {
                         continue;
                     }
 
-                    Profile& p = traj.profiles[dof];
+                    Profile& p = traj.profiles[0][dof];
                     const double t_profile = traj.duration - p.brake.duration;
 
-                    p.t = traj.profiles[limiting_dof].t; // Copy timing information from limiting DoF
-                    p.jerk_signs = traj.profiles[limiting_dof].jerk_signs;
+                    p.t = p_limiting.t; // Copy timing information from limiting DoF
+                    p.jerk_signs = p_limiting.jerk_signs;
                     p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
 
                     // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
@@ -319,7 +330,7 @@ public:
                         } break;
                     }
 
-                    p.limits = traj.profiles[limiting_dof].limits; // After check method call to set correct limits
+                    p.limits = p_limiting.limits; // After check method call to set correct limits
                 }
 
                 if (found_time_synchronization && std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase || s == Synchronization::None; })) {
@@ -329,12 +340,12 @@ public:
         }
 
         // Time Synchronization
-        for (size_t dof = 0; dof < traj.profiles.size(); ++dof) {
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             if (!inp.enabled[dof] || dof == limiting_dof || inp_per_dof_synchronization[dof] == Synchronization::None) {
                 continue;
             }
 
-            Profile& p = traj.profiles[dof];
+            Profile& p = traj.profiles[0][dof];
             const double t_profile = traj.duration - p.brake.duration;
 
             if (inp_per_dof_synchronization[dof] == Synchronization::TimeIfNecessary && std::abs(inp.target_velocity[dof]) < eps && std::abs(inp.target_acceleration[dof]) < eps) {
