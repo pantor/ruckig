@@ -211,7 +211,7 @@ Ruckig<6> otg {0.001, 8};
 InputParameter<6> input {8};
 OutputParameter<6> output {8};
 ```
-The `InputParameter` class takes the number of waypoints as an optional input, however usually you will fill in the values (and therefore reserve its memory) yourself. You can specify the kinematic limits for each section between two waypoints separately by using e.g. `input.per_section_max_velocity`.
+The `InputParameter` class takes the number of waypoints as an optional input, however usually you will fill in the values (and therefore reserve its memory) yourself. You can overwrite the global kinematic limits to specify limits for each section between two waypoints separately by using e.g. `input.per_section_max_velocity`.
 
 When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
 
