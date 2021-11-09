@@ -90,8 +90,13 @@ public:
     //! Intermediate waypoints (only in Ruckig Pro)
     std::vector<Vector<double>> intermediate_positions;
 
+    // Kinematic constraints for intermediate sections (between waypoints) (only in Ruckig Pro)
+    std::optional<std::vector<Vector<double>>> per_section_max_velocity, per_section_max_acceleration, per_section_max_jerk;
+    std::optional<std::vector<Vector<double>>> per_section_min_velocity, per_section_min_acceleration;
+
     // Positional constraints (only in Ruckig Pro)
     std::optional<Vector<double>> max_position, min_position;
+    // std::optional<double> maximum_distance_to_linear_interpolation;
 
     //! Is the DoF considered for calculation?
     Vector<bool> enabled;
@@ -131,6 +136,11 @@ public:
             || max_acceleration != rhs.max_acceleration
             || max_jerk != rhs.max_jerk
             || intermediate_positions != rhs.intermediate_positions
+            || per_section_max_velocity != rhs.per_section_max_velocity
+            || per_section_max_acceleration != rhs.per_section_max_acceleration
+            || per_section_max_jerk != rhs.per_section_max_jerk
+            || per_section_min_velocity != rhs.per_section_min_velocity
+            || per_section_min_acceleration != rhs.per_section_min_acceleration
             || max_position != rhs.max_position
             || min_position != rhs.min_position
             || enabled != rhs.enabled
