@@ -21,6 +21,7 @@ namespace ruckig {
 //! Calculation class for a trajectory.
 template<size_t DOFs>
 class Calculator {
+private:
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
     template<class T> using VectorIntervals = typename std::conditional<DOFs >= 1, std::array<T, 3*DOFs+1>, std::vector<T>>::type;
 

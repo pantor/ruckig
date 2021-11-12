@@ -309,6 +309,11 @@ void PositionStep1::time_none(Profile& profile, double vMax, double vMin, double
         const double t_min = (a0 - af)/jMax;
         const double t_max = (aMax - aMin)/jMax;
 
+        // const double h01 = a0_a0/jMax - 2*(v0 - vMax);
+        // const double h02 = Sqrt((h01 - h2)*h01) * Abs(jMax)/jMax;
+        // const double t_min_vmax = Sqrt((2*h01 - h2 - 2*h02)/jMax);
+        // t_min = std::max(t_min, t_min_vmax);
+
         auto roots = Roots::solveQuartMonic(polynom);
         for (double t: roots) {
             if (t < t_min || t > t_max) {
