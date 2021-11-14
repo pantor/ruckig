@@ -62,7 +62,7 @@ jobs:
         git checkout v2.6.0
 
     - name: Build manylinux wheels
-      uses: RalfG/python-wheels-manylinux-build@v0.2.2-manylinux2010_x86_64
+      uses: RalfG/python-wheels-manylinux-build@v0.3.4-manylinux2010_x86_64
       with:
         python-versions: 'cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39'
 
@@ -71,9 +71,5 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        ls -l
-        mkdir asdf
         sudo python setup.py sdist
-        ls
         twine upload dist/*
-        twine upload wheelhouse/*-manylinux*.whl
