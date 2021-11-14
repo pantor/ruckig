@@ -71,6 +71,9 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        python setup.py sdist
+        ls -l
+        mkdir asdf
+        sudo python setup.py sdist
+        ls
         twine upload dist/*
         twine upload wheelhouse/*-manylinux*.whl
