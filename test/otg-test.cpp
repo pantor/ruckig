@@ -232,6 +232,77 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( output.trajectory.get_duration() == doctest::Approx(12.0) );
 }
 
+TEST_CASE("input-validation" * doctest::description("Secondary Features")) {
+    Ruckig<2, true> otg;
+    InputParameter<2> input;
+
+    const double nan = std::nan("");
+
+    input.current_position = {0.0, -2.0};
+    input.current_velocity = {0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0};
+    input.target_position = {1.0, -3.0};
+    input.target_velocity = {0.0, 0.3};
+    input.target_acceleration = {0.0, 0.0};
+    input.max_velocity = {1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0};
+    input.max_jerk = {1.0, 1.0};
+
+    CHECK( otg.validate_input(input) );
+
+    input.max_jerk = {1.0, nan};
+    CHECK_FALSE( otg.validate_input(input) );
+
+    input.max_jerk = {1.0, 1.0};
+    input.current_position = {1.0, nan};
+    CHECK_FALSE( otg.validate_input(input) );
+
+    input.current_position = {1.0, 1.0};
+    input.max_acceleration = {1.0, -1.0};
+    CHECK_FALSE( otg.validate_input(input) );
+
+    input.max_acceleration = {1.0, 1.0};
+    input.target_velocity = {0.0, 1.3};
+    CHECK( otg.validate_input(input, false, false) );
+    CHECK_FALSE( otg.validate_input(input, false, true) );
+    CHECK_FALSE( otg.validate_input(input) );
+
+    input.target_velocity = {0.0, 0.3};
+    input.current_velocity = {2.0, 0.0};
+    CHECK( otg.validate_input(input, false, false) );
+    CHECK_FALSE( otg.validate_input(input, true, false) );
+    CHECK_FALSE( otg.validate_input(input, true, true) );
+    CHECK( otg.validate_input(input) );
+
+    input.current_velocity = {1.0, 0.0};
+    input.current_acceleration = {-1.0, 0.0};
+    CHECK( otg.validate_input(input) );
+    CHECK( otg.validate_input(input, true, true) );
+
+    input.current_velocity = {1.0, 0.0};
+    input.current_acceleration = {1.0, 0.0};
+    CHECK( otg.validate_input(input) );
+    CHECK_FALSE( otg.validate_input(input, true, true) );
+
+    input.current_velocity = {0.72, 0.0};
+    input.current_acceleration = {0.72, 0.0};
+    CHECK( otg.validate_input(input, true, true) );
+
+    input.current_velocity = {0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0};
+    input.target_velocity = {0.0, 0.72};
+    input.target_acceleration = {0.0, 0.72};
+    CHECK( otg.validate_input(input) );
+
+    input.target_velocity = {0.0, 1.0};
+    input.target_acceleration = {0.0, 1.0};
+    CHECK( otg.validate_input(input) );
+
+    input.target_velocity = {0.0, 1.0};
+    input.target_acceleration = {0.0, -0.0001};
+    CHECK_FALSE( otg.validate_input(input) );
+}
+
 TEST_CASE("enabled" * doctest::description("Enabled DoF")) {
     Ruckig<3, true> otg {0.005};
     InputParameter<3> input;

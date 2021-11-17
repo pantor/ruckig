@@ -32,6 +32,10 @@ class Ruckig {
     //! Max number of intermediate waypoints
     const size_t max_number_of_waypoints;
 
+    inline static double v_at_a_zero(double v0, double a0, double j) {
+        return v0 + (a0 * a0)/(2 * j);
+    }
+
 public:
     size_t degrees_of_freedom;
 
@@ -55,79 +59,70 @@ public:
     }
 
 
-    //! Validate the input for the trajectory calculation
-    bool validate_input(const InputParameter<DOFs>& input) const {
+    //! Validate the input for trajectory calculation and kinematic limits
+    bool validate_input(const InputParameter<DOFs>& input, bool check_current_state_within_limits=false, bool check_target_state_within_limits=true) const {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
-            if (input.control_interface == ControlInterface::Position && std::isnan(input.current_position[dof])) {
+            const double jMax = input.max_jerk[dof];
+            if (std::isnan(jMax) || jMax <= std::numeric_limits<double>::min()) {
                 return false;
             }
 
-            if (input.control_interface == ControlInterface::Position && std::isnan(input.max_velocity[dof])) {
+            const double aMax = input.max_acceleration[dof];
+            if (std::isnan(aMax) || aMax <= std::numeric_limits<double>::min()) {
                 return false;
             }
 
-            if (input.control_interface == ControlInterface::Position && input.max_velocity[dof] <= std::numeric_limits<double>::min()) {
+            const double aMin = input.min_acceleration ? input.min_acceleration.value()[dof] : -input.max_acceleration[dof];
+            if (std::isnan(aMin) || aMin >= -std::numeric_limits<double>::min()) {
                 return false;
             }
 
-            if (input.min_velocity && input.min_velocity.value()[dof] >= -std::numeric_limits<double>::min()) {
+            const double a0 = input.current_acceleration[dof];
+            const double af = input.target_acceleration[dof];
+            if (std::isnan(a0) || std::isnan(af)) {
                 return false;
             }
 
-            if (std::isnan(input.max_acceleration[dof])) {
+            if (check_current_state_within_limits && (a0 > aMax || a0 < aMin)) {
+                return false;
+            }
+            if (check_target_state_within_limits && (af > aMax || af < aMin)) {
+                return false;  
+            }
+
+            const double v0 = input.current_velocity[dof];
+            const double vf = input.target_velocity[dof];
+            if (std::isnan(v0) || std::isnan(vf)) {
                 return false;
             }
 
-            if (input.max_acceleration[dof] <= std::numeric_limits<double>::min()) {
-                return false;
-            }
-
-            if (input.min_acceleration && input.min_acceleration.value()[dof] >= -std::numeric_limits<double>::min()) {
-                return false;
-            }
-
-            if (std::isnan(input.max_jerk[dof])) {
-                return false;
-            }
-
-            if (input.max_jerk[dof] <= std::numeric_limits<double>::min()) {
-                return false;
-            }
-
-            if (input.control_interface == ControlInterface::Position && std::isnan(input.target_position[dof])) {
-                return false;
-            }
-
-            if (input.control_interface == ControlInterface::Position) {
-                if (input.min_velocity) {
-                    if (input.target_velocity[dof] > input.max_velocity[dof] || input.target_velocity[dof] < input.min_velocity.value()[dof]) {
-                        return false;
-                    }
-
-                } else {
-                    if (std::abs(input.target_velocity[dof]) > input.max_velocity[dof]) {
-                        return false;
-                    }
-                }
-            }
-
-            if (input.min_acceleration) {
-                if (input.target_acceleration[dof] > input.max_acceleration[dof] || input.target_acceleration[dof] < input.min_acceleration.value()[dof]) {
+            auto control_interface = input.per_dof_control_interface ? input.per_dof_control_interface.value()[dof] : input.control_interface;
+            if (control_interface == ControlInterface::Position) {
+                if (std::isnan(input.current_position[dof]) || std::isnan(input.target_position[dof])) {
                     return false;
                 }
 
-            } else {
-                if (std::abs(input.target_acceleration[dof]) > input.max_acceleration[dof]) {
+                const double vMax = input.max_velocity[dof];
+                if (std::isnan(vMax) || vMax <= std::numeric_limits<double>::min()) {
                     return false;
                 }
-            }
 
-            // Target acceleration needs to be accessible from "above" and "below"
-            if (input.control_interface == ControlInterface::Position) {
-                const double min_velocity = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
-                const double v_diff = std::min(std::abs(input.max_velocity[dof] - input.target_velocity[dof]), std::abs(min_velocity - input.target_velocity[dof]));
-                const double max_target_acceleration = std::sqrt(2 * input.max_jerk[dof] * v_diff);
-                if (std::abs(input.target_acceleration[dof]) > max_target_acceleration) {
+                const double vMin = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
+                if (std::isnan(vMin) || vMin >= -std::numeric_limits<double>::min()) {
+                    return false;
+                }
+
+                if (check_current_state_within_limits && (v0 > vMax || v0 < vMin)) {
+                    return false;
+                }
+                if (check_target_state_within_limits && (vf > vMax || vf < vMin)) {
+                    return false;
+                }
+
+                if (check_current_state_within_limits && ((a0 > 0 && v_at_a_zero(v0, a0, jMax) > vMax) || (a0 < 0 && v_at_a_zero(v0, a0, -jMax) < vMin))) {
+                    return false;
+                }
+                if (check_target_state_within_limits && ((af < 0 && v_at_a_zero(vf, af, jMax) > vMax) || (af > 0 && v_at_a_zero(vf, af, -jMax) < vMin))) {
                     return false;
                 }
             }
