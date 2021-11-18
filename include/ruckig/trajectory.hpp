@@ -95,11 +95,21 @@ public:
             // Accel post-trajectory
             // if (new_section == profiles.size() - 1 && p.accel.duration > 0) {
             //     if (t_diff_dof > p.t_sum[6]) {
-            //         const size_t index = (t_diff_dof < p.accel.t[0]) ? 1 : 0;
+            //         const size_t index = (t_diff_dof < p.accel.t[1]) ? 1 : 0;
             //         if (index > 0) {
             //             t_diff_dof -= p.accel.t[index - 1];
             //         }
 
+            //         t_diff_dof -= p.t_sum[6];
+
+            //         if (t_diff_dof < p.accel.t[1]) {
+            //             std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.pf, p.vf, p.af, p.accel.j[1]);
+            //             continue;
+            //         }
+
+            //         t_diff_dof -= p.accel.t[1];
+
+            //         const size_t index = 1;
             //         std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.accel.p[index], p.accel.v[index], p.accel.a[index], p.accel.j[index]);
             //         continue;
             //     }
