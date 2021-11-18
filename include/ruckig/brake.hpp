@@ -3,20 +3,11 @@
 #include <array>
 #include <cmath>
 #include <iostream>
-#include <tuple>
+
+#include <ruckig/utils.hpp>
 
 
 namespace ruckig {
-
-//! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
-inline std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j) {
-    return std::make_tuple(
-        p0 + t * (v0 + t * (a0 / 2 + t * j / 6)),
-        v0 + t * (a0 + t * j / 2),
-        a0 + t * j
-    );
-}
-
 
 //! Calculates (pre- or post-) profile to get current or final state below the limits
 class BrakeProfile {
@@ -42,7 +33,7 @@ public:
             p[i] = ps;
             v[i] = vs;
             a[i] = as;
-            std::tie(ps, vs, as) = ::ruckig::integrate(t[i], ps, vs, as, j[i]);
+            std::tie(ps, vs, as) = integrate(t[i], ps, vs, as, j[i]);
         }
     }
 };

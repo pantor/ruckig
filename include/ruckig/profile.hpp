@@ -10,6 +10,7 @@
 
 #include <ruckig/brake.hpp>
 #include <ruckig/roots.hpp>
+#include <ruckig/utils.hpp>
 
 
 namespace ruckig {
