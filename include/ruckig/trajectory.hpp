@@ -61,7 +61,7 @@ public:
             for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                 const double t_pre = (profiles.size() > 1) ? cumulative_times[cumulative_times.size() - 2] : profiles_dof[dof].brake.duration;
                 const double t_diff = time - (t_pre + profiles_dof[dof].t_sum[6]);
-                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff, profiles_dof[dof].pf, profiles_dof[dof].vf, profiles_dof[dof].af, 0);
+                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff, profiles_dof[dof].pf, profiles_dof[dof].vf, profiles_dof[dof].af, 0);
             }
             return;
         }
@@ -77,6 +77,7 @@ public:
             const Profile& p = profiles[new_section][dof];
             double t_diff_dof = t_diff;
 
+            // Brake pre-trajectory
             if (new_section == 0 && p.brake.duration > 0) {
                 if (t_diff_dof < p.brake.duration) {
                     const size_t index = (t_diff_dof < p.brake.t[0]) ? 0 : 1;
@@ -84,17 +85,30 @@ public:
                         t_diff_dof -= p.brake.t[index - 1];
                     }
 
-                    std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff_dof, p.brake.p[index], p.brake.v[index], p.brake.a[index], p.brake.j[index]);
+                    std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.brake.p[index], p.brake.v[index], p.brake.a[index], p.brake.j[index]);
                     continue;
                 } else {
                     t_diff_dof -= p.brake.duration;
                 }
             }
 
+            // Accel post-trajectory
+            // if (new_section == profiles.size() - 1 && p.accel.duration > 0) {
+            //     if (t_diff_dof > p.t_sum[6]) {
+            //         const size_t index = (t_diff_dof < p.accel.t[0]) ? 1 : 0;
+            //         if (index > 0) {
+            //             t_diff_dof -= p.accel.t[index - 1];
+            //         }
+
+            //         std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.accel.p[index], p.accel.v[index], p.accel.a[index], p.accel.j[index]);
+            //         continue;
+            //     }
+            // }
+
             // Non-time synchronization
             if (t_diff_dof >= p.t_sum[6]) {
                 // Keep constant acceleration
-                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff_dof - p.t_sum[6], p.pf, p.vf, p.af, 0);
+                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof - p.t_sum[6], p.pf, p.vf, p.af, 0);
                 continue;
             }
 
@@ -105,7 +119,7 @@ public:
                 t_diff_dof -= p.t_sum[index_dof - 1];
             }
 
-            std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = Profile::integrate(t_diff_dof, p.p[index_dof], p.v[index_dof], p.a[index_dof], p.j[index_dof]);
+            std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.p[index_dof], p.v[index_dof], p.a[index_dof], p.j[index_dof]);
         }
     }
 

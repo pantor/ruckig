@@ -489,7 +489,6 @@ void PositionStep1::time_none_two_step(Profile& profile, double vMax, double vMi
 
 bool PositionStep1::get_profile(const Profile& input, Block& block) {
     Profile profile = input;
-    profile.set_boundary(p0, v0, a0, pf, vf, af);
     valid_profile_counter = 0;
 
     if (std::abs(vf) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {

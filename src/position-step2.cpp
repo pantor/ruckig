@@ -4,7 +4,7 @@
 
 namespace ruckig {
 
-PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), tf(tf), pf(pf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
+PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): v0(v0), a0(a0), tf(tf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
     pd = pf - p0;
     tf_tf = tf * tf;
     tf_p3 = tf_tf * tf;
@@ -976,8 +976,6 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
 }
 
 bool PositionStep2::get_profile(Profile& profile) {
-    profile.set_boundary(p0, v0, a0, pf, vf, af);
-
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
     const bool up_first = (pd > tf * v0);

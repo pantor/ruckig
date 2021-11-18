@@ -7,7 +7,6 @@
 #include <iostream>
 #include <limits>
 #include <optional>
-#include <tuple>
 
 #include <ruckig/brake.hpp>
 #include <ruckig/roots.hpp>
@@ -38,8 +37,8 @@ public:
     //! Target (final) kinematic state
     double pf, vf, af;
 
-    //! Brake sub-profile
-    BrakeProfile brake;
+    //! Brake sub-profiles
+    BrakeProfile brake, accel;
 
     // For velocity interface
     template<JerkSigns jerk_signs, Limits limits>
@@ -206,15 +205,6 @@ public:
     template<JerkSigns jerk_signs, Limits limits>
     inline bool check_with_timing(double tf, double jf, double vMax, double vMin, double aMax, double aMin, double jMax) {
         return (std::abs(jf) < std::abs(jMax) + 1e-12) && check_with_timing<jerk_signs, limits>(tf, jf, vMax, vMin, aMax, aMin);
-    }
-
-    //! Integrate with constant jerk for duration t. Returns new position, new velocity, and new acceleration.
-    inline static std::tuple<double, double, double> integrate(double t, double p0, double v0, double a0, double j) {
-        return std::make_tuple(
-            p0 + t * (v0 + t * (a0 / 2 + t * j / 6)),
-            v0 + t * (a0 + t * j / 2),
-            a0 + t * j
-        );
     }
 
     //! Set boundary values for the position interface

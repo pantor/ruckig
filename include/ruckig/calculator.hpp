@@ -27,19 +27,16 @@ private:
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
 
+    Vector<double> new_max_jerk; // For phase synchronization
     Vector<double> pd;
-
     VectorIntervals<double> possible_t_syncs;
     VectorIntervals<int> idx;
 
     Vector<Block> blocks;
-    Vector<double> p0s, v0s, a0s; // Starting point of profiles without brake trajectory
     Vector<double> inp_min_velocity, inp_min_acceleration;
 
     Vector<ControlInterface> inp_per_dof_control_interface;
     Vector<Synchronization> inp_per_dof_synchronization;
-
-    Vector<double> new_max_jerk; // For phase synchronization
 
     //! Is the trajectory (in principle) phase synchronizable?
     bool is_input_collinear(const InputParameter<DOFs>& inp, const Vector<double>& jMax, Profile::Direction limiting_direction, size_t limiting_dof, Vector<double>& new_max_jerk) {
@@ -180,17 +177,12 @@ public:
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     explicit Calculator(size_t dofs): degrees_of_freedom(dofs) {
         blocks.resize(dofs);
-        p0s.resize(dofs);
-        v0s.resize(dofs);
-        a0s.resize(dofs);
         inp_min_velocity.resize(dofs);
         inp_min_acceleration.resize(dofs);
         inp_per_dof_control_interface.resize(dofs);
         inp_per_dof_synchronization.resize(dofs);
-        pd.resize(dofs);
-
         new_max_jerk.resize(dofs);
-
+        pd.resize(dofs);
         possible_t_syncs.resize(3*dofs+1);
         idx.resize(3*dofs+1);
     }
@@ -203,9 +195,7 @@ public:
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             auto& p = traj.profiles[0][dof];
             if (!inp.enabled[dof]) {
-                p.pf = inp.current_position[dof];
-                p.vf = inp.current_velocity[dof];
-                p.af = inp.current_acceleration[dof];
+                p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof]);
                 p.t_sum[6] = 0.0;
                 blocks[dof].t_min = 0.0;
                 blocks[dof].a = std::nullopt;
@@ -222,33 +212,28 @@ public:
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
                     BrakeProfile::get_position_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.brake.t, p.brake.j);
+                    // BrakeProfile::get_position_brake_trajectory(inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.accel.t, p.accel.j);
+                    p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
                 } break;
                 case ControlInterface::Velocity: {
                     BrakeProfile::get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.brake.t, p.brake.j);
+                    // BrakeProfile::get_velocity_brake_trajectory(inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof], p.accel.t, p.accel.j);
+                    p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
                 } break;
             }
 
-            p.brake.duration = p.brake.t[0] + p.brake.t[1];
-            p0s[dof] = inp.current_position[dof];
-            v0s[dof] = inp.current_velocity[dof];
-            a0s[dof] = inp.current_acceleration[dof];
-
-            // Integrate brake pre-trajectory
-            for (size_t i = 0; i < 2 && p.brake.t[i] > 0; ++i) {
-                p.brake.p[i] = p0s[dof];
-                p.brake.v[i] = v0s[dof];
-                p.brake.a[i] = a0s[dof];
-                std::tie(p0s[dof], v0s[dof], a0s[dof]) = Profile::integrate(p.brake.t[i], p0s[dof], v0s[dof], a0s[dof], p.brake.j[i]);
-            }
+            // Finalize pre & post-trajectories
+            p.brake.finalize(p.p[0], p.v[0], p.a[0]);
+            // p.accel.finalize(p.pf, p.vf, p.af);
 
             bool found_profile;
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
-                    PositionStep1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    PositionStep1 step1 {p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_profile = step1.get_profile(p, blocks[dof]);
                 } break;
                 case ControlInterface::Velocity: {
-                    VelocityStep1 step1 {p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    VelocityStep1 step1 {p.v[0], p.a[0], p.vf, p.af, inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_profile = step1.get_profile(p, blocks[dof]);
                 } break;
             }
@@ -311,11 +296,10 @@ public:
                     }
 
                     Profile& p = traj.profiles[0][dof];
-                    const double t_profile = traj.duration - p.brake.duration;
+                    const double t_profile = traj.duration - p.brake.duration - p.accel.duration;
 
                     p.t = p_limiting.t; // Copy timing information from limiting DoF
                     p.jerk_signs = p_limiting.jerk_signs;
-                    p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
 
                     // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
                     switch (p.jerk_signs) {
@@ -347,7 +331,7 @@ public:
             }
 
             Profile& p = traj.profiles[0][dof];
-            const double t_profile = traj.duration - p.brake.duration;
+            const double t_profile = traj.duration - p.brake.duration - p.accel.duration;
 
             if (inp_per_dof_synchronization[dof] == Synchronization::TimeIfNecessary && std::abs(inp.target_velocity[dof]) < eps && std::abs(inp.target_acceleration[dof]) < eps) {
                 p = blocks[dof].p_min;
@@ -369,11 +353,11 @@ public:
             bool found_time_synchronization;
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
-                    PositionStep2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    PositionStep2 step2 {t_profile, p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_time_synchronization = step2.get_profile(p);
                 } break;
                 case ControlInterface::Velocity: {
-                    VelocityStep2 step2 {t_profile, p0s[dof], v0s[dof], a0s[dof], inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                    VelocityStep2 step2 {t_profile, p.v[0], p.a[0], p.vf, p.af, inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                     found_time_synchronization = step2.get_profile(p);
                 } break;
             }

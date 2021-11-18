@@ -4,7 +4,7 @@
 
 namespace ruckig {
 
-VelocityStep1::VelocityStep1(double p0, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): p0(p0), v0(v0), a0(a0), vf(vf), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax) { }
+VelocityStep1::VelocityStep1(double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): v0(v0), a0(a0), vf(vf), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax) { }
 
 void VelocityStep1::time_acc0(Profile& profile, double aMax, double aMin, double jMax) {
     // UD
@@ -74,7 +74,6 @@ void VelocityStep1::time_none(Profile& profile, double aMax, double aMin, double
 
 bool VelocityStep1::get_profile(const Profile& input, Block& block) {
     Profile profile = input;
-    profile.set_boundary(p0, v0, a0, vf, af);
     valid_profile_counter = 0;
 
     if (std::abs(v0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {

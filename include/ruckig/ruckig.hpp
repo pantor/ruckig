@@ -153,7 +153,7 @@ public:
 
     //! Calculate a new trajectory for the given input and check for interruption
     Result calculate(const InputParameter<DOFs>& input, Trajectory<DOFs>& trajectory, bool& was_interrupted) {
-        if (!validate_input(input)) {
+        if (!validate_input(input, false, true)) {
             return Result::ErrorInvalidInput;
         }
 

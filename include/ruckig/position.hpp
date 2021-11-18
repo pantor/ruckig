@@ -56,8 +56,8 @@ public:
 
 //! Mathematical equations for Step 2 in position interface: Time synchronization
 class PositionStep2 {
-    double p0, v0, a0;
-    double tf, pf, vf, af;
+    double v0, a0;
+    double tf, vf, af;
     double _vMax, _vMin, _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions

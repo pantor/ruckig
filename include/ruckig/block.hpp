@@ -18,8 +18,8 @@ class Block {
         Profile profile; // Profile corresponding to right (end) time
 
         explicit Interval(const Profile& profile_left, const Profile& profile_right) {
-            const double left_duration = profile_left.t_sum[6] + profile_left.brake.duration;
-            const double right_duration = profile_right.t_sum[6] + profile_right.brake.duration;
+            const double left_duration = profile_left.t_sum[6] + profile_left.brake.duration + profile_left.accel.duration;
+            const double right_duration = profile_right.t_sum[6] + profile_right.brake.duration + profile_right.accel.duration;
             if (left_duration < right_duration) {
                 left = left_duration;
                 right = right_duration;
@@ -34,7 +34,7 @@ class Block {
 
     void set_min_profile(const Profile& profile) {
         p_min = profile;
-        t_min = p_min.t_sum[6] + p_min.brake.duration;
+        t_min = p_min.t_sum[6] + p_min.brake.duration + p_min.accel.duration;
         a = std::nullopt;
         b = std::nullopt;
     }
