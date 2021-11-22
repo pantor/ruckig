@@ -1,3 +1,5 @@
+// This example shows the usage of intermediate waypoints. It will only work with the Ruckig Pro version.
+
 #include <iostream>
 
 #include <ruckig/ruckig.hpp>

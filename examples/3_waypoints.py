@@ -1,3 +1,5 @@
+# This example shows the usage of intermediate waypoints. It will only work with the Ruckig Pro version.
+
 from copy import copy
 from pathlib import Path
 from sys import path
