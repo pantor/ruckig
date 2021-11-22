@@ -33,10 +33,10 @@ public:
     //! Current time on trajectory
     double time;
 
-    //! Index of the current section between two intermediate positions (only relevant in Ruckig Pro)
+    //! Index of the current section between two (possibly filtered) intermediate positions (only relevant in Ruckig Pro)
     size_t new_section {0};
 
-    //! Was an intermediate position reached in the last cycle? (only relevant in Ruckig Pro)
+    //! Was a new section reached in the last cycle? (only relevant in Ruckig Pro)
     bool did_section_change {false};
 
     //! Was a new trajectory calculation performed in the last cycle?

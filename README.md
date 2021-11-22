@@ -187,8 +187,8 @@ Vector new_acceleration;
 Trajectory trajectory; // The current trajectory
 double time; // The current, auto-incremented time. Reset to 0 at a new calculation.
 
-size_t new_section; // Index of the section between two intermediate positions (only in Pro Version)
-bool did_section_change; // Was an intermediate position reached in the last cycle? (only in Pro Version)
+size_t new_section; // Index of the section between two (possibly filtered) intermediate positions.
+bool did_section_change; // Was a new section reached in the last cycle?
 
 bool new_calculation; // Whether a new calculation was performed in the last cycle
 bool was_calculation_interrupted; // Was the trajectory calculation interrupted? (only in Pro Version)
