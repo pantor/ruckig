@@ -18,7 +18,7 @@
 
 namespace ruckig {
 
-//! Calculation class for a trajectory.
+//! Calculation class for a state-to-state trajectory.
 template<size_t DOFs>
 class Calculator {
 private:
