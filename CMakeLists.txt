@@ -13,6 +13,7 @@ option(BUILD_PYTHON_MODULE "Build python module" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
+option(EXPOSE_INTERNAL "Expose some internal classes and methods" OFF)
 
 if(WIN32 AND BUILD_SHARED_LIBS)
   option(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS "On Windows, export all symbols when building a shared library." ON)
@@ -45,6 +46,11 @@ if(MSVC)
 
 else()
   target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
+endif()
+
+
+if(EXPOSE_INTERNAL)
+  target_compile_definitions(ruckig PUBLIC WITH_EXPOSE_INTERNAL)
 endif()
 
 

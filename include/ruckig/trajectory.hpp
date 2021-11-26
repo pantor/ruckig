@@ -44,6 +44,11 @@ public:
         position_extrema.resize(dofs);
     }
 
+    //! Get the underlying profiles of the trajectory
+    Container<Vector<Profile>> get_profiles() const {
+        return profiles;
+    }
+
     //! Get the kinematic state at a given time
 
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.

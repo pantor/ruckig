@@ -61,6 +61,9 @@ limited by velocity, acceleration, and jerk constraints.";
     py::class_<Trajectory<DynamicDOFs>>(m, "Trajectory")
         .def(py::init<size_t>(), "dofs"_a)
         .def_readonly("degrees_of_freedom", &Trajectory<DynamicDOFs>::degrees_of_freedom)
+#ifdef WITH_EXPOSE_INTERNAL
+        .def_property_readonly("profiles", &Trajectory<DynamicDOFs>::get_profiles)
+#endif
         .def_property_readonly("duration", &Trajectory<DynamicDOFs>::get_duration)
         .def_property_readonly("intermediate_durations", &Trajectory<DynamicDOFs>::get_intermediate_durations)
         .def_property_readonly("independent_min_durations", &Trajectory<DynamicDOFs>::get_independent_min_durations)
@@ -143,6 +146,33 @@ limited by velocity, acceleration, and jerk constraints.";
         .def("calculate", static_cast<Result (Ruckig<DynamicDOFs, true>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&Ruckig<DynamicDOFs, true>::calculate), "input"_a, "trajectory"_a)
         .def("calculate", static_cast<Result (Ruckig<DynamicDOFs, true>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&, bool&)>(&Ruckig<DynamicDOFs, true>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
         .def("update", &Ruckig<DynamicDOFs, true>::update, "input"_a, "output"_a);
+
+#ifdef WITH_EXPOSE_INTERNAL
+    py::class_<BrakeProfile>(m, "BrakeProfile")
+        .def_readonly("duration", &BrakeProfile::duration)
+        .def_readonly("t", &BrakeProfile::t)
+        .def_readonly("j", &BrakeProfile::j)
+        .def_readonly("a", &BrakeProfile::a)
+        .def_readonly("v", &BrakeProfile::v)
+        .def_readonly("p", &BrakeProfile::p);
+
+    py::class_<Profile>(m, "Profile")
+        .def_readonly("limits", &Profile::limits)
+        .def_readonly("direction", &Profile::direction)
+        .def_readonly("jerk_signs", &Profile::jerk_signs)
+        .def_readonly("t", &Profile::t)
+        .def_readonly("t_sum", &Profile::t_sum)
+        .def_readonly("j", &Profile::j)
+        .def_readonly("a", &Profile::a)
+        .def_readonly("v", &Profile::v)
+        .def_readonly("p", &Profile::p)
+        .def_readonly("pf", &Profile::pf)
+        .def_readonly("vf", &Profile::vf)
+        .def_readonly("af", &Profile::af)
+        .def_readonly("brake", &Profile::brake)
+        .def_readonly("accel", &Profile::accel)
+        .def("__repr__", &Profile::to_string);
+#endif
 
 #ifdef WITH_REFLEXXES
     py::class_<Reflexxes<DynamicDOFs>>(m, "Reflexxes")
