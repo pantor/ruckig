@@ -140,6 +140,7 @@ if(BUILD_TESTS)
       target_compile_definitions(${test} PUBLIC WITH_REFLEXXES)
     endif()
     target_link_libraries(${test} PRIVATE ruckig)
+    target_include_directories(${test} PRIVATE third_party)
     add_test(NAME ${test} COMMAND ${test})
   endforeach()
 
