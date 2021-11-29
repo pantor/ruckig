@@ -10,14 +10,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        cmake_flags: ["", " -DBUILD_ONLINE_CLIENT=ON "]
         include:
           - name: ubuntu-18.04-gcc-5
             os: ubuntu-18.04
             compiler: gcc
             version: 5
-          - name: online-calculator
-            os: ubuntu-latest
-            cmake_flags: " -DBUILD_ONLINE_CLIENT=ON "
 
     steps:
     - uses: actions/checkout@v2
