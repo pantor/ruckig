@@ -54,6 +54,7 @@ class CMakeBuild(build_ext):
             '-DEXAMPLE_VERSION_INFO={}'.format(self.distribution.get_version()),
             '-DCMAKE_BUILD_TYPE=' + build_type,
             '-DBUILD_PYTHON_MODULE=ON',
+            '-DBUILD_ONLINE_CLIENT=ON',
             '-DBUILD_EXAMPLES=OFF',
             '-DBUILD_TESTS=OFF',
             '-DBUILD_SHARED_LIBS=OFF',
