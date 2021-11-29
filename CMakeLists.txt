@@ -55,6 +55,15 @@ if(EXPOSE_INTERNAL)
 endif()
 
 
+if(BUILD_ONLINE_CLIENT)
+  target_include_directories(ruckig PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+  target_compile_definitions(ruckig PUBLIC WITH_ONLINE_CLIENT)
+endif()
+
+
 if(Reflexxes)
   set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
   message("Found Reflexxes ${REFLEXXES_TYPE}")
@@ -69,6 +78,13 @@ if(BUILD_EXAMPLES)
     add_executable(example-${example} "examples/${example}.cpp")
     target_link_libraries(example-${example} PRIVATE ruckig)
   endforeach()
+
+  if(BUILD_ONLINE_CLIENT)
+    foreach(example IN ITEMS 3_waypoints 4_waypoints_online)
+      add_executable(example-${example} "examples/${example}.cpp")
+      target_link_libraries(example-${example} PRIVATE ruckig)
+    endforeach()
+  endif()
 endif()
 
 
@@ -83,6 +99,9 @@ if(BUILD_PYTHON_MODULE)
   pybind11_add_module(python_ruckig src/python.cpp)
   target_compile_features(python_ruckig PUBLIC cxx_std_17)
   target_link_libraries(python_ruckig PUBLIC ruckig)
+  if(BUILD_ONLINE_CLIENT)
+    target_compile_definitions(python_ruckig PUBLIC WITH_ONLINE_CLIENT)
+  endif()
 
   set_target_properties(python_ruckig PROPERTIES OUTPUT_NAME ruckig)
   set_target_properties(python_ruckig PROPERTIES ARCHIVE_OUTPUT_NAME python_ruckig)

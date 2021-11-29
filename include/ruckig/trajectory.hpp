@@ -2,6 +2,7 @@
 
 #include <array>
 #include <tuple>
+#include <vector>
 
 #include <ruckig/input_parameter.hpp>
 #include <ruckig/profile.hpp>
@@ -10,17 +11,24 @@
 namespace ruckig {
 
 template <size_t> class Reflexxes;
-template <size_t> class Calculator;
+template <size_t> class TargetCalculator;
+template <size_t> class WaypointsCalculator;
 
 
 //! Interface for the generated trajectory.
 template<size_t DOFs>
 class Trajectory {
+#if defined WITH_ONLINE_CLIENT
+    template<class T> using Container = std::vector<T>;
+#else
     template<class T> using Container = std::array<T, 1>;
+#endif
+
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
 
     friend class Reflexxes<DOFs>;
-    friend class Calculator<DOFs>;
+    friend class TargetCalculator<DOFs>;
+    friend class WaypointsCalculator<DOFs>;
 
     Container<Vector<Profile>> profiles;
 
@@ -30,19 +38,56 @@ class Trajectory {
     Vector<double> independent_min_durations;
     Vector<PositionExtrema> position_extrema;
 
+    size_t continue_calculation_counter {0};
+
+#if defined WITH_ONLINE_CLIENT
+    void resize(size_t max_number_of_waypoints) {
+        profiles.resize(max_number_of_waypoints + 1);
+        cumulative_times.resize(max_number_of_waypoints + 1);
+
+        if constexpr (DOFs == 0) {
+            for (auto& p: profiles) {
+                p.resize(degrees_of_freedom);
+            }
+        }
+    }
+#endif
+
 public:
     size_t degrees_of_freedom;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     Trajectory(): degrees_of_freedom(DOFs) {
+#if defined WITH_ONLINE_CLIENT
+        resize(0);
+#endif
     }
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     Trajectory(size_t dofs): degrees_of_freedom(dofs) {
+#if defined WITH_ONLINE_CLIENT
+        resize(0);
+#endif
+
         profiles[0].resize(dofs);
         independent_min_durations.resize(dofs);
         position_extrema.resize(dofs);
     }
+
+#if defined WITH_ONLINE_CLIENT
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    Trajectory(size_t max_number_of_waypoints): degrees_of_freedom(DOFs) {
+        resize(max_number_of_waypoints);
+    }
+
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    Trajectory(size_t dofs, size_t max_number_of_waypoints): degrees_of_freedom(dofs) {
+        resize(max_number_of_waypoints);
+
+        independent_min_durations.resize(dofs);
+        position_extrema.resize(dofs);
+    }
+#endif
 
     //! Get the underlying profiles of the trajectory
     Container<Vector<Profile>> get_profiles() const {

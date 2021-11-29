@@ -56,6 +56,16 @@ public:
         resize(dofs);
     }
 
+#if defined WITH_ONLINE_CLIENT
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    OutputParameter(size_t max_number_of_waypoints): degrees_of_freedom(DOFs), trajectory(Trajectory<DOFs>(max_number_of_waypoints)) { }
+
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    OutputParameter(size_t dofs, size_t max_number_of_waypoints): degrees_of_freedom(dofs), trajectory(Trajectory<0>(dofs, max_number_of_waypoints)) {
+        resize(dofs);
+    }
+#endif
+
     void pass_to_input(InputParameter<DOFs>& input) const {
         input.current_position = new_position;
         input.current_velocity = new_velocity;

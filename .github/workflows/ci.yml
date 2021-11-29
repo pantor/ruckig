@@ -16,6 +16,10 @@ jobs:
             os: ubuntu-18.04
             compiler: gcc
             version: 5
+          
+          - name: ubuntu-latest-online-calculator
+            os: ubuntu-latest
+            cmake_flags: " -DBUILD_ONLINE_CLIENT=ON "
 
     steps:
     - uses: actions/checkout@v2
@@ -41,7 +45,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         buildDirectory: "${{ github.workspace }}/build"
         cmakeBuildType: 'Release'
-        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG=. -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG=.'
+        cmakeAppendedArgs: '-DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ${{ matrix.cmake_flags }} -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG=. -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG=.'
 
     - name: Run Examples (Unix)
       if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'

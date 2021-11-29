@@ -50,6 +50,12 @@ public:
     explicit Ruckig(double delta_time): degrees_of_freedom(DOFs), delta_time(delta_time), max_number_of_waypoints(0) {
     }
 
+#if defined WITH_ONLINE_CLIENT
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    explicit Ruckig(double delta_time, size_t max_number_of_waypoints): degrees_of_freedom(DOFs), delta_time(delta_time), calculator(Calculator<DOFs>(max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), current_input(InputParameter<DOFs>(max_number_of_waypoints)) {
+    }
+#endif
+
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     explicit Ruckig(size_t dofs): degrees_of_freedom(dofs), delta_time(-1.0), calculator(Calculator<0>(dofs)), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
     }
@@ -58,6 +64,11 @@ public:
     explicit Ruckig(size_t dofs, double delta_time): degrees_of_freedom(dofs), delta_time(delta_time), calculator(Calculator<0>(dofs)), max_number_of_waypoints(0), current_input(InputParameter<0>(dofs)) {
     }
 
+#if defined WITH_ONLINE_CLIENT
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    explicit Ruckig(size_t dofs, double delta_time, size_t max_number_of_waypoints): degrees_of_freedom(dofs), delta_time(delta_time), calculator(Calculator<0>(dofs, max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), current_input(InputParameter<0>(dofs, max_number_of_waypoints)) {
+    }
+#endif
 
     //! Validate the input for trajectory calculation and kinematic limits
     bool validate_input(const InputParameter<DOFs>& input, bool check_current_state_within_limits=false, bool check_target_state_within_limits=true) const {

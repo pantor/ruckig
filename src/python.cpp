@@ -60,6 +60,9 @@ limited by velocity, acceleration, and jerk constraints.";
 
     py::class_<Trajectory<DynamicDOFs>>(m, "Trajectory")
         .def(py::init<size_t>(), "dofs"_a)
+#if defined WITH_ONLINE_CLIENT
+        .def(py::init<size_t, size_t>(), "dofs"_a, "max_number_of_waypoints"_a)
+#endif
         .def_readonly("degrees_of_freedom", &Trajectory<DynamicDOFs>::degrees_of_freedom)
 #ifdef WITH_EXPOSE_INTERNAL
         .def_property_readonly("profiles", &Trajectory<DynamicDOFs>::get_profiles)
@@ -87,6 +90,9 @@ limited by velocity, acceleration, and jerk constraints.";
 
     py::class_<InputParameter<DynamicDOFs>>(m, "InputParameter")
         .def(py::init<size_t>(), "dofs"_a)
+#if defined WITH_ONLINE_CLIENT
+        .def(py::init<size_t, size_t>(), "dofs"_a, "max_number_of_waypoints"_a)
+#endif
         .def_readonly("degrees_of_freedom", &InputParameter<DynamicDOFs>::degrees_of_freedom)
         .def_readwrite("current_position", &InputParameter<DynamicDOFs>::current_position)
         .def_readwrite("current_velocity", &InputParameter<DynamicDOFs>::current_velocity)
@@ -120,6 +126,9 @@ limited by velocity, acceleration, and jerk constraints.";
 
     py::class_<OutputParameter<DynamicDOFs>>(m, "OutputParameter")
         .def(py::init<size_t>(), "dofs"_a)
+#if defined WITH_ONLINE_CLIENT
+        .def(py::init<size_t, size_t>(), "dofs"_a, "max_number_of_waypoints"_a)
+#endif
         .def_readonly("degrees_of_freedom", &OutputParameter<DynamicDOFs>::degrees_of_freedom)
         .def_readonly("new_position", &OutputParameter<DynamicDOFs>::new_position)
         .def_readonly("new_velocity", &OutputParameter<DynamicDOFs>::new_velocity)
@@ -140,6 +149,10 @@ limited by velocity, acceleration, and jerk constraints.";
     py::class_<Ruckig<DynamicDOFs, true>>(m, "Ruckig")
         .def(py::init<size_t>(), "dofs"_a)
         .def(py::init<size_t, double>(), "dofs"_a, "delta_time"_a)
+#if defined WITH_ONLINE_CLIENT
+        .def(py::init<size_t, double, size_t>(), "dofs"_a, "delta_time"_a, "max_number_of_waypoints"_a=0)
+        // .def("filter_intermediate_positions", &Ruckig<DynamicDOFs, true>::filter_intermediate_positions)
+#endif
         .def_readonly("delta_time", &Ruckig<DynamicDOFs, true>::delta_time)
         .def_readonly("degrees_of_freedom", &Ruckig<DynamicDOFs, true>::degrees_of_freedom)
         .def("validate_input", &Ruckig<DynamicDOFs, true>::validate_input, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)

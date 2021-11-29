@@ -70,6 +70,12 @@ class InputParameter {
         enabled.resize(dofs);
     }
 
+#if defined WITH_ONLINE_CLIENT
+    void reserve(size_t max_number_of_waypoints) {
+        intermediate_positions.reserve(max_number_of_waypoints);
+    }
+#endif
+
 public:
     size_t degrees_of_freedom;
 
@@ -123,6 +129,21 @@ public:
         resize(dofs);
         initialize();
     }
+
+#if defined WITH_ONLINE_CLIENT
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    InputParameter(size_t max_number_of_waypoints): degrees_of_freedom(DOFs) {
+        reserve(max_number_of_waypoints);
+        initialize();
+    }
+
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    InputParameter(size_t dofs, size_t max_number_of_waypoints): degrees_of_freedom(dofs) {
+        reserve(max_number_of_waypoints);
+        resize(dofs);
+        initialize();
+    }
+#endif
 
     bool operator!=(const InputParameter<DOFs>& rhs) const {
         return (
