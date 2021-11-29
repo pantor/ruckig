@@ -15,8 +15,7 @@ jobs:
             os: ubuntu-18.04
             compiler: gcc
             version: 5
-          
-          - name: ubuntu-latest-online-calculator
+          - name: online-calculator
             os: ubuntu-latest
             cmake_flags: " -DBUILD_ONLINE_CLIENT=ON "
 
