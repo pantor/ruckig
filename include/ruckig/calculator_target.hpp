@@ -281,6 +281,10 @@ public:
         }
 
         if (traj.duration == 0.0) {
+            // Copy all profiles for end state
+            for (size_t dof = 0; dof < blocks.size(); ++dof) {
+                traj.profiles[0][dof] = blocks[dof].p_min;
+            }
             return Result::Working;
         }
 

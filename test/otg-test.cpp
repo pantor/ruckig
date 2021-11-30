@@ -391,6 +391,17 @@ TEST_CASE("phase-synchronization" * doctest::description("Phase Synchronization"
     CHECK( result == Result::Working );
     CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
     check_array(new_position, {0.8333333333, -2.0833333333, 0.1666666667});
+
+    // Test equal start and target state
+    input.current_position = {1.0, -2.0, 3.0};
+    input.target_position = {1.0, -2.0, 3.0};
+
+    result = otg.update(input, output);
+    output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
+
+    CHECK( result == Result::Finished );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(0.0) );
+    check_array(new_position, {1.0, -2.0, 3.0});
 }
 
 TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
