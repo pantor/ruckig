@@ -95,6 +95,26 @@ while (ruckig.update(input, output) == Result::Working) {
 Within the control loop, you need to update the *current state* of the input parameter according to the calculated trajectory. Therefore, the `pass_to_input` method copies the new kinematic state of the output to the current kinematic state of the input parameter. If (in the next step) the current state is not the expected, pre-calculated trajectory, Ruckig will calculate a new trajectory based on the novel input. When the trajectory has reached the target state, the `update` function will return `Result::Finished`.
 
 
+### Intermediate Waypoints
+
+The Ruckig Community Version now supports intermediate waypoints via a [remote API](http://api.ruckig.com/docs). Make sure to include `-DBUILD_ONLINE_CLIENT=ON` as a CMake flag when compiling - the PyPI Python version should bring that out of the box. To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
+```.cpp
+Ruckig<6> otg {0.001, 8};
+InputParameter<6> input {8};
+OutputParameter<6> output {8};
+```
+The `InputParameter` class takes the number of waypoints as an optional input, however usually you will fill in the values (and therefore reserve its memory) yourself. Then you're ready to set intermediate via points by
+```.cpp
+input.intermediate_positions = {
+  {0.2, ...},
+  {0.8, ...},
+};
+```
+As soon as at least one intermediate positions is given, the Ruckig Community Version switches to the mentioned (of course, non real-time capable) remote API. If your require real-time calculation on your own hardware, we refer to the *Ruckig Pro Version*.
+
+When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
+
+
 ### Input Parameter
 
 To go into more detail, the *InputParameter* type has following members:
@@ -136,6 +156,7 @@ std::optional<Vector<Synchronization>> per_dof_synchronization; // Sets the sync
 
 On top of the current state, target state, and constraints, Ruckig allows for a few more advanced settings:
 - A *minimum* velocity and acceleration can be specified - these should be a negative number. If they are not given, the negative maximum velocity or acceleration will be used (similar to the jerk limit). For example, this might be useful in human robot collaboration settings with a different velocity limit towards a human. Or, when switching between different moving coordinate frames like picking from a conveyer belt.
+- You can overwrite the global kinematic limits to specify limits for each section between two waypoints separately by using e.g. `per_section_max_velocity`.
 - If a DoF is not *enabled*, it will be ignored in the calculation. Ruckig will output a trajectory with constant acceleration for those DoFs.
 - A *minimum duration* can be optionally given. Note that Ruckig can not guarantee an exact, but only a minimum duration of the trajectory.
 - The control interface (position or velocity control) can be switched easily. For example, a stop trajectory or visual servoing can be easily implemented with the velocity interface.
@@ -206,19 +227,13 @@ std::array<double, DOFs> independent_min_durations; // Time-optimal profile for 
 Again, we refer to the [API documentation](https://docs.ruckig.com) for the exact signatures.
 
 
-### Intermediate Waypoints
+### Offline Calculation
 
-To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
+Ruckig also supports an offline approach for calculating a trajectory:
 ```.cpp
-Ruckig<6> otg {0.001, 8};
-InputParameter<6> input {8};
-OutputParameter<6> output {8};
+result = ruckig.calculate(input, trajectory);
 ```
-The `InputParameter` class takes the number of waypoints as an optional input, however usually you will fill in the values (and therefore reserve its memory) yourself. You can overwrite the global kinematic limits to specify limits for each section between two waypoints separately by using e.g. `input.per_section_max_velocity`.
-
-When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
-
-We are working on introducing a parameter for limiting the maximum distance between the calculated trajectory and a linear interpolation of the waypoints. This way, collision avoidance and safety guarantees become trivial to integrate!
+When only using this method, the `Ruckig` constructor does not need a control cycle as an argument.
 
 
 ### Dynamic Number of Degrees of Freedom
@@ -232,16 +247,6 @@ OutputParameter<DynamicDOFs> output {6};
 ```
 
 However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
-
-
-### Offline Calculation
-
-Ruckig also supports an offline approach for calculating a trajectory:
-```.cpp
-result = ruckig.calculate(input, trajectory);
-```
-When only using this method, the `Ruckig` constructor does not need a control cycle as an argument.
-
 
 
 ## Tests and Numerical Stability
