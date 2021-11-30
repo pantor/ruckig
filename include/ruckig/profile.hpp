@@ -63,7 +63,7 @@ public:
             }
         }
 
-        if (t_sum[6] > 1e12) { // For numerical reasons, is that needed?
+        if (t_sum.back() > 1e12) { // For numerical reasons, is that needed?
             return false;
         }
 
@@ -86,8 +86,8 @@ public:
         const double aLowLim = ((aMax > 0) ? aMin : aMax) - 1e-12;
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
-        // std::cout << std::setprecision(15) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << " " << to_string() << std::endl;
-        return std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-10
+        // std::cout << std::setprecision(15) << "target: " << std::abs(p.back() - pf) << " " << std::abs(v.back() - vf) << " " << std::abs(a.back() - af) << " T: " << t_sum.back() << " " << to_string() << std::endl;
+        return std::abs(v.back() - vf) < 1e-8 && std::abs(a.back() - af) < 1e-10
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
     }
@@ -95,7 +95,7 @@ public:
     template<JerkSigns jerk_signs, Limits limits>
     inline bool check_for_velocity_with_timing(double, double jf, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
-        return check_for_velocity<jerk_signs, limits>(jf, aMax, aMin); // && (std::abs(t_sum[6] - tf) < 1e-8);
+        return check_for_velocity<jerk_signs, limits>(jf, aMax, aMin); // && (std::abs(t_sum.back() - tf) < 1e-8);
     }
 
     // For position interface
@@ -132,7 +132,7 @@ public:
             }
         }
 
-        if (t_sum[6] > 1e12) { // For numerical reasons, is that needed?
+        if (t_sum.back() > 1e12) { // For numerical reasons, is that needed?
             return false;
         }
 
@@ -189,8 +189,8 @@ public:
         const double aLowLim = ((aMax > 0) ? aMin : aMax) - 1e-12;
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
-        // std::cout << std::setprecision(16) << "target: " << std::abs(p[7]-pf) << " " << std::abs(v[7] - vf) << " " << std::abs(a[7] - af) << " T: " << t_sum[6] << " " << to_string() << std::endl;
-        return std::abs(p[7] - pf) < 1e-8 && std::abs(v[7] - vf) < 1e-8 && std::abs(a[7] - af) < 1e-10
+        // std::cout << std::setprecision(16) << "target: " << std::abs(p.back() - pf) << " " << std::abs(v.back() - vf) << " " << std::abs(a.back() - af) << " T: " << t_sum.back() << " " << to_string() << std::endl;
+        return std::abs(p.back() - pf) < 1e-8 && std::abs(v.back() - vf) < 1e-8 && std::abs(a.back() - af) < 1e-10
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim
             && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
@@ -200,7 +200,7 @@ public:
     template<JerkSigns jerk_signs, Limits limits>
     inline bool check_with_timing(double, double jf, double vMax, double vMin, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
-        return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum[6] - tf) < 1e-8);
+        return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum.back() - tf) < 1e-8);
     }
 
     template<JerkSigns jerk_signs, Limits limits>
@@ -289,11 +289,11 @@ public:
 
         if (pf < extrema.min) {
             extrema.min = pf;
-            extrema.t_min = t_sum[6] + brake.duration;
+            extrema.t_min = t_sum.back() + brake.duration;
         }
         if (pf > extrema.max) {
             extrema.max = pf;
-            extrema.t_max = t_sum[6] + brake.duration;
+            extrema.t_max = t_sum.back() + brake.duration;
         }
 
         return extrema;
@@ -322,7 +322,7 @@ public:
         }
 
         if (std::abs(pf - pt) < 1e-9) {
-            time = offset + t_sum[6];
+            time = offset + t_sum.back();
             vt = vf;
             at = af;
             return true;

@@ -24,7 +24,7 @@ class VelocityStep1 {
 
     inline void add_profile(const Profile& profile, double jMax) {
         valid_profiles[valid_profile_counter] = profile;
-        valid_profiles[valid_profile_counter].pf = profile.p[7];
+        valid_profiles[valid_profile_counter].pf = profile.p.back();
         valid_profiles[valid_profile_counter].direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
         ++valid_profile_counter;
     }

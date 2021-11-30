@@ -20,7 +20,7 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
         profile.t[6] = 0;
 
         if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, Limits::ACC0>(tf, jMax, aMax, aMin)) {
-            profile.pf = profile.p[7];
+            profile.pf = profile.p.back();
             return true;
         }
     }
@@ -38,7 +38,7 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
         profile.t[6] = 0;
 
         if (profile.check_for_velocity_with_timing<JerkSigns::UDUD, Limits::ACC0>(tf, jMax, aMax, aMin)) {
-            profile.pf = profile.p[7];
+            profile.pf = profile.p.back();
             return true;
         }
     }
@@ -57,7 +57,7 @@ bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double
         profile.t[6] = 0;
 
         if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, Limits::NONE>(0, jMax, aMax, aMin)) {
-            profile.pf = profile.p[7];
+            profile.pf = profile.p.back();
             return true;
         }
     }
@@ -75,7 +75,7 @@ bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double
         double jf = (a0 - af)*(a0 - af)/(2*(af*tf + v0 - vf));
 
         if (std::abs(jf) < std::abs(jMax) + 1e-12 && profile.check_for_velocity_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jf, aMax, aMin)) {
-            profile.pf = profile.p[7];
+            profile.pf = profile.p.back();
             return true;
         }
     }

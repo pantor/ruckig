@@ -110,7 +110,7 @@ public:
             auto& profiles_dof = profiles.back();
             for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                 const double t_pre = (profiles.size() > 1) ? cumulative_times[cumulative_times.size() - 2] : profiles_dof[dof].brake.duration;
-                const double t_diff = time - (t_pre + profiles_dof[dof].t_sum[6]);
+                const double t_diff = time - (t_pre + profiles_dof[dof].t_sum.back());
                 std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff, profiles_dof[dof].pf, profiles_dof[dof].vf, profiles_dof[dof].af, 0);
             }
             return;
@@ -144,13 +144,13 @@ public:
 
             // Accel post-trajectory
             // if (new_section == profiles.size() - 1 && p.accel.duration > 0) {
-            //     if (t_diff_dof > p.t_sum[6]) {
+            //     if (t_diff_dof > p.t_sum.back()) {
             //         const size_t index = (t_diff_dof < p.accel.t[1]) ? 1 : 0;
             //         if (index > 0) {
             //             t_diff_dof -= p.accel.t[index - 1];
             //         }
 
-            //         t_diff_dof -= p.t_sum[6];
+            //         t_diff_dof -= p.t_sum.back();
 
             //         if (t_diff_dof < p.accel.t[1]) {
             //             std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.pf, p.vf, p.af, p.accel.j[1]);
@@ -166,9 +166,9 @@ public:
             // }
 
             // Non-time synchronization
-            if (t_diff_dof >= p.t_sum[6]) {
+            if (t_diff_dof >= p.t_sum.back()) {
                 // Keep constant acceleration
-                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof - p.t_sum[6], p.pf, p.vf, p.af, 0);
+                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof - p.t_sum.back(), p.pf, p.vf, p.af, 0);
                 continue;
             }
 

@@ -197,7 +197,7 @@ public:
     
             if (!inp.enabled[dof]) {
                 p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof]);
-                p.t_sum[6] = 0.0;
+                p.t_sum.back() = 0.0;
                 blocks[dof].t_min = 0.0;
                 blocks[dof].a = std::nullopt;
                 blocks[dof].b = std::nullopt;

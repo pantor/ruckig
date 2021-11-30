@@ -18,8 +18,8 @@ class Block {
         Profile profile; // Profile corresponding to right (end) time
 
         explicit Interval(const Profile& profile_left, const Profile& profile_right) {
-            const double left_duration = profile_left.t_sum[6] + profile_left.brake.duration + profile_left.accel.duration;
-            const double right_duration = profile_right.t_sum[6] + profile_right.brake.duration + profile_right.accel.duration;
+            const double left_duration = profile_left.t_sum.back() + profile_left.brake.duration + profile_left.accel.duration;
+            const double right_duration = profile_right.t_sum.back() + profile_right.brake.duration + profile_right.accel.duration;
             if (left_duration < right_duration) {
                 left = left_duration;
                 right = right_duration;
@@ -34,7 +34,7 @@ class Block {
 
     void set_min_profile(const Profile& profile) {
         p_min = profile;
-        t_min = p_min.t_sum[6] + p_min.brake.duration + p_min.accel.duration;
+        t_min = p_min.t_sum.back() + p_min.brake.duration + p_min.accel.duration;
         a = std::nullopt;
         b = std::nullopt;
     }
@@ -58,7 +58,7 @@ public:
     static bool calculate_block(Block& block, std::array<Profile, N>& valid_profiles, size_t valid_profile_counter) {
         // std::cout << "---\n " << valid_profile_counter << std::endl;
         // for (size_t i = 0; i < valid_profile_counter; ++i) {
-        //     std::cout << valid_profiles[i].t_sum[6] << " " << valid_profiles[i].to_string() << std::endl;
+        //     std::cout << valid_profiles[i].t_sum.back() << " " << valid_profiles[i].to_string() << std::endl;
         // }
 
         if (valid_profile_counter == 1) {
@@ -66,13 +66,13 @@ public:
             return true;
 
         } else if (valid_profile_counter == 2) {
-            if (std::abs(valid_profiles[0].t_sum[6] - valid_profiles[1].t_sum[6]) < 8*std::numeric_limits<double>::epsilon()) {
+            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 8*std::numeric_limits<double>::epsilon()) {
                 block.set_min_profile(valid_profiles[0]);
                 return true;
             }
 
             if constexpr (numerical_robust) {
-                const size_t idx_min = (valid_profiles[0].t_sum[6] < valid_profiles[1].t_sum[6]) ? 0 : 1;
+                const size_t idx_min = (valid_profiles[0].t_sum.back() < valid_profiles[1].t_sum.back()) ? 0 : 1;
                 const size_t idx_else_1 = (idx_min + 1) % 2;
 
                 block.set_min_profile(valid_profiles[idx_min]);
@@ -83,11 +83,11 @@ public:
         // Only happens due to numerical issues
         } else if (valid_profile_counter == 4) {
             // Find "identical" profiles
-            if (std::abs(valid_profiles[0].t_sum[6] - valid_profiles[1].t_sum[6]) < 32*std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[1].direction) {
+            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 32*std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[1].direction) {
                 remove_profile<N>(valid_profiles, valid_profile_counter, 1);
-            } else if (std::abs(valid_profiles[2].t_sum[6] - valid_profiles[3].t_sum[6]) < 256*std::numeric_limits<double>::epsilon() && valid_profiles[2].direction != valid_profiles[3].direction) {
+            } else if (std::abs(valid_profiles[2].t_sum.back() - valid_profiles[3].t_sum.back()) < 256*std::numeric_limits<double>::epsilon() && valid_profiles[2].direction != valid_profiles[3].direction) {
                 remove_profile<N>(valid_profiles, valid_profile_counter, 3);
-            } else if (std::abs(valid_profiles[0].t_sum[6] - valid_profiles[3].t_sum[6]) < 256*std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[3].direction) {
+            } else if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[3].t_sum.back()) < 256*std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[3].direction) {
                 remove_profile<N>(valid_profiles, valid_profile_counter, 3);
             } else {
                 return false;
@@ -98,7 +98,7 @@ public:
         }
 
         // Find index of fastest profile
-        const auto idx_min_it = std::min_element(valid_profiles.cbegin(), valid_profiles.cbegin() + valid_profile_counter, [](const Profile& a, const Profile& b) { return a.t_sum[6] < b.t_sum[6]; });
+        const auto idx_min_it = std::min_element(valid_profiles.cbegin(), valid_profiles.cbegin() + valid_profile_counter, [](const Profile& a, const Profile& b) { return a.t_sum.back() < b.t_sum.back(); });
         const size_t idx_min = std::distance(valid_profiles.cbegin(), idx_min_it);
 
         block.set_min_profile(valid_profiles[idx_min]);
