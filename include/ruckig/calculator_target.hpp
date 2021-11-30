@@ -196,7 +196,9 @@ public:
             auto& p = traj.profiles[0][dof];
     
             if (!inp.enabled[dof]) {
-                p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof]);
+                p.p.back() = inp.current_position[dof];
+                p.v.back() = inp.current_velocity[dof];
+                p.a.back() = inp.current_acceleration[dof];
                 p.t_sum.back() = 0.0;
                 blocks[dof].t_min = 0.0;
                 blocks[dof].a = std::nullopt;
