@@ -134,8 +134,12 @@ public:
     }
 
     const Profile& get_profile(double t) const {
-        if (b && t >= b->right) return b->profile;
-        if (a && t >= a->right) return a->profile;
+        if (b && t >= b->right) {
+            return b->profile;
+        }
+        if (a && t >= a->right) {
+            return a->profile;
+        }
         return p_min;
     }
 
