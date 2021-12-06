@@ -133,6 +133,12 @@ public:
         return (t < t_min) || (a && a->left < t && t < a->right) || (b && b->left < t && t < b->right);
     }
 
+    const Profile& get_profile(double t) const {
+        if (b && t >= b->right) return b->profile;
+        if (a && t >= a->right) return a->profile;
+        return p_min;
+    }
+
     std::string to_string() const {
         std::string result = "[" + std::to_string(t_min) + " ";
         if (a) {

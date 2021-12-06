@@ -624,6 +624,26 @@ bool PositionStep2::time_acc0(Profile& profile, double vMax, double vMin, double
         }
     }
 
+    // UDUD
+    {
+        const double h0a = -a0_a0 + af_af - 2*ad*aMax + 2*jMax*(aMax*tf - vd);
+        const double h0b = a0_p3 + 2*af_p3 - 6*af_af*aMax - 3*a0_a0*(af - jMax*tf) - 3*a0*aMax*(aMax - 2*af + 2*jMax*tf) - 3*jMax*(jMax*(-2*pd + aMax*tf_tf + 2*tf*v0) + aMax*(aMax*tf - 2*vd)) + 3*af*(aMax*aMax + 2*aMax*jMax*tf - 2*jMax*vd);
+        const double h0 = Abs(jMax)*Sqrt(4*h0b*h0b - 18*h0a*h0a*h0a);
+        const double h1 = 3*jMax*h0a;
+
+        profile.t[0] = (-a0 + aMax)/jMax;
+        profile.t[1] = (-a0_p3 + af_p3 + af_af*(-6*aMax + 3*jMax*tf) + a0_a0*(-3*af + 6*aMax + 3*jMax*tf) + 6*af*(aMax*aMax - jMax*vd) + 3*a0*(af_af - 2*(aMax*aMax + jMax*vd)) - 6*jMax*(aMax*(aMax*tf - 2*vd) + jMax*g2))/h1;
+        profile.t[2] = -(ad + h0/h1)/(2*jMax) + tf/2 - profile.t[1]/2;
+        profile.t[3] = h0/(jMax*h1);
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = tf - (profile.t[0] + profile.t[1] + profile.t[2] + profile.t[3]);
+
+        if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            return true;
+        }
+    }
+
     // a3 != 0
 
     // UDDU Solution 1
