@@ -72,4 +72,5 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         sudo python setup.py sdist
-        twine upload dist/*
+        twine upload dist/*.tar.gz
+        twine upload dist/*manylinux*.whl
