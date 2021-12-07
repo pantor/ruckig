@@ -70,6 +70,69 @@ public:
     }
 #endif
 
+    //! Filter intermediate positions based on a threshold distance for each DoF
+    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+    std::vector<Vector<double>> filter_intermediate_positions(const InputParameter<DOFs>& input, const Vector<double>& threshold_distance) const {
+        if (input.intermediate_positions.empty()) {
+            return input.intermediate_positions;
+        }
+
+        const size_t n_waypoints = input.intermediate_positions.size();
+        std::vector<bool> is_active;
+        is_active.resize(n_waypoints);
+        for (size_t i = 0; i < n_waypoints; ++i) {
+            is_active[i] = true;
+        }
+
+        size_t start = 0;
+        size_t end = start + 2;
+        for (;end < n_waypoints + 2; ++end) {
+            const auto pos_start = (start == 0) ? input.current_position : input.intermediate_positions[start-1];
+            const auto pos_end = (end == n_waypoints+1) ? input.target_position : input.intermediate_positions[end-1];
+            
+            // Check for all intermediate positions
+            bool are_all_below {true};
+            for (size_t current = start + 1; current < end; ++current) {
+                const auto pos_current = input.intermediate_positions[current-1];
+
+                // Is there a point t on the line that holds the threshold?
+                double t_start_max = 0.0;
+                double t_end_min = 1.0;
+                for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+                    const double h0 = (pos_current[dof] - pos_start[dof]) / (pos_end[dof] - pos_start[dof]);
+                    const double t_start = h0 - threshold_distance[dof] / std::abs(pos_end[dof] - pos_start[dof]);
+                    const double t_end = h0 + threshold_distance[dof] / std::abs(pos_end[dof] - pos_start[dof]);
+
+                    t_start_max = std::max(t_start, t_start_max);
+                    t_end_min = std::min(t_end, t_end_min);
+
+                    if (t_start_max > t_end_min) {
+                        are_all_below = false;
+                        break;
+                    }
+                }
+                if (!are_all_below) {
+                    break;
+                }
+            }
+
+            is_active[end-2] = !are_all_below;
+            if (!are_all_below) {
+                start = end - 1;
+            }
+        }
+        
+        std::vector<Vector<double>> filtered_positions;
+        filtered_positions.reserve(n_waypoints);
+        for (size_t i = 0; i < n_waypoints; ++i) {
+            if (is_active[i]) {
+                filtered_positions.push_back(input.intermediate_positions[i]);
+            }
+        }
+
+        return filtered_positions;
+    }
+
     //! Validate the input for trajectory calculation and kinematic limits
     bool validate_input(const InputParameter<DOFs>& input, bool check_current_state_within_limits=false, bool check_target_state_within_limits=true) const {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
