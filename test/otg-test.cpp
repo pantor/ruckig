@@ -404,6 +404,31 @@ TEST_CASE("phase-synchronization" * doctest::description("Phase Synchronization"
     check_array(new_position, {1.0, -2.0, 3.0});
 }
 
+TEST_CASE("discretization" * doctest::description("Duration Discretization")) {
+    Ruckig<3, true> otg {0.01};
+    InputParameter<3> input;
+    OutputParameter<3> output;
+
+    input.current_position = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {0.2, 0.2, 0.2};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {2.0, 2.0, 2.0};
+    input.max_jerk = {1.8, 2.4, 2.0};
+    input.duration_discretization = DurationDiscretization::Discrete;
+
+    Trajectory<3> traj;
+    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    auto result = otg.calculate(input, traj);
+
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(4.5) );
+
+    result = otg.update(input, output);
+    output.trajectory.at_time(4.5, new_position, new_velocity, new_acceleration);
+    check_array(new_position, {1.0, -3.0, 2.0});
+}
+
 TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
     Ruckig<3, true> otg {0.005};
     InputParameter<3> input;

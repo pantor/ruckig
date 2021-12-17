@@ -288,12 +288,12 @@ public:
             return Result::Working;
         }
 
-        if (std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::None; })) {
+        if (!discrete_duration && std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::None; })) {
             return Result::Working;
         }
 
         // Phase Synchronization
-        if (std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
+        if (!discrete_duration && std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
             const Profile& p_limiting = traj.profiles[0][limiting_dof];
             if (is_input_collinear(inp, inp.max_jerk, p_limiting.direction, limiting_dof, new_max_jerk)) {
                 bool found_time_synchronization {true};
@@ -333,7 +333,8 @@ public:
 
         // Time Synchronization
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
-            if (!inp.enabled[dof] || dof == limiting_dof || inp_per_dof_synchronization[dof] == Synchronization::None) {
+            const bool skip_synchronization = (dof == limiting_dof || inp_per_dof_synchronization[dof] == Synchronization::None) && !discrete_duration;
+            if (!inp.enabled[dof] || skip_synchronization) {
                 continue;
             }
 
