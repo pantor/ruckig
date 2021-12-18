@@ -110,9 +110,13 @@ input.intermediate_positions = {
   {0.8, ...},
 };
 ```
-As soon as at least one intermediate positions is given, the Ruckig Community Version switches to the mentioned (of course, non real-time capable) remote API. If your require real-time calculation on your own hardware, we refer to the *Ruckig Pro Version*.
+As soon as at least one intermediate positions is given, the Ruckig Community Version switches to the mentioned (of course, non real-time capable) remote API. If you require real-time calculation on your own hardware, we refer to the *Ruckig Pro Version*.
 
-When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. Please find more information about generating trajectories with intermediate waypoints [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html). Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
+When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. In particular, there are some fundamental limitations for jerk-limited online trajectory generation regarding the usage of waypoints. Please find more information about these limitations [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html), and in general we recommend to use
+```.cpp
+input.intermediate_positions = otg.filter_intermediate_positions(input.intermediate_positions, {0.1, ...});
+```
+to filter waypoints according to a (high) threshold distance. Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
 
 
 ### Input Parameter
