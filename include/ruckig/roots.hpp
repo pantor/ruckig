@@ -252,6 +252,12 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
         return roots;
     }
 
+    if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON && std::abs(d) < DBL_EPSILON) {
+        roots.insert(0.0);
+        roots.insert(-std::cbrt(c));
+        return roots;
+    }
+
     const double a3 = -b;
     const double b3 = a * c - 4 * d;
     const double c3 = -a * a * d - c * c + 4 * b * d;

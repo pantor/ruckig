@@ -13,8 +13,8 @@ using JerkSigns = Profile::JerkSigns;
 
 //! Mathematical equations for Step 1 in position interface: Extremal profiles
 class PositionStep1 {
-    double p0, v0, a0;
-    double pf, vf, af;
+    double v0, a0;
+    double vf, af;
     double _vMax, _vMin, _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
@@ -28,13 +28,11 @@ class PositionStep1 {
     std::array<Profile, 6> valid_profiles;
     size_t valid_profile_counter;
 
-    void time_all_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_all_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found);
+    void time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found);
+    void time_all_none_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found);
 
-    // Only for numerical issues
+    // Only for numerical issues, always return_after_found
     void time_acc1_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_acc0_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     void time_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);

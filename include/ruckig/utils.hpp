@@ -7,7 +7,7 @@
 #include <type_traits>
 
 namespace ruckig {
- 
+
 template<class Vector>
 std::string join(const Vector& array) {
     std::ostringstream ss;

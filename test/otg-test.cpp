@@ -581,7 +581,7 @@ TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
 }
 
 TEST_CASE("known" * doctest::description("Known examples")) {
-    Ruckig<3, true> otg {0.005};
+    Ruckig<3, true> otg {0.004};
 
     InputParameter<3> input;
     input.current_position = {0.0, 0.0, 0.0};
@@ -798,6 +798,21 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_jerk = {12.15045820314999, 2.2, 2.2};
     input.minimum_duration = 3.408914;
     check_duration(otg, input, 3.408914);
+
+    input.current_position = {0.2473592757796861, 0.2921606775204735, 0.7758663276711127};
+    input.current_velocity = {-0.2426115138900957, 0.2200706500820608, -0.01891492763905089};
+    input.current_acceleration = {0.01877538437863763, -0.6573642866096158, 0.5};
+    input.target_position = {0.2308075286416321, 0.3066442218484541, 0.7733155040940536};
+    input.target_velocity = {0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {0.25, 0.25, 0.25};
+    input.max_acceleration = {2.5, 2.5, 2.5};
+    input.max_jerk = {62.5, 62.5, 62.5};
+    input.min_velocity = std::nullopt;
+    input.min_acceleration = std::nullopt;
+    input.minimum_duration = std::nullopt;
+    input.duration_discretization = DurationDiscretization::Discrete;
+    check_duration(otg, input, 0.14);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {

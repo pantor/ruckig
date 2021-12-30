@@ -930,12 +930,12 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
     }
 
     // 3 step profile (ak. UZD), sometimes missed because of numerical errors T 012
-    if (std::abs(af - a0) < DBL_EPSILON) {
-        const double h1 = Sqrt(4*(a0*tf - vd)/jMax + tf_tf);
+    {
+        const double h1 = Sqrt(-ad_ad + jMax*(2*(a0 + af)*tf - 4*vd + jMax*tf_tf)) / Abs(jMax);
 
-        profile.t[0] = (tf - h1)/2;
+        profile.t[0] = (tf - h1 + ad/jMax)/2;
         profile.t[1] = h1;
-        profile.t[2] = profile.t[0];
+        profile.t[2] = (tf - h1 - ad/jMax)/2;
         profile.t[3] = 0;
         profile.t[4] = 0;
         profile.t[5] = 0;
@@ -944,7 +944,6 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
         if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
             return true;
         }
-
     }
 
     // 3 step profile (ak. UZU), sometimes missed because of numerical errors
