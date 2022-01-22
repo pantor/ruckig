@@ -1,8 +1,9 @@
 name: Upload ROS Package
 
-on:
-  release:
-    types: [released]
+# on:
+#   release:
+#     types: [released]
+on: [push, pull_request]
 
 jobs:
   bloom-release:
@@ -19,3 +20,4 @@ jobs:
           git_email: lars.berscheid@ruckig.com
           release_repository_push_url: https://github.com/${{ github.repository }}-release.git
           open_pr: true
+          debug_bloom: true
