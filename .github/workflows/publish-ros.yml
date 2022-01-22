@@ -18,4 +18,4 @@ jobs:
           git_user: Lars Berscheid
           git_email: lars.berscheid@ruckig.com
           release_repository_push_url: https://github.com/${{ github.repository }}-release.git
-          # open_pr: true
+          open_pr: true
