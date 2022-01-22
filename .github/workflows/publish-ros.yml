@@ -14,7 +14,7 @@ jobs:
         uses: at-wat/bloom-release-action@v0
         with:
           ros_distro: rolling galactic foxy melodic noetic
-          github_token_bloom: ${{ secrets.BLOOM_TOKEN }}
+          github_token_bloom: ${{ secrets.aBLOOM_TOKEN }}
           github_user: pantor
           git_email: lars.berscheid@ruckig.com
           release_repository_push_url: https://github.com/${{ github.repository }}-release.git
