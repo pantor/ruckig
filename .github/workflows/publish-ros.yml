@@ -1,8 +1,9 @@
 name: Upload ROS Package
 
-on:
-  release:
-    types: [push]
+# on:
+#   release:
+#     types: [push]
+on: [push, pull_request]
 
 jobs:
   bloom-release:
