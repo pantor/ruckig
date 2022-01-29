@@ -191,6 +191,9 @@ public:
     template<bool throw_error, bool return_error_at_maximal_duration>
     Result calculate(const InputParameter<DOFs>& inp, Trajectory<DOFs>& traj, double delta_time, bool& was_interrupted) {
         was_interrupted = false;
+#if defined WITH_ONLINE_CLIENT
+        traj.resize(0);
+#endif
 
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             auto& p = traj.profiles[0][dof];
