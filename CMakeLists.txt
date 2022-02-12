@@ -74,13 +74,13 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  foreach(example IN ITEMS 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 8_dynamic_dofs 9_dynamic_dofs_waypoints)
+  foreach(example IN ITEMS 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 8_dynamic_dofs)
     add_executable(example-${example} "examples/${example}.cpp")
     target_link_libraries(example-${example} PRIVATE ruckig)
   endforeach()
 
   if(BUILD_ONLINE_CLIENT)
-    foreach(example IN ITEMS 3_waypoints 4_waypoints_online)
+    foreach(example IN ITEMS 3_waypoints 4_waypoints_online 9_dynamic_dofs_waypoints)
       add_executable(example-${example} "examples/${example}.cpp")
       target_link_libraries(example-${example} PRIVATE ruckig)
     endforeach()
