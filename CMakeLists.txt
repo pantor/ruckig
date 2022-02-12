@@ -74,7 +74,7 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  foreach(example IN ITEMS 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 8_dynamic_dofs)
+  foreach(example IN ITEMS 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 8_dynamic_dofs 9_dynamic_dofs_waypoints)
     add_executable(example-${example} "examples/${example}.cpp")
     target_link_libraries(example-${example} PRIVATE ruckig)
   endforeach()

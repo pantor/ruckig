@@ -24,7 +24,7 @@ jobs:
       run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
-        git checkout v2.6.0
+        git checkout v2.9.1
 
     - name: Set compiler version and patch C++11
       if: runner.os == 'Linux' && matrix.compiler == 'gcc' && matrix.version == '5'
@@ -52,12 +52,12 @@ jobs:
         ./build/example-6_stop > /dev/null
         ./build/example-7_minimum_duration > /dev/null
         ./build/example-8_dynamic_dofs > /dev/null
+        ./build/example-9_dynamic_dofs_waypoints > /dev/null
         python3 ./examples/1_position.py > /dev/null
         python3 ./examples/2_position_offline.py > /dev/null
         python3 ./examples/5_velocity.py > /dev/null
         python3 ./examples/6_stop.py > /dev/null
         python3 ./examples/7_minimum_duration.py > /dev/null
-        python3 ./examples/8_dynamic_dofs.py > /dev/null
 
     - name: Run Examples (Windows)
       if: matrix.os == 'windows-latest'
@@ -68,12 +68,12 @@ jobs:
         .\build\example-6_stop.exe > $null
         .\build\example-7_minimum_duration.exe > $null
         .\build\example-8_dynamic_dofs.exe > $null
+        .\build\example-9_dynamic_dofs_waypoints.exe > $null
         python3 .\examples\1_position.py > $null
         python3 .\examples\2_position_offline.py > $null
         python3 .\examples\5_velocity.py > $null
         python3 .\examples\6_stop.py > $null
         python3 .\examples\7_minimum_duration.py > $null
-        python3 .\examples\8_dynamic_dofs.py > $null
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
