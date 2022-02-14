@@ -3,11 +3,11 @@
 
 ### C++
 
-\include 9_dynamic_dofs.cpp
+\include 9_dynamic_dofs_waypoints.cpp
 
 ### Python
 
-\include 9_dynamic_dofs.py
+\include 9_dynamic_dofs_waypoints.py
 
 ### Output Trajectory
 
