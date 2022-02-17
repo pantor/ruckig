@@ -1,4 +1,4 @@
-# This example shows the usage of intermediate waypoints. It will only work with the Ruckig Pro version.
+# This example shows the usage of intermediate waypoints. It will only work with Ruckig Pro or enabled Online API (e.g. default when installed by pip / PyPI).
 
 from copy import copy
 from pathlib import Path
