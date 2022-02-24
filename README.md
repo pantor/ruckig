@@ -8,15 +8,12 @@
   <a href="https://github.com/pantor/ruckig/actions">
     <img src="https://github.com/pantor/ruckig/workflows/CI/badge.svg" alt="CI">
   </a>
-
   <a href="https://github.com/pantor/ruckig/issues">
     <img src="https://img.shields.io/github/issues/pantor/ruckig.svg" alt="Issues">
   </a>
-
   <a href="https://github.com/pantor/ruckig/releases">
     <img src="https://img.shields.io/github/v/release/pantor/ruckig.svg?include_prereleases&sort=semver" alt="Releases">
   </a>
-
   <a href="https://github.com/pantor/ruckig/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT">
   </a>
