@@ -350,6 +350,24 @@ void PositionStep1::time_acc0_two_step(Profile& profile, double vMax, double vMi
             return;
         }
     }
+
+    // Three step - t=(aMax - aMin)/jMax
+    {
+        const double t = (aMax - aMin)/jMax;
+
+        profile.t[0] = (-a0 + aMax)/jMax;
+        profile.t[1] = (a0_a0 - af_af)/(2*aMax*jMax) + (vf - v0 + jMax*t*t)/aMax - 2*t;
+        profile.t[2] = t;
+        profile.t[3] = 0;
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = (af - aMin)/jMax;
+
+        if (profile.check<JerkSigns::UDDU, Limits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
+            add_profile(profile, jMax);
+            return;
+        }
+    }
 }
 
 void PositionStep1::time_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {

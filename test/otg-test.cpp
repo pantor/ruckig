@@ -763,6 +763,17 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_jerk = {200000, 2000000, 20000000};
     check_duration(otg, input, 0.4119588818);
 
+    input.current_position = {0.02853333333333339, 0.0285, 0.0285};
+    input.current_velocity = {0.6800000000000006, 0.68, 0.68};
+    input.current_acceleration = {7.999999999999993, 8.0, 8.0};
+    input.target_position = {0, 0, 0};
+    input.target_velocity = {0, 0, 0};
+    input.target_acceleration = {0, 0, 0};
+    input.max_velocity = {1, 1 ,1};
+    input.max_acceleration = {10, 10, 10};
+    input.max_jerk = {100 + 1e-14, 100 + 1e-14, 100 + 1e-14};
+    check_duration(otg, input, 0.58);
+
     input.current_position = {-0.05598571695553641, -0.534847776106059, 0.0978130731424748};
     input.current_velocity = {-0.03425673149926184, -0.8169926404190487, -0.004506245841081729};
     input.current_acceleration = {-2.720000000000001, 1.440254448401435, 0};
