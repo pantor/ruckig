@@ -40,7 +40,7 @@ public:
     size_t degrees_of_freedom;
 
     //! Time step between updates (cycle time) in [s]
-    const double delta_time;
+    const double delta_time {0.0};
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     explicit Ruckig(): degrees_of_freedom(DOFs), delta_time(-1.0), max_number_of_waypoints(0) {
@@ -214,6 +214,10 @@ public:
             if (input.per_dof_control_interface || input.per_dof_synchronization) {
                 return false;
             }
+        }
+
+        if (delta_time <= 0.0 && input.duration_discretization != DurationDiscretization::Continuous) {
+            return false;
         }
 
         return true;
