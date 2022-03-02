@@ -78,6 +78,9 @@ bool VelocityStep1::get_profile(const Profile& input, Block& block) {
 
     if (std::abs(v0) < DBL_EPSILON && std::abs(vf) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         time_none(profile, _aMax, _aMin, _jMax);
+        if (valid_profile_counter > 0) { return Block::calculate_block(block, valid_profiles, valid_profile_counter); }
+
+        time_none(profile, _aMin, _aMax, -_jMax);
 
     } else {
         time_none(profile, _aMax, _aMin, _jMax);
