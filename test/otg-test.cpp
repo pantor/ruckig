@@ -824,6 +824,38 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.minimum_duration = std::nullopt;
     input.duration_discretization = DurationDiscretization::Discrete;
     check_duration(otg, input, 0.14);
+
+    input.current_position = {0.5289912019692077, -0.2461593579591288, -0.2728396804501142};
+    input.current_velocity = {0.0287779218983349, -0.005980397028399779, 0.04763314105835294};
+    input.current_acceleration = {-1.374657509445135, 0.2564786317266955, -2.497210506808601};
+    input.target_position = {0, 0, 0};
+    input.target_velocity = {0, 0, 0};
+    input.target_acceleration = {0, 0, 0};
+    input.max_velocity = {6.457718232379019, 5.410520681182422, 7.155849933176751};
+    input.max_acceleration = {26.89552377323262, 22.5322006432468, 29.81022362406315};
+    input.max_jerk = {224.2224490037115, 187.8497873921497, 248.4650723139127};
+    input.min_velocity = std::nullopt;
+    input.min_acceleration = std::nullopt;
+    input.minimum_duration = std::nullopt;
+    input.duration_discretization = DurationDiscretization::Discrete;
+    input.control_interface = ControlInterface::Velocity;
+    check_duration(otg, input, 0.024);
+
+    input.current_position = {0.0, 0.0, 0.0};
+    input.current_velocity = {0.1119477497536703, -0.005706738140158095, 0.0};
+    input.current_acceleration = {-2.943871184141059, 0.1638588832925878, 0.0};
+    input.target_position = {0, 0, 0};
+    input.target_velocity = {0, 0, 0};
+    input.target_acceleration = {0, 0, 0};
+    input.max_velocity = {10.0, 10.0, 10.0};
+    input.max_acceleration = {10.0, 10.0, 10.0};
+    input.max_jerk = {224.2224490037115, 187.8497873921497, 10.0};
+    input.min_velocity = std::nullopt;
+    input.min_acceleration = std::nullopt;
+    input.minimum_duration = std::nullopt;
+    input.duration_discretization = DurationDiscretization::Continuous;
+    input.control_interface = ControlInterface::Velocity;
+    check_duration(otg, input, 0.0352632);
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
