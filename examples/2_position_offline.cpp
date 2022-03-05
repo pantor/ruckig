@@ -12,7 +12,7 @@ int main() {
     input.current_velocity = {0.0, -2.2, -0.5};
     input.current_acceleration = {0.0, 2.5, -0.5};
 
-    input.target_position = {-5.0, -2.0, -3.5};
+    input.target_position = {5.0, -2.0, -3.5};
     input.target_velocity = {0.0, -0.5, -2.0};
     input.target_acceleration = {0.0, 0.0, 0.5};
 

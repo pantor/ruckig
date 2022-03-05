@@ -19,7 +19,7 @@ if __name__ == '__main__':
     inp.current_velocity = [0.0, -2.2, -0.5]
     inp.current_acceleration = [0.0, 2.5, -0.5]
 
-    inp.target_position = [-5.0, -2.0, -3.5]
+    inp.target_position = [5.0, -2.0, -3.5]
     inp.target_velocity = [0.0, -0.5, -2.0]
     inp.target_acceleration = [0.0, 0.0, 0.5]
 
@@ -31,14 +31,16 @@ if __name__ == '__main__':
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
     # Generate the trajectory within the control loop
-    first_output = None
+    first_output, out_list, time_offsets = None, [], []
     on_stop_trajectory = False
     res = Result.Working
     while res == Result.Working:
         res = otg.update(inp, out)
 
         print('\t'.join([f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
-
+        out_list.append(copy(out))
+        time_offsets.append(1.0 if on_stop_trajectory else 0.0)
+        
         # Activate stop trajectory after 1s
         if out.time >= 1.0 and not on_stop_trajectory:
             print('Stop immediately!')
@@ -58,3 +60,9 @@ if __name__ == '__main__':
 
     print(f'Calculation duration: {first_output.calculation_duration:0.1f} [µs]')
     print(f'Trajectory duration: {first_output.trajectory.duration:0.4f} [s]')
+
+    # Plot the trajectory
+    # path.insert(0, str(Path(__file__).parent.absolute().parent / 'test'))
+    # from plotter import Plotter
+
+    # Plotter.plot_trajectory(Path(__file__).parent.absolute() / '6_trajectory.pdf', otg, inp, out_list, plot_jerk=False, time_offsets=time_offsets)

@@ -36,8 +36,8 @@ class Plotter:
                 plt.plot(taxis, dddqaxis[:, dof], label=f'Jerk {dof+1}')
 
             # Plot sections
-            if hasattr(out_list[0], 'trajectory'):
-                for t in out_list[0].trajectory.intermediate_durations:
+            if hasattr(out_list[-1], 'trajectory'):
+                for t in out_list[-1].trajectory.intermediate_durations:
                     plt.axvline(x=t, color='black', linestyle='--', linewidth=1.1)
 
             # Plot limit lines
