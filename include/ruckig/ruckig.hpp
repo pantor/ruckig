@@ -26,6 +26,9 @@ class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
 
+    //! Flag that indicates if the current_input was properly initialized
+    bool current_input_initialized {false};
+
     //! Calculator for new trajectories
     Calculator<DOFs> calculator;
 
@@ -250,13 +253,14 @@ public:
 
         output.new_calculation = false;
 
-        if (input != current_input) {
+        if (input != current_input || !current_input_initialized) {
             Result result = calculate(input, output.trajectory, output.was_calculation_interrupted);
             if (result != Result::Working) {
                 return result;
             }
 
             current_input = input;
+            current_input_initialized = true;
             output.time = 0.0;
             output.new_calculation = true;
         }
