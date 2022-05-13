@@ -327,8 +327,25 @@ public:
 
                     p.limits = p_limiting.limits; // After check method call to set correct limits
                 }
-
+            /*
+                //! Maybe there is a bug here: 
+                //!     When the Ruckig::degrees_of_freedom is changed to smaller than its initial value, 
+                //!     if we want to switch the InputParameter::synchronization to Phase, it will never 
+                //!     take effect. As std::all_of(...) will check all the element of inp_per_dof_synchronization
+                //!     even the dof is not actived. So I try to fix it as below, please check it! 
                 if (found_time_synchronization && std::all_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase || s == Synchronization::None; })) {
+                    return Result::Working;
+                }
+            */
+                bool synchronization_phase_none = true;
+                for (size_t dof = 0; dof < inp_per_dof_synchronization.size(); ++dof)
+                {
+                    if (!inp.enabled[dof] || inp_per_dof_synchronization[dof] == Synchronization::Phase || inp_per_dof_synchronization[dof] == Synchronization::None){
+                        continue;
+                    }
+                    synchronization_phase_none = false;
+                }
+                if (found_time_synchronization && synchronization_phase_none){
                     return Result::Working;
                 }
             }
