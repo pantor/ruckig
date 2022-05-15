@@ -40,7 +40,7 @@ class Ruckig {
     }
 
 public:
-    size_t degrees_of_freedom;
+    const size_t degrees_of_freedom;
 
     //! Time step between updates (cycle time) in [s]
     const double delta_time {0.0};
