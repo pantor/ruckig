@@ -116,6 +116,10 @@ public:
         traj.continue_calculation_counter = 0;
         traj.duration = result["duration"].template get<double>();
         traj.cumulative_times = result["cumulative_times"].template get<std::vector<double>>();
+
+        if (!result["message"].empty()) {
+            std::cout << "[ruckig] " << result["message"] << std::endl;
+        }
         
         if (result["result"] == "Result.Error") {
             return Result::Error; 
