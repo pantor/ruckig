@@ -154,7 +154,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def(py::init<size_t, double, size_t>(), "dofs"_a, "delta_time"_a, "max_number_of_waypoints"_a=0)
         .def("filter_intermediate_positions", &Ruckig<DynamicDOFs, true>::filter_intermediate_positions, "input"_a, "threshold_distance"_a)
 #endif
-        .def_readonly("delta_time", &Ruckig<DynamicDOFs, true>::delta_time)
+        .def_readwrite("delta_time", &Ruckig<DynamicDOFs, true>::delta_time)
         .def_readonly("degrees_of_freedom", &Ruckig<DynamicDOFs, true>::degrees_of_freedom)
         .def("validate_input", &Ruckig<DynamicDOFs, true>::validate_input, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
         .def("calculate", static_cast<Result (Ruckig<DynamicDOFs, true>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&Ruckig<DynamicDOFs, true>::calculate), "input"_a, "trajectory"_a)
