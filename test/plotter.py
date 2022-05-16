@@ -6,7 +6,7 @@ import numpy as np
 
 class Plotter:
     @staticmethod
-    def plot_trajectory(filename, otg, inp, out_list, show=False, plot_jerk=True, time_offsets=None):
+    def plot_trajectory(filename, otg, inp, out_list, show=False, plot_jerk=True, time_offsets=None, title=None):
         taxis = np.array(list(map(lambda x: x.time, out_list)))
         if time_offsets:
             taxis += np.array(time_offsets)
@@ -18,6 +18,10 @@ class Plotter:
         dddqaxis[-1, :] = 0.0
 
         plt.figure(figsize=(8.0, 2.0 + 3.0 * inp.degrees_of_freedom), dpi=120)
+        plt.subplot(inp.degrees_of_freedom, 1, 1)
+
+        if title:
+            plt.title(title)
 
         for dof in range(inp.degrees_of_freedom):
             global_max = np.max([qaxis[:, dof], dqaxis[:, dof], ddqaxis[:, dof]])
