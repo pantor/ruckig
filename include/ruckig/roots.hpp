@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <algorithm>
 #include <cfloat>
 #include <cmath>
 
@@ -159,7 +160,7 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
 // Solve resolvent eqaution of corresponding Quartic equation
 // The input x must be of length 3
 // Number of zeros are returned
-inline int solveResolvent(double *x, double a, double b, double c) {
+inline int solveResolvent(std::array<double, 3>& x, double a, double b, double c) {
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;
     
@@ -263,7 +264,7 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
     const double c3 = -a * a * d - c * c + 4 * b * d;
 
     // Solve the resolvent: y^3 - b*y^2 + (ac - 4*d)*y - a^2*d - c^2 + 4*b*d = 0
-    double x3[3];
+    std::array<double, 3> x3;
     const int iZeroes = solveResolvent(x3, a3, b3, c3);
 
     double q1, q2, p1, p2, D, sqrtD, y;
