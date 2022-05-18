@@ -112,26 +112,7 @@ int main() {
     std::cout << "Trajectory<3> size: " << sizeof(Trajectory<3>) << " Byte" << std::endl;
 
     // Main comparison
-    // benchmark<0, Ruckig<0, true>>(n, number_trajectories);
-    benchmark<7, Ruckig<7, true>>(n, number_trajectories);
-    // benchmark<7, Reflexxes<7>>(n, number_trajectories);
-
-    // Dependence performance vs. DoFs
-    // benchmark<1, Ruckig<1, true>>(n, number_trajectories, false);
-    // benchmark<2, Ruckig<2, true>>(n, number_trajectories, false);
-    // benchmark<3, Ruckig<3, true>>(n, number_trajectories, false);
-    // benchmark<4, Ruckig<4, true>>(n, number_trajectories, false);
-    // benchmark<5, Ruckig<5, true>>(n, number_trajectories, false);
-    // benchmark<6, Ruckig<6, true>>(n, number_trajectories, false);
-    // benchmark<7, Ruckig<7, true>>(n, number_trajectories, false);
-    // benchmark<8, Ruckig<8, true>>(n, number_trajectories, false);
-    // benchmark<9, Ruckig<9, true>>(n, number_trajectories, false);
-    // benchmark<10, Ruckig<10, true>>(n, number_trajectories, false);
-    // benchmark<11, Ruckig<11, true>>(n, number_trajectories, false);
-    // benchmark<12, Ruckig<12, true>>(n, number_trajectories, false);
-    // benchmark<13, Ruckig<13, true>>(n, number_trajectories, false);
-    // benchmark<14, Ruckig<14, true>>(n, number_trajectories, false);
-
-    // 1ms worst case
-    // benchmark<Ruckig<82, true>>(n, number_trajectories);
+    const size_t DOFs {7};
+    benchmark<DOFs, Ruckig<DOFs, true>>(n, number_trajectories);
+    // benchmark<DOFs, Reflexxes<DOFs>>(n, number_trajectories);
 }
