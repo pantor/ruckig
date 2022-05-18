@@ -171,9 +171,9 @@ void PositionStep1::time_all_none_acc0_acc1(Profile& profile, double vMax, doubl
     polynom_acc1[3] = h0_acc1/(jMax_jMax*jMax_jMax);
 
 
-    auto roots_none = Roots::solveQuartMonic(polynom_none);
-    auto roots_acc0 = Roots::solveQuartMonic(polynom_acc0);
-    auto roots_acc1 = Roots::solveQuartMonic(polynom_acc1);
+    auto roots_none = roots::solveQuartMonic(polynom_none);
+    auto roots_acc0 = roots::solveQuartMonic(polynom_acc0);
+    auto roots_acc1 = roots::solveQuartMonic(polynom_acc1);
 
 
     for (double t: roots_none) {

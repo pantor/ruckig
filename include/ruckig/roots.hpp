@@ -20,10 +20,8 @@ inline double Abs(double v) {
     return std::abs(v);
 }
 
-} // namespace ruckig
 
-
-namespace Roots {
+namespace roots {
 
 // Use own set class on stack for real-time capability
 template<typename T, size_t N>
@@ -438,4 +436,6 @@ inline double shrinkInterval(const std::array<double, N>& p, double l, double h)
     return rts;
 }
 
-} // namespace Roots
+} // namespace roots
+
+} // namespace ruckig
