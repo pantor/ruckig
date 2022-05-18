@@ -334,8 +334,11 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
             }
             tz_current = tz;
         }
-        if (Roots::polyEval(polynom, tz_current) * Roots::polyEval(polynom, tz_max) < 0) {
+        const double val_max = Roots::polyEval(polynom, tz_max);
+        if (Roots::polyEval(polynom, tz_current) * val_max < 0) {
             roots.insert(Roots::shrinkInterval(polynom, tz_current, tz_max));
+        } else if (std::abs(val_max) < 8 * DBL_EPSILON) {
+            roots.insert(tz_max);
         }
 
         for (double t: roots) {
