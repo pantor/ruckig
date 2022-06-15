@@ -73,6 +73,10 @@ public:
     }
 #endif
 
+    void reset_target(){
+        current_input_initialized = false;
+    }
+
     //! Filter intermediate positions based on a threshold distance for each DoF
     template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
     std::vector<Vector<double>> filter_intermediate_positions(const InputParameter<DOFs>& input, const Vector<double>& threshold_distance) const {
