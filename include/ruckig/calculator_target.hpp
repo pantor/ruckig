@@ -150,7 +150,7 @@ private:
                 return true;
             }
 
-            const auto div = std::ldiv(*i, degrees_of_freedom);
+            const auto div = std::div(static_cast<long>(*i), static_cast<long>(degrees_of_freedom));
             limiting_dof = div.rem;
             switch (div.quot) {
                 case 0: {
