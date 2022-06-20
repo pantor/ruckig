@@ -43,12 +43,7 @@ target_link_libraries(ruckig PUBLIC)
 
 if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
-  target_compile_options(ruckig PRIVATE /W4 /WX)
-
-else()
-  target_compile_options(ruckig PRIVATE -Werror -Wall -Wextra)
 endif()
-
 
 if(EXPOSE_INTERNAL)
   target_compile_definitions(ruckig PUBLIC WITH_EXPOSE_INTERNAL)
@@ -156,11 +151,17 @@ if(BUILD_TESTS)
 
   add_executable(test-target test/test-target.cpp test/test-target-known.cpp)
 
+  target_link_libraries(test-target PRIVATE ruckig)
+  target_include_directories(test-target PRIVATE third_party)
+  if(MSVC)
+    target_compile_options(test-target PRIVATE /W4 /WX)
+  else()
+    target_compile_options(test-target PRIVATE -Wall -Wextra -Werror)
+  endif()
   if(Reflexxes)
     target_compile_definitions(test-target PUBLIC WITH_REFLEXXES)
   endif()
-  target_link_libraries(test-target PRIVATE ruckig)
-  target_include_directories(test-target PRIVATE third_party)
+
   add_test(NAME test-target COMMAND test-target)
 endif()
 

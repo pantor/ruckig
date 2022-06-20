@@ -4,6 +4,7 @@
 #include <array>
 #include <iostream>
 #include <limits>
+#include <optional>
 #include <tuple>
 #include <type_traits>
 
@@ -30,7 +31,7 @@ private:
     Vector<double> new_max_jerk; // For phase synchronization
     Vector<double> pd;
     VectorIntervals<double> possible_t_syncs;
-    VectorIntervals<int> idx;
+    VectorIntervals<size_t> idx;
 
     Vector<Block> blocks;
     Vector<double> inp_min_velocity, inp_min_acceleration;
@@ -88,7 +89,7 @@ private:
         return true;
     }
 
-    bool synchronize(std::optional<double> t_min, double& t_sync, int& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
+    bool synchronize(std::optional<double> t_min, double& t_sync, std::optional<size_t>& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
         if (degrees_of_freedom == 1 && !t_min && !discrete_duration) {
             limiting_dof = 0;
             t_sync = blocks[0].t_min;
@@ -145,21 +146,21 @@ private:
 
             t_sync = possible_t_sync;
             if (*i == 3*degrees_of_freedom) { // Optional t_min
-                limiting_dof = -1;
+                limiting_dof = std::nullopt;
                 return true;
             }
 
-            const auto div = std::div(*i, degrees_of_freedom);
+            const auto div = std::ldiv(*i, degrees_of_freedom);
             limiting_dof = div.rem;
             switch (div.quot) {
                 case 0: {
-                    profiles[limiting_dof] = blocks[limiting_dof].p_min;
+                    profiles[limiting_dof.value()] = blocks[limiting_dof.value()].p_min;
                 } break;
                 case 1: {
-                    profiles[limiting_dof] = blocks[limiting_dof].a->profile;
+                    profiles[limiting_dof.value()] = blocks[limiting_dof.value()].a->profile;
                 } break;
                 case 2: {
-                    profiles[limiting_dof] = blocks[limiting_dof].b->profile;
+                    profiles[limiting_dof.value()] = blocks[limiting_dof.value()].b->profile;
                 } break;
             }
             return true;
@@ -255,7 +256,7 @@ public:
             // std::cout << dof << " profile step1: " << blocks[dof].to_string() << std::endl;
         }
 
-        int limiting_dof; // The DoF that doesn't need step 2
+        std::optional<size_t> limiting_dof; // The DoF that doesn't need step 2
         const bool discrete_duration = (inp.duration_discretization == DurationDiscretization::Discrete);
         const bool found_synchronization = synchronize(inp.minimum_duration, traj.duration, limiting_dof, traj.profiles[0], discrete_duration, delta_time);
         if (!found_synchronization) {
@@ -296,9 +297,9 @@ public:
         }
 
         // Phase Synchronization
-        if (!discrete_duration && std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
-            const Profile& p_limiting = traj.profiles[0][limiting_dof];
-            if (is_input_collinear(inp, inp.max_jerk, p_limiting.direction, limiting_dof, new_max_jerk)) {
+        if (!discrete_duration && limiting_dof && std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
+            const Profile& p_limiting = traj.profiles[0][limiting_dof.value()];
+            if (is_input_collinear(inp, inp.max_jerk, p_limiting.direction, limiting_dof.value(), new_max_jerk)) {
                 bool found_time_synchronization {true};
                 for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                     if (!inp.enabled[dof] || dof == limiting_dof || inp_per_dof_synchronization[dof] != Synchronization::Phase) {
