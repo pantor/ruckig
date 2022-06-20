@@ -40,7 +40,7 @@ private:
     Vector<Synchronization> inp_per_dof_synchronization;
 
     //! Is the trajectory (in principle) phase synchronizable?
-    bool is_input_collinear(const InputParameter<DOFs>& inp, const Vector<double>& jMax, Profile::Direction limiting_direction, size_t limiting_dof, Vector<double>& new_max_jerk) {
+    bool is_input_collinear(const InputParameter<DOFs>& inp, const Vector<double>& jMax, Profile::Direction limiting_direction, size_t limiting_dof) {
         // Get scaling factor of first DoF
         bool pd_found_nonzero {false};
         double v0_scale, a0_scale, vf_scale, af_scale;
@@ -299,7 +299,7 @@ public:
         // Phase Synchronization
         if (!discrete_duration && limiting_dof && std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
             const Profile& p_limiting = traj.profiles[0][limiting_dof.value()];
-            if (is_input_collinear(inp, inp.max_jerk, p_limiting.direction, limiting_dof.value(), new_max_jerk)) {
+            if (is_input_collinear(inp, inp.max_jerk, p_limiting.direction, limiting_dof.value())) {
                 bool found_time_synchronization {true};
                 for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                     if (!inp.enabled[dof] || dof == limiting_dof || inp_per_dof_synchronization[dof] != Synchronization::Phase) {

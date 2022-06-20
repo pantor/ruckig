@@ -15,8 +15,8 @@ class Randomizer {
 
 public:
     explicit Randomizer() { }
-    explicit Randomizer(T dist, int seed): dist(dist), uniform_dist(std::uniform_real_distribution<double>(0.0, 1.0)) {
-        gen.seed(seed);
+    explicit Randomizer(T dist, int local_seed): dist(dist), uniform_dist(std::uniform_real_distribution<double>(0.0, 1.0)) {
+        gen.seed(local_seed);
     }
 
     void fill(Vector<double>& input) {
