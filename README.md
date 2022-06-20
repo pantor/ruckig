@@ -281,7 +281,7 @@ If you still need to use C++11, you can patch the Ruckig *Community Version* by 
 
 - [CoppeliaSim](https://www.coppeliarobotics.com/) in their upcoming release.
 - [MoveIt 2](https://moveit.ros.org) for trajectory smoothing.
-- [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Restructered Text for usage on PLCs.
+- [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Structered Text (ST - IEC61131-3) for usage on PLCs.
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
 - and many others!
 
