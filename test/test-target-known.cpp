@@ -297,6 +297,38 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.control_interface = ControlInterface::Velocity;
     check_duration(otg, input, 0.0352632);
 
+    input.current_position = {0.0, 0.0, 0.0};
+    input.current_velocity = {1.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {0.0, 0.0, 0.0};
+    input.target_velocity = {1.0, 0.0, 1.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+    input.control_interface = ControlInterface::Velocity;
+    check_duration(otg, input, 2.0);
+
+    input.current_position = {-0.54516231864478149, -1.4206629551476477, 0.32727720821160067};
+    input.current_velocity = {6.1348323207600686, -0.0040477518609957240, 0.0088178054233364854};
+    input.current_acceleration = {0.0000000000000000, 0.19725113486681556, -0.23382835447542066};
+    input.target_velocity = {6.1348323207600686, 0.014259490365703332, -0.012798219033181931};
+    input.max_velocity = {6.4577182323790190, 5.4105206811824216, 7.1558499331767509};
+    input.max_acceleration = {26.895523773232618, 22.532200643246796, 29.810223624063148};
+    input.max_jerk = {224.22244900371152, 187.84978739214969, 248.46507231391274};
+    input.control_interface = ControlInterface::Velocity;
+    check_duration(otg, input, 0.0187497625);
+
+    input.current_position = {-1.2563817016634644, -0.51079124473334669, 2.4607439315667303};
+    input.current_velocity = {3.4194572623820010, 5.7548168684509085, -1.5675191369761612};
+    input.current_acceleration = {27.722541632719086, -1.7945991957745204, -22.971380686605098};
+    input.target_velocity = {5.1559110036108979, 5.5636136585722848, -3.6173923596604807};
+    input.max_velocity = {9.5993108859688121, 9.4247779607693793, 17.453292519943297};
+    input.max_acceleration = {39.985493163190093, 39.618974020271281, 72.710416638083771};
+    input.max_jerk = {333.30552725335713, 330.26865435488696, 606.01322287747109};
+    input.control_interface = ControlInterface::Velocity;
+    check_duration(otg, input, 0.1030382161);
+
 
     Ruckig<38, true> otg2 {0.004};
 
