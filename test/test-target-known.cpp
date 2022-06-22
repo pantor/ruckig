@@ -329,6 +329,19 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.control_interface = ControlInterface::Velocity;
     check_duration(otg, input, 0.1030382161);
 
+    input.current_position = {0, 0, 0};
+    input.current_velocity = {0, -0.0577630321017372216, 0};
+    input.current_acceleration = {0, -1.9198621771937627, 0};
+    input.target_position = {0, 0, 0};
+    input.target_velocity = {0, -0.1, 0};
+    input.target_acceleration = {0, 0, 0};
+    input.max_velocity = {5.23, 3.926990816987241394, 3.92};
+    input.max_acceleration = {4.36, 4.363323129985824, 4.36};
+    input.max_jerk = {43.63, 43.633231299858238116, 43.63};
+    input.control_interface = ControlInterface::Velocity;
+    input.duration_discretization = ruckig::DurationDiscretization::Discrete;
+    check_duration(otg, input, 0.048);
+
 
     Ruckig<38, true> otg2 {0.004};
 

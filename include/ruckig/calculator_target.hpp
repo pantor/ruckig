@@ -117,8 +117,15 @@ private:
         any_interval |= t_min.has_value();
 
         if (discrete_duration) {
-            for (size_t i = 0; i < possible_t_syncs.size(); ++i) {
-                possible_t_syncs[i] = std::ceil(possible_t_syncs[i] / delta_time) * delta_time;
+            for (auto& possible_t_sync: possible_t_syncs) {
+                if (std::isinf(possible_t_sync)) {
+                    continue;
+                }
+
+                const double remainder = std::fmod(possible_t_sync, delta_time); // in [0, delta_time)
+                if (remainder > 0) {
+                    possible_t_sync += delta_time - remainder;
+                }
             }
         }
 
