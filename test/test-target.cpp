@@ -224,12 +224,32 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( result == Result::Working );
     CHECK( output.new_calculation );
 
-
     input.minimum_duration = 12.0;
     result = otg.update(input, output);
 
     CHECK( result == Result::Working );
     CHECK( output.trajectory.get_duration() == doctest::Approx(12.0) );
+
+
+    input.current_position = {1300.0, 0.0, 0.02};
+    input.current_velocity = {1200.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1400.0, 0.0, 0.02};
+    input.target_velocity = {0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {800.0, 1.0, 1.0};
+    input.max_acceleration = {40000.0, 1.0, 1.0};
+    input.max_jerk = {200000.0, 1.0, 1.0};
+    input.minimum_duration = std::nullopt;
+    result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(0.167347) );
+
+    independent_min_durations = output.trajectory.get_independent_min_durations();
+    CHECK( independent_min_durations[0] == doctest::Approx(output.trajectory.get_duration()) );
+    CHECK( independent_min_durations[1] == doctest::Approx(0.0) );
+    CHECK( independent_min_durations[2] == doctest::Approx(0.0) );
 }
 
 TEST_CASE("input-validation" * doctest::description("Secondary Features")) {

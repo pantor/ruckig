@@ -252,7 +252,7 @@ public:
                 return Result::ErrorExecutionTimeCalculation;
             }
 
-            traj.independent_min_durations[dof] = blocks[dof].p_min.brake.duration + blocks[dof].t_min;
+            traj.independent_min_durations[dof] = blocks[dof].t_min;
             // std::cout << dof << " profile step1: " << blocks[dof].to_string() << std::endl;
         }
 
