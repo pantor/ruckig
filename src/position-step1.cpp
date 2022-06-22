@@ -1,4 +1,6 @@
-#include <ruckig/ruckig.hpp>
+#include <ruckig/block.hpp>
+#include <ruckig/position.hpp>
+#include <ruckig/profile.hpp>
 #include <ruckig/roots.hpp>
 
 
