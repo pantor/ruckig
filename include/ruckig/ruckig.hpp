@@ -243,7 +243,7 @@ public:
 
     //! Get the next output state (with step delta_time) along the calculated trajectory for the given input
     Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
-        const auto start = std::chrono::high_resolution_clock::now();
+        const auto start = std::chrono::steady_clock::now();
 
         if constexpr (DOFs == 0 && throw_error) {
             if (degrees_of_freedom != input.degrees_of_freedom || degrees_of_freedom != output.degrees_of_freedom) {
@@ -270,7 +270,7 @@ public:
         output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration, output.new_section);
         output.did_section_change = (output.new_section != old_section);
 
-        const auto stop = std::chrono::high_resolution_clock::now();
+        const auto stop = std::chrono::steady_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 
         output.pass_to_input(current_input);

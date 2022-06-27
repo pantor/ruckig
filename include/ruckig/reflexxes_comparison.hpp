@@ -105,7 +105,7 @@ public:
             }
         }
 
-        auto start = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::steady_clock::now();
 
         switch (input.control_interface) {
         case ControlInterface::Position: {
@@ -136,7 +136,7 @@ public:
             output.time = 0.0;
         }
 
-        auto stop = std::chrono::high_resolution_clock::now();
+        auto stop = std::chrono::steady_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
         output.time += delta_time;
 

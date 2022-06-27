@@ -12,14 +12,6 @@ inline double Power2(double v) {
     return v * v;
 }
 
-inline double Sqrt(double v) {
-    return std::sqrt(v);
-}
-
-inline double Abs(double v) {
-    return std::abs(v);
-}
-
 
 namespace roots {
 
@@ -27,8 +19,8 @@ namespace roots {
 template<typename T, size_t N>
 class Set {
 protected:
-    typedef typename std::array<T, N> Container;
-    typedef typename Container::iterator iterator;
+    using Container = typename std::array<T, N>;
+    using iterator = typename Container::iterator;
 
     Container data;
     size_t size {0};
@@ -103,7 +95,7 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
         const double bb = b * b;
         const double bover3a = b * inva / 3;
         const double p = (a * c - bb / 3) * invaa;
-        const double halfq = (2 * bb * b - 9 * a * b * c + 27 * a * a * d) * (0.5 / 27) * invaa * inva;
+        const double halfq = (2 * bb * b - 9 * a * b * c + 27 * a * a * d) / 54 * invaa * inva;
         const double yy = p * p * p / 27 + halfq * halfq;
 
         constexpr double cos120 = -0.50;
@@ -162,41 +154,35 @@ inline int solveResolvent(std::array<double, 3>& x, double a, double b, double c
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;
     
-    const double aover3 = a / 3;
+    a /= 3;
     const double a2 = a * a;
-    double q = (a2 - 3 * b) / 9;
-    const double r = a * (2 * a2 - 9 * b) / 54 + c / 2;
+    double q = a2 - b / 3;
+    const double r = (a * (2 * a2 - b) + c) / 2;
     const double r2 = r * r;
     const double q3 = q * q * q;
-    double A, B;
 
     if (r2 < q3) {
-        double t = r / std::sqrt(q3);
-        if (t < -1.0) {
-            t = -1.0;
-        }
-        if (t > 1.0) {
-            t = 1.0;
-        }
-        q = -2 * std::sqrt(q);
+        const double qsqrt = std::sqrt(q);
+        const double t = std::clamp(r / (q * qsqrt), -1.0, 1.0);
+        q = -2 * qsqrt;
 
         const double theta = std::acos(t) / 3;
         const double ux = std::cos(theta) * q;
         const double uyi = std::sin(theta) * q;
-        x[0] = ux - aover3;
-        x[1] = ux * cos120 - uyi * sin120 - aover3;
-        x[2] = ux * cos120 + uyi * sin120 - aover3;
+        x[0] = ux - a;
+        x[1] = ux * cos120 - uyi * sin120 - a;
+        x[2] = ux * cos120 + uyi * sin120 - a;
         return 3;
 
     } else {
-        A = -std::cbrt(std::abs(r) + std::sqrt(r2 - q3));
+        double A = -std::cbrt(std::abs(r) + std::sqrt(r2 - q3));
         if (r < 0.0) {
             A = -A;
         }
-        B = (0.0 == A ? 0.0 : q / A);
+        const double B = (0.0 == A ? 0.0 : q / A);
 
-        x[0] = (A + B) - aover3;
-        x[1] = -(A + B) / 2 - aover3;
+        x[0] = (A + B) - a;
+        x[1] = -(A + B) / 2 - a;
         x[2] = std::sqrt(3) * (A - B) / 2;
         if (std::abs(x[2]) < DBL_EPSILON) {
             x[2] = x[1];
@@ -265,9 +251,7 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
     std::array<double, 3> x3;
     const int iZeroes = solveResolvent(x3, a3, b3, c3);
 
-    double q1, q2, p1, p2, D, sqrtD, y;
-
-    y = x3[0];
+    double y = x3[0];
     // Choosing Y with maximal absolute value.
     if (iZeroes != 1) {
         if (std::abs(x3[1]) > std::abs(y)) {
@@ -278,8 +262,10 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
         }
     }
 
+    double q1, q2, p1, p2, sqrtD;
+
     // h1 + h2 = y && h1*h2 = d  <=>  h^2 - y*h + d = 0    (h === q)
-    D = y * y - 4 * d;
+    double D = y * y - 4 * d;
     if (std::abs(D) < DBL_EPSILON) {
         q1 = q2 = y / 2;
         // g1 + g2 = a && g1 + g2 = b - y   <=>   g^2 - a*g + b - y = 0    (p === g)

@@ -45,6 +45,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, 44 };
 
     InputParameter<DOFs> input;
+    // input.synchronization = Synchronization::None;
     std::vector<double> average, worst;
 
     // Initial warm-up calculation
