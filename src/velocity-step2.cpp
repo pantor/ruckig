@@ -33,7 +33,7 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
     {
         const double h1 = (a0 - af + jMax*tf);
 
-        profile.t[0] = -Power2(af - a0)/(2*jMax*h1) + (vd - a0*tf)/h1;
+        profile.t[0] = -pow2(af - a0)/(2*jMax*h1) + (vd - a0*tf)/h1;
         profile.t[1] = (a0 - af)/jMax + tf;
         profile.t[2] = 0;
         profile.t[3] = 0;
@@ -94,7 +94,7 @@ bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        const double jf = Power2(a0 - af)/h1;
+        const double jf = pow2(a0 - af)/h1;
 
         if (std::abs(jf) < std::abs(jMax) + 1e-12 && profile.check_for_velocity_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jf, aMax, aMin)) {
             profile.pf = profile.p.back();

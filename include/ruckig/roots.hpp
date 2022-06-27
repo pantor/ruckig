@@ -8,7 +8,8 @@
 
 namespace ruckig {
 
-inline double Power2(double v) {
+template<typename T>
+inline T pow2(T v) {
     return v * v;
 }
 
@@ -163,7 +164,7 @@ inline int solveResolvent(std::array<double, 3>& x, double a, double b, double c
 
     if (r2 < q3) {
         const double qsqrt = std::sqrt(q);
-        const double t = std::clamp(r / (q * qsqrt), -1.0, 1.0);
+        const double t = std::min(std::max(r / (q * qsqrt), -1.0), 1.0);
         q = -2 * qsqrt;
 
         const double theta = std::acos(t) / 3;
