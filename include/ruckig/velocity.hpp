@@ -24,10 +24,9 @@ class VelocityStep1 {
     void time_acc0(Profile& profile, double aMax, double aMin, double jMax, bool return_after_found);
     void time_none(Profile& profile, double aMax, double aMin, double jMax, bool return_after_found);
 
-    inline void add_profile(const Profile& profile, double jMax) {
+    inline void add_profile(const Profile& profile) {
         valid_profiles[valid_profile_counter] = profile;
         valid_profiles[valid_profile_counter].pf = profile.p.back();
-        valid_profiles[valid_profile_counter].direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
         ++valid_profile_counter;
     }
 

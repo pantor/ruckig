@@ -27,6 +27,17 @@ struct PositionExtrema {
 
 //! The state profile for position, velocity, acceleration and jerk for a single DoF
 class Profile {
+    constexpr static double v_eps {1e-12};
+    constexpr static double a_eps {1e-12};
+    constexpr static double j_eps {1e-12};
+
+    constexpr static double p_precision {1e-8};
+    constexpr static double v_precision {1e-8};
+    constexpr static double a_precision {1e-10};
+    constexpr static double t_precision {1e-12};
+
+    constexpr static double t_max {1e12};
+
 public:
     enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
     enum class Direction { UP, DOWN } direction;
@@ -63,7 +74,7 @@ public:
             }
         }
 
-        if (t_sum.back() > 1e12) { // For numerical reasons, is that needed?
+        if (t_sum.back() > t_max) { // For numerical reasons, is that needed?
             return false;
         }
 
@@ -82,12 +93,13 @@ public:
         this->jerk_signs = jerk_signs;
         this->limits = limits;
 
-        const double aUppLim = ((aMax > 0) ? aMax : aMin) + 1e-12;
-        const double aLowLim = ((aMax > 0) ? aMin : aMax) - 1e-12;
+        direction = (aMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
+        const double aUppLim = (direction == Profile::Direction::UP ? aMax : aMin) + a_eps;
+        const double aLowLim = (direction == Profile::Direction::UP ? aMin : aMax) - a_eps;
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
         // std::cout << std::setprecision(15) << "target: " << std::abs(p.back() - pf) << " " << std::abs(v.back() - vf) << " " << std::abs(a.back() - af) << " T: " << t_sum.back() << " " << to_string() << std::endl;
-        return std::abs(v.back() - vf) < 1e-8 && std::abs(a.back() - af) < 1e-10
+        return std::abs(v.back() - vf) < v_precision && std::abs(a.back() - af) < a_precision
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
     }
@@ -95,7 +107,7 @@ public:
     template<JerkSigns jerk_signs, Limits limits>
     inline bool check_for_velocity_with_timing(double, double jf, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
-        return check_for_velocity<jerk_signs, limits>(jf, aMax, aMin); // && (std::abs(t_sum.back() - tf) < 1e-8);
+        return check_for_velocity<jerk_signs, limits>(jf, aMax, aMin); // && (std::abs(t_sum.back() - tf) < t_precision);
     }
 
     // For position interface
@@ -132,7 +144,7 @@ public:
             }
         }
 
-        if (t_sum.back() > 1e12) { // For numerical reasons, is that needed?
+        if (t_sum.back() > t_max) { // For numerical reasons, is that needed?
             return false;
         }
 
@@ -142,8 +154,9 @@ public:
             j = {jf, 0, -jf, 0, jf, 0, -jf};
         }
 
-        const double vUppLim = ((vMax > 0) ? vMax : vMin) + 1e-12;
-        const double vLowLim = ((vMax > 0) ? vMin : vMax) - 1e-12;
+        direction = (vMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
+        const double vUppLim = (direction == Profile::Direction::UP ? vMax : vMin) + v_eps;
+        const double vLowLim = (direction == Profile::Direction::UP ? vMin : vMax) - v_eps;
 
         for (size_t i = 0; i < 7; ++i) {
             a[i+1] = a[i] + t[i] * j[i];
@@ -185,12 +198,12 @@ public:
         this->jerk_signs = jerk_signs;
         this->limits = limits;
 
-        const double aUppLim = ((aMax > 0) ? aMax : aMin) + 1e-12;
-        const double aLowLim = ((aMax > 0) ? aMin : aMax) - 1e-12;
+        const double aUppLim = (direction == Profile::Direction::UP ? aMax : aMin) + a_eps;
+        const double aLowLim = (direction == Profile::Direction::UP ? aMin : aMax) - a_eps;
 
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
         // std::cout << std::setprecision(16) << "target: " << std::abs(p.back() - pf) << " " << std::abs(v.back() - vf) << " " << std::abs(a.back() - af) << " T: " << t_sum.back() << " " << to_string() << std::endl;
-        return std::abs(p.back() - pf) < 1e-8 && std::abs(v.back() - vf) < 1e-8 && std::abs(a.back() - af) < 1e-10
+        return std::abs(p.back() - pf) < p_precision && std::abs(v.back() - vf) < v_precision && std::abs(a.back() - af) < a_precision
             && a[1] >= aLowLim && a[3] >= aLowLim && a[5] >= aLowLim
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim
             && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
@@ -200,12 +213,12 @@ public:
     template<JerkSigns jerk_signs, Limits limits>
     inline bool check_with_timing(double, double jf, double vMax, double vMin, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
-        return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum.back() - tf) < 1e-8);
+        return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum.back() - tf) < t_precision);
     }
 
     template<JerkSigns jerk_signs, Limits limits>
     inline bool check_with_timing(double tf, double jf, double vMax, double vMin, double aMax, double aMin, double jMax) {
-        return (std::abs(jf) < std::abs(jMax) + 1e-12) && check_with_timing<jerk_signs, limits>(tf, jf, vMax, vMin, aMax, aMin);
+        return (std::abs(jf) < std::abs(jMax) + j_eps) && check_with_timing<jerk_signs, limits>(tf, jf, vMax, vMin, aMax, aMin);
     }
 
     //! Set boundary values for the position interface

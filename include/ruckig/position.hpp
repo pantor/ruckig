@@ -39,9 +39,8 @@ class PositionStep1 {
     void time_none_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
 
-    inline void add_profile(const Profile& profile, double jMax) {
+    inline void add_profile(const Profile& profile) {
         valid_profiles[valid_profile_counter] = profile;
-        valid_profiles[valid_profile_counter].direction = (jMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
         ++valid_profile_counter;
     }
 
