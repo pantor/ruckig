@@ -73,7 +73,8 @@ public:
     }
 #endif
 
-    void reset_target(){
+    //! Reset the instance (e.g. to force a new calculation in the next update)
+    void reset() {
         current_input_initialized = false;
     }
 
