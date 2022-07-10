@@ -156,6 +156,7 @@ limited by velocity, acceleration, and jerk constraints.";
 #endif
         .def_readwrite("delta_time", &Ruckig<DynamicDOFs, true>::delta_time)
         .def_readonly("degrees_of_freedom", &Ruckig<DynamicDOFs, true>::degrees_of_freedom)
+        .def("reset", &Ruckig<DynamicDOFs, true>::reset)
         .def("validate_input", &Ruckig<DynamicDOFs, true>::validate_input, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
         .def("calculate", static_cast<Result (Ruckig<DynamicDOFs, true>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&Ruckig<DynamicDOFs, true>::calculate), "input"_a, "trajectory"_a)
         .def("calculate", static_cast<Result (Ruckig<DynamicDOFs, true>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&, bool&)>(&Ruckig<DynamicDOFs, true>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
