@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>ruckig</name>
-  <version>0.7.0</version>
+  <version>0.7.1</version>
   <description>Instantaneous Motion Generation for Robots and Machines.</description>
   <author>Lars Berscheid</author>
   <maintainer email="lars.berscheid@ruckig.com">Lars Berscheid</maintainer>
