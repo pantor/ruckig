@@ -16,6 +16,6 @@ jobs:
           github_token_bloom: ${{ secrets.BLOOM_TOKEN }}
           github_user: pantor
           git_email: lars.berscheid@ruckig.com
-          release_repository_push_url: https://github.com/${{ github.repository }}-release.git
+          release_repository_push_url: https://github.com/ros2-gbp/ruckig-release.git
           # open_pr: true
           debug_bloom: true
