@@ -25,11 +25,11 @@ find_package(Reflexxes QUIET)
 
 
 add_library(ruckig
-  src/brake.cpp
-  src/position-step1.cpp
-  src/position-step2.cpp
-  src/velocity-step1.cpp
-  src/velocity-step2.cpp
+  src/ruckig/brake.cpp
+  src/ruckig/position-step1.cpp
+  src/ruckig/position-step2.cpp
+  src/ruckig/velocity-step1.cpp
+  src/ruckig/velocity-step2.cpp
 )
 add_library(ruckig::ruckig ALIAS ruckig)
 
@@ -91,7 +91,7 @@ if(BUILD_PYTHON_MODULE)
     find_package(pybind11 2.6 REQUIRED)
   endif()
 
-  pybind11_add_module(python_ruckig src/python.cpp)
+  pybind11_add_module(python_ruckig src/ruckig/python.cpp)
   target_compile_features(python_ruckig PUBLIC cxx_std_17)
   target_link_libraries(python_ruckig PUBLIC ruckig)
   if(BUILD_ONLINE_CLIENT)
