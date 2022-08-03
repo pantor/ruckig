@@ -28,8 +28,7 @@ private:
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
 
-    Vector<double> new_max_jerk; // For phase synchronization
-    Vector<double> pd;
+    Vector<double> new_max_jerk, pd; // For phase synchronization
     VectorIntervals<double> possible_t_syncs;
     VectorIntervals<size_t> idx;
 
@@ -41,49 +40,76 @@ private:
 
     //! Is the trajectory (in principle) phase synchronizable?
     bool is_input_collinear(const InputParameter<DOFs>& inp, const Vector<double>& jMax, Profile::Direction limiting_direction, size_t limiting_dof) {
-        // Get scaling factor of first DoF
-        bool pd_found_nonzero {false};
-        double v0_scale, a0_scale, vf_scale, af_scale;
-        for (size_t dof = 0; dof < pd.size(); ++dof) {
+        // Check that vectors pd, v0, a0, vf, af are collinear
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            pd[dof] = inp.target_position[dof] - inp.current_position[dof];
+        }
+        
+        const Vector<double>* scale_vector = nullptr;
+        std::optional<size_t> scale_dof; // Need to find a scale DOF because limiting DOF might not be phase synchronized
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             if (inp_per_dof_synchronization[dof] != Synchronization::Phase) {
                 continue;
             }
 
-            pd[dof] = inp.target_position[dof] - inp.current_position[dof];
-
-            if (!pd_found_nonzero && std::abs(pd[dof]) > eps) {
-                v0_scale = inp.current_velocity[dof] / pd[dof];
-                a0_scale = inp.current_acceleration[dof] / pd[dof];
-                vf_scale = inp.target_velocity[dof] / pd[dof];
-                af_scale = inp.target_acceleration[dof] / pd[dof];
-                pd_found_nonzero = true;
+            if (inp_per_dof_control_interface[dof] == ControlInterface::Position && std::abs(pd[dof]) > eps) {
+                scale_vector = &pd;
+                scale_dof = dof;
+                break;
+            
+            } else if (std::abs(inp.current_velocity[dof]) > eps) {
+                scale_vector = &inp.current_velocity;
+                scale_dof = dof;
+                break;
+            
+            } else if (std::abs(inp.current_acceleration[dof]) > eps) {
+                scale_vector = &inp.current_acceleration;
+                scale_dof = dof;
+                break;
+            
+            } else if (std::abs(inp.target_velocity[dof]) > eps) {
+                scale_vector = &inp.target_velocity;
+                scale_dof = dof;
+                break;
+            
+            } else if (std::abs(inp.target_acceleration[dof]) > eps) {
+                scale_vector = &inp.target_acceleration;
+                scale_dof = dof;
+                break;
             }
         }
 
-        if (!pd_found_nonzero) { // position difference is zero everywhere...
-            return false;
+        if (!scale_dof) {
+            return false; // Zero everywhere is in theory collinear, but that trivial case is better handled elsewhere
         }
 
-        const double max_jerk_limiting = (limiting_direction == Profile::Direction::UP) ? jMax[limiting_dof] : -jMax[limiting_dof];
-        constexpr double eps_colinear {10 * eps};
+        const double scale = scale_vector->operator[](*scale_dof);
+        const double pd_scale = pd[*scale_dof] / scale;
+        const double v0_scale = inp.current_velocity[*scale_dof] / scale;
+        const double vf_scale = inp.target_velocity[*scale_dof] / scale;
+        const double a0_scale = inp.current_acceleration[*scale_dof] / scale;
+        const double af_scale = inp.target_acceleration[*scale_dof] / scale;
         
-        for (size_t dof = 0; dof < pd.size(); ++dof) {
-            if (dof == limiting_dof || inp_per_dof_synchronization[dof] != Synchronization::Phase) {
+        const double scale_limiting = scale_vector->operator[](limiting_dof);
+        const double max_jerk_limiting = (limiting_direction == Profile::Direction::UP) ? jMax[limiting_dof] : -jMax[limiting_dof];
+        
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            if (inp_per_dof_synchronization[dof] != Synchronization::Phase) {
                 continue;
             }
 
-            // Are the vectors collinear?
+            const double current_scale = scale_vector->operator[](dof);
             if (
-                std::abs(inp.current_velocity[dof] - v0_scale * pd[dof]) > eps_colinear
-                || std::abs(inp.current_acceleration[dof] - a0_scale * pd[dof]) > eps_colinear
-                || std::abs(inp.target_velocity[dof] - vf_scale * pd[dof]) > eps_colinear
-                || std::abs(inp.target_acceleration[dof] - af_scale * pd[dof]) > eps_colinear
+                (inp_per_dof_control_interface[dof] == ControlInterface::Position && std::abs(pd[dof] - pd_scale * current_scale) > eps)
+                || std::abs(inp.current_velocity[dof] - v0_scale * current_scale) > eps
+                || std::abs(inp.current_acceleration[dof] - a0_scale * current_scale) > eps
+                || std::abs(inp.target_velocity[dof] - vf_scale * current_scale) > eps
+                || std::abs(inp.target_acceleration[dof] - af_scale * current_scale) > eps
             ) {
                 return false;
             }
 
-            const double scale = pd[dof] / pd[limiting_dof];
-            new_max_jerk[dof] = scale * max_jerk_limiting;
+            new_max_jerk[dof] = max_jerk_limiting * current_scale / scale_limiting;
         }
 
         return true;
@@ -232,7 +258,7 @@ public:
                 case ControlInterface::Velocity: {
                     p.brake.get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
                     // p.accel.get_velocity_brake_trajectory(inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
-                    p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
+                    p.set_boundary_for_velocity(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
                 } break;
             }
 
@@ -304,7 +330,7 @@ public:
         }
 
         // Phase Synchronization
-        if (!discrete_duration && limiting_dof && std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; }) && std::all_of(inp_per_dof_control_interface.begin(), inp_per_dof_control_interface.end(), [](ControlInterface s){ return s == ControlInterface::Position; })) {
+        if (limiting_dof && std::any_of(inp_per_dof_synchronization.begin(), inp_per_dof_synchronization.end(), [](Synchronization s){ return s == Synchronization::Phase; })) {
             const Profile& p_limiting = traj.profiles[0][limiting_dof.value()];
             if (is_input_collinear(inp, inp.max_jerk, p_limiting.direction, limiting_dof.value())) {
                 bool found_time_synchronization {true};
@@ -320,15 +346,33 @@ public:
                     p.jerk_signs = p_limiting.jerk_signs;
 
                     // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
-                    switch (p.jerk_signs) {
-                        case Profile::JerkSigns::UDDU: {
-                            if (!p.check_with_timing<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
-                                found_time_synchronization = false;
+                    switch (inp_per_dof_control_interface[dof]) {
+                        case ControlInterface::Position: {
+                            switch (p.jerk_signs) {
+                                case Profile::JerkSigns::UDDU: {
+                                    if (!p.check_with_timing<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                        found_time_synchronization = false;
+                                    }
+                                } break;
+                                case Profile::JerkSigns::UDUD: {
+                                    if (!p.check_with_timing<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                        found_time_synchronization = false;
+                                    }
+                                } break;
                             }
                         } break;
-                        case Profile::JerkSigns::UDUD: {
-                            if (!p.check_with_timing<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
-                                found_time_synchronization = false;
+                        case ControlInterface::Velocity: {
+                            switch (p.jerk_signs) {
+                                case Profile::JerkSigns::UDDU: {
+                                    if (!p.check_for_velocity_with_timing<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                        found_time_synchronization = false;
+                                    }
+                                } break;
+                                case Profile::JerkSigns::UDUD: {
+                                    if (!p.check_for_velocity_with_timing<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                        found_time_synchronization = false;
+                                    }
+                                } break;
                             }
                         } break;
                     }

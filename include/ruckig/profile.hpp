@@ -110,6 +110,19 @@ public:
         return check_for_velocity<jerk_signs, limits>(jf, aMax, aMin); // && (std::abs(t_sum.back() - tf) < t_precision);
     }
 
+    template<JerkSigns jerk_signs, Limits limits>
+    inline bool check_for_velocity_with_timing(double tf, double jf, double aMax, double aMin, double jMax) {
+        return (std::abs(jf) < std::abs(jMax) + j_eps) && check_for_velocity_with_timing<jerk_signs, limits>(tf, jf, aMax, aMin);
+    }
+
+    inline void set_boundary_for_velocity(double p0_new, double v0_new, double a0_new, double vf_new, double af_new) {
+        a[0] = a0_new;
+        v[0] = v0_new;
+        p[0] = p0_new;
+        af = af_new;
+        vf = vf_new;
+    }
+
     // For position interface
     template<JerkSigns jerk_signs, Limits limits, bool set_limits = false>
     bool check(double jf, double vMax, double vMin, double aMax, double aMin) {
@@ -221,7 +234,6 @@ public:
         return (std::abs(jf) < std::abs(jMax) + j_eps) && check_with_timing<jerk_signs, limits>(tf, jf, vMax, vMin, aMax, aMin);
     }
 
-    //! Set boundary values for the position interface
     inline void set_boundary(double p0_new, double v0_new, double a0_new, double pf_new, double vf_new, double af_new) {
         a[0] = a0_new;
         v[0] = v0_new;
@@ -231,16 +243,8 @@ public:
         pf = pf_new;
     }
 
-    //! Set boundary values for the velocity interface
-    inline void set_boundary(double p0_new, double v0_new, double a0_new, double vf_new, double af_new) {
-        a[0] = a0_new;
-        v[0] = v0_new;
-        p[0] = p0_new;
-        af = af_new;
-        vf = vf_new;
-    }
 
-    inline static void check_position_extremum(double t_ext, double t_sum, double t, double p, double v, double a, double j, PositionExtrema& ext) {
+    static void check_position_extremum(double t_ext, double t_sum, double t, double p, double v, double a, double j, PositionExtrema& ext) {
         if (0 < t_ext && t_ext < t) {
             double p_ext, a_ext;
             std::tie(p_ext, std::ignore, a_ext) = integrate(t_ext, p, v, a, j);

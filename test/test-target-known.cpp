@@ -7,7 +7,7 @@ using namespace ruckig;
 
 
 template<size_t DOFs, class OTGType>
-inline void check_duration(OTGType& otg, InputParameter<DOFs>& input, double duration) {
+void check_duration(OTGType& otg, InputParameter<DOFs>& input, double duration) {
     OutputParameter<DOFs> output;
 
     while (otg.update(input, output) == Result::Working) {
