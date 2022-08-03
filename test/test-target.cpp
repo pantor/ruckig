@@ -6,10 +6,6 @@
 
 #include <ruckig/ruckig.hpp>
 
-#ifdef WITH_REFLEXXES
-#include <ruckig/reflexxes_comparison.hpp>
-#endif
-
 
 using namespace ruckig;
 
@@ -495,6 +491,15 @@ TEST_CASE("phase-synchronization" * doctest::description("Phase Synchronization"
     CHECK( result == Result::Working );
     CHECK_FALSE( array_eq(traj.get_profiles()[0][0].t, traj.get_profiles()[0][1].t) );
     CHECK_FALSE( array_eq(traj.get_profiles()[0][0].t, traj.get_profiles()[0][2].t) );
+
+    input.current_position = {0.0, 0.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {0.0, 0.0, 0.0};
+    input.target_velocity = {0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
 }
 
 TEST_CASE("discretization" * doctest::description("Duration Discretization")) {
@@ -601,16 +606,13 @@ TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
     input.current_position = {0.0, 0.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0};
     input.current_acceleration = {0.0, 0.0, 0.0};
-
     input.target_position = {35, 35, 35};
     input.target_velocity = {125, 125, 100};
     input.target_acceleration = {0.0, 0.0, 0.0};
-
     input.max_velocity = {125, 125, 100};
     input.max_acceleration = {2000, 2000, 2000};
     input.max_jerk = {20000, 20000, 20000};
     input.per_dof_synchronization = {Synchronization::Time, Synchronization::Time, Synchronization::None};
-
     result = otg.calculate(input, traj);
     CHECK( result == Result::Working );
     CHECK( traj.get_duration() == doctest::Approx(0.4207106781) );
@@ -618,32 +620,43 @@ TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.0, 0.2, 0.0};
     input.current_acceleration = {0.0, 0.2, 0.0};
-
     input.target_position = {1.0, -3.0, 2.0};
     input.target_velocity = {0.0, 0.0, 0.2};
     input.target_acceleration = {0.0, 0.0, -0.1};
-
     input.max_velocity = {1.0, 1.0, 1.0};
     input.max_acceleration = {1.0, 1.0, 1.0};
     input.max_jerk = {1.0, 1.0, 1.0};
-
     input.per_dof_synchronization = {Synchronization::None, Synchronization::None, Synchronization::Time};
-
     result = otg.calculate(input, traj);
     CHECK( result == Result::Working );
     CHECK( traj.get_duration() == doctest::Approx(3.7885667284) );
 
     input.per_dof_synchronization = {Synchronization::None, Synchronization::Time, Synchronization::None};
-
     result = otg.calculate(input, traj);
     CHECK( result == Result::Working );
     CHECK( traj.get_duration() == doctest::Approx(3.7885667284) );
 
     input.enabled = {true, false, true};
-
     result = otg.calculate(input, traj);
     CHECK( result == Result::Working );
     CHECK( traj.get_duration() == doctest::Approx(3.6578610221) );
+
+    input.current_position = {0.0, 0.0, 0.0};
+    input.current_velocity = {0.2, 0.0, -0.1};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -0.2, -0.5};
+    input.target_velocity = {0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {1.0, 1.0, 1.0};
+    input.per_dof_synchronization = {Synchronization::Phase, Synchronization::None, Synchronization::Phase};
+    input.enabled = {true, true, true};
+    result = otg.calculate(input, traj);
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(2.848387279) );
+    CHECK_FALSE( array_eq(traj.get_profiles()[0][0].t, traj.get_profiles()[0][1].t) );
+    CHECK( array_eq(traj.get_profiles()[0][0].t, traj.get_profiles()[0][2].t) );
 }
 
 TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
@@ -914,67 +927,6 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
         check_calculation(otg, input);
     }
 }
-
-#ifdef WITH_REFLEXXES
-TEST_CASE("comparison_1" * doctest::description("Comparison with Reflexxes with 1 DoF")) {
-    constexpr size_t DOFs {1};
-    Ruckig<DOFs, true> otg {0.005};
-    Reflexxes<DOFs> rflx {0.005};
-    InputParameter<DOFs> input;
-
-    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 6 };
-    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 7 };
-    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 8 };
-
-    for (size_t i = 0; i < comparison_1; ++i) {
-        p.fill(input.current_position);
-        d.fill_or_zero(input.current_velocity, 0.9);
-        d.fill_or_zero(input.current_acceleration, 0.8);
-        p.fill(input.target_position);
-        d.fill_or_zero(input.target_velocity, 0.7);
-        l.fill(input.max_velocity, input.target_velocity);
-        l.fill(input.max_acceleration);
-        l.fill(input.max_jerk);
-
-        if (!otg.validate_input(input)) {
-            --i;
-            continue;
-        }
-
-        check_comparison(otg, input, rflx);
-    }
-    // WARN(counter_faster << " / " << 128*1024 << " trajectories are faster.");
-}
-
-TEST_CASE("comparison_3" * doctest::description("Comparison with Reflexxes with 3 DoF")) {
-    constexpr size_t DOFs {3};
-    Ruckig<DOFs, true> otg {0.005};
-    Reflexxes<DOFs> rflx {0.005};
-    InputParameter<DOFs> input;
-
-    Randomizer<DOFs, decltype(position_dist)> p { position_dist, seed + 9 };
-    Randomizer<DOFs, decltype(dynamic_dist)> d { dynamic_dist, seed + 10 };
-    Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, seed + 11 };
-
-    for (size_t i = 0; i < comparison_3; ++i) {
-        p.fill(input.current_position);
-        d.fill_or_zero(input.current_velocity, 0.9);
-        d.fill_or_zero(input.current_acceleration, 0.8);
-        p.fill(input.target_position);
-        d.fill_or_zero(input.target_velocity, 0.7);
-        l.fill(input.max_velocity);
-        l.fill(input.max_acceleration);
-        l.fill(input.max_jerk);
-
-        if (!otg.validate_input(input)) {
-            --i;
-            continue;
-        }
-
-        check_comparison(otg, input, rflx);
-    }
-}
-#endif
 
 
 int main(int argc, char** argv) {

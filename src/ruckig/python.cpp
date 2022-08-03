@@ -7,10 +7,6 @@
 
 #include <ruckig/ruckig.hpp>
 
-#ifdef WITH_REFLEXXES
-    #include <ruckig/reflexxes_comparison.hpp>
-#endif
-
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal
@@ -187,13 +183,5 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("brake", &Profile::brake)
         .def_readonly("accel", &Profile::accel)
         .def("__repr__", &Profile::to_string);
-#endif
-
-#ifdef WITH_REFLEXXES
-    py::class_<Reflexxes<DynamicDOFs>>(m, "Reflexxes")
-        .def(py::init<size_t, double>(), "dofs"_a, "delta_time"_a)
-        .def_readonly("degrees_of_freedom", &Reflexxes<DynamicDOFs>::degrees_of_freedom)
-        .def_readonly("delta_time", &Reflexxes<DynamicDOFs>::delta_time)
-        .def("update", &Reflexxes<DynamicDOFs>::update);
 #endif
 }

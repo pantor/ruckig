@@ -21,9 +21,6 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif()
 
 
-find_package(Reflexxes QUIET)
-
-
 add_library(ruckig
   src/ruckig/brake.cpp
   src/ruckig/position-step1.cpp
@@ -56,15 +53,6 @@ if(BUILD_ONLINE_CLIENT)
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
   target_compile_definitions(ruckig PUBLIC WITH_ONLINE_CLIENT)
-endif()
-
-
-if(Reflexxes)
-  set(REFLEXXES_TYPE "ReflexxesTypeII" CACHE STRING "Type of Reflexxes library") # or ReflexxesTypeIV
-  message("Found Reflexxes ${REFLEXXES_TYPE}")
-
-  target_compile_definitions(ruckig PUBLIC WITH_REFLEXXES)
-  target_link_libraries(ruckig PUBLIC Reflexxes::Reflexxes)
 endif()
 
 
@@ -158,9 +146,6 @@ if(BUILD_TESTS)
   else()
     target_compile_options(test-target PRIVATE -Wall -Wextra)
   endif()
-  if(Reflexxes)
-    target_compile_definitions(test-target PUBLIC WITH_REFLEXXES)
-  endif()
 
   add_test(NAME test-target COMMAND test-target)
 endif()
@@ -169,8 +154,5 @@ endif()
 if(BUILD_BENCHMARK)
   add_executable(benchmark-target test/benchmark-target.cpp)
 
-  if(Reflexxes)
-    target_compile_definitions(benchmark-target PUBLIC WITH_REFLEXXES)
-  endif()
   target_link_libraries(benchmark-target PRIVATE ruckig)
 endif()

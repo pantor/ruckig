@@ -4,10 +4,6 @@
 
 #include <ruckig/ruckig.hpp>
 
-#ifdef WITH_REFLEXXES
-#include <ruckig/reflexxes_comparison.hpp>
-#endif
-
 
 using namespace ruckig;
 
@@ -112,8 +108,6 @@ int main() {
     std::cout << "Ruckig size: " << sizeof(Ruckig<3, true>) << " Byte" << std::endl;
     std::cout << "Trajectory<3> size: " << sizeof(Trajectory<3>) << " Byte" << std::endl;
 
-    // Main comparison
     const size_t DOFs {7};
     benchmark<DOFs, Ruckig<DOFs, true>>(n, number_trajectories);
-    // benchmark<DOFs, Reflexxes<DOFs>>(n, number_trajectories);
 }
