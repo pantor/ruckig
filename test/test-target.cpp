@@ -40,6 +40,10 @@ public:
         return data[i];
     }
 
+    size_t size() const {
+        return DOFs;
+    }
+
     bool operator==(const MinimalVector<T, DOFs>& rhs) const {
         for (size_t dof = 0; dof < DOFs; ++dof) {
             if (data[dof] != rhs[dof]) {
@@ -754,6 +758,7 @@ TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
     CHECK( array_eq(new_acceleration, input.current_acceleration) );
 }
 
+#ifndef WITH_ONLINE_CLIENT
 TEST_CASE("custom-vector-type" * doctest::description("Custom Vector Type")) {
     SUBCASE("DOFs compile-time") {
         RuckigThrow<3, MinimalVector> otg {0.005};
@@ -812,6 +817,7 @@ TEST_CASE("custom-vector-type" * doctest::description("Custom Vector Type")) {
         CHECK( new_position[2] == doctest::Approx(input.current_position[2]) );
     }
 }
+#endif
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
     constexpr size_t DOFs {3};
