@@ -18,10 +18,8 @@
 
 namespace ruckig {
 
-constexpr static size_t DynamicDOFs {0};
-
 //! Main class for the Ruckig algorithm.
-template<size_t DOFs = 0, bool throw_error = false, bool return_error_at_maximal_duration = true>
+template<size_t DOFs = 0, bool throw_error = false>
 class Ruckig {
     //! Current input, only for comparison for recalculation
     InputParameter<DOFs> current_input;
@@ -79,7 +77,7 @@ public:
     }
 
     //! Filter intermediate positions based on a threshold distance for each DoF
-    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+    template<class T> using Vector = StandardVector<T, DOFs>;
     std::vector<Vector<double>> filter_intermediate_positions(const InputParameter<DOFs>& input, const Vector<double>& threshold_distance) const {
         if (input.intermediate_positions.empty()) {
             return input.intermediate_positions;
@@ -243,7 +241,7 @@ public:
             return Result::ErrorInvalidInput;
         }
 
-        return calculator.template calculate<throw_error, return_error_at_maximal_duration>(input, trajectory, delta_time, was_interrupted);
+        return calculator.template calculate<throw_error>(input, trajectory, delta_time, was_interrupted);
     }
 
     //! Get the next output state (with step delta_time) along the calculated trajectory for the given input

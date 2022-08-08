@@ -4,10 +4,12 @@
 #include <random>
 #include <type_traits>
 
+#include <ruckig/utils.hpp>
+
 
 template<size_t DOFs, class T>
 class Randomizer {
-    template<class U> using Vector = typename std::conditional<DOFs >= 1, std::array<U, DOFs>, std::vector<U>>::type;
+    template<class U> using Vector = ruckig::StandardVector<U, DOFs>;
 
     std::default_random_engine gen;
     T dist;

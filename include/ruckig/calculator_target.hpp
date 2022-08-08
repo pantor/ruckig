@@ -23,10 +23,11 @@ namespace ruckig {
 template<size_t DOFs>
 class TargetCalculator {
 private:
-    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
-    template<class T> using VectorIntervals = typename std::conditional<DOFs >= 1, std::array<T, 3*DOFs+1>, std::vector<T>>::type;
+    template<class T> using Vector = StandardVector<T, DOFs>;
+    template<class T> using VectorIntervals = StandardSizeVector<T, DOFs, 3*DOFs+1>;
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
+    constexpr static bool return_error_at_maximal_duration {true};
 
     Vector<double> new_max_jerk, pd; // For phase synchronization
     VectorIntervals<double> possible_t_syncs;
@@ -222,7 +223,7 @@ public:
     }
 
     //! Calculate the time-optimal waypoint-based trajectory
-    template<bool throw_error, bool return_error_at_maximal_duration>
+    template<bool throw_error>
     Result calculate(const InputParameter<DOFs>& inp, Trajectory<DOFs>& traj, double delta_time, bool& was_interrupted) {
         was_interrupted = false;
 #if defined WITH_ONLINE_CLIENT
@@ -437,7 +438,7 @@ public:
     }
 
     //! Continue the trajectory calculation
-    template<bool throw_error, bool return_error_at_maximal_duration>
+    template<bool throw_error>
     Result continue_calculation(const InputParameter<DOFs>&, Trajectory<DOFs>&, double, bool&) {
         return Result::Error;
     }

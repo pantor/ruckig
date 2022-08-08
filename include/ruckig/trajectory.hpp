@@ -24,7 +24,7 @@ class Trajectory {
     template<class T> using Container = std::array<T, 1>;
 #endif
 
-    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+    template<class T> using Vector = StandardVector<T, DOFs>;
 
     friend class Reflexxes<DOFs>;
     friend class TargetCalculator<DOFs>;

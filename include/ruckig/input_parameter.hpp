@@ -45,9 +45,9 @@ enum class DurationDiscretization {
 
 
 //! Input type of Ruckig
-template<size_t DOFs>
+template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class InputParameter {
-    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+    template<class T> using Vector = CustomVector<T, DOFs>;
 
     void initialize() {
         std::fill(current_velocity.begin(), current_velocity.end(), 0.0);

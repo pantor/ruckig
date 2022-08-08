@@ -13,7 +13,7 @@ namespace ruckig {
 //! Output type of Ruckig
 template<size_t DOFs>
 class OutputParameter {
-    template<class T> using Vector = typename std::conditional<DOFs >= 1, std::array<T, DOFs>, std::vector<T>>::type;
+    template<class T> using Vector = StandardVector<T, DOFs>;
 
     void resize(size_t dofs) {
         new_position.resize(dofs);

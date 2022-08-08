@@ -39,7 +39,7 @@ public:
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
     explicit WaypointsCalculator(size_t dofs, size_t): degrees_of_freedom(dofs) { }
 
-    template<bool throw_error, bool return_error_at_maximal_duration>
+    template<bool throw_error>
     Result calculate(const InputParameter<DOFs>& input, Trajectory<DOFs>& traj, double, bool& was_interrupted) {
         std::cout << "[ruckig] calculate trajectory via online API server." << std::endl;
 
@@ -166,7 +166,7 @@ public:
         return Result::Working;
     }
 
-    template<bool throw_error, bool return_error_at_maximal_duration>
+    template<bool throw_error>
     Result continue_calculation(const InputParameter<DOFs>&, Trajectory<DOFs>&, double, bool&) {
         if constexpr (throw_error) {
             throw std::runtime_error("[ruckig] continue calculation not available in Ruckig Community Version.");
