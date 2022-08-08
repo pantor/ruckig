@@ -24,20 +24,20 @@ template<size_t DOFs, template<class, size_t> class CustomVector = StandardVecto
 class TargetCalculator {
 private:
     template<class T> using Vector = CustomVector<T, DOFs>;
-    template<class T> using VectorIntervals = StandardSizeVector<T, DOFs, 3*DOFs+1>;
+    template<class T> using StandardVectorIntervals = StandardSizeVector<T, DOFs, 3*DOFs+1>;
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
     constexpr static bool return_error_at_maximal_duration {true};
 
     Vector<double> new_max_jerk, pd; // For phase synchronization
-    VectorIntervals<double> possible_t_syncs;
-    VectorIntervals<size_t> idx;
+    StandardVectorIntervals<double> possible_t_syncs;
+    StandardVectorIntervals<size_t> idx;
 
-    Vector<Block> blocks;
-    Vector<double> inp_min_velocity, inp_min_acceleration;
+    StandardVector<Block, DOFs> blocks;
+    StandardVector<double, DOFs> inp_min_velocity, inp_min_acceleration;
 
-    Vector<ControlInterface> inp_per_dof_control_interface;
-    Vector<Synchronization> inp_per_dof_synchronization;
+    StandardVector<ControlInterface, DOFs> inp_per_dof_control_interface;
+    StandardVector<Synchronization, DOFs> inp_per_dof_synchronization;
 
     //! Is the trajectory (in principle) phase synchronizable?
     bool is_input_collinear(const InputParameter<DOFs, CustomVector>& inp, const Vector<double>& jMax, Profile::Direction limiting_direction, size_t limiting_dof) {

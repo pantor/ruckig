@@ -50,11 +50,13 @@ class InputParameter {
     template<class T> using Vector = CustomVector<T, DOFs>;
 
     void initialize() {
-        std::fill(current_velocity.begin(), current_velocity.end(), 0.0);
-        std::fill(current_acceleration.begin(), current_acceleration.end(), 0.0);
-        std::fill(target_velocity.begin(), target_velocity.end(), 0.0);
-        std::fill(target_acceleration.begin(), target_acceleration.end(), 0.0);
-        std::fill(enabled.begin(), enabled.end(), true);
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            current_velocity[dof] = 0.0;
+            current_acceleration[dof] = 0.0;
+            target_velocity[dof] = 0.0;
+            target_acceleration[dof] = 0.0;
+            enabled[dof] = true;
+        }
     }
 
     void resize(size_t dofs) {
@@ -146,57 +148,57 @@ public:
 #endif
 
     bool operator!=(const InputParameter<DOFs, CustomVector>& rhs) const {
-        return (
-            current_position != rhs.current_position
-            || current_velocity != rhs.current_velocity
-            || current_acceleration != rhs.current_acceleration
-            || target_position != rhs.target_position
-            || target_velocity != rhs.target_velocity
-            || target_acceleration != rhs.target_acceleration
-            || max_velocity != rhs.max_velocity
-            || max_acceleration != rhs.max_acceleration
-            || max_jerk != rhs.max_jerk
-            || intermediate_positions != rhs.intermediate_positions
-            || per_section_max_velocity != rhs.per_section_max_velocity
-            || per_section_max_acceleration != rhs.per_section_max_acceleration
-            || per_section_max_jerk != rhs.per_section_max_jerk
-            || per_section_min_velocity != rhs.per_section_min_velocity
-            || per_section_min_acceleration != rhs.per_section_min_acceleration
-            || max_position != rhs.max_position
-            || min_position != rhs.min_position
-            || enabled != rhs.enabled
-            || minimum_duration != rhs.minimum_duration
-            || min_velocity != rhs.min_velocity
-            || min_acceleration != rhs.min_acceleration
-            || control_interface != rhs.control_interface
-            || synchronization != rhs.synchronization
-            || duration_discretization != rhs.duration_discretization
-            || per_dof_control_interface != rhs.per_dof_control_interface
-            || per_dof_synchronization != rhs.per_dof_synchronization
+        return !(
+            current_position == rhs.current_position
+            && current_velocity == rhs.current_velocity
+            && current_acceleration == rhs.current_acceleration
+            && target_position == rhs.target_position
+            && target_velocity == rhs.target_velocity
+            && target_acceleration == rhs.target_acceleration
+            && max_velocity == rhs.max_velocity
+            && max_acceleration == rhs.max_acceleration
+            && max_jerk == rhs.max_jerk
+            && intermediate_positions == rhs.intermediate_positions
+            && per_section_max_velocity == rhs.per_section_max_velocity
+            && per_section_max_acceleration == rhs.per_section_max_acceleration
+            && per_section_max_jerk == rhs.per_section_max_jerk
+            && per_section_min_velocity == rhs.per_section_min_velocity
+            && per_section_min_acceleration == rhs.per_section_min_acceleration
+            && max_position == rhs.max_position
+            && min_position == rhs.min_position
+            && enabled == rhs.enabled
+            && minimum_duration == rhs.minimum_duration
+            && min_velocity == rhs.min_velocity
+            && min_acceleration == rhs.min_acceleration
+            && control_interface == rhs.control_interface
+            && synchronization == rhs.synchronization
+            && duration_discretization == rhs.duration_discretization
+            && per_dof_control_interface == rhs.per_dof_control_interface
+            && per_dof_synchronization == rhs.per_dof_synchronization
         );
     }
 
     std::string to_string() const {
         std::stringstream ss;
-        ss << "\ninp.current_position = [" << join(current_position) << "]\n";
-        ss << "inp.current_velocity = [" << join(current_velocity) << "]\n";
-        ss << "inp.current_acceleration = [" << join(current_acceleration) << "]\n";
-        ss << "inp.target_position = [" << join(target_position) << "]\n";
-        ss << "inp.target_velocity = [" << join(target_velocity) << "]\n";
-        ss << "inp.target_acceleration = [" << join(target_acceleration) << "]\n";
-        ss << "inp.max_velocity = [" << join(max_velocity) << "]\n";
-        ss << "inp.max_acceleration = [" << join(max_acceleration) << "]\n";
-        ss << "inp.max_jerk = [" << join(max_jerk) << "]\n";
+        ss << "\ninp.current_position = [" << join(current_position, degrees_of_freedom) << "]\n";
+        ss << "inp.current_velocity = [" << join(current_velocity, degrees_of_freedom) << "]\n";
+        ss << "inp.current_acceleration = [" << join(current_acceleration, degrees_of_freedom) << "]\n";
+        ss << "inp.target_position = [" << join(target_position, degrees_of_freedom) << "]\n";
+        ss << "inp.target_velocity = [" << join(target_velocity, degrees_of_freedom) << "]\n";
+        ss << "inp.target_acceleration = [" << join(target_acceleration, degrees_of_freedom) << "]\n";
+        ss << "inp.max_velocity = [" << join(max_velocity, degrees_of_freedom) << "]\n";
+        ss << "inp.max_acceleration = [" << join(max_acceleration, degrees_of_freedom) << "]\n";
+        ss << "inp.max_jerk = [" << join(max_jerk, degrees_of_freedom) << "]\n";
         if (min_velocity) {
-            ss << "inp.min_velocity = [" << join(min_velocity.value()) << "]\n";
+            ss << "inp.min_velocity = [" << join(min_velocity.value(), degrees_of_freedom) << "]\n";
         }
         if (min_acceleration) {
-            ss << "inp.min_acceleration = [" << join(min_acceleration.value()) << "]\n";
+            ss << "inp.min_acceleration = [" << join(min_acceleration.value(), degrees_of_freedom) << "]\n";
         }
         if (!intermediate_positions.empty()) {
             ss << "inp.intermediate_positions = [\n";
             for (auto p: intermediate_positions) {
-                ss << "    [" << join(p) << "],\n";
+                ss << "    [" << join(p, degrees_of_freedom) << "],\n";
             }
             ss << "]\n";
         }

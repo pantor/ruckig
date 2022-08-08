@@ -1,6 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
 
+#include <deque>
 #include <random>
 #include "randomizer.hpp"
 
@@ -19,6 +20,73 @@ std::normal_distribution<double> dynamic_dist {0.0, 0.8};
 std::uniform_real_distribution<double> limit_dist {0.08, 16.0};
 std::uniform_real_distribution<double> limit_dist_high {10.0, 1000000.0};
 std::uniform_real_distribution<double> min_limit_dist {-16.0, -0.08};
+
+
+template<class T, size_t DOFs>
+class MinimalVector {
+    T data[DOFs];
+
+public:
+    MinimalVector() {}
+    MinimalVector(std::initializer_list<T> a) {
+        std::copy_n(a.begin(), DOFs, std::begin(data));
+    }
+
+    T operator[](size_t i) const {
+        return data[i];
+    }
+
+    T& operator[](size_t i) {
+        return data[i];
+    }
+
+    bool operator==(const MinimalVector<T, DOFs>& rhs) const {
+        for (size_t dof = 0; dof < DOFs; ++dof) {
+            if (data[dof] != rhs[dof]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+
+template<class T, size_t DOFs>
+class MinimalRuntimeVector {
+    std::deque<T> data;
+
+public:
+    MinimalRuntimeVector() {}
+    MinimalRuntimeVector(std::initializer_list<T> a) {
+        data.resize(a.size());
+        std::copy_n(a.begin(), a.size(), std::begin(data));
+    }
+
+    T operator[](size_t i) const {
+        return data[i];
+    }
+
+    T& operator[](size_t i) {
+        return data[i];
+    }
+
+    size_t size() const {
+        return data.size();
+    }
+
+    void resize(size_t size) {
+        data.resize(size);
+    }
+
+    bool operator==(const MinimalRuntimeVector<T, DOFs>& rhs) const {
+        for (size_t dof = 0; dof < data.size(); ++dof) {
+            if (data[dof] != rhs[dof]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
 
 
 template<size_t DOFs, class OTGType>
@@ -684,6 +752,65 @@ TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
     CHECK( array_eq(new_position, input.current_position) );
     CHECK( array_eq(new_velocity, input.current_velocity) );
     CHECK( array_eq(new_acceleration, input.current_acceleration) );
+}
+
+TEST_CASE("custom-vector-type" * doctest::description("Custom Vector Type")) {
+    SUBCASE("DOFs compile-time") {
+        RuckigThrow<3, MinimalVector> otg {0.005};
+        InputParameter<3, MinimalVector> input;
+        OutputParameter<3, MinimalVector> output;
+
+        input.current_position = {0.0, -2.0, 0.0};
+        input.current_velocity = {0.0, 0.0, 0.0};
+        input.current_acceleration = {0.0, 0.0, 0.0};
+        input.target_position = {1.0, -3.0, 2.0};
+        input.target_velocity = {0.0, 0.3, 0.0};
+        input.target_acceleration = {0.0, 0.0, 0.0};
+        input.max_velocity = {1.0, 1.0, 1.0};
+        input.max_acceleration = {1.0, 1.0, 1.0};
+        input.max_jerk = {1.0, 1.0, 1.0};
+
+        auto result = otg.update(input, output);
+
+        CHECK( result == Result::Working );
+        CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
+
+        MinimalVector<double, 3> new_position, new_velocity, new_acceleration;
+        output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
+        CHECK( new_position[0] == doctest::Approx(input.current_position[0]) );
+        CHECK( new_position[1] == doctest::Approx(input.current_position[1]) );
+        CHECK( new_position[2] == doctest::Approx(input.current_position[2]) );
+    }
+    
+    SUBCASE("DOFs run-time") {
+        RuckigThrow<DynamicDOFs, MinimalRuntimeVector> otg {3, 0.005};
+        InputParameter<DynamicDOFs, MinimalRuntimeVector> input {3};
+        OutputParameter<DynamicDOFs, MinimalRuntimeVector> output {3};
+
+        input.current_position = {0.0, -2.0, 0.0};
+        input.current_velocity = {0.0, 0.0, 0.0};
+        input.current_acceleration = {0.0, 0.0, 0.0};
+        input.target_position = {1.0, -3.0, 2.0};
+        input.target_velocity = {0.0, 0.3, 0.0};
+        input.target_acceleration = {0.0, 0.0, 0.0};
+        input.max_velocity = {1.0, 1.0, 1.0};
+        input.max_acceleration = {1.0, 1.0, 1.0};
+        input.max_jerk = {1.0, 1.0, 1.0};
+
+        auto result = otg.update(input, output);
+
+        CHECK( result == Result::Working );
+        CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
+
+        MinimalRuntimeVector<double, DynamicDOFs> new_position, new_velocity, new_acceleration;
+        new_position.resize(3);
+        new_velocity.resize(3);
+        new_acceleration.resize(3);
+        output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
+        CHECK( new_position[0] == doctest::Approx(input.current_position[0]) );
+        CHECK( new_position[1] == doctest::Approx(input.current_position[1]) );
+        CHECK( new_position[2] == doctest::Approx(input.current_position[2]) );
+    }
 }
 
 TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
