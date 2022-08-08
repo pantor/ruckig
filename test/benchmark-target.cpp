@@ -63,7 +63,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
             d.fill_or_zero(input.current_acceleration, 0.8);
             p.fill(input.target_position);
             d.fill_or_zero(input.target_velocity, 0.7);
-            if constexpr (std::is_same<OTGType, Ruckig<DOFs, true>>::value) {
+            if constexpr (std::is_same<OTGType, RuckigThrow<DOFs>>::value) {
                 d.fill_or_zero(input.target_acceleration, 0.6);
             }
 
@@ -71,7 +71,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
             l.fill(input.max_acceleration, input.target_acceleration);
             l.fill(input.max_jerk);
 
-            if constexpr (std::is_same<OTGType, Ruckig<DOFs, true>>::value) {
+            if constexpr (std::is_same<OTGType, RuckigThrow<DOFs>>::value) {
                 if (!otg.validate_input(input)) {
                     continue;
                 }
@@ -105,9 +105,9 @@ int main() {
     const size_t n {5}; // Number of iterations
     const size_t number_trajectories {64 * 1024};
     
-    std::cout << "Ruckig size: " << sizeof(Ruckig<3, true>) << " Byte" << std::endl;
+    std::cout << "Ruckig size: " << sizeof(Ruckig<3>) << " Byte" << std::endl;
     std::cout << "Trajectory<3> size: " << sizeof(Trajectory<3>) << " Byte" << std::endl;
 
     const size_t DOFs {7};
-    benchmark<DOFs, Ruckig<DOFs, true>>(n, number_trajectories);
+    benchmark<DOFs, RuckigThrow<DOFs>>(n, number_trajectories);
 }

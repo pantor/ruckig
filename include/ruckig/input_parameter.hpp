@@ -145,7 +145,7 @@ public:
     }
 #endif
 
-    bool operator!=(const InputParameter<DOFs>& rhs) const {
+    bool operator!=(const InputParameter<DOFs, CustomVector>& rhs) const {
         return (
             current_position != rhs.current_position
             || current_velocity != rhs.current_velocity

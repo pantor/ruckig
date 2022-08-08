@@ -20,11 +20,14 @@
 namespace ruckig {
 
 //! Calculation class for a state-to-state trajectory.
-template<size_t DOFs>
+template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class TargetCalculator {
 private:
-    template<class T> using Vector = StandardVector<T, DOFs>;
+    template<class T> using Vector = CustomVector<T, DOFs>;
     template<class T> using VectorIntervals = StandardSizeVector<T, DOFs, 3*DOFs+1>;
+
+    using InputParameter = InputParameter<DOFs, CustomVector>;
+    using Trajectory = Trajectory<DOFs, CustomVector>;
 
     constexpr static double eps {std::numeric_limits<double>::epsilon()};
     constexpr static bool return_error_at_maximal_duration {true};
@@ -40,7 +43,7 @@ private:
     Vector<Synchronization> inp_per_dof_synchronization;
 
     //! Is the trajectory (in principle) phase synchronizable?
-    bool is_input_collinear(const InputParameter<DOFs>& inp, const Vector<double>& jMax, Profile::Direction limiting_direction, size_t limiting_dof) {
+    bool is_input_collinear(const InputParameter& inp, const Vector<double>& jMax, Profile::Direction limiting_direction, size_t limiting_dof) {
         // Check that vectors pd, v0, a0, vf, af are collinear
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             pd[dof] = inp.target_position[dof] - inp.current_position[dof];
@@ -224,7 +227,7 @@ public:
 
     //! Calculate the time-optimal waypoint-based trajectory
     template<bool throw_error>
-    Result calculate(const InputParameter<DOFs>& inp, Trajectory<DOFs>& traj, double delta_time, bool& was_interrupted) {
+    Result calculate(const InputParameter& inp, Trajectory& traj, double delta_time, bool& was_interrupted) {
         was_interrupted = false;
 #if defined WITH_ONLINE_CLIENT
         traj.resize(0);
@@ -301,7 +304,7 @@ public:
         }
 
         // None Synchronization
-        for (size_t dof = 0; dof < blocks.size(); ++dof) {
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             if (inp.enabled[dof] && inp_per_dof_synchronization[dof] == Synchronization::None) {
                 traj.profiles[0][dof] = blocks[dof].p_min;
                 if (blocks[dof].t_min > traj.duration) {
@@ -320,7 +323,7 @@ public:
 
         if (traj.duration == 0.0) {
             // Copy all profiles for end state
-            for (size_t dof = 0; dof < blocks.size(); ++dof) {
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                 traj.profiles[0][dof] = blocks[dof].p_min;
             }
             return Result::Working;
@@ -439,7 +442,7 @@ public:
 
     //! Continue the trajectory calculation
     template<bool throw_error>
-    Result continue_calculation(const InputParameter<DOFs>&, Trajectory<DOFs>&, double, bool&) {
+    Result continue_calculation(const InputParameter&, Trajectory&, double, bool&) {
         return Result::Error;
     }
 };

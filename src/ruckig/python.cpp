@@ -143,20 +143,20 @@ limited by velocity, acceleration, and jerk constraints.";
             return OutputParameter<DynamicDOFs>(self);
         });
 
-    py::class_<Ruckig<DynamicDOFs, true>>(m, "Ruckig")
+    py::class_<RuckigThrow<DynamicDOFs>>(m, "Ruckig")
         .def(py::init<size_t>(), "dofs"_a)
         .def(py::init<size_t, double>(), "dofs"_a, "delta_time"_a)
 #if defined WITH_ONLINE_CLIENT
         .def(py::init<size_t, double, size_t>(), "dofs"_a, "delta_time"_a, "max_number_of_waypoints"_a=0)
-        .def("filter_intermediate_positions", &Ruckig<DynamicDOFs, true>::filter_intermediate_positions, "input"_a, "threshold_distance"_a)
+        .def("filter_intermediate_positions", &RuckigThrow<DynamicDOFs>::filter_intermediate_positions, "input"_a, "threshold_distance"_a)
 #endif
-        .def_readwrite("delta_time", &Ruckig<DynamicDOFs, true>::delta_time)
-        .def_readonly("degrees_of_freedom", &Ruckig<DynamicDOFs, true>::degrees_of_freedom)
-        .def("reset", &Ruckig<DynamicDOFs, true>::reset)
-        .def("validate_input", &Ruckig<DynamicDOFs, true>::validate_input, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
-        .def("calculate", static_cast<Result (Ruckig<DynamicDOFs, true>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&Ruckig<DynamicDOFs, true>::calculate), "input"_a, "trajectory"_a)
-        .def("calculate", static_cast<Result (Ruckig<DynamicDOFs, true>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&, bool&)>(&Ruckig<DynamicDOFs, true>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
-        .def("update", &Ruckig<DynamicDOFs, true>::update, "input"_a, "output"_a);
+        .def_readwrite("delta_time", &RuckigThrow<DynamicDOFs>::delta_time)
+        .def_readonly("degrees_of_freedom", &RuckigThrow<DynamicDOFs>::degrees_of_freedom)
+        .def("reset", &RuckigThrow<DynamicDOFs>::reset)
+        .def("validate_input", &RuckigThrow<DynamicDOFs>::validate_input, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
+        .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a)
+        .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&, bool&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
+        .def("update", &RuckigThrow<DynamicDOFs>::update, "input"_a, "output"_a);
 
 #ifdef WITH_EXPOSE_INTERNAL
     py::class_<BrakeProfile>(m, "BrakeProfile")

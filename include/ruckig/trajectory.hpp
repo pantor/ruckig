@@ -10,13 +10,12 @@
 
 namespace ruckig {
 
-template <size_t> class Reflexxes;
-template <size_t> class TargetCalculator;
-template <size_t> class WaypointsCalculator;
+template <size_t, template<class, size_t> class> class TargetCalculator;
+template <size_t, template<class, size_t> class> class WaypointsCalculator;
 
 
 //! Interface for the generated trajectory.
-template<size_t DOFs>
+template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class Trajectory {
 #if defined WITH_ONLINE_CLIENT
     template<class T> using Container = std::vector<T>;
@@ -24,11 +23,10 @@ class Trajectory {
     template<class T> using Container = std::array<T, 1>;
 #endif
 
-    template<class T> using Vector = StandardVector<T, DOFs>;
+    template<class T> using Vector = CustomVector<T, DOFs>;
 
-    friend class Reflexxes<DOFs>;
-    friend class TargetCalculator<DOFs>;
-    friend class WaypointsCalculator<DOFs>;
+    friend class TargetCalculator<DOFs, CustomVector>;
+    friend class WaypointsCalculator<DOFs, CustomVector>;
 
     Container<Vector<Profile>> profiles;
 

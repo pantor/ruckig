@@ -21,7 +21,7 @@ void check_duration(OTGType& otg, InputParameter<DOFs>& input, double duration) 
 
 
 TEST_CASE("known" * doctest::description("Known examples")) {
-    Ruckig<3, true> otg {0.004};
+    RuckigThrow<3> otg {0.004};
 
     InputParameter<3> input;
     input.current_position = {0.0, 0.0, 0.0};
@@ -343,7 +343,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     check_duration(otg, input, 0.048);
 
 
-    Ruckig<38, true> otg2 {0.004};
+    RuckigThrow<38> otg2 {0.004};
 
     InputParameter<38> input2;
     input2.current_position = {0.5, -0.7, -0.7, -1.5, -0, -0.2, 0.5, 0.7, 0.7, -1.5, 0, -0.2, -0, 0, -0, 0, 0, 0, 0, -0, 0, -0, 0, 0, 0, -0, 0, -0, 0, 0, -0, 0, -0, 0, 0, 0, -0, 0};

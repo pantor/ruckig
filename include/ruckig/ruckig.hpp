@@ -19,16 +19,21 @@
 namespace ruckig {
 
 //! Main class for the Ruckig algorithm.
-template<size_t DOFs = 0, bool throw_error = false>
+template<size_t DOFs = 0, template<class, size_t> class CustomVector = StandardVector, bool throw_error = false>
 class Ruckig {
+    using InputParameter = InputParameter<DOFs, CustomVector>;
+    using OutputParameter = OutputParameter<DOFs, CustomVector>;
+    using Calculator = Calculator<DOFs, CustomVector>;
+    using Trajectory = Trajectory<DOFs, CustomVector>;
+
     //! Current input, only for comparison for recalculation
-    InputParameter<DOFs> current_input;
+    InputParameter current_input;
 
     //! Flag that indicates if the current_input was properly initialized
     bool current_input_initialized {false};
 
     //! Calculator for new trajectories
-    Calculator<DOFs> calculator;
+    Calculator calculator;
 
     //! Max number of intermediate waypoints
     const size_t max_number_of_waypoints;
@@ -53,21 +58,21 @@ public:
 
 #if defined WITH_ONLINE_CLIENT
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
-    explicit Ruckig(double delta_time, size_t max_number_of_waypoints): current_input(InputParameter<DOFs>(max_number_of_waypoints)), calculator(Calculator<DOFs>(max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), degrees_of_freedom(DOFs), delta_time(delta_time) {
+    explicit Ruckig(double delta_time, size_t max_number_of_waypoints): current_input(InputParameter(max_number_of_waypoints)), calculator(Calculator(max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), degrees_of_freedom(DOFs), delta_time(delta_time) {
     }
 #endif
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs): current_input(InputParameter<0>(dofs)), calculator(Calculator<0>(dofs)), max_number_of_waypoints(0), degrees_of_freedom(dofs), delta_time(-1.0) {
+    explicit Ruckig(size_t dofs): current_input(InputParameter(dofs)), calculator(Calculator(dofs)), max_number_of_waypoints(0), degrees_of_freedom(dofs), delta_time(-1.0) {
     }
 
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs, double delta_time): current_input(InputParameter<0>(dofs)), calculator(Calculator<0>(dofs)), max_number_of_waypoints(0), degrees_of_freedom(dofs), delta_time(delta_time) {
+    explicit Ruckig(size_t dofs, double delta_time): current_input(InputParameter(dofs)), calculator(Calculator(dofs)), max_number_of_waypoints(0), degrees_of_freedom(dofs), delta_time(delta_time) {
     }
 
 #if defined WITH_ONLINE_CLIENT
     template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
-    explicit Ruckig(size_t dofs, double delta_time, size_t max_number_of_waypoints): current_input(InputParameter<0>(dofs, max_number_of_waypoints)), calculator(Calculator<0>(dofs, max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), degrees_of_freedom(dofs), delta_time(delta_time) {
+    explicit Ruckig(size_t dofs, double delta_time, size_t max_number_of_waypoints): current_input(InputParameter(dofs, max_number_of_waypoints)), calculator(Calculator(dofs, max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), degrees_of_freedom(dofs), delta_time(delta_time) {
     }
 #endif
 
@@ -77,8 +82,8 @@ public:
     }
 
     //! Filter intermediate positions based on a threshold distance for each DoF
-    template<class T> using Vector = StandardVector<T, DOFs>;
-    std::vector<Vector<double>> filter_intermediate_positions(const InputParameter<DOFs>& input, const Vector<double>& threshold_distance) const {
+    template<class T> using Vector = CustomVector<T, DOFs>;
+    std::vector<Vector<double>> filter_intermediate_positions(const InputParameter& input, const Vector<double>& threshold_distance) const {
         if (input.intermediate_positions.empty()) {
             return input.intermediate_positions;
         }
@@ -140,7 +145,7 @@ public:
     }
 
     //! Validate the input for trajectory calculation and kinematic limits
-    bool validate_input(const InputParameter<DOFs>& input, bool check_current_state_within_limits=false, bool check_target_state_within_limits=true) const {
+    bool validate_input(const InputParameter& input, bool check_current_state_within_limits=false, bool check_target_state_within_limits=true) const {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             const double jMax = input.max_jerk[dof];
             if (std::isnan(jMax) || jMax <= std::numeric_limits<double>::min()) {
@@ -230,13 +235,13 @@ public:
     }
 
     //! Calculate a new trajectory for the given input
-    Result calculate(const InputParameter<DOFs>& input, Trajectory<DOFs>& trajectory) {
+    Result calculate(const InputParameter& input, Trajectory& trajectory) {
         bool was_interrupted {false};
         return calculate(input, trajectory, was_interrupted);
     }
 
     //! Calculate a new trajectory for the given input and check for interruption
-    Result calculate(const InputParameter<DOFs>& input, Trajectory<DOFs>& trajectory, bool& was_interrupted) {
+    Result calculate(const InputParameter& input, Trajectory& trajectory, bool& was_interrupted) {
         if (!validate_input(input, false, true)) {
             return Result::ErrorInvalidInput;
         }
@@ -245,7 +250,7 @@ public:
     }
 
     //! Get the next output state (with step delta_time) along the calculated trajectory for the given input
-    Result update(const InputParameter<DOFs>& input, OutputParameter<DOFs>& output) {
+    Result update(const InputParameter& input, OutputParameter& output) {
         const auto start = std::chrono::steady_clock::now();
 
         if constexpr (DOFs == 0 && throw_error) {
@@ -285,5 +290,10 @@ public:
         return Result::Working;
     }
 };
+
+
+template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
+using RuckigThrow = Ruckig<DOFs, CustomVector, true>;
+
 
 } // namespace ruckig

@@ -11,9 +11,9 @@
 namespace ruckig {
 
 //! Output type of Ruckig
-template<size_t DOFs>
+template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class OutputParameter {
-    template<class T> using Vector = StandardVector<T, DOFs>;
+    template<class T> using Vector = CustomVector<T, DOFs>;
 
     void resize(size_t dofs) {
         new_position.resize(dofs);
@@ -25,7 +25,7 @@ public:
     size_t degrees_of_freedom;
 
     //! Current trajectory
-    Trajectory<DOFs> trajectory;
+    Trajectory<DOFs, CustomVector> trajectory;
 
     // Current kinematic state
     Vector<double> new_position, new_velocity, new_acceleration;
@@ -66,7 +66,7 @@ public:
     }
 #endif
 
-    void pass_to_input(InputParameter<DOFs>& input) const {
+    void pass_to_input(InputParameter<DOFs, CustomVector>& input) const {
         input.current_position = new_position;
         input.current_velocity = new_velocity;
         input.current_acceleration = new_acceleration;
