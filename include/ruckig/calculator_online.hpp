@@ -21,9 +21,6 @@ namespace ruckig {
 //! Calculation class for a trajectory along waypoints.
 template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class WaypointsCalculator {
-    using InputParameter = InputParameter<DOFs, CustomVector>;
-    using Trajectory = Trajectory<DOFs, CustomVector>;
-
     httplib::Client cli {"http://api.ruckig.com"};
 
 public:
@@ -42,7 +39,7 @@ public:
     explicit WaypointsCalculator(size_t dofs, size_t): degrees_of_freedom(dofs) { }
 
     template<bool throw_error>
-    Result calculate(const InputParameter& input, Trajectory& traj, double, bool& was_interrupted) {
+    Result calculate(const InputParameter<DOFs, CustomVector>& input, Trajectory<DOFs, CustomVector>& traj, double, bool& was_interrupted) {
         std::cout << "[ruckig] calculate trajectory via online API server." << std::endl;
 
         nlohmann::json params;
@@ -169,7 +166,7 @@ public:
     }
 
     template<bool throw_error>
-    Result continue_calculation(const InputParameter&, Trajectory&, double, bool&) {
+    Result continue_calculation(const InputParameter<DOFs, CustomVector>&, Trajectory<DOFs, CustomVector>&, double, bool&) {
         if constexpr (throw_error) {
             throw std::runtime_error("[ruckig] continue calculation not available in Ruckig Community Version.");
         }
