@@ -57,24 +57,21 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  foreach(example IN ITEMS 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 8_dynamic_dofs 11_custom_vector_type 12_custom_vector_type_dynamic_dofs)
+  set(EXAMPLES_LIST 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 8_dynamic_dofs)
+
+  if(BUILD_ONLINE_CLIENT)
+    list(APPEND EXAMPLES_LIST 3_waypoints 4_waypoints_online 9_dynamic_dofs_waypoints)
+  else()
+    list(APPEND EXAMPLES_LIST 11_custom_vector_type 12_custom_vector_type_dynamic_dofs)
+    if(TARGET Eigen3::Eigen)
+      list(APPEND EXAMPLES_LIST 10_eigen_vector_type)
+    endif()
+  endif()
+
+  foreach(example IN LISTS EXAMPLES_LIST)
     add_executable(example-${example} examples/${example}.cpp)
     target_link_libraries(example-${example} PRIVATE ruckig)
   endforeach()
-
-  if(TARGET Eigen3::Eigen)
-    foreach(example IN ITEMS 10_eigen_vector_type)
-      add_executable(example-${example} examples/${example}.cpp)
-      target_link_libraries(example-${example} PRIVATE ruckig)
-    endforeach()
-  endif()
-
-  if(BUILD_ONLINE_CLIENT)
-    foreach(example IN ITEMS 3_waypoints 4_waypoints_online 9_dynamic_dofs_waypoints)
-      add_executable(example-${example} examples/${example}.cpp)
-      target_link_libraries(example-${example} PRIVATE ruckig)
-    endforeach()
-  endif()
 endif()
 
 
