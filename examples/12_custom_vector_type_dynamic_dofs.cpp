@@ -1,3 +1,4 @@
+#include <deque>
 #include <iostream>
 
 #include <ruckig/ruckig.hpp>
