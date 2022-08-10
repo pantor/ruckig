@@ -239,7 +239,7 @@ When only using this method, the `Ruckig` constructor does not need a control cy
 
 ### Dynamic Number of Degrees of Freedom
 
-So far, we have told Ruckig the number of DoFs as a template parameter. If you don't know the number of DoFs at compile-time, you can set the template parameter to `DynamicDOFs` and pass the DoFs to the constructor:
+So far, we have told Ruckig the number of DoFs as a template parameter. If you don't know the number of DoFs at compile-time, you can set the template parameter to `ruckig::DynamicDOFs` and pass the DoFs to the constructor:
 
 ```.cpp
 Ruckig<DynamicDOFs> otg {6, 0.001};
@@ -248,6 +248,35 @@ OutputParameter<DynamicDOFs> output {6};
 ```
 
 However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
+
+
+### Custom Vector Types
+
+Ruckig supports custom vector types to make interfacing with your code even easier and more flexible. Most importantly, you can switch to [Eigen Vectors](https://eigen.tuxfamily.org) simply by including Eigen (3.4 or later) before Ruckig
+```.cpp
+#include <Eigen/Core>
+#include <ruckig/ruckig.hpp>
+```
+and then call the constructors with the `ruckig::EigenVector` parameter.
+```.cpp
+Ruckig<6, EigenVector> otg {0.001};
+InputParameter<6, EigenVector> input;
+OutputParameter<6, EigenVector> output;
+```
+Now every in- and output of Ruckig's API (such as `current_position`, `new_position` or `max_jerk`) are Eigen types! To define completely custom vector types, you can pass a C++ [template template parameter](https://en.cppreference.com/w/cpp/language/template_parameters) to the constructor. This template template parameter needs to fulfill a range of template arguments and methods:
+```.cpp
+template<class Type, size_t DOFs>
+struct MinimalVector {
+  Type operator[](size_t i) const; // Array [] getter
+  Type& operator[](size_t i); // Array [] setter
+  size_t size() const; // Current size
+  bool operator==(const MinimalVector<T, DOFs>& rhs) const; // Equal comparison operator
+
+  // Only required in combination with DynamicDOFs, e.g. to allocate memory
+  void resize(size_t size);
+};
+```
+Note that `DynamicDOFs` corresponds to `DOFs = 0`. We've included a range of examples for using Ruckig with [(10) Eigen](https://github.com/pantor/ruckig/blob/master/examples/10_eigen_vector_type.cpp), [(11) custom vector types](https://github.com/pantor/ruckig/blob/master/examples/11_custom_vector_type.cpp), and [(12) custom types with a dynamic number of DoFs](https://github.com/pantor/ruckig/blob/master/examples/12_custom_vector_type_dynamic_dofs.cpp).
 
 
 ## Tests and Numerical Stability
