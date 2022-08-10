@@ -254,7 +254,7 @@ However, we recommend to keep the template parameter when possible: First, it ha
 
 Ruckig supports custom vector types to make interfacing with your code even easier and more flexible. Most importantly, you can switch to [Eigen Vectors](https://eigen.tuxfamily.org) simply by including Eigen (3.4 or later) before Ruckig
 ```.cpp
-#include <Eigen/Core>
+#include <Eigen/Core> // Version 3.4 or later
 #include <ruckig/ruckig.hpp>
 ```
 and then call the constructors with the `ruckig::EigenVector` parameter.

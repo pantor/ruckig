@@ -1,7 +1,7 @@
 #include <iostream>
 
 // Include Eigen before Ruckig
-#include <Eigen/Core>
+#include <Eigen/Core> // Version 3.4 or later
 
 #include <ruckig/ruckig.hpp>
 
