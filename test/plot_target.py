@@ -7,7 +7,6 @@ from plotter import Plotter
 path.insert(0, str(Path(__file__).parent.absolute().parent / 'build'))
 
 from ruckig import InputParameter, OutputParameter, Result, Ruckig, Synchronization, ControlInterface, DurationDiscretization
-# from ruckig import Reflexxes
 
 
 def walk_through_trajectory(otg, inp):
@@ -18,10 +17,7 @@ def walk_through_trajectory(otg, inp):
     while res == Result.Working:
         res = otg.update(inp, out)
 
-        inp.current_position = out.new_position
-        inp.current_velocity = out.new_velocity
-        inp.current_acceleration = out.new_acceleration
-
+        out.pass_to_input(inp)
         out_list.append(copy(out))
 
     return out_list
@@ -51,7 +47,6 @@ if __name__ == '__main__':
     # inp.minimum_duration = 5.0
 
 
-    # otg = Reflexxes(inp.degrees_of_freedom, 0.005)
     otg = Ruckig(inp.degrees_of_freedom, 0.001)
 
     out_list = walk_through_trajectory(otg, inp)

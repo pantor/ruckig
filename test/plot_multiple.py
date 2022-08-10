@@ -23,10 +23,7 @@ def walk_through_trajectory(otg, inp, waypoints):
             inp.target_position, inp.target_velocity, inp.target_acceleration = waypoint
             res = otg.update(inp, out)
 
-            inp.current_position = out.new_position
-            inp.current_velocity = out.new_velocity
-            inp.current_acceleration = out.new_acceleration
-
+            out.pass_to_input(inp)
             time_offsets.append(copy(time_offset))
             out_list.append(copy(out))
 
