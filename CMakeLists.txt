@@ -52,7 +52,7 @@ if(BUILD_ONLINE_CLIENT)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
-  target_compile_definitions(ruckig PUBLIC WITH_ONLINE_CLIENT)
+  target_compile_definitions(ruckig PUBLIC WITH_ONLINE_CLIENT WITH_SERIALIZATION)
 endif()
 
 

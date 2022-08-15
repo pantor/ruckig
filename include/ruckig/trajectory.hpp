@@ -4,6 +4,10 @@
 #include <tuple>
 #include <vector>
 
+#ifdef WITH_SERIALIZATION
+#include <json/json.hpp>
+#endif
+
 #include <ruckig/input_parameter.hpp>
 #include <ruckig/profile.hpp>
 
@@ -242,6 +246,10 @@ public:
         }
         return false;
     }
+
+#ifdef WITH_SERIALIZATION
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Trajectory<DOFs>, profiles, duration, cumulative_times, independent_min_durations)
+#endif
 };
 
 } // namespace ruckig

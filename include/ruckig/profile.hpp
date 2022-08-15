@@ -8,6 +8,10 @@
 #include <limits>
 #include <optional>
 
+#ifdef WITH_SERIALIZATION
+#include <json/json.hpp>
+#endif
+
 #include <ruckig/brake.hpp>
 #include <ruckig/roots.hpp>
 #include <ruckig/utils.hpp>
@@ -370,6 +374,10 @@ public:
         }
         return result;
     }
+
+#ifdef WITH_SERIALIZATION
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Profile, t, t_sum, j, a, v, p, pf, vf, af, brake, accel)
+#endif
 };
 
 } // namespace ruckig
