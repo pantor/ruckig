@@ -248,7 +248,7 @@ public:
     }
 
 #ifdef WITH_SERIALIZATION
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Trajectory<DOFs>, profiles, duration, cumulative_times, independent_min_durations)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Trajectory<DOFs>, degrees_of_freedom, profiles, duration, cumulative_times, independent_min_durations)
 #endif
 };
 
