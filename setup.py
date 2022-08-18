@@ -1,11 +1,9 @@
 import os
-import re
 import subprocess
 import sys
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-from distutils.version import LooseVersion
 
 
 with open('README.md', 'r') as readme_file:
@@ -20,18 +18,6 @@ class CMakeExtension(Extension):
 
 class CMakeBuild(build_ext):
     def run(self):
-        try:
-            out = subprocess.check_output(['cmake', '--version'])
-        except OSError as err:
-            raise RuntimeError(
-                'CMake must be installed to build the following extensions: ' +
-                ', '.join(e.name for e in self.extensions)
-            ) from err
-
-        cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
-        if cmake_version < LooseVersion('3.10.0'):
-            raise RuntimeError('CMake >= 3.10.0 is required')
-
         for ext in self.extensions:
             self.build_extension(ext)
 
