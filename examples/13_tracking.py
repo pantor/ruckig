@@ -14,24 +14,24 @@ from ruckig import Trackig, TargetState, InputParameter, OutputParameter
 
 def model_ramp(t, ramp_vel=0.5, ramp_pos=1.0):
     target = TargetState(1)
-    on_ramp = t < ramp_pos / (0.01 * abs(ramp_vel))
-    target.position = [t * ramp_vel * 0.01] if on_ramp else [ramp_pos]
+    on_ramp = t < ramp_pos / abs(ramp_vel)
+    target.position = [t * ramp_vel] if on_ramp else [ramp_pos]
     target.velocity = [ramp_vel] if on_ramp else [0.0]
     target.acceleration = [0.0]
     return target
 
 def model_constant_acceleration(t, ramp_acc=0.05):
     target = TargetState(1)
-    target.position = [(0.01 * t)**2 * ramp_acc]
-    target.velocity = [0.01 * t * ramp_acc]
+    target.position = [t * t * ramp_acc]
+    target.velocity = [t * ramp_acc]
     target.acceleration = [ramp_acc]
     return target
 
 def model_sinus(t, ramp_vel=0.4):
     target = TargetState(1)
-    target.position = [np.sin(ramp_vel * t * 0.01)]
-    target.velocity = [ramp_vel * np.cos(ramp_vel * t * 0.01)]
-    target.acceleration = [-ramp_vel * ramp_vel * np.sin(ramp_vel * t * 0.01)]
+    target.position = [np.sin(ramp_vel * t)]
+    target.velocity = [ramp_vel * np.cos(ramp_vel * t)]
+    target.acceleration = [-ramp_vel * ramp_vel * np.sin(ramp_vel * t)]
     return target
 
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     steps, target_list, follow_list = [], [], []
     for t in range(500):
-        target_state = model_ramp(t)
+        target_state = model_ramp(otg.delta_time * t)
 
         steps.append(t)
         res = otg.update(target_state, inp, out)
@@ -74,8 +74,9 @@ if __name__ == '__main__':
     # target_list = np.array(target_list)
     
     # plt.ylabel(f'DoF 1')
-    # plt.plot(steps, follow_list[:, 0])
-    # plt.plot(steps, target_list[:, 0], color='r')
+    # plt.plot(steps, follow_list[:, 0], label='Follow Position')
+    # plt.plot(steps, target_list[:, 0], color='r', label='Target Position')
     # plt.grid(True)
+    # plt.legend()
 
-    # plt.savefig(Path(__file__).parent.parent / 'build' / 'otg_trajectory.pdf')
+    # plt.savefig(Path(__file__).parent.absolute() / '13_trajectory.pdf')

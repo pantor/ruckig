@@ -1,5 +1,6 @@
 // Only with Ruckig Pro
 
+#include <cmath>
 #include <iostream>
 
 #include <ruckig/trackig.hpp>
@@ -7,14 +8,31 @@
 
 using namespace ruckig;
 
-TargetState<1> model_ramp(size_t t, double ramp_vel=0.5, double ramp_pos=1.0) {
+TargetState<1> model_ramp(double t, double ramp_vel=0.5, double ramp_pos=1.0) {
     TargetState<1> target;
-    const bool on_ramp = t < ramp_pos / (0.01 * std::abs(ramp_vel));
-    target.position[0] = on_ramp ? t * ramp_vel * 0.01 : ramp_pos;
+    const bool on_ramp = t < ramp_pos / std::abs(ramp_vel);
+    target.position[0] = on_ramp ? t * ramp_vel : ramp_pos;
     target.velocity[0] = on_ramp ? ramp_vel : 0.0;
     target.acceleration[0] = 0.0;
     return target;
 }
+
+TargetState<1> model_constant_acceleration(double t, double ramp_acc=0.05) {
+    TargetState<1> target;
+    target.position[0] = t * t * ramp_acc;
+    target.velocity[0] = t * ramp_acc;
+    target.acceleration[0] = ramp_acc;
+    return target;
+}
+
+TargetState<1> model_sinus(double t, double ramp_vel=0.4) {
+    TargetState<1> target;
+    target.position[0] = std::sin(ramp_vel * t);
+    target.velocity[0] = ramp_vel * std::cos(ramp_vel * t);
+    target.acceleration[0] = -ramp_vel * ramp_vel * std::sin(ramp_vel * t);
+    return target;
+}
+
 
 int main() {
     // Create instances: the Ruckig OTG as well as input and output parameters
@@ -34,7 +52,7 @@ int main() {
     // Generate the trajectory within the control loop
     std::cout << "target | follow" << std::endl;
     for (size_t t = 0; t < 500; t += 1) {
-        auto target_state = model_ramp(t);
+        auto target_state = model_ramp(otg.delta_time * t);
         auto res = otg.update(target_state, input, output);
         std::cout << target_state.position[0] << " " << output.new_position[0] << std::endl;
 
