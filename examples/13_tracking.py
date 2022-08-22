@@ -1,9 +1,8 @@
 # Only with Ruckig Pro
 
+from math import sin, cos
 from pathlib import Path
 from sys import path
-
-import numpy as np
 
 # Path to the build directory including a file similar to 'ruckig.cpython-37m-x86_64-linux-gnu'.
 build_path = Path(__file__).parent.absolute().parent / 'build'
@@ -12,6 +11,7 @@ path.insert(0, str(build_path))
 from ruckig import Trackig, TargetState, InputParameter, OutputParameter
 
 
+# Create the target state signal
 def model_ramp(t, ramp_vel=0.5, ramp_pos=1.0):
     target = TargetState(1)
     on_ramp = t < ramp_pos / abs(ramp_vel)
@@ -29,9 +29,9 @@ def model_constant_acceleration(t, ramp_acc=0.05):
 
 def model_sinus(t, ramp_vel=0.4):
     target = TargetState(1)
-    target.position = [np.sin(ramp_vel * t)]
-    target.velocity = [ramp_vel * np.cos(ramp_vel * t)]
-    target.acceleration = [-ramp_vel * ramp_vel * np.sin(ramp_vel * t)]
+    target.position = [sin(ramp_vel * t)]
+    target.velocity = [ramp_vel * cos(ramp_vel * t)]
+    target.acceleration = [-ramp_vel * ramp_vel * sin(ramp_vel * t)]
     return target
 
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     inp.max_acceleration = [2.0]
     inp.max_jerk = [5.0]
 
-    # otg.reactiveness = 1.0 # default value, should be in [0, 1]
+    otg.reactiveness = 1.0 # default value, should be in [0, 1]
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
@@ -68,6 +68,7 @@ if __name__ == '__main__':
 
 
     # Plot the trajectory
+    # import numpy as np
     # import matplotlib.pyplot as plt
 
     # follow_list = np.array(follow_list)

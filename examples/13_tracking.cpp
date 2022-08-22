@@ -8,6 +8,7 @@
 
 using namespace ruckig;
 
+// Create the target state signal
 TargetState<1> model_ramp(double t, double ramp_vel=0.5, double ramp_pos=1.0) {
     TargetState<1> target;
     const bool on_ramp = t < ramp_pos / std::abs(ramp_vel);
@@ -35,7 +36,7 @@ TargetState<1> model_sinus(double t, double ramp_vel=0.4) {
 
 
 int main() {
-    // Create instances: the Ruckig OTG as well as input and output parameters
+    // Create instances: the Trackig OTG as well as input and output parameters
     Trackig<1> otg {0.01};  // control cycle
     InputParameter<1> input;
     OutputParameter<1> output;
@@ -48,6 +49,8 @@ int main() {
     input.max_velocity = {0.8};
     input.max_acceleration = {2.0};
     input.max_jerk = {5.0};
+
+    otg.reactiveness = 1.0; // default value, should be in [0, 1]
 
     // Generate the trajectory within the control loop
     std::cout << "target | follow" << std::endl;
