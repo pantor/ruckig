@@ -45,6 +45,12 @@ class Plotter:
                     plt.axvline(x=t, color='black', linestyle='--', linewidth=1.1)
 
             # Plot limit lines
+            if inp.min_position and inp.min_position[dof] > 1.4 * global_min:
+                plt.axhline(y=inp.min_position[dof], color='grey', linestyle='--', linewidth=1.1)
+
+            if inp.max_position and inp.max_position[dof] < 1.4 * global_max:
+                plt.axhline(y=inp.max_position[dof], color='grey', linestyle='--', linewidth=1.1)
+
             if inp.max_velocity[dof] < 1.4 * global_max:
                 plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
 

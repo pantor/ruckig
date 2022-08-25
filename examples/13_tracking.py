@@ -48,7 +48,7 @@ if __name__ == '__main__':
     inp.max_acceleration = [2.0]
     inp.max_jerk = [5.0]
 
-    otg.reactiveness = 1.0 # default value, should be in [0, 1]
+    # otg.reactiveness = 1.0 # default value, should be in [0, 1]
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
@@ -76,6 +76,8 @@ if __name__ == '__main__':
     
     # plt.ylabel(f'DoF 1')
     # plt.plot(steps, follow_list[:, 0], label='Follow Position')
+    # plt.plot(steps, follow_list[:, 1], label='Follow Velocity', linestyle='dotted')
+    # plt.plot(steps, follow_list[:, 2], label='Follow Acceleration', linestyle='dotted')
     # plt.plot(steps, target_list[:, 0], color='r', label='Target Position')
     # plt.grid(True)
     # plt.legend()
