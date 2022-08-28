@@ -47,11 +47,11 @@ void BrakeProfile::velocity_brake(double v0, double a0, double vMax, double vMin
         const double t_to_v_max_with_constant = -(v_at_a_min - vMax)/aMin;
         const double t_to_v_min_with_constant = aMin/(2*jMax) - (v_at_a_min - vMin)/aMin;
 
-        t[0] = t_to_a_min - eps;
+        t[0] = std::max(t_to_a_min - eps, 0.0);
         t[1] = std::max(std::min(t_to_v_max_with_constant, t_to_v_min_with_constant), 0.0);
 
     } else {
-        t[0] = t_min_to_v_max - eps;
+        t[0] = std::max(t_min_to_v_max - eps, 0.0);
     }
 }
 

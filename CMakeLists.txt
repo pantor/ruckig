@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(ruckig VERSION 0.7.1 LANGUAGES CXX)
+project(ruckig VERSION 0.8.2 LANGUAGES CXX)
 
 
-list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(GNUInstallDirs)
 
 
 option(BUILD_EXAMPLES "Build example programs" ON)
-option(BUILD_PYTHON_MODULE "Build python module" OFF)
+option(BUILD_PYTHON_MODULE "Build python module with pybind11" OFF)
 option(BUILD_ONLINE_CLIENT "Build online client to calculate Ruckig Pro trajectories" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)

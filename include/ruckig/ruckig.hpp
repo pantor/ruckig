@@ -178,16 +178,19 @@ public:
 
             auto control_interface = input.per_dof_control_interface ? input.per_dof_control_interface.value()[dof] : input.control_interface;
             if (control_interface == ControlInterface::Position) {
-                if (std::isnan(input.current_position[dof]) || std::isnan(input.target_position[dof])) {
+                const double p0 = input.current_position[dof];
+                const double pf = input.target_position[dof];
+                if (std::isnan(p0) || std::isnan(pf)) {
                     return false;
                 }
 
                 const double vMax = input.max_velocity[dof];
+                const double vMin = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
+
                 if (std::isnan(vMax) || vMax <= std::numeric_limits<double>::min()) {
                     return false;
                 }
 
-                const double vMin = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
                 if (std::isnan(vMin) || vMin >= -std::numeric_limits<double>::min()) {
                     return false;
                 }
@@ -256,9 +259,10 @@ public:
 
         output.new_calculation = false;
 
+        Result result {Result::Working};
         if (input != current_input || !current_input_initialized) {
-            Result result = calculate(input, output.trajectory, output.was_calculation_interrupted);
-            if (result != Result::Working) {
+            result = calculate(input, output.trajectory, output.was_calculation_interrupted);
+            if (result != Result::Working && result != Result::ErrorPositionalLimits) {
                 return result;
             }
 
@@ -282,7 +286,7 @@ public:
             return Result::Finished;
         }
 
-        return Result::Working;
+        return result;
     }
 };
 
