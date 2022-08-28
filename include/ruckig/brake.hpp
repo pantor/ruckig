@@ -36,6 +36,7 @@ public:
     //! Finalize by integrating along kinematic state
     void finalize(double& ps, double& vs, double& as) {
         if (t[0] <= 0.0 && t[1] <= 0.0) {
+            duration = 0.0;
             return;
         }
 
