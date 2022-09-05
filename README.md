@@ -237,6 +237,40 @@ result = ruckig.calculate(input, trajectory);
 When only using this method, the `Ruckig` constructor does not need a control cycle as an argument.
 
 
+### Tracking Interface
+
+When following an arbitrary signal with position, velocity, acceleration, and jerk-limitation, the straight forward way would be to pass the current state to Ruckig's target state. However, as the resulting trajectory will take time to catch up, this approach will always lag behind the signal. The tracking interface solves this problem by predicting ahead (e.g. with constant acceleration by default) and is therefore able to follow signals very closely in a time-optimal way. This might be very helpful for (general) tracking, robot servoing, or trajectory post-processing applications. 
+
+To use the tracking interface, construct
+```.cpp
+Trackig<1> otg {0.01};  // control cycle
+```
+and set the current state as well as the kinematic constraints via
+```.cpp
+input.current_position = {0.0};
+input.current_velocity = {0.0};
+input.current_acceleration = {0.0};
+input.max_velocity = {0.8};
+input.max_acceleration = {2.0};
+input.max_jerk = {5.0};
+```
+Then, we can track a signal in an online manner within the real-time control loop 
+```.cpp
+for (double t = 0; t < 10.0; t += otg.delta_time) {
+  auto target_state = signal(t); // signal returns position, velocity, and acceleration
+  auto res = otg.update(target_state, input, output);
+  // Make use of the smooth target motion here (e.g. target_state.position)
+
+  output.pass_to_input(input);
+}
+```
+Please find a complete example [here](https://github.com/pantor/ruckig/blob/master/examples/13_tracking.cpp). This functionality can also be used in an offline manner, e.g. when the entire signal is known beforehand. Here, we call the
+```.cpp 
+smooth_trajectory = otg.calculate_trajectory(target_states, input);
+```
+method with the trajectory given as a `std::vector` of target states. The Tracking interface is available in the Ruckig Pro version.
+
+
 ### Dynamic Number of Degrees of Freedom
 
 So far, we have told Ruckig the number of DoFs as a template parameter. If you don't know the number of DoFs at compile-time, you can set the template parameter to `ruckig::DynamicDOFs` and pass the DoFs to the constructor:
