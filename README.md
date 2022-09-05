@@ -259,7 +259,7 @@ Then, we can track a signal in an online manner within the real-time control loo
 for (double t = 0; t < 10.0; t += otg.delta_time) {
   auto target_state = signal(t); // signal returns position, velocity, and acceleration
   auto res = otg.update(target_state, input, output);
-  // Make use of the smooth target motion here (e.g. target_state.position)
+  // Make use of the smooth target motion here (e.g. output.new_position)
 
   output.pass_to_input(input);
 }
