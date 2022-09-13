@@ -350,7 +350,9 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
                 const double h1 = std::sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (2*a0*t + jMax*t*t - vd)/jMax);
                 const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(h1 + t - tf)) + 6*a0_a0*(af + jMax*(2*t - tf)) + 6*(a0_a0 + af_af)*jMax*h1 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(h1 + t - tf) - tf*v0 - h1*vd))/(12*jMax_jMax);
                 const double deriv_newton = -(a0 + jMax*t)*(3*(h1 + t) - 2*tf + (a0 + 2*af)/jMax);
-                t -= orig / deriv_newton;
+                if (!std::isnan(orig) && !std::isnan(deriv_newton) && std::abs(deriv_newton) > DBL_EPSILON) {
+                    t -= orig / deriv_newton;
+                }
             }
 
             if (t > tf || std::isnan(t)) {

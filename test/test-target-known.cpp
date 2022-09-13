@@ -341,6 +341,27 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.duration_discretization = ruckig::DurationDiscretization::Discrete;
     check_duration(otg, input, 0.048);
 
+    input.current_position = {-19.93333333333424, -0.4983333333333563, 0};
+    input.current_velocity = {10, 0.25, 0};
+    input.current_acceleration = {0, 0, 0};
+    input.target_position = {20, 0.5, 0.2};
+    input.target_velocity = {10, 0.25, 0};
+    input.target_acceleration = {0, 0, 0};
+    input.max_velocity = {10, 10, 10};
+    input.max_acceleration = {15, 15, 15};
+    input.max_jerk = {15, 5, 2};
+    input.control_interface = ControlInterface::Position;
+    input.duration_discretization = ruckig::DurationDiscretization::Continuous;
+
+    Trajectory<3> traj;
+    otg.calculate(input, traj);
+    check_duration(otg, input, 3.99333);
+
+    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    traj.at_time(traj.get_duration() / 2, new_position, new_velocity, new_acceleration);
+    CHECK( new_position[0] == doctest::Approx(0.033333) );
+    CHECK( new_position[1] == doctest::Approx(0.000833) );
+
 
     RuckigThrow<38> otg38 {0.004};
     InputParameter<38> input38;
