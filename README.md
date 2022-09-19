@@ -234,7 +234,14 @@ Ruckig also supports an offline approach for calculating a trajectory:
 ```.cpp
 result = ruckig.calculate(input, trajectory);
 ```
-When only using this method, the `Ruckig` constructor does not need a control cycle as an argument.
+When only using this method, the `Ruckig` constructor does not need a control cycle (`delta_time`) as an argument. However if given, Ruckig supports stepping through the trajectory with
+```.cpp
+while (ruckig.update(trajectory, output) == Result::Working) {
+  // Make use of the new state here!
+  // e.g. robot->setJointPositions(output.new_position);
+}
+```
+starting from the current `output.time` (currently Ruckig Pro only).
 
 
 ### Tracking Interface
@@ -345,6 +352,8 @@ If you still need to use C++11, you can patch the Ruckig *Community Version* by 
 Ruckig is used by over hundred research labs, companies, and open-source projects worldwide, including:
 - [MoveIt 2](https://moveit.ros.org) for trajectory generation.
 - [CoppeliaSim](https://www.coppeliarobotics.com/) starting from version 4.3.
+- [Fuzzy Logic Robotics](https://flr.io)
+- [Gestalt Robotics](https://www.gestalt-robotics.com)
 - [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Structered Text (ST - IEC61131-3) for usage on PLCs.
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
 - and many others!

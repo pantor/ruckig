@@ -31,7 +31,7 @@ public:
     Vector<double> new_position, new_velocity, new_acceleration;
 
     //! Current time on trajectory
-    double time;
+    double time {0.0};
 
     //! Index of the current section between two (possibly filtered) intermediate positions (only relevant in Ruckig Pro)
     size_t new_section {0};

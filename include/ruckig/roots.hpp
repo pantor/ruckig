@@ -322,21 +322,22 @@ inline PositiveSet<double, 4> solveQuartMonic(const std::array<double, 4>& polyn
 template<size_t N>
 inline double polyEval(const std::array<double, N>& p, double x) {
     double retVal = 0.0;
+    if constexpr (N == 0) {
+        return retVal;
+    }
+    
+    if (std::abs(x) < DBL_EPSILON) {
+        retVal = p[N - 1];
+    } else if (x == 1.0) {
+        for (int i = N - 1; i >= 0; i--) {
+            retVal += p[i];
+        }
+    } else {
+        double xn = 1.0;
 
-    if constexpr (N > 0) {
-        if (std::abs(x) < DBL_EPSILON) {
-            retVal = p[N - 1];
-        } else if (x == 1.0) {
-            for (int i = N - 1; i >= 0; i--) {
-                retVal += p[i];
-            }
-        } else {
-            double xn = 1.0;
-
-            for (int i = N - 1; i >= 0; i--) {
-                retVal += p[i] * xn;
-                xn *= x;
-            }
+        for (int i = N - 1; i >= 0; i--) {
+            retVal += p[i] * xn;
+            xn *= x;
         }
     }
 
@@ -370,7 +371,6 @@ constexpr double tolerance {1e-14};
 // Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
 template <size_t N, size_t maxIts = 128>
 inline double shrinkInterval(const std::array<double, N>& p, double l, double h) {
-    const auto deriv = polyDeri(p);
     const double fl = polyEval(p, l);
     const double fh = polyEval(p, h);
     if (fl == 0.0) {
@@ -386,6 +386,7 @@ inline double shrinkInterval(const std::array<double, N>& p, double l, double h)
     double rts = (l + h) / 2;
     double dxold = std::abs(h - l);
     double dx = dxold;
+    const auto deriv = polyDeri(p);
     double f = polyEval(p, rts);
     double df = polyEval(deriv, rts);
     double temp;

@@ -316,8 +316,35 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
         // Solve 4th order derivative analytically
         auto d_extremas = roots::solveQuartMonic(deriv[1], deriv[2], deriv[3], deriv[4]);
 
-        roots::Set<double, 5> roots;
         double tz_current {tz_min};
+
+        const auto check_root = [&](double t) {  
+            // Single Newton step (regarding pd)
+            {
+                const double h1 = std::sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (2*a0*t + jMax*t*t - vd)/jMax);
+                const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(h1 + t - tf)) + 6*a0_a0*(af + jMax*(2*t - tf)) + 6*(a0_a0 + af_af)*jMax*h1 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(h1 + t - tf) - tf*v0 - h1*vd))/(12*jMax_jMax);
+                const double deriv_newton = -(a0 + jMax*t)*(3*(h1 + t) - 2*tf + (a0 + 2*af)/jMax);
+                if (!std::isnan(orig) && !std::isnan(deriv_newton) && std::abs(deriv_newton) > DBL_EPSILON) {
+                    t -= orig / deriv_newton;
+                }
+            }
+
+            if (t > tf || std::isnan(t)) {
+                return false;
+            }
+
+            const double h1 = std::sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (t*(2*a0 + jMax*t) - vd)/jMax);
+
+            profile.t[0] = t;
+            profile.t[1] = 0;
+            profile.t[2] = t + a0/jMax;
+            profile.t[3] = tf - 2*(t + h1) - (a0 + af)/jMax;
+            profile.t[4] = h1;
+            profile.t[5] = 0;
+            profile.t[6] = h1 + af/jMax;
+
+            return profile.check_with_timing<JerkSigns::UDDU, Limits::VEL>(tf, jMax, vMax, vMin, aMax, aMin);
+        };
 
         for (double tz: d_extremas) {
             if (tz >= tz_max) {
@@ -331,45 +358,23 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
 
             const double val_new = roots::polyEval(polynom, tz);
             if (std::abs(val_new) < 64 * std::abs(roots::polyEval(dderiv, tz)) * roots::tolerance) {
-                roots.insert(tz);
+                if (check_root(tz)) {
+                    return true;
+                }
             } else if (roots::polyEval(polynom, tz_current) * val_new < 0) {
-                roots.insert(roots::shrinkInterval(polynom, tz_current, tz));
+                if (check_root(roots::shrinkInterval(polynom, tz_current, tz))) {
+                    return true;
+                }
             }
             tz_current = tz;
         }
         const double val_max = roots::polyEval(polynom, tz_max);
         if (roots::polyEval(polynom, tz_current) * val_max < 0) {
-            roots.insert(roots::shrinkInterval(polynom, tz_current, tz_max));
+            if (check_root(roots::shrinkInterval(polynom, tz_current, tz_max))) {
+                return true;
+            }
         } else if (std::abs(val_max) < 8 * DBL_EPSILON) {
-            roots.insert(tz_max);
-        }
-
-        for (double t: roots) {
-            // Single Newton step (regarding pd)
-            {
-                const double h1 = std::sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (2*a0*t + jMax*t*t - vd)/jMax);
-                const double orig = -pd - (2*a0_p3 + 4*af_p3 + 24*a0*jMax*t*(af + jMax*(h1 + t - tf)) + 6*a0_a0*(af + jMax*(2*t - tf)) + 6*(a0_a0 + af_af)*jMax*h1 + 12*af*jMax*(jMax*t*t - vd) + 12*jMax_jMax*(jMax*t*t*(h1 + t - tf) - tf*v0 - h1*vd))/(12*jMax_jMax);
-                const double deriv_newton = -(a0 + jMax*t)*(3*(h1 + t) - 2*tf + (a0 + 2*af)/jMax);
-                if (!std::isnan(orig) && !std::isnan(deriv_newton) && std::abs(deriv_newton) > DBL_EPSILON) {
-                    t -= orig / deriv_newton;
-                }
-            }
-
-            if (t > tf || std::isnan(t)) {
-                continue;
-            }
-
-            const double h1 = std::sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (t*(2*a0 + jMax*t) - vd)/jMax);
-
-            profile.t[0] = t;
-            profile.t[1] = 0;
-            profile.t[2] = t + a0/jMax;
-            profile.t[3] = tf - 2*(t + h1) - (a0 + af)/jMax;
-            profile.t[4] = h1;
-            profile.t[5] = 0;
-            profile.t[6] = h1 + af/jMax;
-
-            if (profile.check_with_timing<JerkSigns::UDDU, Limits::VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            if (check_root(tz_max)) {
                 return true;
             }
         }
@@ -419,29 +424,9 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
             dd_tz_intervals.insert({dd_tz_current, tz_max});
         }
 
-        roots::Set<double, 6> roots;
         double tz_current {tz_min};
 
-        for (auto interval: dd_tz_intervals) {
-            double tz = roots::shrinkInterval(deriv, interval.first, interval.second);
-
-            if (tz >= tz_max) {
-                continue;
-            }
-
-            const double p_val = roots::polyEval(polynom, tz);
-            if (std::abs(p_val) < 64 * std::abs(roots::polyEval(dderiv, tz)) * roots::tolerance) {
-                roots.insert(tz);
-            } else if (roots::polyEval(polynom, tz_current) * p_val < 0) {
-                roots.insert(roots::shrinkInterval(polynom, tz_current, tz));
-            }
-            tz_current = tz;
-        }
-        if (roots::polyEval(polynom, tz_current) * roots::polyEval(polynom, tz_max) < 0) {
-            roots.insert(roots::shrinkInterval(polynom, tz_current, tz_max));
-        }
-
-        for (double t: roots) {
+        const auto check_root = [&](double t) {
             // Double Newton step (regarding pd)
             {
                 double h1 = std::sqrt((af_af - a0_a0)/(2*jMax_jMax) - ((2*a0 + jMax*t)*t - vd)/jMax);
@@ -469,7 +454,31 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
             profile.t[5] = 0;
             profile.t[6] = h1 - af/jMax;
 
-            if (profile.check_with_timing<JerkSigns::UDUD, Limits::VEL>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            return profile.check_with_timing<JerkSigns::UDUD, Limits::VEL>(tf, jMax, vMax, vMin, aMax, aMin);
+        };
+
+        for (auto interval: dd_tz_intervals) {
+            const double tz = roots::shrinkInterval(deriv, interval.first, interval.second);
+
+            if (tz >= tz_max) {
+                continue;
+            }
+
+            const double p_val = roots::polyEval(polynom, tz);
+            if (std::abs(p_val) < 64 * std::abs(roots::polyEval(dderiv, tz)) * roots::tolerance) {
+                if (check_root(tz)) {
+                    return true;
+                }
+
+            } else if (roots::polyEval(polynom, tz_current) * p_val < 0) {
+                if (check_root(roots::shrinkInterval(polynom, tz_current, tz))) {
+                    return true;
+                }
+            }
+            tz_current = tz;
+        }
+        if (roots::polyEval(polynom, tz_current) * roots::polyEval(polynom, tz_max) < 0) {
+            if (check_root(roots::shrinkInterval(polynom, tz_current, tz_max))) {
                 return true;
             }
         }
@@ -1016,14 +1025,14 @@ bool PositionStep2::get_profile(Profile& profile) {
         || time_vel(profile, vMax, vMin, aMax, aMin, jMax)
         || time_acc0_vel(profile, vMax, vMin, aMax, aMin, jMax)
         || time_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
-        || time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax)
-        || time_acc0(profile, vMax, vMin, aMax, aMin, jMax)
-        || time_acc1(profile, vMax, vMin, aMax, aMin, jMax)
-        || time_none(profile, vMax, vMin, aMax, aMin, jMax)
         || time_acc0_acc1_vel(profile, vMin, vMax, aMin, aMax, -jMax)
         || time_vel(profile, vMin, vMax, aMin, aMax, -jMax)
         || time_acc0_vel(profile, vMin, vMax, aMin, aMax, -jMax)
         || time_acc1_vel(profile, vMin, vMax, aMin, aMax, -jMax)
+        || time_acc0_acc1(profile, vMax, vMin, aMax, aMin, jMax)
+        || time_acc0(profile, vMax, vMin, aMax, aMin, jMax)
+        || time_acc1(profile, vMax, vMin, aMax, aMin, jMax)
+        || time_none(profile, vMax, vMin, aMax, aMin, jMax)
         || time_acc0_acc1(profile, vMin, vMax, aMin, aMax, -jMax)
         || time_acc0(profile, vMin, vMax, aMin, aMax, -jMax)
         || time_acc1(profile, vMin, vMax, aMin, aMax, -jMax)

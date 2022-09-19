@@ -17,7 +17,7 @@ PYBIND11_MODULE(ruckig, m) {
     m.doc() = "Instantaneous Motion Generation for Robots and Machines. Real-time and time-optimal trajectory calculation \
 given a target waypoint with position, velocity, and acceleration, starting from any initial state \
 limited by velocity, acceleration, and jerk constraints.";
-    m.attr("__version__")  = "0.8.4";
+    m.attr("__version__")  = "0.8.5";
 
     py::enum_<ControlInterface>(m, "ControlInterface")
         .value("Position", ControlInterface::Position)
@@ -133,7 +133,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("new_section", &OutputParameter<DynamicDOFs>::new_section)
         .def_readonly("did_section_change", &OutputParameter<DynamicDOFs>::did_section_change)
         .def_readonly("trajectory", &OutputParameter<DynamicDOFs>::trajectory)
-        .def_readonly("time", &OutputParameter<DynamicDOFs>::time)
+        .def_readwrite("time", &OutputParameter<DynamicDOFs>::time)
         .def_readonly("new_calculation", &OutputParameter<DynamicDOFs>::new_calculation)
         .def_readonly("was_calculation_interrupted", &OutputParameter<DynamicDOFs>::was_calculation_interrupted)
         .def_readonly("calculation_duration", &OutputParameter<DynamicDOFs>::calculation_duration)
@@ -156,7 +156,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def("validate_input", &RuckigThrow<DynamicDOFs>::validate_input, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
         .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a)
         .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&, bool&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
-        .def("update", &RuckigThrow<DynamicDOFs>::update, "input"_a, "output"_a);
+        .def("update", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, OutputParameter<DynamicDOFs>&)>(&RuckigThrow<DynamicDOFs>::update), "input"_a, "output"_a);
 
 #ifdef WITH_EXPOSE_INTERNAL
     py::class_<BrakeProfile>(m, "BrakeProfile")
