@@ -41,8 +41,9 @@ class Plotter:
 
             # Plot sections
             if hasattr(out_list[-1], 'trajectory'):
+                linewidth = 1.0 if len(out_list[-1].trajectory.intermediate_durations) < 20 else 0.25
                 for t in out_list[-1].trajectory.intermediate_durations:
-                    plt.axvline(x=t, color='black', linestyle='--', linewidth=1.1)
+                    plt.axvline(x=t, color='black', linestyle='--', linewidth=linewidth)
 
             # Plot limit lines
             if inp.min_position and inp.min_position[dof] > 1.4 * global_min:

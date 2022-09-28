@@ -104,7 +104,6 @@ public:
 
     // Positional constraints (only in Ruckig Pro)
     std::optional<Vector<double>> max_position, min_position;
-    // std::optional<double> maximum_distance_to_linear_interpolation;
 
     //! Is the DoF considered for calculation?
     Vector<bool> enabled;
@@ -117,6 +116,9 @@ public:
 
     //! Optional minimum trajectory duration
     std::optional<double> minimum_duration;
+
+    //! Minimum trajectory duration for intermediate sections (only in Ruckig Pro)
+    // std::vector<std::optional<double>> per_section_minimum_duration;
 
     //! Optional duration [µs] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
     std::optional<double> interrupt_calculation_duration;

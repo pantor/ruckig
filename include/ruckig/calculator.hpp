@@ -13,16 +13,19 @@ namespace ruckig {
 //! Calculation interface.
 template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class Calculator {
-    TargetCalculator<DOFs, CustomVector> target_calculator;
-#if defined WITH_ONLINE_CLIENT
-    WaypointsCalculator<DOFs, CustomVector> waypoints_calculator;
-#endif
-
     inline bool use_waypoints_trajectory(const InputParameter<DOFs, CustomVector>& input) {
         return !input.intermediate_positions.empty() && input.control_interface == ControlInterface::Position;
     }
 
 public:
+    //! State-to-state calculator
+    TargetCalculator<DOFs, CustomVector> target_calculator;
+
+#if defined WITH_ONLINE_CLIENT
+    //! Intermediate waypoints calculator
+    WaypointsCalculator<DOFs, CustomVector> waypoints_calculator;
+#endif
+
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     explicit Calculator() { }
 

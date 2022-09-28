@@ -27,17 +27,18 @@ class Ruckig {
     //! Flag that indicates if the current_input was properly initialized
     bool current_input_initialized {false};
 
+    inline static double v_at_a_zero(double v0, double a0, double j) {
+        return v0 + (a0 * a0)/(2 * j);
+    }
+
+public:
     //! Calculator for new trajectories
     Calculator<DOFs, CustomVector> calculator;
 
     //! Max number of intermediate waypoints
     const size_t max_number_of_waypoints;
 
-    inline static double v_at_a_zero(double v0, double a0, double j) {
-        return v0 + (a0 * a0)/(2 * j);
-    }
-
-public:
+    //! Degrees of freedom
     const size_t degrees_of_freedom;
 
     //! Time step between updates (cycle time) in [s]
