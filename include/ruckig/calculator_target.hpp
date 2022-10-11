@@ -267,7 +267,7 @@ public:
             p.brake.finalize(p.p[0], p.v[0], p.a[0]);
             // p.accel.finalize(p.pf, p.vf, p.af);
 
-            bool found_profile;
+            bool found_profile {false};
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
                     PositionStep1 step1 {p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
@@ -282,8 +282,9 @@ public:
             if (!found_profile) {
                 if constexpr (throw_error) {
                     throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + inp.to_string());
+                } else {
+                    return Result::ErrorExecutionTimeCalculation;
                 }
-                return Result::ErrorExecutionTimeCalculation;
             }
 
             traj.independent_min_durations[dof] = blocks[dof].t_min;
@@ -296,8 +297,9 @@ public:
         if (!found_synchronization) {
             if constexpr (throw_error) {
                 throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(traj.duration));
+            } else {
+                return Result::ErrorSynchronizationCalculation;
             }
-            return Result::ErrorSynchronizationCalculation;
         }
 
         // None Synchronization
@@ -414,7 +416,7 @@ public:
                 continue;
             }
 
-            bool found_time_synchronization;
+            bool found_time_synchronization {false};
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
                     PositionStep2 step2 {t_profile, p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
@@ -428,8 +430,9 @@ public:
             if (!found_time_synchronization) {
                 if constexpr (throw_error) {
                     throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(traj.duration) + " input: " + inp.to_string());
+                } else {
+                    return Result::ErrorSynchronizationCalculation;
                 }
-                return Result::ErrorSynchronizationCalculation;
             }
             // std::cout << dof << " profile step2: " << p.to_string() << std::endl;
         }

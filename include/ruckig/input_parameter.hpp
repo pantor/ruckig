@@ -117,8 +117,8 @@ public:
     //! Optional minimum trajectory duration
     std::optional<double> minimum_duration;
 
-    //! Minimum trajectory duration for intermediate sections (only in Ruckig Pro)
-    // std::vector<std::optional<double>> per_section_minimum_duration;
+    //! Optional minimum trajectory duration for each intermediate sections (only in Ruckig Pro)
+    std::optional<std::vector<double>> per_section_minimum_duration;
 
     //! Optional duration [µs] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
     std::optional<double> interrupt_calculation_duration;
@@ -170,6 +170,7 @@ public:
             && min_position == rhs.min_position
             && enabled == rhs.enabled
             && minimum_duration == rhs.minimum_duration
+            && per_section_minimum_duration == rhs.per_section_minimum_duration
             && min_velocity == rhs.min_velocity
             && min_acceleration == rhs.min_acceleration
             && control_interface == rhs.control_interface

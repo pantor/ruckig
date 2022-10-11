@@ -50,6 +50,10 @@ int main() {
     input.max_acceleration = {2.0};
     input.max_jerk = {5.0};
 
+    // Optional minimum and maximum position
+    input.min_position = {-2.5};
+    input.max_position = {2.5};
+
     otg.reactiveness = 1.0; // default value, should be in [0, 1]
 
     // Generate the trajectory within the control loop

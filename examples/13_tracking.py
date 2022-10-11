@@ -48,6 +48,10 @@ if __name__ == '__main__':
     inp.max_acceleration = [2.0]
     inp.max_jerk = [5.0]
 
+    # Optional minimum and maximum position
+    inp.min_position = [-2.5]
+    inp.max_position = [2.5]
+
     # otg.reactiveness = 1.0 # default value, should be in [0, 1]
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))

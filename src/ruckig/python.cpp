@@ -17,7 +17,7 @@ PYBIND11_MODULE(ruckig, m) {
     m.doc() = "Instantaneous Motion Generation for Robots and Machines. Real-time and time-optimal trajectory calculation \
 given a target waypoint with position, velocity, and acceleration, starting from any initial state \
 limited by velocity, acceleration, and jerk constraints.";
-    m.attr("__version__")  = "0.8.6";
+    m.attr("__version__")  = "0.8.8";
 
     py::enum_<ControlInterface>(m, "ControlInterface")
         .value("Position", ControlInterface::Position)
@@ -117,6 +117,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("per_dof_control_interface", &InputParameter<DynamicDOFs>::per_dof_control_interface)
         .def_readwrite("per_dof_synchronization", &InputParameter<DynamicDOFs>::per_dof_synchronization)
         .def_readwrite("minimum_duration", &InputParameter<DynamicDOFs>::minimum_duration)
+        .def_readwrite("per_section_minimum_duration", &InputParameter<DynamicDOFs>::per_section_minimum_duration)
         .def_readwrite("interrupt_calculation_duration", &InputParameter<DynamicDOFs>::interrupt_calculation_duration)
         .def(py::self != py::self)
         .def("__repr__", &InputParameter<DynamicDOFs>::to_string);
