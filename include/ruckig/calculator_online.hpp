@@ -96,14 +96,18 @@ public:
         if (input.minimum_duration) {
             params["minimum_duration"] = *input.minimum_duration;
         }
+        if (input.per_section_minimum_duration) {
+            params["per_section_minimum_duration"] = *input.per_section_minimum_duration;
+        }
 
         auto res = cli.Post("/calculate", params.dump(), "application/json");
         if (res->status != 200) {
             if constexpr (throw_error) {
                 throw std::runtime_error("[ruckig] could not reach online API server, error code: " + std::to_string(res->status) + " " + res->body);
+            } else {
+                std::cout << "[ruckig] could not reach online API server, error code: " << res->status << " " << res->body << std::endl;
+                return Result::Error;
             }
-            std::cout << "[ruckig] could not reach online API server, error code: " << res->status << " " << res->body << std::endl;
-            return Result::Error;
         }
         
         auto result = nlohmann::json::parse(res->body);
@@ -141,8 +145,9 @@ public:
     Result continue_calculation(const InputParameter<DOFs, CustomVector>&, Trajectory<DOFs, CustomVector>&, double, bool&) {
         if constexpr (throw_error) {
             throw std::runtime_error("[ruckig] continue calculation not available in Ruckig Community Version.");
+        } else {
+            return Result::Error;
         }
-        return Result::Error;
     }
 };
 
