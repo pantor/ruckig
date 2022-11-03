@@ -42,6 +42,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
 
     InputParameter<DOFs> input;
     // input.synchronization = Synchronization::None;
+    // input.control_interface = ControlInterface::Velocity
     std::vector<double> average, worst;
 
     // Initial warm-up calculation

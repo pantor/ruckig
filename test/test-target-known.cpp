@@ -1,5 +1,7 @@
 #include <doctest/doctest.h>
 
+#include <optional>
+
 #include <ruckig/ruckig.hpp>
 
 

@@ -3,6 +3,7 @@
 
 #include <deque>
 #include <random>
+#include <optional>
 #include "randomizer.hpp"
 
 #include <ruckig/ruckig.hpp>
