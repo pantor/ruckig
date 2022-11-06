@@ -24,7 +24,7 @@ jobs:
       run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
-        git checkout v2.9.1
+        git checkout v2.10.1
 
     - name: Set compiler version and patch C++11
       if: runner.os == 'Linux' && matrix.compiler == 'gcc' && matrix.version == '5'
