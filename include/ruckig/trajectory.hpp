@@ -43,14 +43,18 @@ class Trajectory {
     size_t continue_calculation_counter {0};
 
 #if defined WITH_ONLINE_CLIENT
+    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
     void resize(size_t max_number_of_waypoints) {
         profiles.resize(max_number_of_waypoints + 1);
         cumulative_times.resize(max_number_of_waypoints + 1);
+    }
 
-        if constexpr (DOFs == 0) {
-            for (auto& p: profiles) {
-                p.resize(degrees_of_freedom);
-            }
+    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    void resize(size_t max_number_of_waypoints) {
+        resize<1>(max_number_of_waypoints); // Also call resize method above
+
+        for (auto& p: profiles) {
+            p.resize(degrees_of_freedom);
         }
     }
 #endif

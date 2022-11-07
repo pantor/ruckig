@@ -159,7 +159,7 @@ private:
         // Test them in sorted order
         auto idx_end = any_interval ? idx.end() : idx.begin() + degrees_of_freedom;
         std::iota(idx.begin(), idx_end, 0);
-        std::sort(idx.begin(), idx_end, [&possible_t_syncs=possible_t_syncs](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
+        std::sort(idx.begin(), idx_end, [&](size_t i, size_t j) { return possible_t_syncs[i] < possible_t_syncs[j]; });
 
         // Start at last tmin (or worse)
         for (auto i = idx.begin() + degrees_of_freedom - 1; i != idx_end; ++i) {
