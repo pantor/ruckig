@@ -11,7 +11,7 @@ wget -O include/nonstd/optional.hpp https://raw.githubusercontent.com/martinmoen
 
 # Replace function, be careful with overwriting a file
 replace () {
-    sed "${@:2}" "$1" > "$1.2" && mv "$1.2" "$1"
+    sed "${@:2}" "$1" > "$1".2 && mv "$1".2 "$1"
 }
 
 # Replace optional, if constexpr, and C++ version
