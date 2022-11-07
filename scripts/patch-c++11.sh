@@ -1,7 +1,7 @@
 # If there is no argument, create subdirectory for patch and copy all relevant files
 if [ "$#" -eq 0 ]; then
     mkdir patch-cpp11
-    cp -r include src examples cmake test third_party patch-cpp11/
+    cp -r include src examples cmake test third_party CMakeLists.txt patch-cpp11/
     cd patch-cpp11
 fi
 
@@ -11,7 +11,7 @@ wget -O include/nonstd/optional.hpp https://raw.githubusercontent.com/martinmoen
 
 # Replace function, be careful with overwriting a file
 replace () {
-    sed "${@:2}" "$1" > "$1".2 && mv "$1".2 "$1"
+    sed "${@:2}" "$1" > "$1.2" && mv "$1.2" "$1"
 }
 
 # Replace optional, if constexpr, and C++ version

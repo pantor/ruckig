@@ -344,7 +344,7 @@ Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos
 - Doctest v2.4 (only for testing)
 - Pybind11 v2.9 (only for python wrapper)
 
-If you still need to use C++11, you can patch the Ruckig *Community Version* by calling `sh scripts/patch-c++11.sh`. Note that this will result in a performance drop of a few percent. Moreover, the Python module is not supported.
+If you still need to use C++11, you can patch the Ruckig *Community Version* by calling `bash scripts/patch-c++11.sh`. Note that this will result in a performance drop of a few percent. Moreover, the Python module is not supported.
 
 
 ## Used By
