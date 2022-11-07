@@ -9,15 +9,20 @@ fi
 mkdir -p include/nonstd/
 wget -O include/nonstd/optional.hpp https://raw.githubusercontent.com/martinmoene/optional-lite/master/include/nonstd/optional.hpp
 
-# Replace optional, if constexpr, and C++ version
-sed -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g' ../include/ruckig/block.hpp > include/ruckig/block.hpp
-sed -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g' ../include/ruckig/calculator_target.hpp > include/ruckig/calculator_target.hpp
-sed -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' ../include/ruckig/input_parameter.hpp > include/ruckig/input_parameter.hpp
-sed -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g' ../include/ruckig/profile.hpp > include/ruckig/profile.hpp
-sed -e 's|if constexpr|if|g' ../include/ruckig/roots.hpp > include/ruckig/roots.hpp
-sed -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g' ../include/ruckig/ruckig.hpp > include/ruckig/ruckig.hpp
-sed -e 's|if constexpr|if|g' ../include/ruckig/trajectory.hpp > include/ruckig/trajectory.hpp
-sed -e 's|std::nullopt|nonstd::nullopt|g' -e 's|<optional>|<nonstd/optional.hpp>|g' ../test/test-target.cpp > test/test-target.cpp
-sed -e 's|std::nullopt|nonstd::nullopt|g' -e 's|<optional>|<nonstd/optional.hpp>|g' ../test/test-target-known.cpp > test/test-target-known.cpp
+# Replace function, be careful with overwriting a file
+replace () {
+    sed "${@:2}" "$1" > "$1.2" && mv "$1.2" "$1"
+}
 
-sed -e 's|cxx_std_17|cxx_std_11|g' -e 's|if(BUILD_BENCHMARK)|if(FALSE)|g' ../CMakeLists.txt > CMakeLists.txt
+# Replace optional, if constexpr, and C++ version
+replace include/ruckig/block.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
+replace include/ruckig/calculator_target.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
+replace include/ruckig/input_parameter.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g'
+replace include/ruckig/profile.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
+replace include/ruckig/roots.hpp -e 's|if constexpr|if|g'
+replace include/ruckig/ruckig.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
+replace include/ruckig/trajectory.hpp -e 's|if constexpr|if|g'
+replace test/test-target.cpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|<optional>|<nonstd/optional.hpp>|g'
+replace test/test-target-known.cpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|<optional>|<nonstd/optional.hpp>|g'
+
+replace CMakeLists.txt -e 's|cxx_std_17|cxx_std_11|g' -e 's|if(BUILD_BENCHMARK)|if(FALSE)|g'
