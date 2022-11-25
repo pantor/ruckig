@@ -767,32 +767,6 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
         }
     }
 
-    // Reduce jMax
-    // {
-    //     std::array<double, 4> polynom;
-    //     polynom[0] = 4*(-8*pd + tf*((a0 - af)*tf + 4*(v0 + vf)))/tf_p3;
-    //     polynom[1] = -2*((a0_a0 + af_af)*tf_tf + 16*af*(-pd + tf*v0) + 8*vd_vd + 2*a0*(8*pd + 3*af*tf_tf - 8*tf*vf))/tf_p4;
-    //     polynom[2] = 4*ad*ad_ad/(3*tf_p3);
-    //     polynom[3] = -ad_ad*ad_ad/(3*tf_p4);
-
-    //     auto roots = roots::solveQuartMonic(polynom);
-    //     for (double t: roots) {
-    //         const double jf = t;
-
-    //         profile.t[0] = (19*a0_p4*tf_tf - 41*af_p4*tf_tf + a0_p3*tf*(-64*af*tf + 51*t*tf_tf + 12*v0 - 12*vf) + 3*af_af*(-192*pd*t*tf + 21*t*t*tf_p4 + 200*t*tf_tf*v0 - 16*v0_v0 - 8*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) - 36*t*(v0 - vf)*(-32*pd*t*tf + t*t*tf_p4 + 16*t*tf_tf*v0 - 16*v0_v0 + 16*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) - 3*a0_a0*(-192*pd*t*tf - 10*af_af*tf_tf - 85*af*t*tf_p3 + 27*t*t*tf_p4 + 44*af*tf*v0 - 40*t*tf_tf*v0 + 16*v0_v0 - 44*af*tf*vf + 232*t*tf_tf*vf - 32*v0*vf + 16*vf_vf) + 3*af_p3*tf*(7*t*tf_tf + 36*(-v0 + vf)) - 3*af*t*(5*t*t*tf_p4*tf + 32*t*tf_p3*(v0 + 4*vf) - 16*tf*(29*v0_v0 - 34*v0*vf + 5*vf_vf) - 32*pd*(5*t*tf_tf + 12*(-v0 + vf))) + a0*(56*af_p3*tf_tf + 3*af_af*tf*(83*t*tf_tf + 76*(v0 - vf)) + 6*af*(3*t*t*tf_p4 + 168*t*tf_tf*(v0 - vf) + 16*vd_vd) - 3*t*(7*t*t*tf_p4*tf - 32*pd*(7*t*tf_tf + 12*(v0 - vf)) + 32*t*tf_p3*(5*v0 + 2*vf) - 16*tf*(7*v0_v0 - 38*v0*vf + 31*vf_vf))))/(24*ad_ad*(a0 - af)*(a0*tf + af*tf + 2*v0 - 2*vf));
-    //         profile.t[1] = 0;
-    //         profile.t[2] = (-77*a0_p5*tf_tf + a0_p4*tf*(109*af*tf - 93*t*tf_tf - 180*v0 + 180*vd) + a0_p3*(-1728*pd*t*tf + 94*af_af*tf_tf - 804*af*t*tf_p3 + 207*t*t*tf_p4 + 432*af*tf*v0 - 168*t*tf_tf*v0 - 48*v0_v0 - 432*af*tf*vf + 1896*t*tf_tf*vf + 96*v0*vf - 48*vf_vf) - a0*(af_p4*tf_tf + 12*af_p3*tf*(31*t*tf_tf + 12*(v0 - vf)) - 108*t*(v0 - vf)*(-32*pd*t*tf + t*t*tf_p4 + 16*t*tf_tf*v0 - 16*v0_v0 + 16*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) + 3*af_af*(-576*pd*t*tf + 81*t*t*tf_p4 + 1000*t*tf_tf*v0 + 48*v0_v0 - 424*t*tf_tf*vf - 96*v0*vf + 48*vf_vf) - 6*af*t*(-416*pd*t*tf_tf + 13*t*t*tf_p4*tf + 384*pd*(v0 - vf) + 32*t*tf_p3*(5*v0 + 8*vf) - 16*tf*(49*v0_v0 - 74*v0*vf + 25*vf_vf))) + a0_a0*(-166*af_p3*tf_tf - 6*af_af*tf*(169*t*tf_tf + 36*(v0 - vf)) + 3*af*(-192*pd*t*tf + 33*t*t*tf_p4 - 1048*t*tf_tf*v0 + 48*v0_v0 + 1240*t*tf_tf*vf - 96*v0*vf + 48*vf_vf) + 3*t*(17*t*t*tf_p4*tf - 32*pd*(17*t*tf_tf + 36*(v0 - vf)) + 32*t*tf_p3*(13*v0 + 4*vf) - 16*tf*(17*v0_v0 - 106*v0*vf + 89*vf_vf))) + af*(41*af_p4*tf_tf + 36*t*(v0 - vf)*(-32*pd*t*tf + t*t*tf_p4 + 16*t*tf_tf*v0 - 16*v0_v0 + 16*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) + af_af*(576*pd*t*tf - 63*t*t*tf_p4 - 600*t*tf_tf*v0 + 48*v0_v0 + 24*t*tf_tf*vf - 96*v0*vf + 48*vf_vf) - 3*af_p3*tf*(7*t*tf_tf + 36*(-v0 + vf)) + 3*af*t*(5*t*t*tf_p4*tf + 32*t*tf_p3*(v0 + 4*vf) - 16*tf*(29*v0_v0 - 34*v0*vf + 5*vf_vf) - 32*pd*(5*t*tf_tf + 12*(-v0 + vf)))))/(24*ad_ad*ad_ad*(a0*tf + af*tf + 2*v0 - 2*vf));
-    //         profile.t[3] = 0;
-    //         profile.t[4] = (41*a0_p5*tf_tf + a0_p4*tf*(-(af*tf) + 21*t*tf_tf + 108*(v0 - vf)) + a0_p3*(576*pd*t*tf - 166*af_af*tf_tf + 372*af*t*tf_p3 - 63*t*t*tf_p4 - 144*af*tf*v0 + 24*t*tf_tf*v0 + 48*v0_v0 + 144*af*tf*vf - 600*t*tf_tf*vf - 96*v0*vf + 48*vf_vf) + a0_a0*(94*af_p3*tf_tf - 3*af*(-576*pd*t*tf + 81*t*t*tf_p4 - 424*t*tf_tf*v0 + 48*v0_v0 + 1000*t*tf_tf*vf - 96*v0*vf + 48*vf_vf) + 6*af_af*tf*(169*t*tf_tf + 36*(-v0 + vf)) - 3*t*(5*t*t*tf_p4*tf - 32*pd*(5*t*tf_tf + 12*(v0 - vf)) + 32*t*tf_p3*(4*v0 + vf) - 16*tf*(5*v0_v0 - 34*v0*vf + 29*vf_vf))) + a0*(109*af_p4*tf_tf + 12*af_p3*tf*(67*t*tf_tf + 36*(v0 - vf)) - 36*t*(v0 - vf)*(-32*pd*t*tf + t*t*tf_p4 + 16*t*tf_tf*v0 - 16*v0_v0 + 16*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) + 3*af_af*(-192*pd*t*tf + 33*t*t*tf_p4 + 1240*t*tf_tf*v0 + 48*v0_v0 - 1048*t*tf_tf*vf - 96*v0*vf + 48*vf_vf) - 6*af*t*(-416*pd*t*tf_tf + 13*t*t*tf_p4*tf - 384*pd*(v0 - vf) + 32*t*tf_p3*(8*v0 + 5*vf) - 16*tf*(25*v0_v0 - 74*v0*vf + 49*vf_vf))) - af*(77*af_p4*tf_tf - 3*af_af*(-576*pd*t*tf + 69*t*t*tf_p4 + 632*t*tf_tf*v0 - 16*v0_v0 - 56*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) + 108*t*(v0 - vf)*(-32*pd*t*tf + t*t*tf_p4 + 16*t*tf_tf*v0 - 16*v0_v0 + 16*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) - 3*af_p3*tf*(31*t*tf_tf + 60*(-v0 + vf)) + 3*af*t*(17*t*t*tf_p4*tf + 32*t*tf_p3*(4*v0 + 13*vf) - 16*tf*(89*v0_v0 - 106*v0*vf + 17*vf_vf) - 32*pd*(17*t*tf_tf + 36*(-v0 + vf)))))/(24*ad_ad*ad_ad*(a0*tf + af*tf + 2*v0 - 2*vf));
-    //         profile.t[5] = 0;
-    //         profile.t[6] = (41*a0_p4*tf_tf - 19*af_p4*tf_tf + a0_p3*tf*(-56*af*tf + 21*t*tf_tf + 108*(v0 - vf)) + 3*af_p3*tf*(17*t*tf_tf - 4*v0 + 4*vf) - 36*t*(v0 - vf)*(-32*pd*t*tf + t*t*tf_p4 + 16*t*tf_tf*v0 - 16*v0_v0 + 16*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) - 3*a0_a0*(-192*pd*t*tf + 10*af_af*tf_tf - 83*af*t*tf_p3 + 21*t*t*tf_p4 + 76*af*tf*v0 - 8*t*tf_tf*v0 - 16*v0_v0 - 76*af*tf*vf + 200*t*tf_tf*vf + 32*v0*vf - 16*vf_vf) + 3*af_af*(-192*pd*t*tf + 27*t*t*tf_p4 + 232*t*tf_tf*v0 + 16*v0_v0 - 40*t*tf_tf*vf - 32*v0*vf + 16*vf_vf) - 3*af*t*(7*t*t*tf_p4*tf + 32*t*tf_p3*(2*v0 + 5*vf) - 16*tf*(31*v0_v0 - 38*v0*vf + 7*vf_vf) - 32*pd*(7*t*tf_tf + 12*(-v0 + vf))) + a0*(64*af_p3*tf_tf + 3*af_af*tf*(85*t*tf_tf + 44*(v0 - vf)) - 6*af*(3*t*t*tf_p4 - 168*t*tf_tf*(v0 - vf) + 16*vd_vd) - 3*t*(5*t*t*tf_p4*tf - 32*pd*(5*t*tf_tf + 12*(v0 - vf)) + 32*t*tf_p3*(4*v0 + vf) - 16*tf*(5*v0_v0 - 34*v0*vf + 29*vf_vf))))/(24*ad_ad*(a0 - af)*(a0*tf + af*tf + 2*v0 - 2*vf));
-
-    //         if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jf, vMax, vMin, aMax, aMin, jMax)) {
-    //             return true;
-    //         }
-    //     }
-    // }
-
     // UDUD T 0246
     {
         const double h0 = std::sqrt(2*jMax_jMax*(2*pow2(a0_p3 - af_p3 - 3*af_af*jMax*tf + 9*af*jMax_jMax*tf_tf - 3*a0_a0*(af + jMax*tf) + 3*a0*pow2(af + jMax*tf) + 3*jMax_jMax*(8*pd + jMax*tf_tf*tf - 8*tf*vf)) - 3*(a0_a0 + af_af - 2*af*jMax*tf - 2*a0*(af + jMax*tf) - jMax*(jMax*tf_tf + 4*v0 - 4*vf))*(a0_p4 + af_p4 + 4*af_p3*jMax*tf + 6*af_af*jMax_jMax*tf_tf - 3*jMax_jMax*jMax_jMax*tf_tf*tf_tf - 4*a0_p3*(af + jMax*tf) + 6*a0_a0*pow2(af + jMax*tf) - 12*af*jMax_jMax*(8*pd + jMax*tf_tf*tf - 8*tf*v0) + 48*jMax_jMax*vd_vd + 48*jMax_jMax*jMax*tf*g2 - 4*a0*(af_p3 + 3*af_af*jMax*tf - 9*af*jMax_jMax*tf_tf - 3*jMax_jMax*(8*pd + jMax*tf_tf*tf - 8*tf*vf)))))/jMax;
@@ -1037,6 +1011,104 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
     return false;
 }
 
+bool PositionStep2::time_none_smooth(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+    {
+        const double h0 = ad_ad + 2*jMax*(a0*tf - vd);
+        const double h1a = 2*(a0_p3 - af_p3) - 6*a0_a0*(af - jMax*tf) + 6*jMax_jMax*(-pd + tf*v0) + 6*a0*af_af + 3*a0*jMax*(jMax*tf_tf - 2*vd) + 6*af*jMax*(vd - tf*a0);
+        const double h1 = std::sqrt(4*h1a*h1a - 18*h0*h0*h0) * std::abs(jMax) / jMax;
+
+        profile.t[0] = 0;
+        profile.t[1] = (-a0_p3 + af_p3 + 3*(af_af - a0_a0)*jMax*tf - 3*a0*af*ad - 6*jMax*ad*vd - 6*jMax_jMax*(-2*pd + tf*(v0 + vf)))/(3*jMax*h0);
+        profile.t[2] = (4*(a0_p3 - af_p3) + 6*jMax_jMax*a0*tf_tf + 12*a0*af*ad + 12*jMax*(jMax*(tf*v0 - pd) + ad*(vd - a0*tf)) - h1)/(6*jMax*h0);
+        profile.t[3] = h1/(3*jMax*h0);
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = tf - (profile.t[1] + profile.t[2] + profile.t[3]);
+
+        if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            return true;
+        }
+    }
+    
+    {
+        const double h0 = ad_ad + 2*jMax*(vd - af*tf);
+        const double h0b = af_p3 - 3*jMax_jMax*(af*tf_tf + 2*(pd - tf*vf));
+        const double h1a = a0_p3 + 3*a0*af*ad - h0b;
+        const double h1 = std::sqrt(4*h1a*h1a - 6*h0*(a0_p4 + af_p4 - 4*a0_p3*af + 6*a0_a0*af_af + 12*jMax_jMax*(vd_vd - 2*af*(pd - tf*v0)) - 4*a0*h0b)) * std::abs(jMax) / jMax;
+
+        profile.t[0] = -(2*h1a + h1)/(6*jMax*h0);
+        profile.t[1] = h1/(3*jMax*h0);
+        profile.t[2] = profile.t[0] - (af - a0)/jMax;
+        profile.t[3] = 0;
+        profile.t[4] = 0;
+        profile.t[5] = tf - (profile.t[0] + profile.t[1] + profile.t[2]);
+        profile.t[6] = 0;
+
+        if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            return true;
+        }
+    }
+
+    // Solution 3
+    {
+        const double h0 = std::sqrt(3*(a0_p4 + af_p4 - 4*af_p3*jMax*tf + 6*af_af*jMax_jMax*tf_tf - 4*a0_p3*(af - jMax*tf) + 6*a0_a0*(af - jMax*tf)*(af - jMax*tf) + 24*af*jMax_jMax*(-pd + tf*v0) - 4*a0*(af_p3 - 3*af_af*jMax*tf + 6*jMax_jMax*(-pd + tf*vf)) - 12*jMax_jMax*(-vd_vd + jMax*tf*(-2*pd + tf*(v0 + vf))))) * std::abs(jMax) / jMax;
+        const double h1 = std::sqrt(3*(3*a0_a0 + 3*af_af - 6*a0*af - 6*ad*jMax*tf + 3*jMax_jMax*tf_tf - 2*h0)) * std::abs(jMax) / jMax;
+
+        profile.t[0] = (-3*(a0_a0 + af_af) + 6*a0*af + 6*jMax*(vd - a0*tf) + h0)/(6*jMax*(-ad + jMax*tf));
+        profile.t[1] = 0;
+        profile.t[2] = (3*jMax*tf - 3*ad - h1)/(6*jMax);
+        profile.t[3] = h1/(3*jMax);
+        profile.t[4] = 0;
+        profile.t[5] = 0;
+        profile.t[6] = tf - (profile.t[0] + profile.t[2] + profile.t[3]);
+
+        if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            return true;
+        }
+    }
+
+    // Solution 2
+    {
+        const double h0 = 6*(ad_ad + 2*af*jMax*tf - 2*jMax*vd);
+        const double h1a = 2*(a0_p3 - af_p3 + 3*a0*af*ad + 6*jMax_jMax*(pd - tf*vf) + 3*jMax_jMax*af*tf_tf);
+        const double h1 = std::sqrt(h1a*h1a - h0*(a0_p4 - 4*a0_p3*af + 6*a0_a0*af_af + af_p4 + 24*af*jMax_jMax*(-pd + tf*v0) + 12*jMax_jMax*vd_vd - 4*a0*(af_p3 - 3*af*jMax_jMax*tf_tf + 6*jMax_jMax*(-pd + tf*vf)))) * std::abs(jMax) / jMax;
+        const double h2 = 4*a0_p3 - 4*af_p3 + 12*a0*af*ad - 12*jMax_jMax*(pd - tf*vf) - 6*jMax_jMax*af*tf_tf + 12*ad*jMax*(vd - af*tf);
+        const double h3 = jMax*h0;
+
+        profile.t[0] = 0;
+        profile.t[1] = 0;
+        profile.t[2] = (h1a + h1)/h3;
+        profile.t[3] = -(h2 + h1)/h3;
+        profile.t[4] = (h2 - h1)/h3;
+        profile.t[5] = tf - (profile.t[2] + profile.t[3] + profile.t[4]);
+        profile.t[6] = 0;
+
+        if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            return true;
+        }
+    }
+
+    // Solution 1
+    {
+        const double h0 = std::sqrt((a0_p4 + af_p4 - 4*af_p3*jMax*tf + 6*af_af*jMax_jMax*tf_tf - 4*a0_p3*(af - jMax*tf) + 6*a0_a0*(af - jMax*tf)*(af - jMax*tf) + 24*af*jMax_jMax*(-pd + tf*v0) - 4*a0*(af_p3 - 3*af_af*jMax*tf + 6*jMax_jMax*(-pd + tf*vf)) - 12*jMax_jMax*(-vd_vd + jMax*tf*(-2*pd + tf*(v0 + vf)))) / 3) * std::abs(jMax) / jMax;
+        const double h1 = std::sqrt(ad_ad - 2*ad*jMax*tf + jMax_jMax*tf_tf + 2*h0) * std::abs(jMax) / jMax;
+
+        profile.t[0] = -(ad_ad + 2*jMax*(a0*tf - vd) + h0)/(2*jMax*(-ad + jMax*tf));
+        profile.t[1] = 0;
+        profile.t[2] = 0;
+        profile.t[3] = 0;
+        profile.t[4] = (-ad + jMax*tf - h1)/(2*jMax);
+        profile.t[5] = h1/jMax;
+        profile.t[6] = tf - (profile.t[0] + profile.t[4] + profile.t[5]);
+
+        if (profile.check_with_timing<JerkSigns::UDDU, Limits::NONE>(tf, jMax, vMax, vMin, aMax, aMin)) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 bool PositionStep2::get_profile(Profile& profile) {
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
@@ -1046,6 +1118,13 @@ bool PositionStep2::get_profile(Profile& profile) {
     const double aMax = up_first ? _aMax : _aMin;
     const double aMin = up_first ? _aMin : _aMax;
     const double jMax = up_first ? _jMax : -_jMax;
+
+    if (minimize_jerk && (
+        time_none_smooth(profile, vMax, vMin, aMax, aMin, jMax)
+        || time_none_smooth(profile, vMin, vMax, aMin, aMax, -jMax)
+    )) {
+        return true;
+    }
 
     return time_acc0_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
         || time_vel(profile, vMax, vMin, aMax, aMin, jMax)

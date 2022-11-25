@@ -107,7 +107,7 @@ input.intermediate_positions = {
   {0.8, ...},
 };
 ```
-As soon as at least one intermediate positions is given, the Ruckig Community Version switches to the mentioned (of course, non real-time capable) remote API. If you require real-time calculation on your own hardware, we refer to the *Ruckig Pro Version*.
+As soon as at least one intermediate positions is given, the Ruckig Community Version switches to the mentioned (of course, non real-time capable) remote API. If you require real-time calculation on your own hardware, please contact us for the *Ruckig Pro Version*.
 
 When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. In particular, there are some fundamental limitations for jerk-limited online trajectory generation regarding the usage of waypoints. Please find more information about these limitations [here](https://docs.ruckig.com/md_pages_intermediate_waypoints.html), and in general we recommend to use
 ```.cpp
@@ -322,7 +322,7 @@ Note that `DynamicDOFs` corresponds to `DOFs = 0`. We've included a range of exa
 
 ## Tests and Numerical Stability
 
-The current test suite validates over 5.000.000.000 random trajectories. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the final acceleration to be within `1e-10`, and for the velocity, acceleration and jerk limit to be within of a numerical error of `1e-12`. These are absolute values - we suggest to scale your input so that these correspond to your required precision of the system. For example, for most real-world systems we suggest to use input values in `[m]` (instead of e.g. `[mm]`), as `1e-8m` is sufficient precise for practical trajectory generation. Furthermore, all kinematic limits should be below `1e12`. The maximal supported trajectory duration is `7e3`, which again should suffice for most applications seeking for time-optimality. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
+The current test suite validates over 5.000.000.000 random trajectories as well as many additional edge cases. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the final acceleration to be within `1e-10`, and for the velocity, acceleration and jerk limit to be within of a numerical error of `1e-12`. These are absolute values - we suggest to scale your input so that these correspond to your required precision of the system. For example, for most real-world systems we suggest to use input values in `[m]` (instead of e.g. `[mm]`), as `1e-8m` is sufficient precise for practical trajectory generation. Furthermore, all kinematic limits should be below `1e12`. The maximal supported trajectory duration is `7e3`, and you can [scale your input parameter](https://github.com/pantor/ruckig/issues/139#issuecomment-1280730316) to avoid that limitation. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
 
 
 ## Benchmark

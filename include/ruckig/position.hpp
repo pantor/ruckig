@@ -76,8 +76,11 @@ class PositionStep2 {
     bool time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     bool time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
     bool time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    bool time_none_smooth(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
 public:
+    bool minimize_jerk {false};
+
     explicit PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(Profile& profile);
