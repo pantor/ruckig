@@ -25,23 +25,24 @@ class PositionStep1 {
     double jMax_jMax;
 
     // Max 5 valid profiles + 1 spare for numerical issues
+    using ProfileIter = std::array<Profile, 6>::iterator;
     std::array<Profile, 6> valid_profiles;
-    size_t valid_profile_counter;
 
-    void time_all_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found);
-    void time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found);
-    void time_all_none_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found);
+    void time_all_vel(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const;
+    void time_acc0_acc1(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const;
+    void time_all_none_acc0_acc1(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const;
 
     // Only for numerical issues, always return_after_found
-    void time_acc1_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_acc0_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_vel_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
-    void time_none_two_step(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
+    void time_acc1_vel_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const;
+    void time_acc0_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const;
+    void time_vel_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const;
+    void time_none_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const;
 
 
-    inline void add_profile(const Profile& profile) {
-        valid_profiles[valid_profile_counter] = profile;
-        ++valid_profile_counter;
+    inline void add_profile(ProfileIter& profile) const {
+        const auto prev_profile = profile;
+        ++profile;
+        profile->set_boundary(*prev_profile);
     }
 
 public:

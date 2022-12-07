@@ -18,16 +18,16 @@ class VelocityStep1 {
     double vd;
 
     // Max 3 valid profiles
+    using ProfileIter = std::array<Profile, 3>::iterator;
     std::array<Profile, 3> valid_profiles;
-    size_t valid_profile_counter;
 
-    void time_acc0(Profile& profile, double aMax, double aMin, double jMax, bool return_after_found);
-    void time_none(Profile& profile, double aMax, double aMin, double jMax, bool return_after_found);
+    void time_acc0(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const;
+    void time_none(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const;
 
-    inline void add_profile(const Profile& profile) {
-        valid_profiles[valid_profile_counter] = profile;
-        valid_profiles[valid_profile_counter].pf = profile.p.back();
-        ++valid_profile_counter;
+    inline void add_profile(ProfileIter& profile) const {
+        const auto prev_profile = profile;
+        ++profile;
+        profile->set_boundary(*prev_profile);
     }
 
 public:
@@ -43,7 +43,7 @@ class VelocityStep2 {
     double _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
-    double vd;
+    double vd, ad;
 
     bool time_acc0(Profile& profile, double aMax, double aMin, double jMax);
     bool time_none(Profile& profile, double aMax, double aMin, double jMax);

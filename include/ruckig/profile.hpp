@@ -238,6 +238,17 @@ public:
         return (std::abs(jf) < std::abs(jMax) + j_eps) && check_with_timing<jerk_signs, limits>(tf, jf, vMax, vMin, aMax, aMin);
     }
 
+    inline void set_boundary(const Profile& profile) {
+        a[0] = profile.a[0];
+        v[0] = profile.v[0];
+        p[0] = profile.p[0];
+        af = profile.af;
+        vf = profile.vf;
+        pf = profile.pf;
+        brake = profile.brake;
+        accel = profile.accel;
+    }
+
     inline void set_boundary(double p0_new, double v0_new, double a0_new, double pf_new, double vf_new, double af_new) {
         a[0] = a0_new;
         v[0] = v0_new;
