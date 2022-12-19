@@ -92,7 +92,7 @@ void PositionStep1::time_acc0_acc1(ProfileIter& profile, double vMax, double vMi
         const double h3 = -af_af/(2*aMin*jMax) - (aMax - 2*aMin)/(2*jMax) + vf/aMin;
 
         // UDDU: Solution 2
-        if (h2 > h1/aMax && h3 > -h1/aMin)  {
+        if (h2 > h1/aMax && h3 > -h1/aMin) {
             profile->t[0] = (-a0 + aMax)/jMax;
             profile->t[1] = h2 - h1/aMax;
             profile->t[2] = aMax/jMax;
@@ -170,9 +170,30 @@ void PositionStep1::time_all_none_acc0_acc1(ProfileIter& profile, double vMax, d
     polynom_acc1[3] = h0_acc1/(jMax_jMax*jMax_jMax);
 
 
+    // Limits
+    // const double t_min_pd = std::abs(pd / vMax) - 1e-12;
+    // t_min_none = std::max(t_min_none, (t_min_pd - (af - a0)/jMax)/2);
+
+    // Budan's theorem
+    // std::array<double, 4> polynom_none_min = polynom_none;
+    // polynom_none_min[0] += 4 * t_min_none;
+    // polynom_none_min[1] += (3 * polynom_none[0] + 6 * t_min_none) * t_min_none;
+    // polynom_none_min[2] += (2 * polynom_none[1] + (3 * polynom_none[0] + 4 * t_min_none) * t_min_none) * t_min_none;
+    // polynom_none_min[3] += (polynom_none[2] + (polynom_none[1] + (polynom_none[0] + t_min_none) * t_min_none) * t_min_none) * t_min_none;
+
+    std::array<double, 4> polynom_acc0_min = polynom_acc0;
+    polynom_acc0_min[0] += 4 * t_min_acc0;
+    polynom_acc0_min[1] += (3 * polynom_acc0[0] + 6 * t_min_acc0) * t_min_acc0;
+    polynom_acc0_min[2] += (2 * polynom_acc0[1] + (3 * polynom_acc0[0] + 4 * t_min_acc0) * t_min_acc0) * t_min_acc0;
+    polynom_acc0_min[3] += (polynom_acc0[2] + (polynom_acc0[1] + (polynom_acc0[0] + t_min_acc0) * t_min_acc0) * t_min_acc0) * t_min_acc0;
+
+    // const bool polynom_none_has_solution = (polynom_none_min[0] < 0.0) || (polynom_none_min[1] < 0.0) || (polynom_none_min[2] < 0.0) || (polynom_none_min[3] <= 0.0);
+    const bool polynom_acc0_has_solution = (polynom_acc0_min[0] < 0.0) || (polynom_acc0_min[1] < 0.0) || (polynom_acc0_min[2] < 0.0) || (polynom_acc0_min[3] <= 0.0);
+    const bool polynom_acc1_has_solution = (polynom_acc1[0] < 0.0) || (polynom_acc1[1] < 0.0) || (polynom_acc1[2] < 0.0) || (polynom_acc1[3] <= 0.0);
+
     auto roots_none = roots::solveQuartMonic(polynom_none);
-    auto roots_acc0 = roots::solveQuartMonic(polynom_acc0);
-    auto roots_acc1 = roots::solveQuartMonic(polynom_acc1);
+    auto roots_acc0 = polynom_acc0_has_solution ? roots::solveQuartMonic(polynom_acc0) : roots::PositiveSet<double, 4>{};
+    auto roots_acc1 = polynom_acc1_has_solution ? roots::solveQuartMonic(polynom_acc1) : roots::PositiveSet<double, 4>{};
 
 
     for (double t: roots_none) {
@@ -214,8 +235,8 @@ void PositionStep1::time_all_none_acc0_acc1(ProfileIter& profile, double vMax, d
         // Single Newton step (regarding pd)
         if (t > DBL_EPSILON) {
             const double h1 = jMax*t;
-            const double orig = h0_acc0/(24*aMax*jMax_jMax) + t*t*(h2_acc0 + h1*(h1 - 2*aMax))/(2*aMax);
-            const double deriv = t*(h2_acc0 + h1*(2*h1 - 3*aMax))/aMax;
+            const double orig = h0_acc0/(12*jMax_jMax*t) + t*(h2_acc0 + h1*(h1 - 2*aMax));
+            const double deriv = 2*(h2_acc0 + h1*(2*h1 - 3*aMax));
 
             t -= orig / deriv;
         }
@@ -245,22 +266,22 @@ void PositionStep1::time_all_none_acc0_acc1(ProfileIter& profile, double vMax, d
         if (t > DBL_EPSILON) {
             const double h5 = a0_p3 + 2*jMax*a0*v0;
             double h1 = jMax*t;
-            double orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
-            double deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1))/(aMin*jMax);
+            double orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/jMax;
+            double deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1));
             t -= std::min(orig / deriv, t);
 
             h1 = jMax*t;
-            orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
+            orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/jMax;
             
             if (std::abs(orig) > 1e-9) {
-                deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1))/(aMin*jMax);
+                deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1));
                 t -= orig / deriv;
 
                 h1 = jMax*t;
-                orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/(aMin*jMax_jMax);
+                orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/jMax;
                 
                 if (std::abs(orig) > 1e-9) {
-                    deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1))/(aMin*jMax);
+                    deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1));
                     t -= orig / deriv;
                 }
             }
@@ -476,12 +497,12 @@ bool PositionStep1::get_profile(const Profile& input, Block& block) {
         }
 
     } else {
-        time_all_vel(profile, _vMax, _vMin, _aMax, _aMin, _jMax, false);
-        time_all_vel(profile, _vMin, _vMax, _aMin, _aMax, -_jMax, false);
         time_all_none_acc0_acc1(profile, _vMax, _vMin, _aMax, _aMin, _jMax, false);
         time_all_none_acc0_acc1(profile, _vMin, _vMax, _aMin, _aMax, -_jMax, false);
         time_acc0_acc1(profile, _vMax, _vMin, _aMax, _aMin, _jMax, false);
         time_acc0_acc1(profile, _vMin, _vMax, _aMin, _aMax, -_jMax, false);
+        time_all_vel(profile, _vMax, _vMin, _aMax, _aMin, _jMax, false);
+        time_all_vel(profile, _vMin, _vMax, _aMin, _aMax, -_jMax, false);
     }
 
     if (profile == start) {

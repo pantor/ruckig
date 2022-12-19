@@ -37,7 +37,7 @@ public:
         return data.begin() + size;
     }
 
-    inline void insert(T value) {
+    void insert(T value) {
         data[size] = value;
         ++size;
     }
@@ -48,7 +48,7 @@ public:
 template<typename T, size_t N>
 class PositiveSet: public Set<T, N> {
 public:
-    inline void insert(T value) {
+    void insert(T value) {
         if (value >= 0) {
             Set<T, N>::insert(value);
         }
@@ -194,67 +194,42 @@ inline int solveResolvent(std::array<double, 3>& x, double a, double b, double c
     }
 }
 
-constexpr double DBL_EPSILON_SQRT {1.483e-8}; // approx std::sqrt(DBL_EPSILON)
-
 //! Calculate all roots of the monic quartic equation: x^4 + a*x^3 + b*x^2 + c*x + d = 0
 inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, double d) {
     PositiveSet<double, 4> roots;
 
-    if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON_SQRT && std::abs(c) < DBL_EPSILON_SQRT && std::abs(d) < DBL_EPSILON) {
-        const double e0 = std::cbrt(c * c);
-        const double e1 = (b * b + 12 * d) / (9 * e0);
-        const double q1 = -(4 * b) / 3 - e0 - e1;
-        const double p1 = std::sqrt(-q1 - 2 * b);
-        const double q2 = 2 * c / p1;
-        double D, sqrtD;
+    if (std::abs(d) < DBL_EPSILON) {
+        if (std::abs(c) < DBL_EPSILON) {
+            roots.insert(0.0);
 
-        D = q1 - q2;
-        if (D > 0.0) {
-            sqrtD = std::sqrt(D);
-            roots.insert((p1 + sqrtD) / 2);
-            roots.insert((p1 - sqrtD) / 2);
+            const double D = a * a - 4 * b;
+            if (std::abs(D) < DBL_EPSILON) {
+                roots.insert(-a / 2);
+            } else if (D > 0) {
+                const double sqrtD = std::sqrt(D);
+                roots.insert((-a - sqrtD) / 2);
+                roots.insert((-a + sqrtD) / 2);
+            }
+            return roots;
         }
 
-        D = q1 + q2;
-        if (D > 0.0) {
-            sqrtD = std::sqrt(D);
-            roots.insert((-p1 + sqrtD) / 2);
-            roots.insert((-p1 - sqrtD) / 2);
+        if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON) {
+            roots.insert(0.0);
+            roots.insert(-std::cbrt(c));
+            return roots;
         }
-        return roots;
-    }
-
-    if (std::abs(c) < DBL_EPSILON && std::abs(d) < DBL_EPSILON) {
-        roots.insert(0.0);
-
-        const double D = a * a - 4 * b;
-        if (std::abs(D) < DBL_EPSILON) {
-            roots.insert(-a / 2);
-        } else if (D > 0) {
-            const double sqrtD = std::sqrt(D);
-            roots.insert((-a - sqrtD) / 2);
-            roots.insert((-a + sqrtD) / 2);
-        }
-        return roots;
-    }
-
-    if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON && std::abs(d) < DBL_EPSILON) {
-        roots.insert(0.0);
-        roots.insert(-std::cbrt(c));
-        return roots;
     }
 
     const double a3 = -b;
     const double b3 = a * c - 4 * d;
     const double c3 = -a * a * d - c * c + 4 * b * d;
 
-    // Solve the resolvent: y^3 - b*y^2 + (ac - 4*d)*y - a^2*d - c^2 + 4*b*d = 0
     std::array<double, 3> x3;
-    const int iZeroes = solveResolvent(x3, a3, b3, c3);
+    const int number_zeroes = solveResolvent(x3, a3, b3, c3);
 
     double y = x3[0];
     // Choosing Y with maximal absolute value.
-    if (iZeroes != 1) {
+    if (number_zeroes != 1) {
         if (std::abs(x3[1]) > std::abs(y)) {
             y = x3[1];
         }
@@ -263,50 +238,45 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
         }
     }
 
-    double q1, q2, p1, p2, sqrtD;
+    double q1, q2, p1, p2;
 
-    // h1 + h2 = y && h1*h2 = d  <=>  h^2 - y*h + d = 0    (h === q)
     double D = y * y - 4 * d;
     if (std::abs(D) < DBL_EPSILON) {
         q1 = q2 = y / 2;
-        // g1 + g2 = a && g1 + g2 = b - y   <=>   g^2 - a*g + b - y = 0    (p === g)
         D = a * a - 4 * (b - y);
         if (std::abs(D) < DBL_EPSILON) {
             p1 = p2 = a / 2;
         } else {
-            sqrtD = std::sqrt(D);
+            const double sqrtD = std::sqrt(D);
             p1 = (a + sqrtD) / 2;
             p2 = (a - sqrtD) / 2;
         }
     } else {
-        sqrtD = std::sqrt(D);
+        const double sqrtD = std::sqrt(D);
         q1 = (y + sqrtD) / 2;
         q2 = (y - sqrtD) / 2;
-        // g1 + g2 = a && g1*h2 + g2*h1 = c   ( && g === p )  Krammer
         p1 = (a * q1 - c) / (q1 - q2);
         p2 = (c - a * q2) / (q1 - q2);
     }
 
     constexpr double eps {16 * DBL_EPSILON};
 
-    // Solve the quadratic equation: x^2 + p1*x + q1 = 0
     D = p1 * p1 - 4 * q1;
     if (std::abs(D) < eps) {
         roots.insert(-p1 / 2);
     } else if (D > 0.0) {
-        sqrtD = std::sqrt(D);
-        roots.insert((-p1 + sqrtD) / 2);
+        const double sqrtD = std::sqrt(D);
         roots.insert((-p1 - sqrtD) / 2);
+        roots.insert((-p1 + sqrtD) / 2);
     }
 
-    // Solve the quadratic equation: x^2 + p2*x + q2 = 0
     D = p2 * p2 - 4 * q2;
     if (std::abs(D) < eps) {
         roots.insert(-p2 / 2);
     } else if (D > 0.0) {
-        sqrtD = std::sqrt(D);
-        roots.insert((-p2 + sqrtD) / 2);
+        const double sqrtD = std::sqrt(D);
         roots.insert((-p2 - sqrtD) / 2);
+        roots.insert((-p2 + sqrtD) / 2);
     }
 
     return roots;

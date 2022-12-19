@@ -103,7 +103,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {3.0, 3.0, 3.0};
     input.max_acceleration = {0.5, 0.5, 0.5};
     input.max_jerk = {0.2, 0.2, 0.2};
-    check_duration(otg, input, 1.4939456041);
+    check_duration(otg, input, 1.493805);
 
     input.current_position = {-5.54640573838539, -2.34195463203842, 5.10070661762967};
     input.current_velocity = {0.824843228617216, -1.03863337183304, -0.749451523227729};
