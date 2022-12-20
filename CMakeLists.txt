@@ -56,14 +56,14 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  set(EXAMPLES_LIST 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 8_dynamic_dofs)
+  set(EXAMPLES_LIST 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 9_dynamic_dofs)
 
   if(BUILD_ONLINE_CLIENT)
-    list(APPEND EXAMPLES_LIST 3_waypoints 4_waypoints_online 9_dynamic_dofs_waypoints)
+    list(APPEND EXAMPLES_LIST 3_waypoints 4_waypoints_online 8_per_section_minimum_duration 10_dynamic_dofs_waypoints)
   else()
-    list(APPEND EXAMPLES_LIST 11_custom_vector_type 12_custom_vector_type_dynamic_dofs)
+    list(APPEND EXAMPLES_LIST 12_custom_vector_type 13_custom_vector_type_dynamic_dofs)
     if(TARGET Eigen3::Eigen)
-      list(APPEND EXAMPLES_LIST 10_eigen_vector_type)
+      list(APPEND EXAMPLES_LIST 11_eigen_vector_type)
     endif()
   endif()
 
