@@ -12,25 +12,37 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         cmake_flags: ["", " -DBUILD_ONLINE_CLIENT=ON "]
         include:
-          - name: ubuntu-18.04-gcc-5
-            os: ubuntu-18.04
+          - name: ubuntu-20.04-gcc-5
+            os: ubuntu-20.04
             compiler: gcc
             version: 5
 
     steps:
     - uses: actions/checkout@v3
 
+    - name: Get cross-platform /dev/null for hidden output
+      run: echo "HIDDEN=$(python3 -c "import os; print(os.devnull)")" >> $GITHUB_ENV
+
     - name: Install pybind11
       run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
-        git checkout v2.10.1
+        git checkout v2.10.3
 
     - name: Set compiler version and patch C++11
-      if: runner.os == 'Linux' && matrix.compiler == 'gcc' && matrix.version == '5'
+      if: matrix.name == 'ubuntu-20.04-gcc-5'
       run: |
-        sudo apt-get update
-        sudo apt-get install -y g++-${{ matrix.version }} g++-${{ matrix.version }}-multilib
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/gcc-5-base_5.5.0-12ubuntu1_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/i/isl-0.18/libisl15_0.18-4_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/cpp-5_5.5.0-12ubuntu1_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libasan2_5.5.0-12ubuntu1_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libmpx0_5.5.0-12ubuntu1_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libgcc-5-dev_5.5.0-12ubuntu1_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/gcc-5_5.5.0-12ubuntu1_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libstdc++-5-dev_5.5.0-12ubuntu1_amd64.deb
+        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/g++-5_5.5.0-12ubuntu1_amd64.deb
+        sudo apt install ./g++-5_5.5.0-12ubuntu1_amd64.deb ./gcc-5_5.5.0-12ubuntu1_amd64.deb ./gcc-5-base_5.5.0-12ubuntu1_amd64.deb ./cpp-5_5.5.0-12ubuntu1_amd64.deb ./libisl15_0.18-4_amd64.deb ./libgcc-5-dev_5.5.0-12ubuntu1_amd64.deb ./libasan2_5.5.0-12ubuntu1_amd64.deb ./libmpx0_5.5.0-12ubuntu1_amd64.deb ./libstdc++-5-dev_5.5.0-12ubuntu1_amd64.deb
+        
         echo "CC=gcc-${{ matrix.version }}" >> $GITHUB_ENV
         echo "CXX=g++-${{ matrix.version }}" >> $GITHUB_ENV
         bash scripts/patch-c++11.sh inplace
@@ -40,35 +52,22 @@ jobs:
         cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ${{ matrix.cmake_flags }} -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=. -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=.
         cmake --build build --config Release -j2
 
-    - name: Run Examples (Unix)
-      if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
+    - name: Run C++ Examples
       run: |
-        ./build/example-1_position > /dev/null
-        ./build/example-2_position_offline > /dev/null
-        ./build/example-5_velocity > /dev/null
-        ./build/example-6_stop > /dev/null
-        ./build/example-7_minimum_duration > /dev/null
-        ./build/example-9_dynamic_dofs > /dev/null
-        python3 ./examples/1_position.py > /dev/null
-        python3 ./examples/2_position_offline.py > /dev/null
-        python3 ./examples/5_velocity.py > /dev/null
-        python3 ./examples/6_stop.py > /dev/null
-        python3 ./examples/7_minimum_duration.py > /dev/null
+        ./build/example-1_position > "$HIDDEN"
+        ./build/example-2_position_offline > "$HIDDEN"
+        ./build/example-5_velocity > "$HIDDEN"
+        ./build/example-6_stop > "$HIDDEN"
+        ./build/example-7_minimum_duration > "$HIDDEN"
+        ./build/example-9_dynamic_dofs > "$HIDDEN"
 
-    - name: Run Examples (Windows)
-      if: matrix.os == 'windows-latest'
+    - name: Run Python Examples
       run: |
-        .\build\example-1_position.exe > $null
-        .\build\example-2_position_offline.exe > $null
-        .\build\example-5_velocity.exe > $null
-        .\build\example-6_stop.exe > $null
-        .\build\example-7_minimum_duration.exe > $null
-        .\build\example-9_dynamic_dofs.exe > $null
-        python3 .\examples\1_position.py > $null
-        python3 .\examples\2_position_offline.py > $null
-        python3 .\examples\5_velocity.py > $null
-        python3 .\examples\6_stop.py > $null
-        python3 .\examples\7_minimum_duration.py > $null
+        python3 ./examples/1_position.py > "$HIDDEN"
+        python3 ./examples/2_position_offline.py > "$HIDDEN"
+        python3 ./examples/5_velocity.py > "$HIDDEN"
+        python3 ./examples/6_stop.py > "$HIDDEN"
+        python3 ./examples/7_minimum_duration.py > "$HIDDEN"
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
