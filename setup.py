@@ -56,12 +56,12 @@ class CMakeBuild(build_ext):
 
 setup(
     name='ruckig',
-    version='0.9.1',
+    version='0.9.2',
     description='Instantaneous Motion Generation for Robots and Machines.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Lars Berscheid',
-    author_email='info@ruckig.com',
+    author_email='lars.berscheid@ruckig.com',
     url='https://www.ruckig.com',
     packages=find_packages(),
     license='MIT',
