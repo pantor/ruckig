@@ -195,6 +195,16 @@ public:
         at_time(time, new_position, new_velocity, new_acceleration, new_section);
     }
 
+    //! Get the kinematic state and current section at a given time without vectors for a single DoF
+    template <size_t D = DOFs, typename std::enable_if<D == 1, int>::type = 0>
+    void at_time(double time, double& new_position, double& new_velocity, double& new_acceleration) const {
+        Vector<double> new_p, new_v, new_a;
+        at_time(time, new_p, new_v, new_a);
+        new_position = new_p[0];
+        new_velocity = new_v[0];
+        new_acceleration = new_a[0];
+    }
+
     //! Get the duration of the (synchronized) trajectory
     double get_duration() const {
         return duration;

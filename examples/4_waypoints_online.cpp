@@ -42,16 +42,15 @@ int main() {
     std::cout << "t | p1 | p2 | p3" << std::endl;
     double calculation_duration {0.0};
     while (otg.update(input, output) == Result::Working) {
+        if (output.new_calculation) {
+            std::cout << "Updated the trajectory:" << std::endl;
+            std::cout << "  Reached target position in " << output.trajectory.get_duration() << " [s]." << std::endl;
+            std::cout << "  Calculation in " << output.calculation_duration << " [µs]." << std::endl;
+        }
+
         auto& p = output.new_position;
         std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << std::endl;
 
         output.pass_to_input(input);
-
-        if (output.new_calculation) {
-            calculation_duration = output.calculation_duration;
-        }
     }
-
-    std::cout << "Reached target position in " << output.trajectory.get_duration() << " [s]." << std::endl;
-    std::cout << "Calculation in " << calculation_duration << " [µs]." << std::endl;
 }

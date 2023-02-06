@@ -14,7 +14,7 @@ namespace ruckig {
 //! Result type of Ruckig's update function
 enum Result {
     Working = 0, ///< The trajectory is calculated normally
-    Finished = 1, ///< Trajectory has reached its final position
+    Finished = 1, ///< The trajectory has reached its final position
     Error = -1, ///< Unclassified error
     ErrorInvalidInput = -100, ///< Error in the input parameter
     ErrorTrajectoryDuration = -101, ///< The trajectory duration exceeds its numerical limits
@@ -121,6 +121,11 @@ public:
     std::optional<std::vector<double>> per_section_minimum_duration;
 
     //! Optional duration [µs] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
+    //! 
+    //! The total calculation consists of a first iterative phase and a second fixed phase. The interrupt signal
+    //! is applied to the iterative phase only, and the real-time capable (constant) second phase is computed
+    //! afterwards. Therefore, the total calculation duration might exceed this interrupt signal by a constant offset,
+    //! which should be considered (subtracted) here. 
     std::optional<double> interrupt_calculation_duration;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>

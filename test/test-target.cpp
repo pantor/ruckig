@@ -184,6 +184,36 @@ bool array_eq(const T& first, const T& second) {
 }
 
 
+TEST_CASE("at_time" * doctest::description("Single DoF")) {
+    RuckigThrow<1> otg {0.005};
+    InputParameter<1> input;
+    OutputParameter<1> output;
+
+    input.current_position = {0.0};
+    input.target_position = {1.0};
+    input.max_velocity = {1.0};
+    input.max_acceleration = {1.0};
+    input.max_jerk = {1.0};
+
+    Trajectory<1> traj;
+    auto result = otg.calculate(input, traj);
+
+    CHECK( result == Result::Working );
+    CHECK( traj.get_duration() == doctest::Approx(3.1748) );
+
+    std::array<double, 1> new_position, new_velocity, new_acceleration;
+    traj.at_time(0.0, new_position, new_velocity, new_acceleration);
+    CHECK( array_eq(new_position, input.current_position) );
+
+    double new_position_element, new_velocity_element, new_acceleration_element;
+    traj.at_time(0.0, new_position_element, new_velocity_element, new_acceleration_element);
+    CHECK( new_position_element == doctest::Approx(input.current_position[0]) );
+
+    traj.at_time(3.1748 / 2, new_position_element, new_velocity_element, new_acceleration_element);
+    CHECK( new_position_element == doctest::Approx(0.5) );
+}
+
+
 TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     RuckigThrow<3> otg {0.005};
     InputParameter<3> input;

@@ -53,6 +53,11 @@ if __name__ == '__main__':
 
     otg = Ruckig(inp.degrees_of_freedom, 0.01, 10)
 
+    # otg.calculator.waypoints_calculator.number_global_steps = 1
+    # otg.calculator.waypoints_calculator.number_local_steps = 16
+    # otg.calculator.waypoints_calculator.number_smoothing_steps = 0
+    # otg.calculator.waypoints_calculator.number_acceleration_smoothing_steps = 0
+
     out_list, time_offsets, time_offset = walk_through_trajectory(otg, inp)
 
     print(f'{0}\tCalculation duration: {out_list[0].calculation_duration:0.1f} [µs]')
