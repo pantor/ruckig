@@ -8,7 +8,6 @@
 #include <json/json.hpp>
 #endif
 
-#include <ruckig/input_parameter.hpp>
 #include <ruckig/profile.hpp>
 
 

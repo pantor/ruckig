@@ -7,23 +7,10 @@
 #include <type_traits>
 #include <vector>
 
+#include <ruckig/result.hpp>
 #include <ruckig/utils.hpp>
 
 namespace ruckig {
-
-//! Result type of Ruckig's update function
-enum Result {
-    Working = 0, ///< The trajectory is calculated normally
-    Finished = 1, ///< The trajectory has reached its final position
-    Error = -1, ///< Unclassified error
-    ErrorInvalidInput = -100, ///< Error in the input parameter
-    ErrorTrajectoryDuration = -101, ///< The trajectory duration exceeds its numerical limits
-    ErrorPositionalLimits = -102, ///< The trajectory exceeds the given positional limits (only in Ruckig Pro)
-    // ErrorNoPhaseSynchronization = -103, ///< The trajectory cannot be phase synchronized
-    ErrorExecutionTimeCalculation = -110, ///< Error during the extremel time calculation (Step 1)
-    ErrorSynchronizationCalculation = -111, ///< Error during the synchronization calculation (Step 2)
-};
-
 
 enum class ControlInterface {
     Position, ///< Position-control: Full control over the entire kinematic state (Default)
