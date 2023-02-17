@@ -6,7 +6,7 @@ import numpy as np
 
 class Plotter:
     @staticmethod
-    def plot_trajectory(filename, otg, inp, out_list, show=False, plot_jerk=True, time_offsets=None, title=None):
+    def plot_trajectory(filename, otg, inp, out_list, show=False, plot_acceleration=True, plot_jerk=True, time_offsets=None, title=None):
         taxis = np.array(list(map(lambda x: x.time, out_list)))
         if time_offsets:
             taxis += np.array(time_offsets)
@@ -35,7 +35,8 @@ class Plotter:
             plt.ylabel(f'DoF {dof+1}')
             plt.plot(taxis, qaxis[:, dof], label=f'Position {dof+1}')
             plt.plot(taxis, dqaxis[:, dof], label=f'Velocity {dof+1}')
-            plt.plot(taxis, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
+            if plot_acceleration:
+                plt.plot(taxis, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
             if plot_jerk:
                 plt.plot(taxis, dddqaxis[:, dof], label=f'Jerk {dof+1}')
 
@@ -59,11 +60,11 @@ class Plotter:
             if min_velocity > 1.4 * global_min:
                 plt.axhline(y=min_velocity, color='orange', linestyle='--', linewidth=1.1)
 
-            if inp.max_acceleration[dof] < 1.4 * global_max:
+            if plot_acceleration and inp.max_acceleration[dof] < 1.4 * global_max:
                 plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
 
             min_acceleration = inp.min_acceleration[dof] if inp.min_acceleration else -inp.max_acceleration[dof]
-            if min_acceleration > 1.4 * global_min:
+            if plot_acceleration and min_acceleration > 1.4 * global_min:
                 plt.axhline(y=min_acceleration, color='g', linestyle='--', linewidth=1.1)
 
             if plot_jerk and inp.max_jerk[dof] < 1.4 * global_max:

@@ -276,7 +276,7 @@ public:
         const size_t old_section = output.new_section;
         output.time += delta_time;
         output.trajectory.at_time(output.time, output.new_position, output.new_velocity, output.new_acceleration, output.new_section);
-        output.did_section_change = (output.new_section != old_section);
+        output.did_section_change = (output.new_section > old_section);  // Report only forward section changes
 
         const auto stop = std::chrono::steady_clock::now();
         output.calculation_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
