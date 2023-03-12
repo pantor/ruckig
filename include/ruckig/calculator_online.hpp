@@ -109,7 +109,7 @@ public:
                 return Result::Error;
             }
         }
-        
+
         auto result = nlohmann::json::parse(res->body);
 
         was_interrupted = false;
@@ -123,12 +123,12 @@ public:
         if (!result["message"].empty()) {
             std::cout << "[ruckig] " << result["message"] << std::endl;
         }
-        
+
         if (result["result"] == "Result.Error") {
-            return Result::Error; 
-        
+            return Result::Error;
+
         } else if (result["result"] == "Result.ErrorInvalidInput") {
-            return Result::ErrorInvalidInput; 
+            return Result::ErrorInvalidInput;
         }
 
         for (size_t i = 0; i < result["profiles"].size(); ++i) {

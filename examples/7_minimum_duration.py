@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
         print('\t'.join([f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
         out_list.append(copy(out))
-        
+
         out.pass_to_input(inp)
 
         if not first_output:

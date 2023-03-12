@@ -96,7 +96,7 @@ public:
         for (;end < n_waypoints + 2; ++end) {
             const auto pos_start = (start == 0) ? input.current_position : input.intermediate_positions[start-1];
             const auto pos_end = (end == n_waypoints+1) ? input.target_position : input.intermediate_positions[end-1];
-            
+
             // Check for all intermediate positions
             bool are_all_below {true};
             for (size_t current = start + 1; current < end; ++current) {
@@ -128,7 +128,7 @@ public:
                 start = end - 1;
             }
         }
-        
+
         std::vector<Vector<double>> filtered_positions;
         filtered_positions.reserve(n_waypoints);
         for (size_t i = 0; i < n_waypoints; ++i) {
@@ -168,7 +168,7 @@ public:
                 return false;
             }
             if (check_target_state_within_limits && (af > aMax || af < aMin)) {
-                return false;  
+                return false;
             }
 
             const double v0 = input.current_velocity[dof];
@@ -216,7 +216,7 @@ public:
             if (input.intermediate_positions.size() > max_number_of_waypoints) {
                 return false;
             }
-            
+
             if (input.minimum_duration || input.duration_discretization != DurationDiscretization::Continuous) {
                 return false;
             }

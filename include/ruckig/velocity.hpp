@@ -39,7 +39,7 @@ public:
 
 //! Mathematical equations for Step 2 in velocity interface: Time synchronization
 class VelocityStep2 {
-    double a0, tf, af; 
+    double a0, tf, af;
     double _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions

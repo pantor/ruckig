@@ -14,7 +14,7 @@ if __name__ == '__main__':
     otg = Ruckig(3, 0.01)  # DoFs, control cycle
     inp = InputParameter(3)
     out = OutputParameter(3)
-    
+
     inp.current_position = [0.0, 0.0, 0.5]
     inp.current_velocity = [0.0, -2.2, -0.5]
     inp.current_acceleration = [0.0, 2.5, -0.5]
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         print('\t'.join([f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
         out_list.append(copy(out))
         time_offsets.append(1.0 if on_stop_trajectory else 0.0)
-        
+
         # Activate stop trajectory after 1s
         if out.time >= 1.0 and not on_stop_trajectory:
             print('Stop immediately!')

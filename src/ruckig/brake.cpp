@@ -22,7 +22,7 @@ void BrakeProfile::acceleration_brake(double v0, double a0, double vMax, double 
 
     if ((v_at_a_zero > vMax && jMax > 0) || (v_at_a_zero < vMax && jMax < 0)) {
         velocity_brake(v0, a0, vMax, vMin, aMax, aMin, jMax);
-    
+
     } else if ((v_at_a_max < vMin && jMax > 0) || (v_at_a_max > vMin && jMax < 0)) {
         const double t_to_v_min = -(v_at_a_max - vMin)/aMax;
         const double t_to_v_max = -aMax/(2*jMax) - (v_at_a_max - vMax)/aMax;

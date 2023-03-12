@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     # follow_list = np.array(follow_list)
     # target_list = np.array(target_list)
-    
+
     # plt.ylabel(f'DoF 1')
     # plt.plot(steps, follow_list[:, 0], label='Follow Position')
     # plt.plot(steps, follow_list[:, 1], label='Follow Velocity', linestyle='dotted')

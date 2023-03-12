@@ -318,7 +318,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
 
         double tz_current {tz_min};
 
-        const auto check_root = [&](double t) {  
+        const auto check_root = [&](double t) {
             // Single Newton step (regarding pd)
             {
                 const double h1 = std::sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (2*a0*t + jMax*t*t - vd)/jMax);
@@ -1029,7 +1029,7 @@ bool PositionStep2::time_none_smooth(Profile& profile, double vMax, double vMin,
             return true;
         }
     }
-    
+
     {
         const double h0 = ad_ad + 2*jMax*(vd - af*tf);
         const double h0b = af_p3 - 3*jMax_jMax*(af*tf_tf + 2*(pd - tf*vf));
@@ -1105,7 +1105,7 @@ bool PositionStep2::time_none_smooth(Profile& profile, double vMax, double vMin,
             return true;
         }
     }
-    
+
     return false;
 }
 

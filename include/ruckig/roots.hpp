@@ -154,7 +154,7 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
 inline int solveResolvent(std::array<double, 3>& x, double a, double b, double c) {
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;
-    
+
     a /= 3;
     const double a2 = a * a;
     double q = a2 - b / 3;
@@ -295,7 +295,7 @@ inline double polyEval(const std::array<double, N>& p, double x) {
     if constexpr (N == 0) {
         return retVal;
     }
-    
+
     if (std::abs(x) < DBL_EPSILON) {
         retVal = p[N - 1];
     } else if (x == 1.0) {

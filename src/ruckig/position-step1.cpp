@@ -272,14 +272,14 @@ void PositionStep1::time_all_none_acc0_acc1(ProfileIter& profile, double vMax, d
 
             h1 = jMax*t;
             orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/jMax;
-            
+
             if (std::abs(orig) > 1e-9) {
                 deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1));
                 t -= orig / deriv;
 
                 h1 = jMax*t;
                 orig = -(h0_acc1/2 + h1*(h5 + a0*(aMin - 2*h1)*(aMin - h1) + a0_a0*(5*h1/2 - 2*aMin) + aMin*aMin*h1/2 + jMax*(h1/2 - aMin)*(h1*t + 2*v0)))/jMax;
-                
+
                 if (std::abs(orig) > 1e-9) {
                     deriv = (aMin - a0 - h1)*(h2_acc1 + h1*(4*a0 - aMin + 2*h1));
                     t -= orig / deriv;

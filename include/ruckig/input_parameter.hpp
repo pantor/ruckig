@@ -108,11 +108,11 @@ public:
     std::optional<std::vector<double>> per_section_minimum_duration;
 
     //! Optional duration [µs] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
-    //! 
+    //!
     //! The total calculation consists of a first iterative phase and a second fixed phase. The interrupt signal
     //! is applied to the iterative phase only, and the real-time capable (constant) second phase is computed
     //! afterwards. Therefore, the total calculation duration might exceed this interrupt signal by a constant offset,
-    //! which should be considered (subtracted) here. 
+    //! which should be considered (subtracted) here.
     std::optional<double> interrupt_calculation_duration;
 
     template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>

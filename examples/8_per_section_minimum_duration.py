@@ -13,7 +13,7 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 if __name__ == '__main__':
     # Create instances: the Ruckig OTG as well as input and output parameters
-    otg = Ruckig(3, 0.01, 10)  # DoFs, control cycle rate, maximum number of intermediate waypoints for memory allocation    
+    otg = Ruckig(3, 0.01, 10)  # DoFs, control cycle rate, maximum number of intermediate waypoints for memory allocation
     inp = InputParameter(3)  # DoFs
     out = OutputParameter(3, 10)  # DoFs, maximum number of intermediate waypoints for memory allocation
 

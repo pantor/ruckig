@@ -45,7 +45,7 @@ private:
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             pd[dof] = inp.target_position[dof] - inp.current_position[dof];
         }
-        
+
         const Vector<double>* scale_vector = nullptr;
         std::optional<size_t> scale_dof; // Need to find a scale DOF because limiting DOF might not be phase synchronized
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
@@ -57,22 +57,22 @@ private:
                 scale_vector = &pd;
                 scale_dof = dof;
                 break;
-            
+
             } else if (std::abs(inp.current_velocity[dof]) > eps) {
                 scale_vector = &inp.current_velocity;
                 scale_dof = dof;
                 break;
-            
+
             } else if (std::abs(inp.current_acceleration[dof]) > eps) {
                 scale_vector = &inp.current_acceleration;
                 scale_dof = dof;
                 break;
-            
+
             } else if (std::abs(inp.target_velocity[dof]) > eps) {
                 scale_vector = &inp.target_velocity;
                 scale_dof = dof;
                 break;
-            
+
             } else if (std::abs(inp.target_acceleration[dof]) > eps) {
                 scale_vector = &inp.target_acceleration;
                 scale_dof = dof;
@@ -90,10 +90,10 @@ private:
         const double vf_scale = inp.target_velocity[*scale_dof] / scale;
         const double a0_scale = inp.current_acceleration[*scale_dof] / scale;
         const double af_scale = inp.target_acceleration[*scale_dof] / scale;
-        
+
         const double scale_limiting = scale_vector->operator[](limiting_dof);
         const double max_jerk_limiting = (limiting_direction == Profile::Direction::UP) ? jMax[limiting_dof] : -jMax[limiting_dof];
-        
+
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             if (inp_per_dof_synchronization[dof] != Synchronization::Phase) {
                 continue;
@@ -163,7 +163,7 @@ private:
 
         // Start at last tmin (or worse)
         for (auto i = idx.begin() + degrees_of_freedom - 1; i != idx_end; ++i) {
-            const double possible_t_sync = possible_t_syncs[*i];            
+            const double possible_t_sync = possible_t_syncs[*i];
             bool is_blocked {false};
             for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
                 if (inp_per_dof_synchronization[dof] == Synchronization::None) {
@@ -232,7 +232,7 @@ public:
 
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             auto& p = traj.profiles[0][dof];
-    
+
             if (!inp.enabled[dof]) {
                 p.p.back() = inp.current_position[dof];
                 p.v.back() = inp.current_velocity[dof];
