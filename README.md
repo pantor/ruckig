@@ -19,7 +19,7 @@
   </a>
 </p>
 
-Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input. Ruckig calculates a trajectory to a *target* waypoint (with position, velocity, and acceleration) starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Besides the target state, Ruckig allows to define intermediate positions for waypoint following. For state-to-state motions, Ruckig guarantees a time-optimal solution. With intermediate waypoints, Ruckig calculates the path and its time parametrization jointly, resulting in significantly faster trajectories compared to traditional methods. 
+Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input. Ruckig calculates a trajectory to a *target* waypoint (with position, velocity, and acceleration) starting from *any* initial state limited by velocity, acceleration, and jerk constraints. Besides the target state, Ruckig allows to define intermediate positions for waypoint following. For state-to-state motions, Ruckig guarantees a time-optimal solution. With intermediate waypoints, Ruckig calculates the path and its time parametrization jointly, resulting in significantly faster trajectories compared to traditional methods.
 
 More information can be found at [ruckig.com](https://ruckig.com) and in the corresponding paper [Jerk-limited Real-time Trajectory Generation with Arbitrary Target States](https://arxiv.org/abs/2105.04830), accepted for the *Robotics: Science and Systems (RSS), 2021* conference.
 
@@ -35,7 +35,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. To enable the [Online API](http://api.ruckig.com/docs) for intermediate waypoints, just pass the `BUILD_ONLINE_CLIENT` flag to CMake. 
+To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. To enable the [Online API](http://api.ruckig.com/docs) for intermediate waypoints, just pass the `BUILD_ONLINE_CLIENT` flag to CMake.
 
 Ruckig is also available as a Python module, in particular for development or debugging purposes. The Ruckig *Community Version* can be installed from [PyPI](https://pypi.org/project/ruckig/) via
 ```bash
@@ -246,7 +246,7 @@ starting from the current `output.time` (currently Ruckig Pro only).
 
 ### Tracking Interface
 
-When following an arbitrary signal with position, velocity, acceleration, and jerk-limitation, the straight forward way would be to pass the current state to Ruckig's target state. However, as the resulting trajectory will take time to catch up, this approach will always lag behind the signal. The tracking interface solves this problem by predicting ahead (e.g. with constant acceleration by default) and is therefore able to follow signals very closely in a time-optimal way. This might be very helpful for (general) tracking, robot servoing, or trajectory post-processing applications. 
+When following an arbitrary signal with position, velocity, acceleration, and jerk-limitation, the straight forward way would be to pass the current state to Ruckig's target state. However, as the resulting trajectory will take time to catch up, this approach will always lag behind the signal. The tracking interface solves this problem by predicting ahead (e.g. with constant acceleration by default) and is therefore able to follow signals very closely in a time-optimal way. This might be very helpful for (general) tracking, robot servoing, or trajectory post-processing applications.
 
 To use the tracking interface, construct
 ```.cpp
@@ -261,7 +261,7 @@ input.max_velocity = {0.8};
 input.max_acceleration = {2.0};
 input.max_jerk = {5.0};
 ```
-Then, we can track a signal in an online manner within the real-time control loop 
+Then, we can track a signal in an online manner within the real-time control loop
 ```.cpp
 for (double t = 0; t < 10.0; t += otg.delta_time) {
   auto target_state = signal(t); // signal returns position, velocity, and acceleration
@@ -272,7 +272,7 @@ for (double t = 0; t < 10.0; t += otg.delta_time) {
 }
 ```
 Please find a complete example [here](https://github.com/pantor/ruckig/blob/master/examples/13_tracking.cpp). This functionality can also be used in an offline manner, e.g. when the entire signal is known beforehand. Here, we call the
-```.cpp 
+```.cpp
 smooth_trajectory = otg.calculate_trajectory(target_states, input);
 ```
 method with the trajectory given as a `std::vector` of target states. The Tracking interface is available in the Ruckig Pro version.
@@ -288,7 +288,7 @@ InputParameter<DynamicDOFs> input {6};
 OutputParameter<DynamicDOFs> output {6};
 ```
 
-However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
+This switches the default Vector from the `std::array` to the dynamic `std::vector` type. However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
 
 
 ### Custom Vector Types
