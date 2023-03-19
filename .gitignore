@@ -9,5 +9,6 @@ __pycache__
 .env
 build
 dist
+doc/html
 local
 patch-*

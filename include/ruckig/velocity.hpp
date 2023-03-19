@@ -6,13 +6,13 @@
 
 namespace ruckig {
 
-using Limits = Profile::Limits;
-using JerkSigns = Profile::JerkSigns;
-
 //! Mathematical equations for Step 1 in velocity interface: Extremal profiles
 class VelocityStep1 {
-    double a0, af;
-    double _aMax, _aMin, _jMax;
+    using Limits = Profile::Limits;
+    using JerkSigns = Profile::JerkSigns;
+
+    const double a0, af;
+    const double _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
     double vd;
@@ -39,8 +39,11 @@ public:
 
 //! Mathematical equations for Step 2 in velocity interface: Time synchronization
 class VelocityStep2 {
-    double a0, tf, af;
-    double _aMax, _aMin, _jMax;
+    using Limits = Profile::Limits;
+    using JerkSigns = Profile::JerkSigns;
+
+    const double a0, tf, af;
+    const double _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
     double vd, ad;

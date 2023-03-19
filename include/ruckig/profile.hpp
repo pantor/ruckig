@@ -43,18 +43,18 @@ class Profile {
     constexpr static double t_max {1e12};
 
 public:
-    enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
-    enum class Direction { UP, DOWN } direction;
-    enum class JerkSigns { UDDU, UDUD } jerk_signs;
-
     std::array<double, 7> t, t_sum, j;
     std::array<double, 8> a, v, p;
+
+    //! Brake sub-profiles
+    BrakeProfile brake, accel;
 
     //! Target (final) kinematic state
     double pf, vf, af;
 
-    //! Brake sub-profiles
-    BrakeProfile brake, accel;
+    enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
+    enum class Direction { UP, DOWN } direction;
+    enum class JerkSigns { UDDU, UDUD } jerk_signs;
 
     // For velocity interface
     template<JerkSigns jerk_signs, Limits limits>
@@ -288,7 +288,7 @@ public:
             if (std::abs(D) < std::numeric_limits<double>::epsilon()) {
                 check_position_extremum(-a / j, t_sum, t, p, v, a, j, ext);
 
-            } else if (D > 0) {
+            } else if (D > 0.0) {
                 const double D_sqrt = std::sqrt(D);
                 check_position_extremum((-a - D_sqrt) / j, t_sum, t, p, v, a, j, ext);
                 check_position_extremum((-a + D_sqrt) / j, t_sum, t, p, v, a, j, ext);

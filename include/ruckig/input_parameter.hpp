@@ -115,25 +115,25 @@ public:
     //! which should be considered (subtracted) here.
     std::optional<double> interrupt_calculation_duration;
 
-    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     InputParameter(): degrees_of_freedom(DOFs) {
         initialize();
     }
 
-    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     InputParameter(size_t dofs): degrees_of_freedom(dofs) {
         resize(dofs);
         initialize();
     }
 
 #if defined WITH_ONLINE_CLIENT
-    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     InputParameter(size_t max_number_of_waypoints): degrees_of_freedom(DOFs) {
         reserve(max_number_of_waypoints);
         initialize();
     }
 
-    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     InputParameter(size_t dofs, size_t max_number_of_waypoints): degrees_of_freedom(dofs) {
         reserve(max_number_of_waypoints);
         resize(dofs);

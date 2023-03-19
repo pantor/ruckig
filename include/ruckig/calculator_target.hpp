@@ -206,10 +206,10 @@ private:
 public:
     size_t degrees_of_freedom;
 
-    template <size_t D = DOFs, typename std::enable_if<D >= 1, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     explicit TargetCalculator(): degrees_of_freedom(DOFs) { }
 
-    template <size_t D = DOFs, typename std::enable_if<D == 0, int>::type = 0>
+    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     explicit TargetCalculator(size_t dofs): degrees_of_freedom(dofs) {
         blocks.resize(dofs);
         inp_min_velocity.resize(dofs);

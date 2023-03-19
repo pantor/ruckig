@@ -205,7 +205,7 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
             const double D = a * a - 4 * b;
             if (std::abs(D) < DBL_EPSILON) {
                 roots.insert(-a / 2);
-            } else if (D > 0) {
+            } else if (D > 0.0) {
                 const double sqrtD = std::sqrt(D);
                 roots.insert((-a - sqrtD) / 2);
                 roots.insert((-a + sqrtD) / 2);

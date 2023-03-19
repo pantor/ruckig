@@ -6,16 +6,16 @@
 
 namespace ruckig {
 
-using Limits = Profile::Limits;
-using JerkSigns = Profile::JerkSigns;
-
 
 
 //! Mathematical equations for Step 1 in position interface: Extremal profiles
 class PositionStep1 {
-    double v0, a0;
-    double vf, af;
-    double _vMax, _vMin, _aMax, _aMin, _jMax;
+    using Limits = Profile::Limits;
+    using JerkSigns = Profile::JerkSigns;
+
+    const double v0, a0;
+    const double vf, af;
+    const double _vMax, _vMin, _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
     double pd;
@@ -54,9 +54,12 @@ public:
 
 //! Mathematical equations for Step 2 in position interface: Time synchronization
 class PositionStep2 {
-    double v0, a0;
-    double tf, vf, af;
-    double _vMax, _vMin, _aMax, _aMin, _jMax;
+    using Limits = Profile::Limits;
+    using JerkSigns = Profile::JerkSigns;
+
+    const double v0, a0;
+    const double tf, vf, af;
+    const double _vMax, _vMin, _aMax, _aMin, _jMax;
 
     // Pre-calculated expressions
     double pd;
