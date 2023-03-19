@@ -52,12 +52,12 @@ public:
     //! Target (final) kinematic state
     double pf, vf, af;
 
-    enum class Limits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
+    enum class ReachedLimits { ACC0_ACC1_VEL, VEL, ACC0, ACC1, ACC0_ACC1, ACC0_VEL, ACC1_VEL, NONE } limits;
     enum class Direction { UP, DOWN } direction;
     enum class JerkSigns { UDDU, UDUD } jerk_signs;
 
     // For velocity interface
-    template<JerkSigns jerk_signs, Limits limits>
+    template<JerkSigns jerk_signs, ReachedLimits limits>
     bool check_for_velocity(double jf, double aMax, double aMin) {
         if (t[0] < 0) {
             return false;
@@ -72,7 +72,7 @@ public:
             t_sum[i+1] = t_sum[i] + t[i+1];
         }
 
-        if constexpr (limits == Limits::ACC0) {
+        if constexpr (limits == ReachedLimits::ACC0) {
             if (t[1] < std::numeric_limits<double>::epsilon()) {
                 return false;
             }
@@ -108,13 +108,13 @@ public:
             && a[1] <= aUppLim && a[3] <= aUppLim && a[5] <= aUppLim;
     }
 
-    template<JerkSigns jerk_signs, Limits limits>
+    template<JerkSigns jerk_signs, ReachedLimits limits>
     inline bool check_for_velocity_with_timing(double, double jf, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
         return check_for_velocity<jerk_signs, limits>(jf, aMax, aMin); // && (std::abs(t_sum.back() - tf) < t_precision);
     }
 
-    template<JerkSigns jerk_signs, Limits limits>
+    template<JerkSigns jerk_signs, ReachedLimits limits>
     inline bool check_for_velocity_with_timing(double tf, double jf, double aMax, double aMin, double jMax) {
         return (std::abs(jf) < std::abs(jMax) + j_eps) && check_for_velocity_with_timing<jerk_signs, limits>(tf, jf, aMax, aMin);
     }
@@ -128,7 +128,7 @@ public:
     }
 
     // For position interface
-    template<JerkSigns jerk_signs, Limits limits, bool set_limits = false>
+    template<JerkSigns jerk_signs, ReachedLimits limits, bool set_limits = false>
     bool check(double jf, double vMax, double vMin, double aMax, double aMin) {
         if (t[0] < 0) {
             return false;
@@ -143,19 +143,19 @@ public:
             t_sum[i+1] = t_sum[i] + t[i+1];
         }
 
-        if constexpr (limits == Limits::ACC0_ACC1_VEL || limits == Limits::ACC0_VEL || limits == Limits::ACC1_VEL || limits == Limits::VEL) {
+        if constexpr (limits == ReachedLimits::ACC0_ACC1_VEL || limits == ReachedLimits::ACC0_VEL || limits == ReachedLimits::ACC1_VEL || limits == ReachedLimits::VEL) {
             if (t[3] < std::numeric_limits<double>::epsilon()) {
                 return false;
             }
         }
 
-        if constexpr (limits == Limits::ACC0 || limits == Limits::ACC0_ACC1) {
+        if constexpr (limits == ReachedLimits::ACC0 || limits == ReachedLimits::ACC0_ACC1) {
             if (t[1] < std::numeric_limits<double>::epsilon()) {
                 return false;
             }
         }
 
-        if constexpr (limits == Limits::ACC1 || limits == Limits::ACC0_ACC1) {
+        if constexpr (limits == ReachedLimits::ACC1 || limits == ReachedLimits::ACC0_ACC1) {
             if (t[5] < std::numeric_limits<double>::epsilon()) {
                 return false;
             }
@@ -180,20 +180,20 @@ public:
             v[i+1] = v[i] + t[i] * (a[i] + t[i] * j[i] / 2);
             p[i+1] = p[i] + t[i] * (v[i] + t[i] * (a[i] / 2 + t[i] * j[i] / 6));
 
-            if constexpr (limits == Limits::ACC0_ACC1_VEL || limits == Limits::ACC0_ACC1 || limits == Limits::ACC0_VEL || limits == Limits::ACC1_VEL || limits == Limits::VEL) {
+            if constexpr (limits == ReachedLimits::ACC0_ACC1_VEL || limits == ReachedLimits::ACC0_ACC1 || limits == ReachedLimits::ACC0_VEL || limits == ReachedLimits::ACC1_VEL || limits == ReachedLimits::VEL) {
                 if (i == 2) {
                     a[3] = 0.0;
                 }
             }
 
             if constexpr (set_limits) {
-                if constexpr (limits == Limits::ACC1) {
+                if constexpr (limits == ReachedLimits::ACC1) {
                     if (i == 2) {
                         a[3] = aMin;
                     }
                 }
 
-                if constexpr (limits == Limits::ACC0_ACC1) {
+                if constexpr (limits == ReachedLimits::ACC0_ACC1) {
                     if (i == 0) {
                         a[1] = aMax;
                     }
@@ -227,13 +227,13 @@ public:
             && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim;
     }
 
-    template<JerkSigns jerk_signs, Limits limits>
+    template<JerkSigns jerk_signs, ReachedLimits limits>
     inline bool check_with_timing(double, double jf, double vMax, double vMin, double aMax, double aMin) {
         // Time doesn't need to be checked as every profile has a: tf - ... equation
         return check<jerk_signs, limits>(jf, vMax, vMin, aMax, aMin); // && (std::abs(t_sum.back() - tf) < t_precision);
     }
 
-    template<JerkSigns jerk_signs, Limits limits>
+    template<JerkSigns jerk_signs, ReachedLimits limits>
     inline bool check_with_timing(double tf, double jf, double vMax, double vMin, double aMax, double aMin, double jMax) {
         return (std::abs(jf) < std::abs(jMax) + j_eps) && check_with_timing<jerk_signs, limits>(tf, jf, vMax, vMin, aMax, aMin);
     }
@@ -370,14 +370,14 @@ public:
             case Direction::DOWN: result += "DOWN_"; break;
         }
         switch (limits) {
-            case Limits::ACC0_ACC1_VEL: result += "ACC0_ACC1_VEL"; break;
-            case Limits::VEL: result += "VEL"; break;
-            case Limits::ACC0: result += "ACC0"; break;
-            case Limits::ACC1: result += "ACC1"; break;
-            case Limits::ACC0_ACC1: result += "ACC0_ACC1"; break;
-            case Limits::ACC0_VEL: result += "ACC0_VEL"; break;
-            case Limits::ACC1_VEL: result += "ACC1_VEL"; break;
-            case Limits::NONE: result += "NONE"; break;
+            case ReachedLimits::ACC0_ACC1_VEL: result += "ACC0_ACC1_VEL"; break;
+            case ReachedLimits::VEL: result += "VEL"; break;
+            case ReachedLimits::ACC0: result += "ACC0"; break;
+            case ReachedLimits::ACC1: result += "ACC1"; break;
+            case ReachedLimits::ACC0_ACC1: result += "ACC0_ACC1"; break;
+            case ReachedLimits::ACC0_VEL: result += "ACC0_VEL"; break;
+            case ReachedLimits::ACC1_VEL: result += "ACC1_VEL"; break;
+            case ReachedLimits::NONE: result += "NONE"; break;
         }
         switch (jerk_signs) {
             case JerkSigns::UDDU: result += "_UDDU"; break;

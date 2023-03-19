@@ -348,17 +348,17 @@ public:
                     p.t = p_limiting.t; // Copy timing information from limiting DoF
                     p.jerk_signs = p_limiting.jerk_signs;
 
-                    // Profile::Limits::NONE is a small hack, as there is no specialization for that in the check function
+                    // Profile::ReachedLimits::NONE is a small hack, as there is no specialization for that in the check function
                     switch (inp_per_dof_control_interface[dof]) {
                         case ControlInterface::Position: {
                             switch (p.jerk_signs) {
                                 case Profile::JerkSigns::UDDU: {
-                                    if (!p.check_with_timing<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                    if (!p.check_with_timing<Profile::JerkSigns::UDDU, Profile::ReachedLimits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
                                         found_time_synchronization = false;
                                     }
                                 } break;
                                 case Profile::JerkSigns::UDUD: {
-                                    if (!p.check_with_timing<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                    if (!p.check_with_timing<Profile::JerkSigns::UDUD, Profile::ReachedLimits::NONE>(t_profile, new_max_jerk[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
                                         found_time_synchronization = false;
                                     }
                                 } break;
@@ -367,12 +367,12 @@ public:
                         case ControlInterface::Velocity: {
                             switch (p.jerk_signs) {
                                 case Profile::JerkSigns::UDDU: {
-                                    if (!p.check_for_velocity_with_timing<Profile::JerkSigns::UDDU, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                    if (!p.check_for_velocity_with_timing<Profile::JerkSigns::UDDU, Profile::ReachedLimits::NONE>(t_profile, new_max_jerk[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
                                         found_time_synchronization = false;
                                     }
                                 } break;
                                 case Profile::JerkSigns::UDUD: {
-                                    if (!p.check_for_velocity_with_timing<Profile::JerkSigns::UDUD, Profile::Limits::NONE>(t_profile, new_max_jerk[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
+                                    if (!p.check_for_velocity_with_timing<Profile::JerkSigns::UDUD, Profile::ReachedLimits::NONE>(t_profile, new_max_jerk[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof])) {
                                         found_time_synchronization = false;
                                     }
                                 } break;

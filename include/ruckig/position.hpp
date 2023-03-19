@@ -10,7 +10,7 @@ namespace ruckig {
 
 //! Mathematical equations for Step 1 in position interface: Extremal profiles
 class PositionStep1 {
-    using Limits = Profile::Limits;
+    using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
 
     const double v0, a0;
@@ -54,7 +54,7 @@ public:
 
 //! Mathematical equations for Step 2 in position interface: Time synchronization
 class PositionStep2 {
-    using Limits = Profile::Limits;
+    using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
 
     const double v0, a0;

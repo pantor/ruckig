@@ -8,7 +8,7 @@ namespace ruckig {
 
 //! Mathematical equations for Step 1 in velocity interface: Extremal profiles
 class VelocityStep1 {
-    using Limits = Profile::Limits;
+    using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
 
     const double a0, af;
@@ -39,7 +39,7 @@ public:
 
 //! Mathematical equations for Step 2 in velocity interface: Time synchronization
 class VelocityStep2 {
-    using Limits = Profile::Limits;
+    using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
 
     const double a0, tf, af;
