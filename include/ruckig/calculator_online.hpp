@@ -11,6 +11,7 @@
 #include <httplib/httplib.h>
 #include <json/json.hpp>
 
+#include <ruckig/error.hpp>
 #include <ruckig/input_parameter.hpp>
 #include <ruckig/profile.hpp>
 #include <ruckig/trajectory.hpp>
@@ -103,7 +104,7 @@ public:
         auto res = cli.Post("/calculate", params.dump(), "application/json");
         if (res->status != 200) {
             if constexpr (throw_error) {
-                throw std::runtime_error("[ruckig] could not reach online API server, error code: " + std::to_string(res->status) + " " + res->body);
+                throw RuckigError("could not reach online API server, error code: " + std::to_string(res->status) + " " + res->body);
             } else {
                 std::cout << "[ruckig] could not reach online API server, error code: " << res->status << " " << res->body << std::endl;
                 return Result::Error;
@@ -144,7 +145,7 @@ public:
     template<bool throw_error>
     Result continue_calculation(const InputParameter<DOFs, CustomVector>&, Trajectory<DOFs, CustomVector>&, double, bool&) {
         if constexpr (throw_error) {
-            throw std::runtime_error("[ruckig] continue calculation not available in Ruckig Community Version.");
+            throw RuckigError("continue calculation not available in Ruckig Community Version.");
         } else {
             return Result::Error;
         }

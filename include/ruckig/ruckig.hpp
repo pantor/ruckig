@@ -11,6 +11,7 @@
 #include <tuple>
 
 #include <ruckig/calculator.hpp>
+#include <ruckig/error.hpp>
 #include <ruckig/input_parameter.hpp>
 #include <ruckig/output_parameter.hpp>
 #include <ruckig/trajectory.hpp>
@@ -254,7 +255,7 @@ public:
 
         if constexpr (DOFs == 0 && throw_error) {
             if (degrees_of_freedom != input.degrees_of_freedom || degrees_of_freedom != output.degrees_of_freedom) {
-                throw std::runtime_error("[ruckig] mismatch in degrees of freedom (vector size).");
+                throw RuckigError("mismatch in degrees of freedom (vector size).");
             }
         }
 

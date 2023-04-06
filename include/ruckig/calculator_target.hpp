@@ -10,6 +10,7 @@
 
 #include <ruckig/block.hpp>
 #include <ruckig/brake.hpp>
+#include <ruckig/error.hpp>
 #include <ruckig/input_parameter.hpp>
 #include <ruckig/profile.hpp>
 #include <ruckig/position.hpp>
@@ -281,7 +282,7 @@ public:
 
             if (!found_profile) {
                 if constexpr (throw_error) {
-                    throw std::runtime_error("[ruckig] error in step 1, dof: " + std::to_string(dof) + " input: " + inp.to_string());
+                    throw RuckigError("error in step 1, dof: " + std::to_string(dof) + " input: " + inp.to_string());
                 } else {
                     return Result::ErrorExecutionTimeCalculation;
                 }
@@ -296,7 +297,7 @@ public:
         const bool found_synchronization = synchronize(inp.minimum_duration, traj.duration, limiting_dof, traj.profiles[0], discrete_duration, delta_time);
         if (!found_synchronization) {
             if constexpr (throw_error) {
-                throw std::runtime_error("[ruckig] error in time synchronization: " + std::to_string(traj.duration));
+                throw RuckigError("error in time synchronization: " + std::to_string(traj.duration));
             } else {
                 return Result::ErrorSynchronizationCalculation;
             }
@@ -429,7 +430,7 @@ public:
             }
             if (!found_time_synchronization) {
                 if constexpr (throw_error) {
-                    throw std::runtime_error("[ruckig] error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(traj.duration) + " input: " + inp.to_string());
+                    throw RuckigError("error in step 2 in dof: " + std::to_string(dof) + " for t sync: " + std::to_string(traj.duration) + " input: " + inp.to_string());
                 } else {
                     return Result::ErrorSynchronizationCalculation;
                 }

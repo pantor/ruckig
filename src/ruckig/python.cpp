@@ -46,6 +46,8 @@ limited by velocity, acceleration, and jerk constraints.";
         .value("ErrorSynchronizationCalculation", Result::ErrorSynchronizationCalculation)
         .export_values();
 
+    py::register_exception<RuckigError>(m, "RuckigError");
+
     py::class_<PositionExtrema>(m, "PositionExtrema")
         .def_readonly("min", &PositionExtrema::min)
         .def_readonly("max", &PositionExtrema::max)

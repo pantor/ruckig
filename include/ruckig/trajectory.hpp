@@ -8,6 +8,7 @@
 #include <json/json.hpp>
 #endif
 
+#include <ruckig/error.hpp>
 #include <ruckig/profile.hpp>
 
 
@@ -105,7 +106,7 @@ public:
     void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration, size_t& new_section) const {
         if constexpr (DOFs == 0) {
             if (degrees_of_freedom != new_position.size() || degrees_of_freedom != new_velocity.size() || degrees_of_freedom != new_acceleration.size()) {
-                throw std::runtime_error("[ruckig] mismatch in degrees of freedom (vector size).");
+                throw RuckigError("mismatch in degrees of freedom (vector size).");
             }
         }
 
