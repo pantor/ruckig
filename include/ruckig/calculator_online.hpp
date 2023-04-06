@@ -101,7 +101,7 @@ public:
             params["per_section_minimum_duration"] = *input.per_section_minimum_duration;
         }
 
-        auto res = cli.Post("/calculate", params.dump(), "application/json");
+        const auto res = cli.Post("/calculate", params.dump(), "application/json");
         if (res->status != 200) {
             if constexpr (throw_error) {
                 throw RuckigError("could not reach online API server, error code: " + std::to_string(res->status) + " " + res->body);
@@ -111,7 +111,7 @@ public:
             }
         }
 
-        auto result = nlohmann::json::parse(res->body);
+        const auto result = nlohmann::json::parse(res->body);
 
         was_interrupted = false;
         traj.degrees_of_freedom = input.degrees_of_freedom;
