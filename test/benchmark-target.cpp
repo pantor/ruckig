@@ -73,7 +73,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
             l.fill(input.max_jerk);
 
             if constexpr (std::is_same<OTGType, RuckigThrow<DOFs>>::value) {
-                if (!otg.validate_input(input)) {
+                if (!otg.template validate_input<false>(input)) {
                     continue;
                 }
             }
@@ -105,7 +105,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
 int main() {
     const size_t n {5}; // Number of iterations
     const size_t number_trajectories {64 * 1024};
-    
+
     std::cout << "Ruckig size: " << sizeof(Ruckig<3>) << " Byte" << std::endl;
     std::cout << "Trajectory<3> size: " << sizeof(Trajectory<3>) << " Byte" << std::endl;
 

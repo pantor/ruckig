@@ -142,55 +142,89 @@ public:
     }
 
     //! Validate the input for trajectory calculation and kinematic limits
+    template<bool throw_validation_error = true>
     bool validate_input(const InputParameter<DOFs, CustomVector>& input, bool check_current_state_within_limits=false, bool check_target_state_within_limits=true) const {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             const double jMax = input.max_jerk[dof];
             if (std::isnan(jMax) || jMax <= std::numeric_limits<double>::min()) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("maximum jerk limit " + std::to_string(jMax) + " of DoF " + std::to_string(dof) + " should be larger than zero.");
+                }
                 return false;
             }
 
             const double aMax = input.max_acceleration[dof];
             if (std::isnan(aMax) || aMax <= std::numeric_limits<double>::min()) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("maximum acceleration limit " + std::to_string(aMax) + " of DoF " + std::to_string(dof) + " should be larger than zero.");
+                }
                 return false;
             }
 
             const double aMin = input.min_acceleration ? input.min_acceleration.value()[dof] : -input.max_acceleration[dof];
             if (std::isnan(aMin) || aMin >= -std::numeric_limits<double>::min()) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("minimum acceleration limit " + std::to_string(aMin) + " of DoF " + std::to_string(dof) + " should be smaller than zero.");
+                }
                 return false;
             }
 
             const double a0 = input.current_acceleration[dof];
             if (std::isnan(a0)) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("current acceleration " + std::to_string(a0) + " of DoF " + std::to_string(dof) + " should be a valid number.");
+                }
                 return false;
             }
             const double af = input.target_acceleration[dof];
             if (std::isnan(af)) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("target acceleration " + std::to_string(af) + " of DoF " + std::to_string(dof) + " should be a valid number.");
+                }
                 return false;
             }
 
             if (check_current_state_within_limits) {
                 if (a0 > aMax) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("current acceleration " + std::to_string(a0) + " of DoF " + std::to_string(dof) + " exceeds its maximum acceleration limit " + std::to_string(aMax) + ".");
+                    }
                     return false;
                 }
                 if (a0 < aMin) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("current acceleration " + std::to_string(a0) + " of DoF " + std::to_string(dof) + " undercuts its minimum acceleration limit " + std::to_string(aMin) + ".");
+                    }
                     return false;
                 }
             }
             if (check_target_state_within_limits) {
                 if (af > aMax) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("target acceleration " + std::to_string(af) + " of DoF " + std::to_string(dof) + " exceeds its maximum acceleration limit " + std::to_string(aMax) + ".");
+                    }
                     return false;
                 }
                 if (af < aMin) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("target acceleration " + std::to_string(af) + " of DoF " + std::to_string(dof) + " undercuts its minimum acceleration limit " + std::to_string(aMin) + ".");
+                    }
                     return false;
                 }
             }
 
             const double v0 = input.current_velocity[dof];
             if (std::isnan(v0)) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("current velocity " + std::to_string(v0) + " of DoF " + std::to_string(dof) + " should be a valid number.");
+                }
                 return false;
             }
             const double vf = input.target_velocity[dof];
             if (std::isnan(vf)) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("target velocity " + std::to_string(vf) + " of DoF " + std::to_string(dof) + " should be a valid number.");
+                }
                 return false;
             }
 
@@ -198,53 +232,89 @@ public:
             if (control_interface == ControlInterface::Position) {
                 const double p0 = input.current_position[dof];
                 if (std::isnan(p0)) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("current position " + std::to_string(p0) + " of DoF " + std::to_string(dof) + " should be a valid number.");
+                    }
                     return false;
                 }
                 const double pf = input.target_position[dof];
                 if (std::isnan(pf)) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("target position " + std::to_string(pf) + " of DoF " + std::to_string(dof) + " should be a valid number.");
+                    }
                     return false;
                 }
 
                 const double vMax = input.max_velocity[dof];
                 if (std::isnan(vMax) || vMax <= std::numeric_limits<double>::min()) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("maximum velocity limit " + std::to_string(vMax) + " of DoF " + std::to_string(dof) + " should be larger than zero.");
+                    }
                     return false;
                 }
 
                 const double vMin = input.min_velocity ? input.min_velocity.value()[dof] : -input.max_velocity[dof];
                 if (std::isnan(vMin) || vMin >= -std::numeric_limits<double>::min()) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("minimum velocity limit " + std::to_string(vMin) + " of DoF " + std::to_string(dof) + " should be smaller than zero.");
+                    }
                     return false;
                 }
 
                 if (check_current_state_within_limits) {
                     if (v0 > vMax) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("current velocity " + std::to_string(v0) + " of DoF " + std::to_string(dof) + " exceeds its maximum velocity limit " + std::to_string(vMax) + ".");
+                        }
                         return false;
                     }
                     if (v0 < vMin) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("current velocity " + std::to_string(v0) + " of DoF " + std::to_string(dof) + " undercuts its minimum velocity limit " + std::to_string(vMin) + ".");
+                        }
                         return false;
                     }
                 }
                 if (check_target_state_within_limits) {
                     if (vf > vMax) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("target velocity " + std::to_string(vf) + " of DoF " + std::to_string(dof) + " exceeds its maximum velocity limit " + std::to_string(vMax) + ".");
+                        }
                         return false;
                     }
                     if (vf < vMin) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("target velocity " + std::to_string(vf) + " of DoF " + std::to_string(dof) + " undercuts its minimum velocity limit " + std::to_string(vMin) + ".");
+                        }
                         return false;
                     }
                 }
 
                 if (check_current_state_within_limits) {
                     if (a0 > 0 && v_at_a_zero(v0, a0, jMax) > vMax) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("DoF " + std::to_string(dof) + " will inevitably reach a velocity " + std::to_string(v_at_a_zero(v0, a0, jMax)) + " from the current kinematic state that will exceed its maximum velocity limit " + std::to_string(vMax) + ".");
+                        }
                         return false;
                     }
                     if (a0 < 0 && v_at_a_zero(v0, a0, -jMax) < vMin) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("DoF " + std::to_string(dof) + " will inevitably reach a velocity " + std::to_string(v_at_a_zero(v0, a0, -jMax)) + " from the current kinematic state that will undercut its minimum velocity limit " + std::to_string(vMin) + ".");
+                        }
                         return false;
                     }
                 }
                 if (check_target_state_within_limits) {
                     if (af < 0 && v_at_a_zero(vf, af, jMax) > vMax) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("DoF " + std::to_string(dof) + " will inevitably have reached a velocity " + std::to_string(v_at_a_zero(vf, af, jMax)) + " from the target kinematic state that will exceed its maximum velocity limit " + std::to_string(vMax) + ".");
+                        }
                         return false;
                     }
                     if (af > 0 && v_at_a_zero(vf, af, -jMax) < vMin) {
+                        if constexpr (throw_validation_error) {
+                            throw RuckigError("DoF " + std::to_string(dof) + " will inevitably have reached a velocity " + std::to_string(v_at_a_zero(vf, af, -jMax)) + " from the target kinematic state that will undercut its minimum velocity limit " + std::to_string(vMin) + ".");
+                        }
                         return false;
                     }
                 }
@@ -253,19 +323,31 @@ public:
 
         if (!input.intermediate_positions.empty() && input.control_interface == ControlInterface::Position) {
             if (input.intermediate_positions.size() > max_number_of_waypoints) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("The number of intermediate positions " + std::to_string(input.intermediate_positions.size()) + " exceeds the maximum number of waypoints " + std::to_string(max_number_of_waypoints) + ".");
+                }
                 return false;
             }
 
             if (input.minimum_duration || input.duration_discretization != DurationDiscretization::Continuous) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("Intermediate position can not be used together with a global minimum or discrete duration.");
+                }
                 return false;
             }
 
             if (input.per_dof_control_interface || input.per_dof_synchronization) {
+                if constexpr (throw_validation_error) {
+                    throw RuckigError("Intermediate positions can only be used together with the position control interface and a global synchronization.");
+                }
                 return false;
             }
         }
 
         if (delta_time <= 0.0 && input.duration_discretization != DurationDiscretization::Continuous) {
+            if constexpr (throw_validation_error) {
+                throw RuckigError("delta time (control rate) parameter " + std::to_string(delta_time) + " should be larger than zero.");
+            }
             return false;
         }
 
@@ -280,7 +362,7 @@ public:
 
     //! Calculate a new trajectory for the given input and check for interruption
     Result calculate(const InputParameter<DOFs, CustomVector>& input, Trajectory<DOFs, CustomVector>& trajectory, bool& was_interrupted) {
-        if (!validate_input(input, false, true)) {
+        if (!validate_input<throw_error>(input, false, true)) {
             return Result::ErrorInvalidInput;
         }
 

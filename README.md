@@ -172,9 +172,9 @@ We refer to the [API documentation](https://docs.ruckig.com/namespaceruckig.html
 To check that Ruckig is able to generate a trajectory before the actual calculation step,
 ```.cpp
 ruckig.validate_input(input, check_current_state_within_limits=false, check_target_state_within_limits=true);
-// returns boolean
+// returns true or throws
 ```
-returns `false` if an input is not valid. The two boolean arguments check that the current or target state are within the limits. The check includes a typical catch of jerk-limited trajectory generation: When the current state is at maximal velocity, any positive acceleration will inevitable lead to a velocity violation *at a future timestep*. In general, this condition is fulfilled when
+throws an error with a detailed reason if an input is not valid. You can also set the default template parameter to false via `ruckig.validate_input<false>(...)` to just return a boolean true or false. The two boolean arguments check that the current or target state are within the limits. The check includes a typical catch of jerk-limited trajectory generation: When the current state is at maximal velocity, any positive acceleration will inevitable lead to a velocity violation *at a future timestep*. In general, this condition is fulfilled when
 ```
 Abs(acceleration) <= Sqrt(2 * max_jerk * (max_velocity - Abs(velocity))).
 ```

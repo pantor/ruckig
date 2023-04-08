@@ -6,6 +6,7 @@
 #include <optional>
 #include "randomizer.hpp"
 
+#include <ruckig/error.hpp>
 #include <ruckig/ruckig.hpp>
 
 
@@ -315,9 +316,7 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     input.max_acceleration = {1.0, 1.0, 1.0};
     input.max_jerk = {1.0, 1.0, 1.0};
 
-    result = otg.update(input, output);
-
-    CHECK( result == Result::ErrorInvalidInput );
+    CHECK_THROWS_WITH_AS( otg.update(input, output), doctest::Contains("exceeds its maximum velocity limit"), RuckigError);
     CHECK_FALSE( output.new_calculation );
 
     input.target_velocity = {0.2, -0.3, 0.8};
@@ -371,29 +370,41 @@ TEST_CASE("input-validation" * doctest::description("Secondary Features")) {
     input.max_jerk = {1.0, 1.0};
 
     CHECK( otg.validate_input(input) );
+    CHECK( otg.validate_input<false>(input) );
 
     input.max_jerk = {1.0, nan};
-    CHECK_FALSE( otg.validate_input(input) );
+    CHECK_THROWS_WITH_AS( otg.validate_input(input), doctest::Contains("maximum jerk limit"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input) );
 
     input.max_jerk = {1.0, 1.0};
     input.current_position = {1.0, nan};
-    CHECK_FALSE( otg.validate_input(input) );
+    CHECK_THROWS_WITH_AS( otg.validate_input(input), doctest::Contains("current position"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input) );
 
     input.current_position = {1.0, 1.0};
     input.max_acceleration = {1.0, -1.0};
-    CHECK_FALSE( otg.validate_input(input) );
+    CHECK_THROWS_WITH_AS( otg.validate_input(input), doctest::Contains("maximum acceleration limit"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input) );
 
     input.max_acceleration = {1.0, 1.0};
+    input.max_velocity = {1.0, -1.0};
+    CHECK_THROWS_WITH_AS( otg.validate_input(input), doctest::Contains("maximum velocity limit"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input) );
+
+    input.max_velocity = {1.0, 1.0};
     input.target_velocity = {0.0, 1.3};
     CHECK( otg.validate_input(input, false, false) );
-    CHECK_FALSE( otg.validate_input(input, false, true) );
-    CHECK_FALSE( otg.validate_input(input) );
+    CHECK_THROWS_WITH_AS( otg.validate_input(input), doctest::Contains("exceeds its maximum velocity limit"), RuckigError);
+    CHECK_THROWS_WITH_AS( otg.validate_input(input, false, true), doctest::Contains("exceeds its maximum velocity limit"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input, false, true) );
+    CHECK_FALSE( otg.validate_input<false>(input) );
 
     input.target_velocity = {0.0, 0.3};
     input.current_velocity = {2.0, 0.0};
     CHECK( otg.validate_input(input, false, false) );
-    CHECK_FALSE( otg.validate_input(input, true, false) );
-    CHECK_FALSE( otg.validate_input(input, true, true) );
+    CHECK_THROWS_WITH_AS( otg.validate_input(input, true, false), doctest::Contains("exceeds its maximum velocity limit"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input, true, false) );
+    CHECK_FALSE( otg.validate_input<false>(input, true, true) );
     CHECK( otg.validate_input(input) );
 
     input.current_velocity = {1.0, 0.0};
@@ -404,7 +415,8 @@ TEST_CASE("input-validation" * doctest::description("Secondary Features")) {
     input.current_velocity = {1.0, 0.0};
     input.current_acceleration = {1.0, 0.0};
     CHECK( otg.validate_input(input) );
-    CHECK_FALSE( otg.validate_input(input, true, true) );
+    CHECK_THROWS_WITH_AS( otg.validate_input(input, true, true), doctest::Contains("will exceed its maximum velocity limit"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input, true, true) );
 
     input.current_velocity = {0.72, 0.0};
     input.current_acceleration = {0.72, 0.0};
@@ -415,6 +427,7 @@ TEST_CASE("input-validation" * doctest::description("Secondary Features")) {
     input.target_velocity = {0.0, 0.72};
     input.target_acceleration = {0.0, 0.72};
     CHECK( otg.validate_input(input) );
+    CHECK( otg.validate_input<false>(input) );
 
     input.target_velocity = {0.0, 1.0};
     input.target_acceleration = {0.0, 1.0};
@@ -422,7 +435,8 @@ TEST_CASE("input-validation" * doctest::description("Secondary Features")) {
 
     input.target_velocity = {0.0, 1.0};
     input.target_acceleration = {0.0, -0.0001};
-    CHECK_FALSE( otg.validate_input(input) );
+    CHECK_THROWS_WITH_AS( otg.validate_input(input), doctest::Contains("will exceed its maximum velocity"), RuckigError);
+    CHECK_FALSE( otg.validate_input<false>(input) );
 }
 
 TEST_CASE("enabled" * doctest::description("Enabled DoF")) {
@@ -817,7 +831,7 @@ TEST_CASE("custom-vector-type" * doctest::description("Custom Vector Type")) {
         CHECK( new_position[1] == doctest::Approx(input.current_position[1]) );
         CHECK( new_position[2] == doctest::Approx(input.current_position[2]) );
     }
-    
+
     SUBCASE("DOFs run-time") {
         RuckigThrow<DynamicDOFs, MinimalRuntimeVector> otg {3, 0.005};
         InputParameter<DynamicDOFs, MinimalRuntimeVector> input {3};
@@ -880,7 +894,7 @@ TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with
         l.fill(input.max_acceleration, input.target_acceleration);
         l.fill(input.max_jerk);
 
-        if (!otg.validate_input(input)) {
+        if (!otg.validate_input<false>(input)) {
             --i;
             continue;
         }
@@ -909,7 +923,7 @@ TEST_CASE("random_1" * doctest::description("Random input with 1 DoF and target 
         l.fill(input.max_acceleration, input.target_acceleration);
         l.fill(input.max_jerk);
 
-        if (!otg.validate_input(input)) {
+        if (!otg.validate_input<false>(input)) {
             --i;
             continue;
         }
@@ -962,7 +976,7 @@ TEST_CASE("random_3_high" * doctest::description("Random input with 3 DoF and ta
         l.fill(input.max_acceleration, input.target_acceleration);
         l.fill(input.max_jerk);
 
-        if (!otg.validate_input(input)) {
+        if (!otg.validate_input<false>(input)) {
             --i;
             continue;
         }
@@ -991,7 +1005,7 @@ TEST_CASE("step_through_3" * doctest::description("Step through random input wit
         l.fill(input.max_acceleration, input.target_acceleration);
         l.fill(input.max_jerk);
 
-        if (!otg.validate_input(input)) {
+        if (!otg.validate_input<false>(input)) {
             --i;
             continue;
         }
@@ -1027,7 +1041,7 @@ TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF a
         min_l.fill_min(*input.min_velocity, input.target_velocity);
         min_l.fill_min(*input.min_acceleration, input.target_acceleration);
 
-        if (!otg.validate_input(input)) {
+        if (!otg.validate_input<false>(input)) {
             --i;
             continue;
         }
@@ -1083,7 +1097,7 @@ TEST_CASE("random_3" * doctest::description("Random input with 3 DoF and target 
         //     }
         // }
 
-        if (!otg.validate_input(input)) {
+        if (!otg.validate_input<false>(input)) {
             --i;
             continue;
         }
