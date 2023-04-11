@@ -13,6 +13,15 @@ namespace ruckig {
 
 //! Which times are possible for synchronization?
 class Block {
+    template<size_t N>
+    inline static void remove_profile(std::array<Profile, N>& valid_profiles, size_t& valid_profile_counter, size_t index) {
+        for (size_t i = index; i < valid_profile_counter - 1; ++i) {
+            valid_profiles[i] = valid_profiles[i + 1];
+        }
+        valid_profile_counter -= 1;
+    }
+
+public:
     struct Interval {
         double left, right; // [s]
         Profile profile; // Profile corresponding to right (end) time
@@ -39,15 +48,6 @@ class Block {
         b = std::nullopt;
     }
 
-    template<size_t N>
-    inline static void remove_profile(std::array<Profile, N>& valid_profiles, size_t& valid_profile_counter, size_t index) {
-        for (size_t i = index; i < valid_profile_counter - 1; ++i) {
-            valid_profiles[i] = valid_profiles[i + 1];
-        }
-        valid_profile_counter -= 1;
-    }
-
-public:
     Profile p_min; // Save min profile so that it doesn't need to be recalculated in Step2
     double t_min; // [s]
 

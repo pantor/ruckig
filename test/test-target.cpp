@@ -214,7 +214,6 @@ TEST_CASE("at_time" * doctest::description("Single DoF")) {
     CHECK( new_position_element == doctest::Approx(0.5) );
 }
 
-
 TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     RuckigThrow<3> otg {0.005};
     InputParameter<3> input;
@@ -801,6 +800,76 @@ TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
     CHECK( array_eq(new_position, input.current_position) );
     CHECK( array_eq(new_velocity, input.current_velocity) );
     CHECK( array_eq(new_acceleration, input.current_acceleration) );
+}
+
+TEST_CASE("zero-limits" * doctest::description("Kinematic limits that are partly zero")) {
+    RuckigThrow<3> otg {0.005};
+    InputParameter<3> input;
+    OutputParameter<3> output;
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.2, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 0.0};
+    input.target_velocity = {0.2, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {0.0, 1.0, 0.0};
+    input.max_jerk = {0.0, 1.0, 0.0};
+
+    auto result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(5.0) );
+
+
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {-0.2, 0.0, 0.0};
+    input.current_acceleration = {1.0, 0.0, 0.0};
+    input.target_position = {0.4, -3.0, 0.0};
+    input.target_velocity = {0.8, 0.0, 0.0};
+    input.target_acceleration = {1.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 200.0, 1.0};
+    input.max_acceleration = {1.0, 200.0, 0.0};
+    input.max_jerk = {0.0, 200.0, 0.0};
+
+    CHECK_THROWS_WITH_AS( otg.update(input, output), doctest::Contains("zero limits conflict in step 1"), RuckigError);
+
+
+    input.target_position = {0.3, -3.0, 0.0};
+    input.max_velocity = {1.0, 2.0, 1.0};
+    input.max_acceleration = {1.0, 2.0, 0.0};
+    input.max_jerk = {0.0, 2.0, 0.0};
+
+    CHECK_THROWS_WITH_AS( otg.update(input, output), doctest::Contains("zero limits conflict with other"), RuckigError);
+
+
+    input.control_interface = ControlInterface::Velocity;
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {-0.2, 0.0, 0.0};
+    input.current_acceleration = {1.0, 0.0, 0.2};
+    input.target_position = {0.4, -3.0, 0.0};
+    input.target_velocity = {0.9, 0.5, 0.4};
+    input.target_acceleration = {1.0, 0.0, 0.2};
+    input.max_velocity = {1.0, 2.0, 1.0};
+    input.max_acceleration = {1.0, 2.0, 6.0};
+    input.max_jerk = {0.0, 2.0, 0.0};
+
+    CHECK_THROWS_WITH_AS( otg.update(input, output), doctest::Contains("zero limits conflict with other"), RuckigError);
+
+    input.max_jerk = {1.0, 2.0, 0.0};
+
+    result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(2.0) );
+
+    input.max_jerk = {0.0, 2.0, 20.0};
+
+    result = otg.update(input, output);
+
+    CHECK( result == Result::Working );
+    CHECK( output.trajectory.get_duration() == doctest::Approx(1.1) );
 }
 
 #ifndef WITH_ONLINE_CLIENT

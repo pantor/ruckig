@@ -12,6 +12,7 @@ enum Result {
     ErrorTrajectoryDuration = -101, ///< The trajectory duration exceeds its numerical limits
     ErrorPositionalLimits = -102, ///< The trajectory exceeds the given positional limits (only in Ruckig Pro)
     // ErrorNoPhaseSynchronization = -103, ///< The trajectory cannot be phase synchronized
+    ErrorZeroLimits = -104, ///< The trajectory is not valid due to a conflict with zero limits
     ErrorExecutionTimeCalculation = -110, ///< Error during the extremel time calculation (Step 1)
     ErrorSynchronizationCalculation = -111, ///< Error during the synchronization calculation (Step 2)
 };

@@ -61,6 +61,10 @@ void BrakeProfile::get_position_brake_trajectory(double v0, double a0, double vM
     j[0] = 0.0;
     j[1] = 0.0;
 
+    if (jMax == 0.0 || aMax == 0.0 || aMin == 0.0) {
+        return; // Ignore braking for zero-limits
+    }
+
     if (a0 > aMax) {
         acceleration_brake(v0, a0, vMax, vMin, aMax, aMin, jMax);
 
@@ -80,6 +84,10 @@ void BrakeProfile::get_velocity_brake_trajectory(double a0, double aMax, double 
     t[1] = 0.0;
     j[0] = 0.0;
     j[1] = 0.0;
+
+    if (jMax == 0.0) {
+        return; // Ignore braking for zero-limits
+    }
 
     if (a0 > aMax) {
         j[0] = -jMax;

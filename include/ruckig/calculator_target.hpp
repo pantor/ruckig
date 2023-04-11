@@ -175,7 +175,7 @@ private:
                     break; // inner dof loop
                 }
             }
-            if (is_blocked || possible_t_sync < t_min.value_or(0.0)) {
+            if (is_blocked || possible_t_sync < t_min.value_or(0.0) || std::isinf(possible_t_sync)) {
                 continue;
             }
 
@@ -281,10 +281,20 @@ public:
             }
 
             if (!found_profile) {
-                if constexpr (throw_error) {
-                    throw RuckigError("error in step 1, dof: " + std::to_string(dof) + " input: " + inp.to_string());
+                const bool has_zero_limits = (inp.max_acceleration[dof] == 0.0 || inp_min_acceleration[dof] == 0.0 || inp.max_jerk[dof] == 0.0);
+                if (has_zero_limits) {
+                    if constexpr (throw_error) {
+                        throw RuckigError("zero limits conflict in step 1, dof: " + std::to_string(dof) + " input: " + inp.to_string());
+                    } else {
+                        return Result::ErrorZeroLimits;
+                    }
+
                 } else {
-                    return Result::ErrorExecutionTimeCalculation;
+                    if constexpr (throw_error) {
+                        throw RuckigError("error in step 1, dof: " + std::to_string(dof) + " input: " + inp.to_string());
+                    } else {
+                        return Result::ErrorExecutionTimeCalculation;
+                    }
                 }
             }
 
@@ -296,10 +306,27 @@ public:
         const bool discrete_duration = (inp.duration_discretization == DurationDiscretization::Discrete);
         const bool found_synchronization = synchronize(inp.minimum_duration, traj.duration, limiting_dof, traj.profiles[0], discrete_duration, delta_time);
         if (!found_synchronization) {
-            if constexpr (throw_error) {
-                throw RuckigError("error in time synchronization: " + std::to_string(traj.duration));
+            bool has_zero_limits = false;
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+                if (inp.max_acceleration[dof] == 0.0 || inp_min_acceleration[dof] == 0.0 || inp.max_jerk[dof] == 0.0) {
+                    has_zero_limits = true;
+                    break;
+                }
+            }
+
+            if (has_zero_limits) {
+                if constexpr (throw_error) {
+                    throw RuckigError("zero limits conflict with other degrees of freedom in time synchronization " + std::to_string(traj.duration));
+                } else {
+                    return Result::ErrorZeroLimits;
+                }
+
             } else {
-                return Result::ErrorSynchronizationCalculation;
+                if constexpr (throw_error) {
+                    throw RuckigError("error in time synchronization: " + std::to_string(traj.duration));
+                } else {
+                    return Result::ErrorSynchronizationCalculation;
+                }
             }
         }
 

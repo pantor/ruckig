@@ -38,6 +38,8 @@ class PositionStep1 {
     void time_vel_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const;
     void time_none_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const;
 
+    // Only for zero-limits case
+    bool time_all_single_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const;
 
     inline void add_profile(ProfileIter& profile) const {
         const auto prev_profile = profile;

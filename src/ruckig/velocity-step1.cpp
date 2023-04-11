@@ -86,11 +86,56 @@ void VelocityStep1::time_none(ProfileIter& profile, double aMax, double aMin, do
     }
 }
 
+bool VelocityStep1::time_all_single_step(ProfileIter& profile, double aMax, double aMin, double jMax) const {
+    if (std::abs(af - a0) > DBL_EPSILON) {
+        return false;
+    }
+
+    profile->t[0] = 0;
+    profile->t[1] = 0;
+    profile->t[2] = 0;
+    profile->t[3] = 0;
+    profile->t[4] = 0;
+    profile->t[5] = 0;
+    profile->t[6] = 0;
+
+    if (std::abs(a0) > DBL_EPSILON) {
+        profile->t[3] = vd / a0;
+        if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, aMax, aMin)) {
+            add_profile(profile);
+            return true;
+        }
+
+    } else if (std::abs(vd) < DBL_EPSILON) {
+        if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, aMax, aMin)) {
+            add_profile(profile);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 bool VelocityStep1::get_profile(const Profile& input, Block& block) {
     const ProfileIter start = valid_profiles.begin();
 
     ProfileIter profile = start;
     profile->set_boundary(input);
+
+    // Zero-limits special case
+    if (_jMax == 0.0) {
+        if (time_all_single_step(profile, _aMax, _aMin, _jMax)) {
+            auto& p = valid_profiles[0];
+            block.set_min_profile(p);
+            block.a = Block::Interval(p, p);
+            if (std::abs(a0) > DBL_EPSILON) {
+                block.a->right = std::numeric_limits<double>::infinity();
+            }
+            return true;
+        }
+        return false;
+    }
 
     if (std::abs(af) < DBL_EPSILON) {
         // There is no blocked interval when af==0, so return after first found profile
