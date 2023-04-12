@@ -83,9 +83,9 @@ public:
         }
 
         if constexpr (jerk_signs == JerkSigns::UDDU) {
-            j = {jf, 0, -jf, 0, -jf, 0, jf};
+            j = {(t[0] > 0 ? jf : 0), 0, (t[2] > 0 ? -jf : 0), 0, (t[4] > 0 ? -jf : 0), 0, (t[6] > 0 ? jf : 0)};
         } else {
-            j = {jf, 0, -jf, 0, jf, 0, -jf};
+            j = {(t[0] > 0 ? jf : 0), 0, (t[2] > 0 ? -jf : 0), 0, (t[4] > 0 ? jf : 0), 0, (t[6] > 0 ? -jf : 0)};
         }
 
         for (size_t i = 0; i < 7; ++i) {
