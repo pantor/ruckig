@@ -118,12 +118,7 @@ private:
     }
 
     bool synchronize(std::optional<double> t_min, double& t_sync, std::optional<size_t>& limiting_dof, Vector<Profile>& profiles, bool discrete_duration, double delta_time) {
-        if (degrees_of_freedom == 1 && !t_min && !discrete_duration) {
-            limiting_dof = 0;
-            t_sync = blocks[0].t_min;
-            profiles[0] = blocks[0].p_min;
-            return true;
-        }
+        // Check for (degrees_of_freedom == 1 && !t_min && !discrete_duration) is now outside
 
         // Possible t_syncs are the start times of the intervals and optional t_min
         bool any_interval {false};
@@ -302,8 +297,15 @@ public:
             // std::cout << dof << " profile step1: " << blocks[dof].to_string() << std::endl;
         }
 
-        std::optional<size_t> limiting_dof; // The DoF that doesn't need step 2
         const bool discrete_duration = (inp.duration_discretization == DurationDiscretization::Discrete);
+        if (degrees_of_freedom == 1 && !inp.minimum_duration && !discrete_duration) {
+            traj.duration = blocks[0].t_min;
+            traj.profiles[0][0] = blocks[0].p_min;
+            traj.cumulative_times[0] = traj.duration;
+            return Result::Working;
+        }
+
+        std::optional<size_t> limiting_dof; // The DoF that doesn't need step 2
         const bool found_synchronization = synchronize(inp.minimum_duration, traj.duration, limiting_dof, traj.profiles[0], discrete_duration, delta_time);
         if (!found_synchronization) {
             bool has_zero_limits = false;

@@ -26,6 +26,8 @@ public:
         double left, right; // [s]
         Profile profile; // Profile corresponding to right (end) time
 
+        explicit Interval(double left, double right): left(left), right(right) {}
+
         explicit Interval(const Profile& profile_left, const Profile& profile_right) {
             const double left_duration = profile_left.t_sum.back() + profile_left.brake.duration + profile_left.accel.duration;
             const double right_duration = profile_right.t_sum.back() + profile_right.brake.duration + profile_right.accel.duration;

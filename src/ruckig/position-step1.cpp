@@ -463,7 +463,7 @@ void PositionStep1::time_none_two_step(ProfileIter& profile, double vMax, double
     }
 }
 
-bool PositionStep1::time_all_single_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
+bool PositionStep1::time_all_single_step(Profile* profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
     if (std::abs(af - a0) > DBL_EPSILON) {
         return false;
     }
@@ -481,28 +481,24 @@ bool PositionStep1::time_all_single_step(ProfileIter& profile, double vMax, doub
 
         // Solution 1
         profile->t[3] = (-v0 + q) / a0;
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
-            add_profile(profile);
+        if (profile->t[3] >= 0.0 && profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
             return true;
         }
 
         // Solution 2
         profile->t[3] = -(v0 + q) / a0;
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
-            add_profile(profile);
+        if (profile->t[3] >= 0.0 && profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
             return true;
         }
 
     } else if (std::abs(v0) > DBL_EPSILON) {
         profile->t[3] = pd / v0;
         if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
-            add_profile(profile);
             return true;
         }
 
     } else if (std::abs(pd) < DBL_EPSILON) {
         if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
-            add_profile(profile);
             return true;
         }
     }
@@ -512,24 +508,24 @@ bool PositionStep1::time_all_single_step(ProfileIter& profile, double vMax, doub
 
 
 bool PositionStep1::get_profile(const Profile& input, Block& block) {
-    const ProfileIter start = valid_profiles.begin();
-
-    ProfileIter profile = start;
-    profile->set_boundary(input);
-
     // Zero-limits special case
     if (_jMax == 0.0 || _aMax == 0.0 || _aMin == 0.0) {
-        if (time_all_single_step(profile, _vMax, _vMin, _aMax, _aMin, _jMax)) {
-            auto& p = valid_profiles[0];
-            block.set_min_profile(p);
-            block.a = Block::Interval(p, p);
+        auto& p = block.p_min;
+        p.set_boundary(input);
+
+        if (time_all_single_step(&p, _vMax, _vMin, _aMax, _aMin, _jMax)) {
+            block.t_min = p.t_sum.back() + p.brake.duration + p.accel.duration;
             if (std::abs(v0) > DBL_EPSILON || std::abs(a0) > DBL_EPSILON) {
-                block.a->right = std::numeric_limits<double>::infinity();
+                block.a = Block::Interval(block.t_min, std::numeric_limits<double>::infinity());
             }
             return true;
         }
         return false;
     }
+
+    const ProfileIter start = valid_profiles.begin();
+    ProfileIter profile = start;
+    profile->set_boundary(input);
 
     if (std::abs(vf) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double vMax = (pd >= 0) ? _vMax : _vMin;
