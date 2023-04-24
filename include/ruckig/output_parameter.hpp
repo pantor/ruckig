@@ -19,6 +19,7 @@ class OutputParameter {
         new_position.resize(dofs);
         new_velocity.resize(dofs);
         new_acceleration.resize(dofs);
+        new_jerk.resize(dofs);
     }
 
 public:
@@ -28,7 +29,7 @@ public:
     Trajectory<DOFs, CustomVector> trajectory;
 
     // Current kinematic state
-    Vector<double> new_position, new_velocity, new_acceleration;
+    Vector<double> new_position, new_velocity, new_acceleration, new_jerk;
 
     //! Current time on trajectory
     double time {0.0};
@@ -82,6 +83,7 @@ public:
         ss << "\nout.new_position = [" << join(new_position, degrees_of_freedom) << "]\n";
         ss << "out.new_velocity = [" << join(new_velocity, degrees_of_freedom) << "]\n";
         ss << "out.new_acceleration = [" << join(new_acceleration, degrees_of_freedom) << "]\n";
+        ss << "out.new_jerk = [" << join(new_jerk, degrees_of_freedom) << "]\n";
         ss << "out.time = [" << std::setprecision(16) << time << "]\n";
         ss << "out.calculation_duration = [" << std::setprecision(16) << calculation_duration << "]\n";
         return ss.str();

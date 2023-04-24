@@ -71,9 +71,9 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_property_readonly("independent_min_durations", &Trajectory<DynamicDOFs>::get_independent_min_durations)
         .def_property_readonly("position_extrema", &Trajectory<DynamicDOFs>::get_position_extrema)
         .def("at_time", [](const Trajectory<DynamicDOFs>& traj, double time, bool return_section=false) {
-            std::vector<double> new_position(traj.degrees_of_freedom), new_velocity(traj.degrees_of_freedom), new_acceleration(traj.degrees_of_freedom);
+            std::vector<double> new_position(traj.degrees_of_freedom), new_velocity(traj.degrees_of_freedom), new_acceleration(traj.degrees_of_freedom), new_jerk(traj.degrees_of_freedom);
             size_t new_section;
-            traj.at_time(time, new_position, new_velocity, new_acceleration, new_section);
+            traj.at_time(time, new_position, new_velocity, new_acceleration, new_jerk, new_section);
             if (return_section) {
                 return py::make_tuple(new_position, new_velocity, new_acceleration, new_section);
             }

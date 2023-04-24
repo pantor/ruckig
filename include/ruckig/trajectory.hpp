@@ -59,6 +59,88 @@ class Trajectory {
     }
 #endif
 
+    //! Calculates the base values to then integrate from
+    using SetIntegrate = std::function<void(size_t, double, double, double, double, double)>;
+    void state_to_integrate_from(double time, size_t& new_section, const SetIntegrate& set_integrate) const {
+        if (time >= duration) {
+            // Keep constant acceleration
+            new_section = profiles.size();
+            const auto& profiles_dof = profiles.back();
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+                const double t_pre = (profiles.size() > 1) ? cumulative_times[cumulative_times.size() - 2] : profiles_dof[dof].brake.duration;
+                const double t_diff = time - (t_pre + profiles_dof[dof].t_sum.back());
+                set_integrate(dof, t_diff, profiles_dof[dof].p.back(), profiles_dof[dof].v.back(), profiles_dof[dof].a.back(), 0.0);
+            }
+            return;
+        }
+
+        const auto new_section_ptr = std::upper_bound(cumulative_times.begin(), cumulative_times.end(), time);
+        new_section = std::distance(cumulative_times.begin(), new_section_ptr);
+        double t_diff = time;
+        if (new_section > 0) {
+            t_diff -= cumulative_times[new_section - 1];
+        }
+
+        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            const Profile& p = profiles[new_section][dof];
+            double t_diff_dof = t_diff;
+
+            // Brake pre-trajectory
+            if (new_section == 0 && p.brake.duration > 0) {
+                if (t_diff_dof < p.brake.duration) {
+                    const size_t index = (t_diff_dof < p.brake.t[0]) ? 0 : 1;
+                    if (index > 0) {
+                        t_diff_dof -= p.brake.t[index - 1];
+                    }
+
+                    set_integrate(dof, t_diff_dof, p.brake.p[index], p.brake.v[index], p.brake.a[index], p.brake.j[index]);
+                    continue;
+                } else {
+                    t_diff_dof -= p.brake.duration;
+                }
+            }
+
+            // Accel post-trajectory
+            // if (new_section == profiles.size() - 1 && p.accel.duration > 0) {
+            //     if (t_diff_dof > p.t_sum.back()) {
+            //         const size_t index = (t_diff_dof < p.accel.t[1]) ? 1 : 0;
+            //         if (index > 0) {
+            //             t_diff_dof -= p.accel.t[index - 1];
+            //         }
+
+            //         t_diff_dof -= p.t_sum.back();
+
+            //         if (t_diff_dof < p.accel.t[1]) {
+            //             set_integrate(dof, t_diff_dof, p.p.back(), p.v.back(), p.a.back(), p.accel.j[1]);
+            //             continue;
+            //         }
+
+            //         t_diff_dof -= p.accel.t[1];
+
+            //         const size_t index = 1;
+            //         set_integrate(dof, t_diff_dof, p.accel.p[index], p.accel.v[index], p.accel.a[index], p.accel.j[index]);
+            //         continue;
+            //     }
+            // }
+
+            // Non-time synchronization
+            if (t_diff_dof >= p.t_sum.back()) {
+                // Keep constant acceleration
+                set_integrate(dof, t_diff_dof - p.t_sum.back(), p.p.back(), p.v.back(), p.a.back(), 0.0);
+                continue;
+            }
+
+            const auto index_dof_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t_diff_dof);
+            const size_t index_dof = std::distance(p.t_sum.begin(), index_dof_ptr);
+
+            if (index_dof > 0) {
+                t_diff_dof -= p.t_sum[index_dof - 1];
+            }
+
+            set_integrate(dof, t_diff_dof, p.p[index_dof], p.v[index_dof], p.a[index_dof], p.j[index_dof]);
+        }
+    }
+
 public:
     size_t degrees_of_freedom;
 
@@ -95,114 +177,80 @@ public:
     }
 #endif
 
-    //! Get the underlying profiles of the trajectory
-    Container<Vector<Profile>> get_profiles() const {
-        return profiles;
+    //! Get the kinematic state, the jerk, and the section at a given time
+    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration, Vector<double>& new_jerk, size_t& new_section) const {
+        if constexpr (DOFs == 0) {
+            if (degrees_of_freedom != new_position.size() || degrees_of_freedom != new_velocity.size() || degrees_of_freedom != new_acceleration.size() || degrees_of_freedom != new_jerk.size()) {
+                throw RuckigError("mismatch in degrees of freedom (vector size).");
+            }
+        }
+
+        state_to_integrate_from(time, new_section, [&](size_t dof, double t, double p, double v, double a, double j) {
+            std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t, p, v, a, j);
+            new_jerk[dof] = j;
+        });
     }
 
     //! Get the kinematic state at a given time
-
     //! The Python wrapper takes `time` as an argument, and returns `new_position`, `new_velocity`, and `new_acceleration` instead.
-    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration, size_t& new_section) const {
+    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
         if constexpr (DOFs == 0) {
             if (degrees_of_freedom != new_position.size() || degrees_of_freedom != new_velocity.size() || degrees_of_freedom != new_acceleration.size()) {
                 throw RuckigError("mismatch in degrees of freedom (vector size).");
             }
         }
 
-        if (time >= duration) {
-            // Keep constant acceleration
-            new_section = profiles.size();
-            auto& profiles_dof = profiles.back();
-            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
-                const double t_pre = (profiles.size() > 1) ? cumulative_times[cumulative_times.size() - 2] : profiles_dof[dof].brake.duration;
-                const double t_diff = time - (t_pre + profiles_dof[dof].t_sum.back());
-                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff, profiles_dof[dof].p.back(), profiles_dof[dof].v.back(), profiles_dof[dof].a.back(), 0);
-            }
-            return;
-        }
-
-        const auto new_section_ptr = std::upper_bound(cumulative_times.begin(), cumulative_times.end(), time);
-        new_section = std::distance(cumulative_times.begin(), new_section_ptr);
-        double t_diff = time;
-        if (new_section > 0) {
-            t_diff -= cumulative_times[new_section - 1];
-        }
-
-        for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
-            const Profile& p = profiles[new_section][dof];
-            double t_diff_dof = t_diff;
-
-            // Brake pre-trajectory
-            if (new_section == 0 && p.brake.duration > 0) {
-                if (t_diff_dof < p.brake.duration) {
-                    const size_t index = (t_diff_dof < p.brake.t[0]) ? 0 : 1;
-                    if (index > 0) {
-                        t_diff_dof -= p.brake.t[index - 1];
-                    }
-
-                    std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.brake.p[index], p.brake.v[index], p.brake.a[index], p.brake.j[index]);
-                    continue;
-                } else {
-                    t_diff_dof -= p.brake.duration;
-                }
-            }
-
-            // Accel post-trajectory
-            // if (new_section == profiles.size() - 1 && p.accel.duration > 0) {
-            //     if (t_diff_dof > p.t_sum.back()) {
-            //         const size_t index = (t_diff_dof < p.accel.t[1]) ? 1 : 0;
-            //         if (index > 0) {
-            //             t_diff_dof -= p.accel.t[index - 1];
-            //         }
-
-            //         t_diff_dof -= p.t_sum.back();
-
-            //         if (t_diff_dof < p.accel.t[1]) {
-            //             std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.p.back(), p.v.back(), p.a.back(), p.accel.j[1]);
-            //             continue;
-            //         }
-
-            //         t_diff_dof -= p.accel.t[1];
-
-            //         const size_t index = 1;
-            //         std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.accel.p[index], p.accel.v[index], p.accel.a[index], p.accel.j[index]);
-            //         continue;
-            //     }
-            // }
-
-            // Non-time synchronization
-            if (t_diff_dof >= p.t_sum.back()) {
-                // Keep constant acceleration
-                std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof - p.t_sum.back(), p.p.back(), p.v.back(), p.a.back(), 0);
-                continue;
-            }
-
-            const auto index_dof_ptr = std::upper_bound(p.t_sum.begin(), p.t_sum.end(), t_diff_dof);
-            const size_t index_dof = std::distance(p.t_sum.begin(), index_dof_ptr);
-
-            if (index_dof > 0) {
-                t_diff_dof -= p.t_sum[index_dof - 1];
-            }
-
-            std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t_diff_dof, p.p[index_dof], p.v[index_dof], p.a[index_dof], p.j[index_dof]);
-        }
-    }
-
-    //! Get the kinematic state and current section at a given time
-    void at_time(double time, Vector<double>& new_position, Vector<double>& new_velocity, Vector<double>& new_acceleration) const {
         size_t new_section;
-        at_time(time, new_position, new_velocity, new_acceleration, new_section);
+        state_to_integrate_from(time, new_section, [&](size_t dof, double t, double p, double v, double a, double j) {
+            std::tie(new_position[dof], new_velocity[dof], new_acceleration[dof]) = integrate(t, p, v, a, j);
+        });
     }
 
-    //! Get the kinematic state and current section at a given time without vectors for a single DoF
+    //! Get the position at a given time
+    void at_time(double time, Vector<double>& new_position) const {
+        if constexpr (DOFs == 0) {
+            if (degrees_of_freedom != new_position.size()) {
+                throw RuckigError("mismatch in degrees of freedom (vector size).");
+            }
+        }
+
+        size_t new_section;
+        state_to_integrate_from(time, new_section, [&](size_t dof, double t, double p, double v, double a, double j) {
+            std::tie(new_position[dof], std::ignore, std::ignore) = integrate(t, p, v, a, j);
+        });
+    }
+
+    //! Get the kinematic state, the jerk, and the section at a given time without vectors for a single DoF
+    template <size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
+    void at_time(double time, double& new_position, double& new_velocity, double& new_acceleration, double& new_jerk, size_t& new_section) const {
+        state_to_integrate_from(time, new_section, [&](size_t, double t, double p, double v, double a, double j) {
+            std::tie(new_position, new_velocity, new_acceleration) = integrate(t, p, v, a, j);
+            new_jerk = j;
+        });
+    }
+
+    //! Get the kinematic state at a given time without vectors for a single DoF
     template <size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
     void at_time(double time, double& new_position, double& new_velocity, double& new_acceleration) const {
-        Vector<double> new_p, new_v, new_a;
-        at_time(time, new_p, new_v, new_a);
-        new_position = new_p[0];
-        new_velocity = new_v[0];
-        new_acceleration = new_a[0];
+        size_t new_section;
+        state_to_integrate_from(time, new_section, [&](size_t, double t, double p, double v, double a, double j) {
+            std::tie(new_position, new_velocity, new_acceleration) = integrate(t, p, v, a, j);
+        });
+    }
+
+    //! Get the position at a given time without vectors for a single DoF
+    template <size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
+    void at_time(double time, double& new_position) const {
+        size_t new_section;
+        state_to_integrate_from(time, new_section, [&](size_t, double t, double p, double v, double a, double j) {
+            std::tie(new_position, std::ignore, std::ignore) = integrate(t, p, v, a, j);
+        });
+    }
+
+
+    //! Get the underlying profiles of the trajectory
+    Container<Vector<Profile>> get_profiles() const {
+        return profiles;
     }
 
     //! Get the duration of the (synchronized) trajectory

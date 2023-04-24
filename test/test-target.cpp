@@ -240,7 +240,7 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( result == Result::Working );
     CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
 
-    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    std::array<double, 3> new_position, new_velocity, new_acceleration, new_jerk;
     output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
     CHECK( array_eq(new_position, input.current_position) );
     CHECK( array_eq(new_velocity, input.current_velocity) );
@@ -252,11 +252,13 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( array_eq(new_acceleration, input.target_acceleration) );
 
     size_t new_section;
-    output.trajectory.at_time(2.0, new_position, new_velocity, new_acceleration, new_section);
+    output.trajectory.at_time(2.0, new_position, new_velocity, new_acceleration, new_jerk, new_section);
     CHECK( array_eq(new_position, {0.5, -2.6871268303, 1.0}) );
+    CHECK( array_eq(new_jerk, {0.0, 0.0, -1.0}) );
     CHECK( new_section == 0 );
 
-    output.trajectory.at_time(5.0, new_position, new_velocity, new_acceleration, new_section);
+    output.trajectory.at_time(5.0, new_position, new_velocity, new_acceleration, new_jerk, new_section);
+    CHECK( array_eq(new_jerk, {0.0, 0.0, 0.0}) );
     CHECK( new_section == 1 );
 
     auto independent_min_durations = output.trajectory.get_independent_min_durations();
