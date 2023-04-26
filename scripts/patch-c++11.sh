@@ -17,7 +17,7 @@ replace () {
 # Replace optional, if constexpr, and C++ version
 replace include/ruckig/block.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
 replace include/ruckig/calculator_target.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
-replace include/ruckig/input_parameter.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g'
+replace include/ruckig/input_parameter.hpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|std::optional|nonstd::optional|g' -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
 replace include/ruckig/position.hpp -e 's|<optional>|<nonstd/optional.hpp>|g'
 replace include/ruckig/profile.hpp -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
 replace include/ruckig/roots.hpp -e 's|if constexpr|if|g'
