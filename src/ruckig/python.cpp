@@ -121,6 +121,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("minimum_duration", &InputParameter<DynamicDOFs>::minimum_duration)
         .def_readwrite("per_section_minimum_duration", &InputParameter<DynamicDOFs>::per_section_minimum_duration)
         .def_readwrite("interrupt_calculation_duration", &InputParameter<DynamicDOFs>::interrupt_calculation_duration)
+        .def("validate", &InputParameter<DynamicDOFs>::validate<true>, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
         .def(py::self != py::self)
         .def("__repr__", &InputParameter<DynamicDOFs>::to_string);
 

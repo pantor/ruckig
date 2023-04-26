@@ -56,7 +56,8 @@ public:
     enum class Direction { UP, DOWN } direction;
     enum class JerkSigns { UDDU, UDUD } jerk_signs;
 
-    // For velocity interface
+
+    // For third-order velocity interface
     template<JerkSigns jerk_signs, ReachedLimits limits>
     bool check_for_velocity(double jf, double aMax, double aMin) {
         if (t[0] < 0) {
@@ -127,7 +128,8 @@ public:
         vf = vf_new;
     }
 
-    // For position interface
+
+    // For third-order position interface
     template<JerkSigns jerk_signs, ReachedLimits limits, bool set_limits = false>
     bool check(double jf, double vMax, double vMin, double aMax, double aMin) {
         if (t[0] < 0) {
@@ -259,6 +261,7 @@ public:
     }
 
 
+    // Secondary features
     static void check_position_extremum(double t_ext, double t_sum, double t, double p, double v, double a, double j, PositionExtrema& ext) {
         if (0 < t_ext && t_ext < t) {
             double p_ext, a_ext;
