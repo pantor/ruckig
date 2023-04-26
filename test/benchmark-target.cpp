@@ -52,7 +52,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
 
     InputParameter<DOFs> input;
     // input.synchronization = Synchronization::None;
-    // input.control_interface = ControlInterface::Velocity
+    // input.control_interface = ControlInterface::Velocity;
     std::vector<double> average, worst, global;
 
     // Initial warm-up calculation
@@ -132,6 +132,6 @@ int main() {
     std::cout << "Ruckig size: " << sizeof(Ruckig<3>) << " Byte" << std::endl;
     std::cout << "Trajectory<3> size: " << sizeof(Trajectory<3>) << " Byte" << std::endl;
 
-    const size_t DOFs {1};
+    const size_t DOFs {3};
     benchmark<DOFs, RuckigThrow<DOFs>>(n, number_trajectories);
 }

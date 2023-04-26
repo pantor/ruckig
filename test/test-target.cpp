@@ -14,8 +14,8 @@ using namespace ruckig;
 
 
 int seed {42};
-size_t number_trajectories {150000}; // Some user variable you want to be able to set
-size_t random_1, random_3, random_3_high, step_through_3, random_discrete_3, random_direction_3, comparison_1, comparison_3, velocity_random_3;
+size_t number_trajectories {256 * 1024}; // Some user variable you want to be able to set
+size_t random_1, random_3, random_3_high, step_through_3, random_discrete_3, random_direction_3, velocity_random_3, velocity_random_discrete_3;
 
 std::normal_distribution<double> position_dist {0.0, 4.0};
 std::normal_distribution<double> dynamic_dist {0.0, 0.8};
@@ -1027,6 +1027,46 @@ TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF an
     }
 }
 
+TEST_CASE("velocity_random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
+    constexpr size_t DOFs {3};
+    RuckigThrow<DOFs> otg {0.005};
+    InputParameter<DOFs> input;
+    input.control_interface = ControlInterface::Velocity;
+
+    std::uniform_int_distribution<int> position_discrete_dist(-1, 1);
+    std::uniform_int_distribution<int> dynamic_discrete_dist(-1, 1);
+    std::uniform_int_distribution<int> limit_discrete_dist(1, 2);
+
+    Randomizer<DOFs, decltype(position_discrete_dist)> p { position_discrete_dist, seed };
+    Randomizer<DOFs, decltype(dynamic_discrete_dist)> d { dynamic_discrete_dist, seed + 1 };
+    Randomizer<DOFs, decltype(limit_discrete_dist)> l { limit_discrete_dist, seed + 2 };
+
+    for (size_t i = 0; i < velocity_random_discrete_3; ++i) {
+        if (i < velocity_random_discrete_3 / 2) {
+            input.synchronization = Synchronization::Phase;
+        } else {
+            input.synchronization = Synchronization::Time;
+        }
+
+        p.fill(input.current_position);
+        d.fill(input.current_velocity);
+        d.fill(input.current_acceleration);
+        p.fill(input.target_position);
+        d.fill(input.target_velocity);
+        d.fill(input.target_acceleration);
+        l.fill(input.max_velocity, input.target_velocity);
+        l.fill(input.max_acceleration, input.target_acceleration);
+        l.fill(input.max_jerk);
+
+        if (!otg.validate_input<false>(input)) {
+            --i;
+            continue;
+        }
+
+        check_calculation(otg, input);
+    }
+}
+
 TEST_CASE("random_3_high" * doctest::description("Random input with 3 DoF and target velocity, acceleration and high limits")) {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
@@ -1182,7 +1222,7 @@ int main(int argc, char** argv) {
     doctest::Context context;
 
     if (argc > 1 && std::isdigit(argv[1][0])) {
-        number_trajectories = std::stoi(argv[1]);
+        number_trajectories = std::stol(argv[1]);
     }
     if (argc > 2 && std::isdigit(argv[2][0])) {
         seed = std::stoi(argv[2]);
@@ -1190,18 +1230,26 @@ int main(int argc, char** argv) {
 
     context.applyCommandLine(argc, argv);
 
-    comparison_1 = std::min<size_t>(250000, number_trajectories / 10);
-    comparison_3 = std::min<size_t>(250000, number_trajectories / 10);
-    random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     random_1 = number_trajectories / 10;
     step_through_3 = 0; // number_trajectories / 20;
     random_direction_3 = number_trajectories / 50;
+    random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
     velocity_random_3 = number_trajectories / 10;
+    velocity_random_discrete_3 = std::min<size_t>(250000, number_trajectories / 10);
 
-    const size_t remainder = number_trajectories - (random_1 + step_through_3 + random_direction_3 + comparison_1 + comparison_3 + velocity_random_3 + random_discrete_3); // 1. Normal, 2. High
+    const size_t remainder = number_trajectories - (random_1 + step_through_3 + random_direction_3 + velocity_random_3 + random_discrete_3); // 1. Normal, 2. High
     random_3 = (size_t)(remainder * 95/100);
     random_3_high = (size_t)(remainder * 5/100);
-    std::cout << "<number_trajectories> Random (1 DoF): " << random_1 << " (3 DoF): " << random_3 << " High Limits (3 DoF): " << random_3_high << "  Step Through (3 Dof): " << step_through_3 << "  Comparison (1 DoF): " << comparison_1 << " (3 DoF): " << comparison_3 << " Total: " << number_trajectories << std::endl;
+
+    std::cout << "<number_trajectories>" << std::endl;
+    std::cout << "\t(1 DoF): " << random_1 << std::endl;
+    std::cout << "\t(3 DoF): " << random_3 << std::endl;
+    std::cout << "\tDiscrete (3 DoF): " << random_discrete_3 << std::endl;
+    std::cout << "\tHigh Limits (3 DoF): " << random_3_high << std::endl;
+    std::cout << "\tStep Through (3 DoF): " << step_through_3 << std::endl;
+    std::cout << "\tVelocity (3 DoF): " << velocity_random_3 << std::endl;
+    std::cout << "\tVelocity Discrete (3 DoF): " << velocity_random_discrete_3 << std::endl;
+    std::cout << "Total: " << number_trajectories << std::endl;
 
     return context.run();
 }

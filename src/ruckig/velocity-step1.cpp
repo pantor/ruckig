@@ -8,79 +8,52 @@ VelocityStep1::VelocityStep1(double v0, double a0, double vf, double af, double 
     vd = vf - v0;
 }
 
-void VelocityStep1::time_acc0(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const {
-    // UD
-    {
-        profile->t[0] = (-a0 + aMax)/jMax;
-        profile->t[1] = (a0*a0 + af*af - 2*aMax*aMax + 2*jMax*vd)/(2*aMax*jMax);
-        profile->t[2] = (-af + aMax)/jMax;
-        profile->t[3] = 0;
-        profile->t[4] = 0;
-        profile->t[5] = 0;
-        profile->t[6] = 0;
+void VelocityStep1::time_acc0(ProfileIter& profile, double aMax, double aMin, double jMax, bool) const {
+    profile->t[0] = (-a0 + aMax)/jMax;
+    profile->t[1] = (a0*a0 + af*af)/(2*aMax*jMax) - aMax/jMax + vd/aMax;
+    profile->t[2] = (-af + aMax)/jMax;
+    profile->t[3] = 0;
+    profile->t[4] = 0;
+    profile->t[5] = 0;
+    profile->t[6] = 0;
 
-        if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, aMax, aMin)) {
-            add_profile(profile);
-            if (return_after_found) {
-                return;
-            }
-        }
-    }
-
-    // UU
-    {
-        profile->t[0] = (-a0 + aMax)/jMax;
-        profile->t[1] = (a0*a0 - af*af + 2*jMax*vd)/(2*aMax*jMax);
-        profile->t[2] = 0;
-        profile->t[3] = 0;
-        profile->t[4] = (af - aMax)/jMax;
-        profile->t[5] = 0;
-        profile->t[6] = 0;
-
-        if (profile->check_for_velocity<JerkSigns::UDUD, ReachedLimits::ACC0>(jMax, aMax, aMin)) {
-            add_profile(profile);
-            if (return_after_found) {
-                return;
-            }
-        }
+    if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, aMax, aMin)) {
+        add_profile(profile);
     }
 }
 
 void VelocityStep1::time_none(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const {
-    const double h1 = std::sqrt((a0*a0 + af*af)/2 + jMax*vd);
+    double h1 = (a0*a0 + af*af)/2 + jMax*vd;
+    if (h1 >= 0.0) {
+        h1 = std::sqrt(h1);
 
-    // Solution 1
-    {
-        profile->t[0] = -(a0 + h1)/jMax;
-        profile->t[1] = 0;
-        profile->t[2] = -(af + h1)/jMax;
         profile->t[3] = 0;
         profile->t[4] = 0;
         profile->t[5] = 0;
         profile->t[6] = 0;
 
-        if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
-            add_profile(profile);
-            if (return_after_found) {
-                return;
+        // Solution 1
+        {
+            profile->t[0] = -(a0 + h1)/jMax;
+            profile->t[1] = 0;
+            profile->t[2] = -(af + h1)/jMax;
+
+            if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
+                add_profile(profile);
+                if (return_after_found) {
+                    return;
+                }
             }
         }
-    }
 
-    // Solution 2
-    {
-        profile->t[0] = (-a0 + h1)/jMax;
-        profile->t[1] = 0;
-        profile->t[2] = (-af + h1)/jMax;
-        profile->t[3] = 0;
-        profile->t[4] = 0;
-        profile->t[5] = 0;
-        profile->t[6] = 0;
+        // Solution 2
+        {
+            profile->t[0] = (-a0 + h1)/jMax;
+            profile->t[1] = 0;
+            profile->t[2] = (-af + h1)/jMax;
 
-        if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
-            add_profile(profile);
-            if (return_after_found) {
-                return;
+            if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
+                add_profile(profile);
             }
         }
     }

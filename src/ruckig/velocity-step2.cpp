@@ -38,11 +38,11 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
         profile.t[1] = -ad/jMax + tf;
         profile.t[2] = 0;
         profile.t[3] = 0;
-        profile.t[4] = tf - (profile.t[0] + profile.t[1]);
+        profile.t[4] = 0;
         profile.t[5] = 0;
-        profile.t[6] = 0;
+        profile.t[6] = tf - (profile.t[0] + profile.t[1]);
 
-        if (profile.check_for_velocity_with_timing<JerkSigns::UDUD, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
+        if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -54,11 +54,11 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
         profile.t[1] = -ad/jMax + tf;
         profile.t[2] = 0;
         profile.t[3] = 0;
-        profile.t[4] = ad/jMax;
+        profile.t[4] = 0;
         profile.t[5] = 0;
-        profile.t[6] = 0;
+        profile.t[6] = ad/jMax;
 
-        if (profile.check_for_velocity_with_timing<JerkSigns::UDUD, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
+        if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
             profile.pf = profile.p.back();
             return true;
         }
