@@ -29,8 +29,6 @@ class CMakeBuild(build_ext):
             extdir += os.path.sep
 
         build_type = os.environ.get('BUILD_TYPE', 'Release')
-        build_args = ['--config', build_type]
-
         cmake_args = [
             '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
             '-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=' + extdir,
@@ -51,7 +49,7 @@ class CMakeBuild(build_ext):
             os.makedirs(self.build_temp)
 
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp)
-        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+        subprocess.check_call(['cmake', '--build', '.', '--config', build_type, '-j2'], cwd=self.build_temp)
 
 
 setup(
