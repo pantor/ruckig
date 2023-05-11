@@ -8,16 +8,24 @@
 using namespace ruckig;
 
 
+// Checks only for approximate trajectory duration
 template<size_t DOFs, class OTGType>
 void check_duration(OTGType& otg, InputParameter<DOFs>& input, double duration) {
     OutputParameter<DOFs> output;
+    otg.update(input, output);
+    CHECK( output.trajectory.get_duration() == doctest::Approx(duration) );
+}
 
+
+// Checks trajectory duration and steps along trajectory till the end
+template<size_t DOFs, class OTGType>
+void check_full_duration(OTGType& otg, InputParameter<DOFs>& input, double duration) {
+    OutputParameter<DOFs> output;
     while (otg.update(input, output) == Result::Working) {
         input.current_position = output.new_position;
         input.current_velocity = output.new_velocity;
         input.current_acceleration = output.new_acceleration;
     }
-
     CHECK( output.trajectory.get_duration() == doctest::Approx(duration) );
 }
 
@@ -34,7 +42,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {1.0, 1.0, 1.0};
     input.max_acceleration = {1.0, 1.0, 1.0};
     input.max_jerk = {1.0, 1.0, 1.0};
-    check_duration(otg, input, 0.0);
+    check_full_duration(otg, input, 0.0);
 
     input.target_position = {0.0, 1e-17, -1e-17};
     check_duration(otg, input, 1e-18);
@@ -125,7 +133,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {8.65978706670502, 5.94921088330542, 10.7652253566829};
     input.max_acceleration = {3.40137210377608, 4.04166318018487, 10.8617860610581};
     input.max_jerk = {10.9542353113865, 3.11056302676629, 0.798055744482636 + 9e-12};
-    check_duration(otg, input, 4.6277455678);
+    check_full_duration(otg, input, 4.6277455678);
 
     input.current_position = {7.06378251402596, -2.4834697862831, -0.843847405371359};
     input.current_velocity = {0.436985859305842, 0.0708113515655622, -0.751266816040307};
@@ -136,7 +144,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {7.97399137456765, 2.68591430972239, 9.54987666746364};
     input.max_acceleration = {5.44679859206862, 7.61752909348119, 0.473482772614085};
     input.max_jerk = {7.88958080921515, 5.26855927512131, 0.764061581326592 - 1e-14};
-    check_duration(otg, input, 8.8739464323);
+    check_full_duration(otg, input, 8.8739464323);
 
     input.current_position = {-7.962737259350095, 0, 0};
     input.current_velocity = {-0.8844863500141733, 0, 0};
@@ -180,7 +188,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {1, 1, 1};
     input.max_acceleration = {7, 7, 7};
     input.max_jerk = {1000, 1000, 1000};
-    check_duration(otg, input, 1.403613276);
+    check_full_duration(otg, input, 1.403613276);
 
     input.current_position = {0.0001215, 0, 0};
     input.current_velocity = {0.00405, 0, 0};
@@ -191,7 +199,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {1, 1, 1};
     input.max_acceleration = {0.5, 0.5, 0.5};
     input.max_jerk = {1, 1, 1};
-    check_duration(otg, input, 0.9);
+    check_full_duration(otg, input, 0.9);
 
     input.current_position = {0, 0, 0};
     input.current_velocity = {0, 0, 0};
@@ -202,7 +210,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {1800, 18000, 180000};
     input.max_acceleration = {20000, 200000, 2000000};
     input.max_jerk = {200000, 2000000, 20000000};
-    check_duration(otg, input, 0.4119588818);
+    check_full_duration(otg, input, 0.4119588818);
 
     input.current_position = {0.02853333333333339, 0.0285, 0.0285};
     input.current_velocity = {0.6800000000000006, 0.68, 0.68};
@@ -213,7 +221,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {1, 1 ,1};
     input.max_acceleration = {10, 10, 10};
     input.max_jerk = {100 + 1e-14, 100 + 1e-14, 100 + 1e-14};
-    check_duration(otg, input, 0.58);
+    check_full_duration(otg, input, 0.58);
 
     input.current_position = {-0.05598571695553641, -0.534847776106059, 0.0978130731424748};
     input.current_velocity = {-0.03425673149926184, -0.8169926404190487, -0.004506245841081729};
@@ -224,7 +232,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_velocity = {0.8500000000000001, 0.8500000000000001, 0.8500000000000001};
     input.max_acceleration = {4.25, 4.25, 4.25};
     input.max_jerk = {85.00000000000001, 85.00000000000001, 85.00000000000001};
-    check_duration(otg, input, 0.2281604414);
+    check_full_duration(otg, input, 0.2281604414);
 
     input.current_position = {0.0, 0.0, 0.3736320740840176};
     input.current_velocity = {0.0, 0.0, -0.60486324450823};
@@ -237,7 +245,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_jerk = {1.0, 1.0, 7.770133554060553};
     input.min_velocity = {-1.0, -1.0, -1.94898305867544};
     input.min_acceleration = {-1.0, -1.0, -0.6829625196960336};
-    check_duration(otg, input, 1.08732372);
+    check_full_duration(otg, input, 1.08732372);
 
     input.current_position = {-0.01919986582215404, 0.0, 0.0};
     input.current_velocity = {-0.3858205249368821, 0.0, 0.0};
@@ -249,7 +257,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {0.4552736879216988, 2.5, 2.5};
     input.max_jerk = {12.15045820314999, 2.2, 2.2};
     input.minimum_duration = 3.408914;
-    check_duration(otg, input, 3.408914);
+    check_full_duration(otg, input, 3.408914);
 
     input.current_position = {0.2473592757796861, 0.2921606775204735, 0.7758663276711127};
     input.current_velocity = {-0.2426115138900957, 0.2200706500820608, -0.01891492763905089};
@@ -264,7 +272,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.min_acceleration = std::nullopt;
     input.minimum_duration = std::nullopt;
     input.duration_discretization = DurationDiscretization::Discrete;
-    check_duration(otg, input, 0.14);
+    check_full_duration(otg, input, 0.14);
 
     input.current_position = {0.5289912019692077, -0.2461593579591288, -0.2728396804501142};
     input.current_velocity = {0.0287779218983349, -0.005980397028399779, 0.04763314105835294};
@@ -280,7 +288,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.minimum_duration = std::nullopt;
     input.duration_discretization = DurationDiscretization::Discrete;
     input.control_interface = ControlInterface::Velocity;
-    check_duration(otg, input, 0.024);
+    check_full_duration(otg, input, 0.024);
 
     input.current_position = {0.0, 0.0, 0.0};
     input.current_velocity = {0.1119477497536703, -0.005706738140158095, 0.0};
@@ -296,7 +304,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.minimum_duration = std::nullopt;
     input.duration_discretization = DurationDiscretization::Continuous;
     input.control_interface = ControlInterface::Velocity;
-    check_duration(otg, input, 0.0352632);
+    check_full_duration(otg, input, 0.0352632);
 
     input.current_position = {0.0, 0.0, 0.0};
     input.current_velocity = {1.0, 0.0, 0.0};
@@ -308,7 +316,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {1.0, 1.0, 1.0};
     input.max_jerk = {1.0, 1.0, 1.0};
     input.control_interface = ControlInterface::Velocity;
-    check_duration(otg, input, 2.0);
+    check_full_duration(otg, input, 2.0);
 
     input.current_position = {-0.54516231864478149, -1.4206629551476477, 0.32727720821160067};
     input.current_velocity = {6.1348323207600686, -0.0040477518609957240, 0.0088178054233364854};
@@ -340,8 +348,9 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.max_acceleration = {4.36, 4.363323129985824, 4.36};
     input.max_jerk = {43.63, 43.633231299858238116, 43.63};
     input.control_interface = ControlInterface::Velocity;
+    check_duration(otg, input, 0.044);
     input.duration_discretization = ruckig::DurationDiscretization::Discrete;
-    check_duration(otg, input, 0.048);
+    check_duration(otg, input, 0.044);
 
     input.current_position = {-19.93333333333424, -0.4983333333333563, 0};
     input.current_velocity = {10, 0.25, 0};
@@ -405,7 +414,7 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input6.max_velocity = {0.06981316999999999, 0.06423623454575711, 0.007006078877926925, 0.1187909578397501, 6.981317008, 34.90658504};
     input6.max_acceleration = {0.034906585, 0.261799388, 0.043633231, 0.4, 4.01425728, 34.90658504};
     input6.max_jerk = {100, 100, 100, 100, 100, 100};
-    check_duration(otg6, input6, 0.764274);
+    check_full_duration(otg6, input6, 0.764274);
 
     input6.duration_discretization = DurationDiscretization::Discrete;
     input6.current_position = { 0.1174161453909641,-0.4222080077114712,0.3003863125814782,2.960444926889819,-0.005791262234199017,-2.364847659719411 };

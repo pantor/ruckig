@@ -146,7 +146,7 @@ private:
                 }
 
                 const double remainder = std::fmod(possible_t_sync, delta_time); // in [0, delta_time)
-                if (remainder > 0) {
+                if (remainder > eps) {
                     possible_t_sync += delta_time - remainder;
                 }
             }
@@ -435,13 +435,14 @@ public:
             }
 
             // Check if the final time corresponds to an extremal profile calculated in step 1
-            if (std::abs(t_profile - blocks[dof].t_min) < eps) {
+            // Use 2*eps because of numerical robustness in duration discretization
+            if (std::abs(t_profile - blocks[dof].t_min) < 2*eps) {
                 p = blocks[dof].p_min;
                 continue;
-            } else if (blocks[dof].a && std::abs(t_profile - blocks[dof].a->right) < eps) {
+            } else if (blocks[dof].a && std::abs(t_profile - blocks[dof].a->right) < 2*eps) {
                 p = blocks[dof].a->profile;
                 continue;
-            } else if (blocks[dof].b && std::abs(t_profile - blocks[dof].b->right) < eps) {
+            } else if (blocks[dof].b && std::abs(t_profile - blocks[dof].b->right) < 2*eps) {
                 p = blocks[dof].b->profile;
                 continue;
             }
