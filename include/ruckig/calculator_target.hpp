@@ -266,12 +266,22 @@ public:
             bool found_profile {false};
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
-                    PositionThirdOrderStep1 step1 {p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-                    found_profile = step1.get_profile(p, blocks[dof]);
+                    if (!std::isinf(inp.max_jerk[dof])) {
+                        PositionThirdOrderStep1 step1 {p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_profile = step1.get_profile(p, blocks[dof]);
+                    } else {
+                        PositionThirdOrderStep1 step1 {p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_profile = step1.get_profile(p, blocks[dof]);
+                    }
                 } break;
                 case ControlInterface::Velocity: {
-                    VelocityThirdOrderStep1 step1 {p.v[0], p.a[0], p.vf, p.af, inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-                    found_profile = step1.get_profile(p, blocks[dof]);
+                    if (!std::isinf(inp.max_jerk[dof])) {
+                        VelocityThirdOrderStep1 step1 {p.v[0], p.a[0], p.vf, p.af, inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_profile = step1.get_profile(p, blocks[dof]);
+                    } else {
+                        VelocitySecondOrderStep1 step1 {p.v[0], p.vf, inp.max_acceleration[dof], inp_min_acceleration[dof]};
+                        found_profile = step1.get_profile(p, blocks[dof]);
+                    }
                 } break;
             }
 
@@ -450,12 +460,22 @@ public:
             bool found_time_synchronization {false};
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
-                    PositionThirdOrderStep2 step2 {t_profile, p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-                    found_time_synchronization = step2.get_profile(p);
+                    if (!std::isinf(inp.max_jerk[dof])) {
+                        PositionThirdOrderStep2 step2 {t_profile, p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_time_synchronization = step2.get_profile(p);
+                    } else {
+                        PositionThirdOrderStep2 step2 {t_profile, p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_time_synchronization = step2.get_profile(p);
+                    }
                 } break;
                 case ControlInterface::Velocity: {
-                    VelocityThirdOrderStep2 step2 {t_profile, p.v[0], p.a[0], p.vf, p.af, inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
-                    found_time_synchronization = step2.get_profile(p);
+                    if (!std::isinf(inp.max_jerk[dof])) {
+                        VelocityThirdOrderStep2 step2 {t_profile, p.v[0], p.a[0], p.vf, p.af, inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        found_time_synchronization = step2.get_profile(p);
+                    } else {
+                        VelocitySecondOrderStep2 step2 {t_profile, p.v[0], p.vf, inp.max_acceleration[dof], inp_min_acceleration[dof]};
+                        found_time_synchronization = step2.get_profile(p);
+                    }
                 } break;
             }
             if (!found_time_synchronization) {

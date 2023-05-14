@@ -6,7 +6,7 @@
 
 namespace ruckig {
 
-//! Mathematical equations for Step 1 in velocity interface: Extremal profiles
+//! Mathematical equations for Step 1 in third order velocity interface: Extremal profiles
 class VelocityThirdOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
@@ -40,7 +40,7 @@ public:
 };
 
 
-//! Mathematical equations for Step 2 in velocity interface: Time synchronization
+//! Mathematical equations for Step 2 in third order velocity interface: Time synchronization
 class VelocityThirdOrderStep2 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
@@ -60,6 +60,30 @@ class VelocityThirdOrderStep2 {
 
 public:
     explicit VelocityThirdOrderStep2(double tf, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax);
+
+    bool get_profile(Profile& profile);
+};
+
+
+//! Mathematical equations for Step 1 in second order velocity interface: Extremal profiles
+class VelocitySecondOrderStep1 {
+    const double _aMax, _aMin;
+    double vd; // Pre-calculated expressions
+
+public:
+    explicit VelocitySecondOrderStep1(double v0, double vf, double aMax, double aMin);
+
+    bool get_profile(const Profile& input, Block& block);
+};
+
+
+//! Mathematical equations for Step 2 in second order velocity interface: Time synchronization
+class VelocitySecondOrderStep2 {
+    const double tf, _aMax, _aMin;
+    double vd; // Pre-calculated expressions
+
+public:
+    explicit VelocitySecondOrderStep2(double tf, double v0, double vf, double aMax, double aMin);
 
     bool get_profile(Profile& profile);
 };

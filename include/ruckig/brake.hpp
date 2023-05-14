@@ -27,13 +27,13 @@ public:
     //! Profile information for a two-step profile
     std::array<double, 2> t, j, a, v, p;
 
-    //! Calculate brake trajectory for position interface
+    //! Calculate brake trajectory for third-order position interface
     void get_position_brake_trajectory(double v0, double a0, double vMax, double vMin, double aMax, double aMin, double jMax);
 
-    //! Calculate brake trajectory for velocity interface
+    //! Calculate brake trajectory for third-order velocity interface
     void get_velocity_brake_trajectory(double a0, double aMax, double aMin, double jMax);
 
-    //! Finalize by integrating along kinematic state
+    //! Finalize third-order braking by integrating along kinematic state
     void finalize(double& ps, double& vs, double& as) {
         if (t[0] <= 0.0 && t[1] <= 0.0) {
             duration = 0.0;

@@ -8,7 +8,7 @@ namespace ruckig {
 
 
 
-//! Mathematical equations for Step 1 in position interface: Extremal profiles
+//! Mathematical equations for Step 1 in third order position interface: Extremal profiles
 class PositionThirdOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
@@ -54,7 +54,7 @@ public:
 };
 
 
-//! Mathematical equations for Step 2 in position interface: Time synchronization
+//! Mathematical equations for Step 2 in third order position interface: Time synchronization
 class PositionThirdOrderStep2 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;

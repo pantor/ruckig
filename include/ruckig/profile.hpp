@@ -129,6 +129,48 @@ public:
     }
 
 
+    // For second-order velocity interface
+    template<JerkSigns jerk_signs, ReachedLimits limits>
+    bool check_for_second_order_velocity(double af) {
+        // ReachedLimits::ACC0
+        if (t[1] < 0.0) {
+            return false;
+        }
+
+        t_sum = {0, t[1], t[1], t[1], t[1], t[1], t[1]};
+        if (t_sum.back() > t_max) { // For numerical reasons, is that needed?
+            return false;
+        }
+
+        j = {0, 0, 0, 0, 0, 0, 0};
+        a = {0, af, 0, 0, 0, 0, 0};
+        for (size_t i = 0; i < 7; ++i) {
+            v[i+1] = v[i] + t[i] * a[i];
+            p[i+1] = p[i] + t[i] * (v[i] + t[i] * a[i] / 2);
+        }
+
+        this->jerk_signs = jerk_signs;
+        this->limits = limits;
+
+        direction = (af > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
+
+        // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
+        // std::cout << std::setprecision(15) << "target: " << std::abs(p.back() - pf) << " " << std::abs(v.back() - vf) << " " << std::abs(a.back() - af) << " T: " << t_sum.back() << " " << to_string() << std::endl;
+        return std::abs(v.back() - vf) < v_precision;
+    }
+
+    template<JerkSigns jerk_signs, ReachedLimits limits>
+    inline bool check_for_second_order_velocity_with_timing(double, double af) {
+        // Time doesn't need to be checked as every profile has a: tf - ... equation
+        return check_for_second_order_velocity<jerk_signs, limits>(af); // && (std::abs(t_sum.back() - tf) < t_precision);
+    }
+
+    template<JerkSigns jerk_signs, ReachedLimits limits>
+    inline bool check_for_second_order_velocity_with_timing(double tf, double af, double aMax, double aMin) {
+        return (aMin - a_eps < af) && (af < aMax + a_eps) && check_for_second_order_velocity_with_timing<jerk_signs, limits>(tf, af);
+    }
+
+
     // For third-order position interface
     template<JerkSigns jerk_signs, ReachedLimits limits, bool set_limits = false>
     bool check(double jf, double vMax, double vMin, double aMax, double aMin) {

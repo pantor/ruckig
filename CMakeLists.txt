@@ -24,6 +24,8 @@ add_library(ruckig
   src/ruckig/brake.cpp
   src/ruckig/position-third-step1.cpp
   src/ruckig/position-third-step2.cpp
+  src/ruckig/velocity-second-step1.cpp
+  src/ruckig/velocity-second-step2.cpp
   src/ruckig/velocity-third-step1.cpp
   src/ruckig/velocity-third-step2.cpp
 )
