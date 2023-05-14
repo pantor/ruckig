@@ -248,20 +248,35 @@ public:
             // Calculate brake (if input exceeds or will exceed limits)
             switch (inp_per_dof_control_interface[dof]) {
                 case ControlInterface::Position: {
-                    p.brake.get_position_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
-                    // p.accel.get_position_brake_trajectory(inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
+                    if (!std::isinf(inp.max_jerk[dof])) {
+                        p.brake.get_position_brake_trajectory(inp.current_velocity[dof], inp.current_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
+                        // p.accel.get_position_brake_trajectory(inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
+                    } else {
+                        p.brake.get_second_order_position_brake_trajectory(inp.current_velocity[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof]);
+                        // p.accel.get_second_order_position_brake_trajectory(inp.target_velocity[dof], inp.target_acceleration[dof], inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof]);
+                    }
                     p.set_boundary(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_position[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
                 } break;
                 case ControlInterface::Velocity: {
-                    p.brake.get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
-                    // p.accel.get_velocity_brake_trajectory(inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
+                    if (!std::isinf(inp.max_jerk[dof])) {
+                        p.brake.get_velocity_brake_trajectory(inp.current_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
+                        // p.accel.get_velocity_brake_trajectory(inp.target_acceleration[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]);
+                    } else {
+                        p.brake.get_second_order_velocity_brake_trajectory();
+                        // p.accel.get_second_order_velocity_brake_trajectory();
+                    }
                     p.set_boundary_for_velocity(inp.current_position[dof], inp.current_velocity[dof], inp.current_acceleration[dof], inp.target_velocity[dof], inp.target_acceleration[dof]);
                 } break;
             }
 
             // Finalize pre & post-trajectories
-            p.brake.finalize(p.p[0], p.v[0], p.a[0]);
-            // p.accel.finalize(p.pf, p.vf, p.af);
+            if (!std::isinf(inp.max_jerk[dof])) {
+                p.brake.finalize(p.p[0], p.v[0], p.a[0]);
+                // p.accel.finalize(p.pf, p.vf, p.af);
+            } else {
+                p.brake.finalize_second_order(p.p[0], p.v[0], p.a[0]);
+                // p.accel.finalize_second_order(p.pf, p.vf, p.af);
+            }
 
             bool found_profile {false};
             switch (inp_per_dof_control_interface[dof]) {

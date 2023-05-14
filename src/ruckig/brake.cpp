@@ -79,6 +79,28 @@ void BrakeProfile::get_position_brake_trajectory(double v0, double a0, double vM
     }
 }
 
+void BrakeProfile::get_second_order_position_brake_trajectory(double v0, double vMax, double vMin, double aMax, double aMin) {
+    t[0] = 0.0;
+    t[1] = 0.0;
+    j[0] = 0.0;
+    j[1] = 0.0;
+    a[0] = 0.0;
+    a[1] = 0.0;
+
+    if (aMax == 0.0 || aMin == 0.0) {
+        return; // Ignore braking for zero-limits
+    }
+
+    if (v0 > vMax) {
+        a[0] = aMin;
+        t[0] = (vMax - v0)/aMin + eps;
+
+    } else if (v0 < vMin) {
+        j[0] = aMax;
+        t[0] = (vMin - v0)/aMax + eps;
+    }
+}
+
 void BrakeProfile::get_velocity_brake_trajectory(double a0, double aMax, double aMin, double jMax) {
     t[0] = 0.0;
     t[1] = 0.0;
