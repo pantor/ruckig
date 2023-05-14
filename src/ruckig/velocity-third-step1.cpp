@@ -4,11 +4,11 @@
 
 namespace ruckig {
 
-VelocityStep1::VelocityStep1(double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): a0(a0), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax) {
+VelocityThirdOrderStep1::VelocityThirdOrderStep1(double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): a0(a0), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax) {
     vd = vf - v0;
 }
 
-void VelocityStep1::time_acc0(ProfileIter& profile, double aMax, double aMin, double jMax, bool) const {
+void VelocityThirdOrderStep1::time_acc0(ProfileIter& profile, double aMax, double aMin, double jMax, bool) const {
     profile->t[0] = (-a0 + aMax)/jMax;
     profile->t[1] = (a0*a0 + af*af)/(2*aMax*jMax) - aMax/jMax + vd/aMax;
     profile->t[2] = (-af + aMax)/jMax;
@@ -22,7 +22,7 @@ void VelocityStep1::time_acc0(ProfileIter& profile, double aMax, double aMin, do
     }
 }
 
-void VelocityStep1::time_none(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const {
+void VelocityThirdOrderStep1::time_none(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const {
     double h1 = (a0*a0 + af*af)/2 + jMax*vd;
     if (h1 >= 0.0) {
         h1 = std::sqrt(h1);
@@ -59,7 +59,7 @@ void VelocityStep1::time_none(ProfileIter& profile, double aMax, double aMin, do
     }
 }
 
-bool VelocityStep1::time_all_single_step(Profile* profile, double aMax, double aMin, double jMax) const {
+bool VelocityThirdOrderStep1::time_all_single_step(Profile* profile, double aMax, double aMin, double jMax) const {
     if (std::abs(af - a0) > DBL_EPSILON) {
         return false;
     }
@@ -88,7 +88,7 @@ bool VelocityStep1::time_all_single_step(Profile* profile, double aMax, double a
 }
 
 
-bool VelocityStep1::get_profile(const Profile& input, Block& block) {
+bool VelocityThirdOrderStep1::get_profile(const Profile& input, Block& block) {
     // Zero-limits special case
     if (_jMax == 0.0) {
         auto& p = block.p_min;

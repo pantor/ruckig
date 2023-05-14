@@ -22,10 +22,10 @@ endif()
 
 add_library(ruckig
   src/ruckig/brake.cpp
-  src/ruckig/position-step1.cpp
-  src/ruckig/position-step2.cpp
-  src/ruckig/velocity-step1.cpp
-  src/ruckig/velocity-step2.cpp
+  src/ruckig/position-third-step1.cpp
+  src/ruckig/position-third-step2.cpp
+  src/ruckig/velocity-third-step1.cpp
+  src/ruckig/velocity-third-step2.cpp
 )
 add_library(ruckig::ruckig ALIAS ruckig)
 

@@ -342,6 +342,16 @@ public:
                 }
                 return false;
             }
+
+            for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+                const double jMax = max_jerk[dof];
+                if (std::isinf(jMax)) {
+                    if constexpr (throw_validation_error) {
+                        throw RuckigError("infinite jerk limit of DoF " + std::to_string(dof) + " is currently not supported with intermediate positions.");
+                    }
+                    return false;
+                }
+            }
         }
 
         return true;

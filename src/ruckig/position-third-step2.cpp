@@ -6,7 +6,7 @@
 
 namespace ruckig {
 
-PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): v0(v0), a0(a0), tf(tf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
+PositionThirdOrderStep2::PositionThirdOrderStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): v0(v0), a0(a0), tf(tf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
     pd = pf - p0;
     tf_tf = tf * tf;
     tf_p3 = tf_tf * tf;
@@ -38,7 +38,7 @@ PositionStep2::PositionStep2(double tf, double p0, double v0, double a0, double 
     g2 = -2*pd + tf*(v0 + vf);
 }
 
-bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // Profile UDDU, Solution 1
     if ((2*(aMax - aMin) + ad)/jMax < tf) {
         const double h1 = std::sqrt((a0_p4 + af_p4 - 4*a0_p3*(2*aMax + aMin)/3 - 4*af_p3*(aMax + 2*aMin)/3 + 2*(a0_a0 - af_af)*aMax*aMax + (4*a0*aMax - 2*a0_a0)*(af_af - 2*af*aMin + (aMin - aMax)*aMin + 2*jMax*(aMin*tf - vd)) + 2*af_af*(aMin*aMin + 2*jMax*(aMax*tf - vd)) + 4*jMax*(2*aMin*(af*vd + jMax*g1) + (aMax*aMax - aMin*aMin)*vd + jMax*vd_vd) + 8*aMax*jMax_jMax*(pd - tf*vf))/(aMax*aMin) + 4*af_af + 2*a0_a0 + (4*af + aMax - aMin)*(aMax - aMin) + 4*jMax*(aMin - aMax + jMax*tf - 2*af)*tf) * std::abs(jMax)/jMax;
@@ -74,7 +74,7 @@ bool PositionStep2::time_acc0_acc1_vel(Profile& profile, double vMax, double vMi
     return false;
 }
 
-bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_acc1_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // Profile UDDU
     {
         const double ph1 = a0_a0 + af_af - aMin*(a0 + 2*af - aMin) - 2*jMax*(vd - aMin*tf);
@@ -162,7 +162,7 @@ bool PositionStep2::time_acc1_vel(Profile& profile, double vMax, double vMin, do
     return false;
 }
 
-bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_acc0_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     if (tf < std::max((-a0 + aMax)/jMax, 0.0) + std::max(aMax/jMax, 0.0)) {
         return false;
     }
@@ -256,7 +256,7 @@ bool PositionStep2::time_acc0_vel(Profile& profile, double vMax, double vMin, do
     return false;
 }
 
-bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_vel(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     const double tz_min = std::max(0.0, -a0/jMax);
     const double tz_max = std::min((tf - a0/jMax)/2, (aMax - a0)/jMax);
 
@@ -487,7 +487,7 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
     return false;
 }
 
-bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_acc0_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double h1 = 2*aMin*g1 + vd_vd + aMax*(2*pd + aMin*tf_tf - 2*tf*vf);
         const double h2 = ((aMax - aMin)*(-aMin*vd + aMax*(aMin*tf - vd)));
@@ -541,7 +541,7 @@ bool PositionStep2::time_acc0_acc1(Profile& profile, double vMax, double vMin, d
     return false;
 }
 
-bool PositionStep2::time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_acc1(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // a3 != 0
     // Case UDDU
     {
@@ -623,7 +623,7 @@ bool PositionStep2::time_acc1(Profile& profile, double vMax, double vMin, double
     return false;
 }
 
-bool PositionStep2::time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     // UDUD
     {
         const double h1 = std::sqrt(ad_ad/(2*jMax_jMax) - ad*(aMax - a0)/(jMax_jMax) + (aMax*tf - vd)/jMax);
@@ -686,7 +686,7 @@ bool PositionStep2::time_acc0(Profile& profile, double vMax, double vMin, double
     return false;
 }
 
-bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     if (std::abs(v0) < DBL_EPSILON && std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON) {
         const double h1 = std::sqrt(tf_tf*vf_vf + pow2(4*pd - tf*vf));
         const double jf = 4*(4*pd - 2*tf*vf + h1)/tf_p3;
@@ -1011,7 +1011,7 @@ bool PositionStep2::time_none(Profile& profile, double vMax, double vMin, double
     return false;
 }
 
-bool PositionStep2::time_none_smooth(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
+bool PositionThirdOrderStep2::time_none_smooth(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax) {
     {
         const double h0 = ad_ad + 2*jMax*(a0*tf - vd);
         const double h1a = 2*(a0_p3 - af_p3) - 6*a0_a0*(af - jMax*tf) + 6*jMax_jMax*(-pd + tf*v0) + 6*a0*af_af + 3*a0*jMax*(jMax*tf_tf - 2*vd) + 6*af*jMax*(vd - tf*a0);
@@ -1109,7 +1109,7 @@ bool PositionStep2::time_none_smooth(Profile& profile, double vMax, double vMin,
     return false;
 }
 
-bool PositionStep2::get_profile(Profile& profile) {
+bool PositionThirdOrderStep2::get_profile(Profile& profile) {
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
     const bool up_first = (pd > tf * v0);

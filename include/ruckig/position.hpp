@@ -9,7 +9,7 @@ namespace ruckig {
 
 
 //! Mathematical equations for Step 1 in position interface: Extremal profiles
-class PositionStep1 {
+class PositionThirdOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
 
@@ -48,14 +48,14 @@ class PositionStep1 {
     }
 
 public:
-    explicit PositionStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
+    explicit PositionThirdOrderStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(const Profile& input, Block& block);
 };
 
 
 //! Mathematical equations for Step 2 in position interface: Time synchronization
-class PositionStep2 {
+class PositionThirdOrderStep2 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
 
@@ -87,7 +87,7 @@ class PositionStep2 {
 public:
     bool minimize_jerk {false};
 
-    explicit PositionStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
+    explicit PositionThirdOrderStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(Profile& profile);
 };

@@ -6,12 +6,12 @@
 
 namespace ruckig {
 
-VelocityStep2::VelocityStep2(double tf, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): a0(a0), tf(tf), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
+VelocityThirdOrderStep2::VelocityThirdOrderStep2(double tf, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): a0(a0), tf(tf), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
     vd = vf - v0;
     ad = af - a0;
 }
 
-bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double jMax) {
+bool VelocityThirdOrderStep2::time_acc0(Profile& profile, double aMax, double aMin, double jMax) {
     // UD Solution 1/2
     {
         const double h1 = std::sqrt((-ad*ad + 2*jMax*((a0 + af)*tf - 2*vd))/(jMax*jMax) + tf*tf);
@@ -67,7 +67,7 @@ bool VelocityStep2::time_acc0(Profile& profile, double aMax, double aMin, double
     return false;
 }
 
-bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double jMax) {
+bool VelocityThirdOrderStep2::time_none(Profile& profile, double aMax, double aMin, double jMax) {
     if (std::abs(a0) < DBL_EPSILON && std::abs(af) < DBL_EPSILON && std::abs(vd) < DBL_EPSILON) {
         profile.t[0] = 0;
         profile.t[1] = tf;
@@ -106,7 +106,7 @@ bool VelocityStep2::time_none(Profile& profile, double aMax, double aMin, double
     return false;
 }
 
-bool VelocityStep2::get_profile(Profile& profile) {
+bool VelocityThirdOrderStep2::get_profile(Profile& profile) {
     // Test all cases to get ones that match
     // However we should guess which one is correct and try them first...
     if (vd > 0) {

@@ -3,7 +3,7 @@
 
 namespace ruckig {
 
-PositionStep1::PositionStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): v0(v0), a0(a0), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax) {
+PositionThirdOrderStep1::PositionThirdOrderStep1(double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): v0(v0), a0(a0), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax) {
     pd = pf - p0;
 
     v0_v0 = v0 * v0;
@@ -21,7 +21,7 @@ PositionStep1::PositionStep1(double p0, double v0, double a0, double pf, double 
     jMax_jMax = jMax * jMax;
 }
 
-void PositionStep1::time_all_vel(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool) const {
+void PositionThirdOrderStep1::time_all_vel(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool) const {
     // ACC0_ACC1_VEL
     profile->t[0] = (-a0 + aMax)/jMax;
     profile->t[1] = (a0_a0/2 - aMax*aMax - jMax*(v0 - vMax))/(aMax*jMax);
@@ -83,7 +83,7 @@ void PositionStep1::time_all_vel(ProfileIter& profile, double vMax, double vMin,
     }
 }
 
-void PositionStep1::time_acc0_acc1(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const {
+void PositionThirdOrderStep1::time_acc0_acc1(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const {
     double h1 = (3*(af_p4*aMax - a0_p4*aMin) + aMax*aMin*(8*(a0_p3 - af_p3) + 3*aMax*aMin*(aMax - aMin) + 6*aMin*af_af - 6*aMax*a0_a0) + 12*jMax*(aMax*aMin*((aMax - 2*a0)*v0 - (aMin - 2*af)*vf) + aMin*a0_a0*v0 - aMax*af_af*vf))/(3*(aMax - aMin)*jMax_jMax) + 4*(aMax*vf_vf - aMin*v0_v0 - 2*aMin*aMax*pd)/(aMax - aMin);
 
     if (h1 >= 0) {
@@ -126,7 +126,7 @@ void PositionStep1::time_acc0_acc1(ProfileIter& profile, double vMax, double vMi
     }
 }
 
-void PositionStep1::time_all_none_acc0_acc1(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const {
+void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const {
     // NONE UDDU / UDUD Strategy: t7 == 0 (equals UDDU), this one is in particular prone to numerical issues
     const double h2_none = (a0_a0 - af_af)/(2*jMax) + (vf - v0);
     const double h2_h2 = h2_none*h2_none;
@@ -305,7 +305,7 @@ void PositionStep1::time_all_none_acc0_acc1(ProfileIter& profile, double vMax, d
 }
 
 
-void PositionStep1::time_acc1_vel_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
+void PositionThirdOrderStep1::time_acc1_vel_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
     profile->t[0] = 0;
     profile->t[1] = 0;
     profile->t[2] = a0/jMax;
@@ -319,7 +319,7 @@ void PositionStep1::time_acc1_vel_two_step(ProfileIter& profile, double vMax, do
     }
 }
 
-void PositionStep1::time_acc0_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
+void PositionThirdOrderStep1::time_acc0_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
     // Two step
     {
         profile->t[0] = 0;
@@ -390,7 +390,7 @@ void PositionStep1::time_acc0_two_step(ProfileIter& profile, double vMax, double
     }
 }
 
-void PositionStep1::time_vel_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
+void PositionThirdOrderStep1::time_vel_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
     const double h1 = std::sqrt(af_af/(2*jMax_jMax) + (vMax - vf)/jMax);
 
     // Four step
@@ -428,7 +428,7 @@ void PositionStep1::time_vel_two_step(ProfileIter& profile, double vMax, double 
     }
 }
 
-void PositionStep1::time_none_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
+void PositionThirdOrderStep1::time_none_two_step(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
     // Two step
     {
         const double h0 = std::sqrt((a0_a0 + af_af)/2 + jMax*(vf - v0)) * std::abs(jMax) / jMax;
@@ -463,7 +463,7 @@ void PositionStep1::time_none_two_step(ProfileIter& profile, double vMax, double
     }
 }
 
-bool PositionStep1::time_all_single_step(Profile* profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
+bool PositionThirdOrderStep1::time_all_single_step(Profile* profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
     if (std::abs(af - a0) > DBL_EPSILON) {
         return false;
     }
@@ -507,7 +507,7 @@ bool PositionStep1::time_all_single_step(Profile* profile, double vMax, double v
 }
 
 
-bool PositionStep1::get_profile(const Profile& input, Block& block) {
+bool PositionThirdOrderStep1::get_profile(const Profile& input, Block& block) {
     // Zero-limits special case
     if (_jMax == 0.0 || _aMax == 0.0 || _aMin == 0.0) {
         auto& p = block.p_min;
