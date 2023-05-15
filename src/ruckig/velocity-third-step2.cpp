@@ -6,7 +6,7 @@
 
 namespace ruckig {
 
-VelocityThirdOrderStep2::VelocityThirdOrderStep2(double tf, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): a0(a0), tf(tf), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
+VelocityThirdOrderStep2::VelocityThirdOrderStep2(double tf, double v0, double a0, double vf, double af, double aMax, double aMin, double jMax): a0(a0), tf(tf), af(af), _aMax(aMax), _aMin(aMin), _jMax(jMax) {
     vd = vf - v0;
     ad = af - a0;
 }

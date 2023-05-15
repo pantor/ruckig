@@ -6,7 +6,7 @@
 
 namespace ruckig {
 
-PositionThirdOrderStep2::PositionThirdOrderStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): v0(v0), a0(a0), tf(tf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax)  {
+PositionThirdOrderStep2::PositionThirdOrderStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax): v0(v0), a0(a0), tf(tf), vf(vf), af(af), _vMax(vMax), _vMin(vMin), _aMax(aMax), _aMin(aMin), _jMax(jMax) {
     pd = pf - p0;
     tf_tf = tf * tf;
     tf_p3 = tf_tf * tf;

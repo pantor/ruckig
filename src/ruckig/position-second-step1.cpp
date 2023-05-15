@@ -10,20 +10,20 @@ PositionSecondOrderStep1::PositionSecondOrderStep1(double p0, double v0, double 
 
 void PositionSecondOrderStep1::time_acc0(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, bool) const {
     profile->t[0] = (-v0 + vMax)/aMax;
-    profile->t[1] = (v0*v0 + vf*vf)/(2*vMax*aMax) - vMax/aMax + pd/vMax;
-    profile->t[2] = (-vf + vMax)/aMax;
+    profile->t[1] = (aMin*v0*v0 - aMax*vf*vf)/(2*aMax*aMin*vMax) + vMax*(aMax - aMin)/(2*aMax*aMin) + pd/vMax;
+    profile->t[2] = (vf - vMax)/aMin;
     profile->t[3] = 0;
     profile->t[4] = 0;
     profile->t[5] = 0;
     profile->t[6] = 0;
 
-    if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::ACC0>(aMax, vMax, vMin)) {
+    if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::ACC0>(aMax, aMin, vMax, vMin)) {
         add_profile(profile);
     }
 }
 
 void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, bool return_after_found) const {
-    double h1 = (v0*v0 + vf*vf)/2 + aMax*pd;
+    double h1 = (aMax*vf*vf - aMin*v0*v0 - 2*aMax*aMin*pd)/(aMax - aMin);
     if (h1 >= 0.0) {
         h1 = std::sqrt(h1);
 
@@ -36,9 +36,9 @@ void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, doub
         {
             profile->t[0] = -(v0 + h1)/aMax;
             profile->t[1] = 0;
-            profile->t[2] = -(vf + h1)/aMax;
+            profile->t[2] = (vf + h1)/aMin;
 
-            if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(aMax, vMax, vMin)) {
+            if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(aMax, aMin, vMax, vMin)) {
                 add_profile(profile);
                 if (return_after_found) {
                     return;
@@ -50,9 +50,9 @@ void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, doub
         {
             profile->t[0] = (-v0 + h1)/aMax;
             profile->t[1] = 0;
-            profile->t[2] = (-vf + h1)/aMax;
+            profile->t[2] = (vf - h1)/aMin;
 
-            if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(aMax, vMax, vMin)) {
+            if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(aMax, aMin, vMax, vMin)) {
                 add_profile(profile);
             }
         }
@@ -74,12 +74,12 @@ bool PositionSecondOrderStep1::time_all_single_step(Profile* profile, double vMa
 
     if (std::abs(v0) > DBL_EPSILON) {
         profile->t[3] = pd / v0;
-        if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin)) {
+        if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, 0.0, vMax, vMin)) {
             return true;
         }
 
     } else if (std::abs(pd) < DBL_EPSILON) {
-        if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin)) {
+        if (profile->check_for_second_order<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, 0.0, vMax, vMin)) {
             return true;
         }
     }

@@ -14,9 +14,9 @@ PositionSecondOrderStep2::PositionSecondOrderStep2(double tf, double p0, double 
 bool PositionSecondOrderStep2::time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin) {
     // UD Solution 1/2
     {
-        const double h1 = std::sqrt((-vd*vd + 2*aMax*((v0 + vf)*tf - 2*pd))/(aMax*aMax) + tf*tf);
+        const double h1 = std::sqrt((2*aMax*(pd - tf*vf) - 2*aMin*(pd - tf*v0) + vd*vd)/(aMax*aMin) + tf*tf);
 
-        profile.t[0] = vd/(2*aMax) + (tf - h1)/2;
+        profile.t[0] = (aMax*vd - aMax*aMin*(tf - h1))/(aMax*(aMax - aMin));
         profile.t[1] = h1;
         profile.t[2] = tf - (profile.t[0] + h1);
         profile.t[3] = 0;
@@ -24,7 +24,7 @@ bool PositionSecondOrderStep2::time_acc0(Profile& profile, double vMax, double v
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, aMax, vMax, vMin)) {
+        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, aMax, aMin, vMax, vMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -42,7 +42,7 @@ bool PositionSecondOrderStep2::time_acc0(Profile& profile, double vMax, double v
         profile.t[5] = 0;
         profile.t[6] = tf - (profile.t[0] + profile.t[1]);
 
-        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, aMax, vMax, vMin)) {
+        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, aMax, aMin, vMax, vMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -58,7 +58,7 @@ bool PositionSecondOrderStep2::time_acc0(Profile& profile, double vMax, double v
         profile.t[5] = 0;
         profile.t[6] = vd/aMax;
 
-        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, aMax, vMax, vMin)) {
+        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, aMax, aMin, vMax, vMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -77,7 +77,7 @@ bool PositionSecondOrderStep2::time_none(Profile& profile, double vMax, double v
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::NONE>(tf, aMax, vMax, vMin)) {
+        if (profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::NONE>(tf, aMax, aMin, vMax, vMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -97,7 +97,7 @@ bool PositionSecondOrderStep2::time_none(Profile& profile, double vMax, double v
 
         const double af = vd*vd/h1;
 
-        if ((aMin - 1e-12 < af) && (af < aMax + 1e-12) && profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::NONE>(tf, af, vMax, vMin)) {
+        if ((aMin - 1e-12 < af) && (af < aMax + 1e-12) && profile.check_for_second_order_with_timing<JerkSigns::UDDU, ReachedLimits::NONE>(tf, af, -af, vMax, vMin)) {
             profile.pf = profile.p.back();
             return true;
         }
