@@ -143,7 +143,7 @@ public:
         }
 
         j = {0, 0, 0, 0, 0, 0, 0};
-        a = {0, aUp, 0, 0, 0, 0, 0};
+        a = {0, aUp, 0, 0, 0, 0, 0, af};
         for (size_t i = 0; i < 7; ++i) {
             v[i+1] = v[i] + t[i] * a[i];
             p[i+1] = p[i] + t[i] * (v[i] + t[i] * a[i] / 2);
@@ -343,9 +343,9 @@ public:
 
         j = {0, 0, 0, 0, 0, 0, 0};
         if constexpr (control_signs == ControlSigns::UDDU) {
-            a = {(t[0] > 0 ? aUp : 0), 0, (t[2] > 0 ? aDown : 0), 0, (t[4] > 0 ? aDown : 0), 0, (t[6] > 0 ? aUp : 0)};
+            a = {(t[0] > 0 ? aUp : 0), 0, (t[2] > 0 ? aDown : 0), 0, (t[4] > 0 ? aDown : 0), 0, (t[6] > 0 ? aUp : 0), af};
         } else {
-            a = {(t[0] > 0 ? aUp : 0), 0, (t[2] > 0 ? aDown : 0), 0, (t[4] > 0 ? aUp : 0), 0, (t[6] > 0 ? aDown : 0)};
+            a = {(t[0] > 0 ? aUp : 0), 0, (t[2] > 0 ? aDown : 0), 0, (t[4] > 0 ? aUp : 0), 0, (t[6] > 0 ? aDown : 0), af};
         }
 
         direction = (vMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;

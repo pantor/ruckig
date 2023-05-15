@@ -109,7 +109,7 @@ bool PositionSecondOrderStep1::get_profile(const Profile& input, Block& block) {
     profile->set_boundary(input);
 
     if (std::abs(vf) < DBL_EPSILON) {
-        // There is no blocked interval when af==0, so return after first found profile
+        // There is no blocked interval when vf==0, so return after first found profile
         const double vMax = (pd >= 0) ? _vMax : _vMin;
         const double vMin = (pd >= 0) ? _vMin : _vMax;
         const double aMax = (pd >= 0) ? _aMax : _aMin;
