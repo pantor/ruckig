@@ -303,6 +303,95 @@ public:
     }
 
 
+    // For second-order position interface
+    template<JerkSigns jerk_signs, ReachedLimits limits>
+    bool check_for_second_order(double af, double vMax, double vMin) {
+        if (t[0] < 0) {
+            return false;
+        }
+
+        t_sum[0] = t[0];
+        for (size_t i = 0; i < 6; ++i) {
+            if (t[i+1] < 0) {
+                return false;
+            }
+
+            t_sum[i+1] = t_sum[i] + t[i+1];
+        }
+
+        if constexpr (limits == ReachedLimits::ACC0_ACC1_VEL || limits == ReachedLimits::ACC0_VEL || limits == ReachedLimits::ACC1_VEL || limits == ReachedLimits::VEL) {
+            if (t[3] < std::numeric_limits<double>::epsilon()) {
+                return false;
+            }
+        }
+
+        if constexpr (limits == ReachedLimits::ACC0 || limits == ReachedLimits::ACC0_ACC1) {
+            if (t[1] < std::numeric_limits<double>::epsilon()) {
+                return false;
+            }
+        }
+
+        if constexpr (limits == ReachedLimits::ACC1 || limits == ReachedLimits::ACC0_ACC1) {
+            if (t[5] < std::numeric_limits<double>::epsilon()) {
+                return false;
+            }
+        }
+
+        if (t_sum.back() > t_max) { // For numerical reasons, is that needed?
+            return false;
+        }
+
+        j = {0, 0, 0, 0, 0, 0, 0};
+        if constexpr (jerk_signs == JerkSigns::UDDU) {
+            a = {(t[0] > 0 ? af : 0), 0, (t[2] > 0 ? -af : 0), 0, (t[4] > 0 ? -af : 0), 0, (t[6] > 0 ? af : 0)};
+        } else {
+            a = {(t[0] > 0 ? af : 0), 0, (t[2] > 0 ? -af : 0), 0, (t[4] > 0 ? af : 0), 0, (t[6] > 0 ? -af : 0)};
+        }
+
+        direction = (vMax > 0) ? Profile::Direction::UP : Profile::Direction::DOWN;
+        const double vUppLim = (direction == Profile::Direction::UP ? vMax : vMin) + v_eps;
+        const double vLowLim = (direction == Profile::Direction::UP ? vMin : vMax) - v_eps;
+
+        for (size_t i = 0; i < 7; ++i) {
+            v[i+1] = v[i] + t[i] * a[i];
+            p[i+1] = p[i] + t[i] * (v[i] + t[i] * a[i] / 2);
+
+            if constexpr (limits == ReachedLimits::ACC0_ACC1_VEL || limits == ReachedLimits::ACC0_ACC1 || limits == ReachedLimits::ACC0_VEL || limits == ReachedLimits::ACC1_VEL || limits == ReachedLimits::VEL) {
+                if (i == 2) {
+                    a[3] = 0.0;
+                }
+            }
+
+            if (i > 1 && a[i+1] * a[i] < -std::numeric_limits<double>::epsilon()) {
+                const double v_a_zero = v[i] - (a[i] * a[i]) / (2 * j[i]);
+                if (v_a_zero > vUppLim || v_a_zero < vLowLim) {
+                    return false;
+                }
+            }
+        }
+
+        this->jerk_signs = jerk_signs;
+        this->limits = limits;
+
+        // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
+        // std::cout << std::setprecision(16) << "target: " << std::abs(p.back() - pf) << " " << std::abs(v.back() - vf) << " " << std::abs(a.back() - af) << " T: " << t_sum.back() << " " << to_string() << std::endl;
+        return std::abs(p.back() - pf) < p_precision && std::abs(v.back() - vf) < v_precision
+            && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
+            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim;
+    }
+
+    template<JerkSigns jerk_signs, ReachedLimits limits>
+    inline bool check_for_second_order_with_timing(double, double af, double vMax, double vMin) {
+        // Time doesn't need to be checked as every profile has a: tf - ... equation
+        return check_for_second_order<jerk_signs, limits>(af, vMax, vMin); // && (std::abs(t_sum.back() - tf) < t_precision);
+    }
+
+    template<JerkSigns jerk_signs, ReachedLimits limits>
+    inline bool check_for_second_order_with_timing(double tf, double af, double vMax, double vMin, double aMax, double aMin) {
+        return (aMin - a_eps < af) && (af < aMax + j_eps) && check_for_second_order_with_timing<jerk_signs, limits>(tf, af, vMax, vMin);
+    }
+
+
     // Secondary features
     static void check_position_extremum(double t_ext, double t_sum, double t, double p, double v, double a, double j, PositionExtrema& ext) {
         if (0 < t_ext && t_ext < t) {

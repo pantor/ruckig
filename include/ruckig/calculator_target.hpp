@@ -285,7 +285,7 @@ public:
                         PositionThirdOrderStep1 step1 {p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                         found_profile = step1.get_profile(p, blocks[dof]);
                     } else {
-                        PositionThirdOrderStep1 step1 {p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        PositionSecondOrderStep1 step1 {p.p[0], p.v[0], p.pf, p.vf, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof]};
                         found_profile = step1.get_profile(p, blocks[dof]);
                     }
                 } break;
@@ -479,7 +479,7 @@ public:
                         PositionThirdOrderStep2 step2 {t_profile, p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
                         found_time_synchronization = step2.get_profile(p);
                     } else {
-                        PositionThirdOrderStep2 step2 {t_profile, p.p[0], p.v[0], p.a[0], p.pf, p.vf, p.af, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof], inp.max_jerk[dof]};
+                        PositionSecondOrderStep2 step2 {t_profile, p.p[0], p.v[0], p.pf, p.vf, inp.max_velocity[dof], inp_min_velocity[dof], inp.max_acceleration[dof], inp_min_acceleration[dof]};
                         found_time_synchronization = step2.get_profile(p);
                     }
                 } break;

@@ -8,7 +8,7 @@ namespace ruckig {
 
 
 
-//! Mathematical equations for Step 1 in third order position interface: Extremal profiles
+//! Mathematical equations for Step 1 in third-order position interface: Extremal profiles
 class PositionThirdOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
@@ -54,7 +54,7 @@ public:
 };
 
 
-//! Mathematical equations for Step 2 in third order position interface: Time synchronization
+//! Mathematical equations for Step 2 in third-order position interface: Time synchronization
 class PositionThirdOrderStep2 {
     using ReachedLimits = Profile::ReachedLimits;
     using JerkSigns = Profile::JerkSigns;
@@ -88,6 +88,65 @@ public:
     bool minimize_jerk {false};
 
     explicit PositionThirdOrderStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
+
+    bool get_profile(Profile& profile);
+};
+
+
+//! Mathematical equations for Step 1 in second-order position interface: Extremal profiles
+class PositionSecondOrderStep1 {
+    using ReachedLimits = Profile::ReachedLimits;
+    using JerkSigns = Profile::JerkSigns;
+
+    const double v0, vf;
+    const double _vMax, _vMin, _aMax, _aMin;
+
+    // Pre-calculated expressions
+    double pd;
+
+    // Max 3 valid profiles
+    using ProfileIter = std::array<Profile, 3>::iterator;
+    std::array<Profile, 3> valid_profiles;
+
+    void time_acc0(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, bool return_after_found) const;
+    void time_none(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, bool return_after_found) const;
+
+    // Only for zero-limits case
+    bool time_all_single_step(Profile* profile, double vMax, double vMin, double aMax, double aMin) const;
+
+    inline void add_profile(ProfileIter& profile) const {
+        const auto prev_profile = profile;
+        ++profile;
+        profile->set_boundary(*prev_profile);
+    }
+
+public:
+    explicit PositionSecondOrderStep1(double p0, double v0, double pf, double vf, double vMax, double vMin, double aMax, double aMin);
+
+    bool get_profile(const Profile& input, Block& block);
+};
+
+
+//! Mathematical equations for Step 2 in second-order position interface: Time synchronization
+class PositionSecondOrderStep2 {
+    using ReachedLimits = Profile::ReachedLimits;
+    using JerkSigns = Profile::JerkSigns;
+
+    const double v0, tf, vf;
+    const double _vMax, _vMin, _aMax, _aMin;
+
+    // Pre-calculated expressions
+    double pd, vd;
+
+    bool time_acc0(Profile& profile, double vMax, double vMin, double aMax, double aMin);
+    bool time_none(Profile& profile, double vMax, double vMin, double aMax, double aMin);
+
+    inline bool check_all(Profile& profile, double vMax, double vMin, double aMax, double aMin) {
+        return time_acc0(profile, vMax, vMin, aMax, aMin) || time_none(profile, vMax, vMin, aMax, aMin);
+    }
+
+public:
+    explicit PositionSecondOrderStep2(double tf, double p0, double v0, double pf, double vf, double vMax, double vMin, double aMax, double aMin);
 
     bool get_profile(Profile& profile);
 };
