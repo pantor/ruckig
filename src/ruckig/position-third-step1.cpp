@@ -31,7 +31,7 @@ void PositionThirdOrderStep1::time_all_vel(ProfileIter& profile, double vMax, do
     profile->t[5] = -(af_af/2 - aMin*aMin - jMax*(vf - vMax))/(aMin*jMax);
     profile->t[6] = profile->t[4] + af/jMax;
 
-    if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0_ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
+    if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0_ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile);
         return;
     }
@@ -47,7 +47,7 @@ void PositionThirdOrderStep1::time_all_vel(ProfileIter& profile, double vMax, do
     // profile->t[5] = -(af_af/2 - aMin*aMin + jMax*(vMax - vf))/(aMin*jMax);
     // profile->t[6] = profile->t[4] + af/jMax;
 
-    if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
+    if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile);
         return;
     }
@@ -63,7 +63,7 @@ void PositionThirdOrderStep1::time_all_vel(ProfileIter& profile, double vMax, do
     profile->t[5] = 0;
     profile->t[6] = t_acc1 + af/jMax;
 
-    if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0_VEL>(jMax, vMax, vMin, aMax, aMin)) {
+    if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile);
         return;
     }
@@ -78,7 +78,7 @@ void PositionThirdOrderStep1::time_all_vel(ProfileIter& profile, double vMax, do
     // profile->t[5] = 0;
     // profile->t[6] = t_acc1 + af/jMax;
 
-    if (profile->check<JerkSigns::UDDU, ReachedLimits::VEL>(jMax, vMax, vMin, aMax, aMin)) {
+    if (profile->check<ControlSigns::UDDU, ReachedLimits::VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile);
     }
 }
@@ -101,7 +101,7 @@ void PositionThirdOrderStep1::time_acc0_acc1(ProfileIter& profile, double vMax, 
             profile->t[5] = h3 + h1/aMin;
             profile->t[6] = profile->t[4] + af/jMax;
 
-            if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0_ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
+            if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0_ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
                 add_profile(profile);
                 if (return_after_found) {
                     return;
@@ -119,7 +119,7 @@ void PositionThirdOrderStep1::time_acc0_acc1(ProfileIter& profile, double vMax, 
             profile->t[5] = h3 - h1/aMin;
             profile->t[6] = profile->t[4] + af/jMax;
 
-            if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0_ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
+            if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0_ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
                 add_profile(profile);
             }
         }
@@ -219,7 +219,7 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
         profile->t[5] = 0;
         profile->t[6] = -h0 + t/2 + af/jMax;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::NONE>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             if (return_after_found) {
                 return;
@@ -249,7 +249,7 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
         profile->t[5] = 0;
         profile->t[6] = (af - aMax)/jMax + t;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             if (return_after_found) {
                 return;
@@ -295,7 +295,7 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
         profile->t[5] = h3_acc1 - (2*a0 + jMax*t)*t/aMin;
         profile->t[6] = (af - aMin)/jMax;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC1, true>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             if (return_after_found) {
                 return;
@@ -314,7 +314,7 @@ void PositionThirdOrderStep1::time_acc1_vel_two_step(ProfileIter& profile, doubl
     profile->t[5] = -(af_af/2 - aMin*aMin + jMax*(vMax - vf))/(aMin*jMax);
     profile->t[6] = profile->t[4] + af/jMax;
 
-    if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
+    if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC1_VEL>(jMax, vMax, vMin, aMax, aMin)) {
         add_profile(profile);
     }
 }
@@ -330,7 +330,7 @@ void PositionThirdOrderStep1::time_acc0_two_step(ProfileIter& profile, double vM
         profile->t[5] = 0;
         profile->t[6] = 0;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -346,7 +346,7 @@ void PositionThirdOrderStep1::time_acc0_two_step(ProfileIter& profile, double vM
         profile->t[5] = 0;
         profile->t[6] = 0;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -365,7 +365,7 @@ void PositionThirdOrderStep1::time_acc0_two_step(ProfileIter& profile, double vM
         profile->t[5] = 0;
         profile->t[6] = 0;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -383,7 +383,7 @@ void PositionThirdOrderStep1::time_acc0_two_step(ProfileIter& profile, double vM
         profile->t[5] = 0;
         profile->t[6] = (af - aMin)/jMax;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::ACC0>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -404,7 +404,7 @@ void PositionThirdOrderStep1::time_vel_two_step(ProfileIter& profile, double vMa
         profile->t[5] = 0;
         profile->t[6] = h1 + af/jMax;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::VEL>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::VEL>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -421,7 +421,7 @@ void PositionThirdOrderStep1::time_vel_two_step(ProfileIter& profile, double vMa
         profile->t[5] = 0;
         profile->t[6] = h1 + af/jMax;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::VEL>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::VEL>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -440,7 +440,7 @@ void PositionThirdOrderStep1::time_none_two_step(ProfileIter& profile, double vM
         profile->t[5] = 0;
         profile->t[6] = 0;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::NONE>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -456,7 +456,7 @@ void PositionThirdOrderStep1::time_none_two_step(ProfileIter& profile, double vM
         profile->t[5] = 0;
         profile->t[6] = 0;
 
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::NONE>(jMax, vMax, vMin, aMax, aMin)) {
             add_profile(profile);
             return;
         }
@@ -481,24 +481,24 @@ bool PositionThirdOrderStep1::time_all_single_step(Profile* profile, double vMax
 
         // Solution 1
         profile->t[3] = (-v0 + q) / a0;
-        if (profile->t[3] >= 0.0 && profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
+        if (profile->t[3] >= 0.0 && profile->check<ControlSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
             return true;
         }
 
         // Solution 2
         profile->t[3] = -(v0 + q) / a0;
-        if (profile->t[3] >= 0.0 && profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
+        if (profile->t[3] >= 0.0 && profile->check<ControlSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
             return true;
         }
 
     } else if (std::abs(v0) > DBL_EPSILON) {
         profile->t[3] = pd / v0;
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
             return true;
         }
 
     } else if (std::abs(pd) < DBL_EPSILON) {
-        if (profile->check<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
+        if (profile->check<ControlSigns::UDDU, ReachedLimits::NONE>(0.0, vMax, vMin, aMax, aMin)) {
             return true;
         }
     }

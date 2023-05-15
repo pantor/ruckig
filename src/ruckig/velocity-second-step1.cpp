@@ -21,7 +21,7 @@ bool VelocitySecondOrderStep1::get_profile(const Profile& input, Block& block) {
     p.t[5] = 0;
     p.t[6] = 0;
 
-    if (p.check_for_second_order_velocity<Profile::JerkSigns::UDDU, Profile::ReachedLimits::ACC0>(af)) {
+    if (p.check_for_second_order_velocity<Profile::ControlSigns::UDDU, Profile::ReachedLimits::ACC0>(af)) {
         block.t_min = p.t_sum.back() + p.brake.duration + p.accel.duration;
         return true;
     }

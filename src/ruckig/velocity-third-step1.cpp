@@ -17,7 +17,7 @@ void VelocityThirdOrderStep1::time_acc0(ProfileIter& profile, double aMax, doubl
     profile->t[5] = 0;
     profile->t[6] = 0;
 
-    if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::ACC0>(jMax, aMax, aMin)) {
+    if (profile->check_for_velocity<ControlSigns::UDDU, ReachedLimits::ACC0>(jMax, aMax, aMin)) {
         add_profile(profile);
     }
 }
@@ -38,7 +38,7 @@ void VelocityThirdOrderStep1::time_none(ProfileIter& profile, double aMax, doubl
             profile->t[1] = 0;
             profile->t[2] = -(af + h1)/jMax;
 
-            if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
+            if (profile->check_for_velocity<ControlSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
                 add_profile(profile);
                 if (return_after_found) {
                     return;
@@ -52,7 +52,7 @@ void VelocityThirdOrderStep1::time_none(ProfileIter& profile, double aMax, doubl
             profile->t[1] = 0;
             profile->t[2] = (-af + h1)/jMax;
 
-            if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
+            if (profile->check_for_velocity<ControlSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
                 add_profile(profile);
             }
         }
@@ -74,12 +74,12 @@ bool VelocityThirdOrderStep1::time_all_single_step(Profile* profile, double aMax
 
     if (std::abs(a0) > DBL_EPSILON) {
         profile->t[3] = vd / a0;
-        if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, aMax, aMin)) {
+        if (profile->check_for_velocity<ControlSigns::UDDU, ReachedLimits::NONE>(0.0, aMax, aMin)) {
             return true;
         }
 
     } else if (std::abs(vd) < DBL_EPSILON) {
-        if (profile->check_for_velocity<JerkSigns::UDDU, ReachedLimits::NONE>(0.0, aMax, aMin)) {
+        if (profile->check_for_velocity<ControlSigns::UDDU, ReachedLimits::NONE>(0.0, aMax, aMin)) {
             return true;
         }
     }

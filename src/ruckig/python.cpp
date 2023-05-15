@@ -175,7 +175,7 @@ limited by velocity, acceleration, and jerk constraints.";
     py::class_<Profile>(m, "Profile")
         .def_readonly("limits", &Profile::limits)
         .def_readonly("direction", &Profile::direction)
-        .def_readonly("jerk_signs", &Profile::jerk_signs)
+        .def_readonly("control_signs", &Profile::control_signs)
         .def_readonly("t", &Profile::t)
         .def_readonly("t_sum", &Profile::t_sum)
         .def_readonly("j", &Profile::j)

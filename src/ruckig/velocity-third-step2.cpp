@@ -24,7 +24,7 @@ bool VelocityThirdOrderStep2::time_acc0(Profile& profile, double aMax, double aM
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
+        if (profile.check_for_velocity_with_timing<ControlSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -42,7 +42,7 @@ bool VelocityThirdOrderStep2::time_acc0(Profile& profile, double aMax, double aM
         profile.t[5] = 0;
         profile.t[6] = tf - (profile.t[0] + profile.t[1]);
 
-        if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
+        if (profile.check_for_velocity_with_timing<ControlSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -58,7 +58,7 @@ bool VelocityThirdOrderStep2::time_acc0(Profile& profile, double aMax, double aM
         profile.t[5] = 0;
         profile.t[6] = ad/jMax;
 
-        if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
+        if (profile.check_for_velocity_with_timing<ControlSigns::UDDU, ReachedLimits::ACC0>(tf, jMax, aMax, aMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -77,7 +77,7 @@ bool VelocityThirdOrderStep2::time_none(Profile& profile, double aMax, double aM
         profile.t[5] = 0;
         profile.t[6] = 0;
 
-        if (profile.check_for_velocity_with_timing<JerkSigns::UDDU, ReachedLimits::NONE>(tf, jMax, aMax, aMin)) {
+        if (profile.check_for_velocity_with_timing<ControlSigns::UDDU, ReachedLimits::NONE>(tf, jMax, aMax, aMin)) {
             profile.pf = profile.p.back();
             return true;
         }
@@ -97,7 +97,7 @@ bool VelocityThirdOrderStep2::time_none(Profile& profile, double aMax, double aM
 
         const double jf = ad*ad/h1;
 
-        if (std::abs(jf) < std::abs(jMax) + 1e-12 && profile.check_for_velocity_with_timing<JerkSigns::UDDU, ReachedLimits::NONE>(tf, jf, aMax, aMin)) {
+        if (std::abs(jf) < std::abs(jMax) + 1e-12 && profile.check_for_velocity_with_timing<ControlSigns::UDDU, ReachedLimits::NONE>(tf, jf, aMax, aMin)) {
             profile.pf = profile.p.back();
             return true;
         }

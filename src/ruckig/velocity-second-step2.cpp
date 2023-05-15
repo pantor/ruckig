@@ -21,7 +21,7 @@ bool VelocitySecondOrderStep2::get_profile(Profile& profile) {
     profile.t[5] = 0;
     profile.t[6] = 0;
 
-    if (profile.check_for_second_order_velocity_with_timing<Profile::JerkSigns::UDDU, Profile::ReachedLimits::NONE>(tf, af, _aMax, _aMin)) {
+    if (profile.check_for_second_order_velocity_with_timing<Profile::ControlSigns::UDDU, Profile::ReachedLimits::NONE>(tf, af, _aMax, _aMin)) {
         profile.pf = profile.p.back();
         return true;
     }

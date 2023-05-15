@@ -9,7 +9,7 @@ namespace ruckig {
 //! Mathematical equations for Step 1 in third-order velocity interface: Extremal profiles
 class VelocityThirdOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
-    using JerkSigns = Profile::JerkSigns;
+    using ControlSigns = Profile::ControlSigns;
 
     const double a0, af;
     const double _aMax, _aMin, _jMax;
@@ -43,7 +43,7 @@ public:
 //! Mathematical equations for Step 2 in third-order velocity interface: Time synchronization
 class VelocityThirdOrderStep2 {
     using ReachedLimits = Profile::ReachedLimits;
-    using JerkSigns = Profile::JerkSigns;
+    using ControlSigns = Profile::ControlSigns;
 
     const double a0, tf, af;
     const double _aMax, _aMin, _jMax;

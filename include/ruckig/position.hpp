@@ -11,7 +11,7 @@ namespace ruckig {
 //! Mathematical equations for Step 1 in third-order position interface: Extremal profiles
 class PositionThirdOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
-    using JerkSigns = Profile::JerkSigns;
+    using ControlSigns = Profile::ControlSigns;
 
     const double v0, a0;
     const double vf, af;
@@ -57,7 +57,7 @@ public:
 //! Mathematical equations for Step 2 in third-order position interface: Time synchronization
 class PositionThirdOrderStep2 {
     using ReachedLimits = Profile::ReachedLimits;
-    using JerkSigns = Profile::JerkSigns;
+    using ControlSigns = Profile::ControlSigns;
 
     const double v0, a0;
     const double tf, vf, af;
@@ -96,7 +96,7 @@ public:
 //! Mathematical equations for Step 1 in second-order position interface: Extremal profiles
 class PositionSecondOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
-    using JerkSigns = Profile::JerkSigns;
+    using ControlSigns = Profile::ControlSigns;
 
     const double v0, vf;
     const double _vMax, _vMin, _aMax, _aMin;
@@ -130,7 +130,7 @@ public:
 //! Mathematical equations for Step 2 in second-order position interface: Time synchronization
 class PositionSecondOrderStep2 {
     using ReachedLimits = Profile::ReachedLimits;
-    using JerkSigns = Profile::JerkSigns;
+    using ControlSigns = Profile::ControlSigns;
 
     const double v0, tf, vf;
     const double _vMax, _vMin, _aMax, _aMin;
