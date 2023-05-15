@@ -143,7 +143,7 @@ public:
         }
 
         j = {0, 0, 0, 0, 0, 0, 0};
-        a = {0, aUp, 0, 0, 0, 0, 0, af};
+        a = {0, (t[1] > 0) ? aUp : 0, 0, 0, 0, 0, 0, af};
         for (size_t i = 0; i < 7; ++i) {
             v[i+1] = v[i] + t[i] * a[i];
             p[i+1] = p[i] + t[i] * (v[i] + t[i] * a[i] / 2);
@@ -319,24 +319,6 @@ public:
             t_sum[i+1] = t_sum[i] + t[i+1];
         }
 
-        if constexpr (limits == ReachedLimits::ACC0_ACC1_VEL || limits == ReachedLimits::ACC0_VEL || limits == ReachedLimits::ACC1_VEL || limits == ReachedLimits::VEL) {
-            if (t[3] < std::numeric_limits<double>::epsilon()) {
-                return false;
-            }
-        }
-
-        if constexpr (limits == ReachedLimits::ACC0 || limits == ReachedLimits::ACC0_ACC1) {
-            if (t[1] < std::numeric_limits<double>::epsilon()) {
-                return false;
-            }
-        }
-
-        if constexpr (limits == ReachedLimits::ACC1 || limits == ReachedLimits::ACC0_ACC1) {
-            if (t[5] < std::numeric_limits<double>::epsilon()) {
-                return false;
-            }
-        }
-
         if (t_sum.back() > t_max) { // For numerical reasons, is that needed?
             return false;
         }
@@ -355,19 +337,6 @@ public:
         for (size_t i = 0; i < 7; ++i) {
             v[i+1] = v[i] + t[i] * a[i];
             p[i+1] = p[i] + t[i] * (v[i] + t[i] * a[i] / 2);
-
-            if constexpr (limits == ReachedLimits::ACC0_ACC1_VEL || limits == ReachedLimits::ACC0_ACC1 || limits == ReachedLimits::ACC0_VEL || limits == ReachedLimits::ACC1_VEL || limits == ReachedLimits::VEL) {
-                if (i == 2) {
-                    a[3] = 0.0;
-                }
-            }
-
-            if (i > 1 && a[i+1] * a[i] < -std::numeric_limits<double>::epsilon()) {
-                const double v_a_zero = v[i] - (a[i] * a[i]) / (2 * j[i]);
-                if (v_a_zero > vUppLim || v_a_zero < vLowLim) {
-                    return false;
-                }
-            }
         }
 
         this->control_signs = control_signs;
