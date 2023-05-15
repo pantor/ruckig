@@ -376,8 +376,8 @@ public:
         // Velocity limit can be broken in the beginning if both initial velocity and acceleration are too high
         // std::cout << std::setprecision(16) << "target: " << std::abs(p.back() - pf) << " " << std::abs(v.back() - vf) << " " << std::abs(a.back() - af) << " T: " << t_sum.back() << " " << to_string() << std::endl;
         return std::abs(p.back() - pf) < p_precision && std::abs(v.back() - vf) < v_precision
-            && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
-            && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim;
+            && v[2] <= vUppLim && v[3] <= vUppLim && v[4] <= vUppLim && v[5] <= vUppLim && v[6] <= vUppLim
+            && v[2] >= vLowLim && v[3] >= vLowLim && v[4] >= vLowLim && v[5] >= vLowLim && v[6] >= vLowLim;
     }
 
     template<ControlSigns control_signs, ReachedLimits limits>
@@ -388,7 +388,7 @@ public:
 
     template<ControlSigns control_signs, ReachedLimits limits>
     inline bool check_for_second_order_with_timing(double tf, double aUp, double aDown, double vMax, double vMin, double aMax, double aMin) {
-        return (aMin - a_eps < aDown) && (aUp < aMax + j_eps) && check_for_second_order_with_timing<control_signs, limits>(tf, aUp, aDown, vMax, vMin);
+        return (aMin - a_eps < aUp) && (aUp < aMax + a_eps) && (aMin - a_eps < aDown) && (aDown < aMax + a_eps) && check_for_second_order_with_timing<control_signs, limits>(tf, aUp, aDown, vMax, vMin);
     }
 
 

@@ -96,7 +96,7 @@ void BrakeProfile::get_second_order_position_brake_trajectory(double v0, double 
         t[0] = (vMax - v0)/aMin + eps;
 
     } else if (v0 < vMin) {
-        j[0] = aMax;
+        a[0] = aMax;
         t[0] = (vMin - v0)/aMax + eps;
     }
 }

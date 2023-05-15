@@ -46,7 +46,7 @@ When using CMake, the Python module can be built using the `BUILD_PYTHON_MODULE`
 
 ## Tutorial
 
-Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a [collection of examples](https://docs.ruckig.com/pages.html) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. We also added plots for the resulting trajectories of all examples. Let's get started!
+Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a [collection of examples](https://docs.ruckig.com/pages.html) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. We also added plots of the resulting trajectories for all examples. Let's get started!
 
 ![Trajectory Profile](https://github.com/pantor/ruckig/raw/master/doc/example_profile.png?raw=true)
 
@@ -78,7 +78,7 @@ input.max_jerk = {4.0, ...};
 OutputParameter<6> output; // Number DoFs
 ```
 
-Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
+If you only want to have a acceleration-constrained trajectory, you can also omit the `max_jerk` as well as the `current` and `target_acceleration` value. Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
 
 ```.cpp
 while (ruckig.update(input, output) == Result::Working) {
@@ -135,7 +135,7 @@ Vector target_acceleration; // Initialized to zero
 
 Vector max_velocity;
 Vector max_acceleration;
-Vector max_jerk;
+Vector max_jerk; // Initialized to infinity
 
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.

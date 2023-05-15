@@ -63,7 +63,7 @@ public:
 
     //! Finalize second-order braking by integrating along kinematic state
     void finalize_second_order(double& ps, double& vs, double& as) {
-        if (t[0] <= 0.0 && t[1] <= 0.0) {
+        if (t[0] <= 0.0) {
             duration = 0.0;
             return;
         }
@@ -71,14 +71,7 @@ public:
         duration = t[0];
         p[0] = ps;
         v[0] = vs;
-        std::tie(ps, vs, as) = integrate(t[0], ps, vs, a[0], j[0]);
-
-        if (t[1] > 0.0) {
-            duration += t[1];
-            p[1] = ps;
-            v[1] = vs;
-            std::tie(ps, vs, as) = integrate(t[1], ps, vs, a[1], j[1]);
-        }
+        std::tie(ps, vs, as) = integrate(t[0], ps, vs, a[0], 0.0);
     }
 
 #ifdef WITH_SERIALIZATION
