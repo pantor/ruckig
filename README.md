@@ -356,6 +356,7 @@ Ruckig is used by over hundred research labs, companies, and open-source project
 - [Gestalt Robotics](https://www.gestalt-robotics.com)
 - [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Structered Text (ST - IEC61131-3) for usage on PLCs.
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
+- [Wiredworks](https://wiredworks.com) coded a simple [GUI](https://github.com/wiredworks/ruckig-showcase)
 - and many others!
 
 
