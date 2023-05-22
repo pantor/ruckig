@@ -110,6 +110,8 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readwrite("per_section_max_jerk", &InputParameter<DynamicDOFs>::per_section_max_jerk)
         .def_readwrite("per_section_min_velocity", &InputParameter<DynamicDOFs>::per_section_min_velocity)
         .def_readwrite("per_section_min_acceleration", &InputParameter<DynamicDOFs>::per_section_min_acceleration)
+        .def_readwrite("per_section_max_position", &InputParameter<DynamicDOFs>::per_section_max_position)
+        .def_readwrite("per_section_min_position", &InputParameter<DynamicDOFs>::per_section_min_position)
         .def_readwrite("max_position", &InputParameter<DynamicDOFs>::max_position)
         .def_readwrite("min_position", &InputParameter<DynamicDOFs>::min_position)
         .def_readwrite("enabled", &InputParameter<DynamicDOFs>::enabled)
@@ -173,20 +175,20 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_readonly("p", &BrakeProfile::p);
 
     py::class_<Profile>(m, "Profile")
-        .def_readonly("limits", &Profile::limits)
-        .def_readonly("direction", &Profile::direction)
-        .def_readonly("control_signs", &Profile::control_signs)
         .def_readonly("t", &Profile::t)
         .def_readonly("t_sum", &Profile::t_sum)
         .def_readonly("j", &Profile::j)
         .def_readonly("a", &Profile::a)
         .def_readonly("v", &Profile::v)
         .def_readonly("p", &Profile::p)
+        .def_readonly("brake", &Profile::brake)
+        .def_readonly("accel", &Profile::accel)
         .def_readonly("pf", &Profile::pf)
         .def_readonly("vf", &Profile::vf)
         .def_readonly("af", &Profile::af)
-        .def_readonly("brake", &Profile::brake)
-        .def_readonly("accel", &Profile::accel)
+        .def_readonly("limits", &Profile::limits)
+        .def_readonly("direction", &Profile::direction)
+        .def_readonly("control_signs", &Profile::control_signs)
         .def("__repr__", &Profile::to_string);
 #endif
 }

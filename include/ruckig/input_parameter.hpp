@@ -96,6 +96,7 @@ public:
     // Kinematic constraints for intermediate sections (between waypoints) (only in Ruckig Pro)
     std::optional<std::vector<Vector<double>>> per_section_max_velocity, per_section_max_acceleration, per_section_max_jerk;
     std::optional<std::vector<Vector<double>>> per_section_min_velocity, per_section_min_acceleration;
+    std::optional<std::vector<Vector<double>>> per_section_max_position, per_section_min_position;
 
     // Positional constraints (only in Ruckig Pro)
     std::optional<Vector<double>> max_position, min_position;
@@ -375,6 +376,8 @@ public:
             && per_section_max_jerk == rhs.per_section_max_jerk
             && per_section_min_velocity == rhs.per_section_min_velocity
             && per_section_min_acceleration == rhs.per_section_min_acceleration
+            && per_section_max_position == rhs.per_section_max_position
+            && per_section_min_position == rhs.per_section_min_position
             && max_position == rhs.max_position
             && min_position == rhs.min_position
             && enabled == rhs.enabled
