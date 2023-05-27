@@ -1,0 +1,238 @@
+<head>
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script>
+</head>
+<body>
+<style>
+    body {
+        height: 100%;
+        margin: 0;
+    }
+    #box {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+    }
+    .container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .input-group {
+        flex-basis: 50%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .input-group label,
+    .input-group input {
+        width: 100%;
+    }
+    #top {
+        flex: 0 1 auto;
+    }
+    #gd {
+        flex: 1 1 auto;
+    }
+    #error-box {
+        position: absolute;
+        top: 30%;
+        background-color: #ff0000de;
+        z-index: 99;
+        height: 40%;
+        width: 100%;
+        border-top: black dotted 5px;
+        border-bottom: black dotted 5px;
+        visibility: hidden;
+    }
+    #ohsnap {
+        font-size: 40px;
+    }
+    #error-box-text {
+        font-size: 23px;
+    }
+</style>
+<div id="error-box">
+    <div id="ohsnap">oh snap... </div>
+    <div id="error-box-text">
+    tbd
+    </div>
+</div>
+<div id="box">
+<div id="top">
+<div class="container" style="background-color: #7ce5e5;">
+    <div class="input-group">
+        <label for="current_position">current_position:</label>
+        <input type="number" value="-1" id="current_position" name="current_position">
+    </div>
+    <div class="input-group">
+        <label for="current_velocity">current_velocity:</label>
+        <input type="number" value="-1" id="current_velocity" name="current_velocity">
+    </div>
+    <div class="input-group">
+        <label for="current_acceleration">current_acceleration:</label>
+        <input type="number" value="-1" id="current_acceleration" name="current_acceleration">
+    </div>
+</div>
+
+<div class="container" style="background-color: #88ec71;">
+    <div class="input-group">
+        <label for="target_position">target_position:</label>
+        <input type="number" value="-1" id="target_position" name="target_position">
+    </div>
+    <div class="input-group">
+        <label for="target_velocity">target_velocity:</label>
+        <input type="number" value="-1" id="target_velocity" name="target_velocity">
+    </div>
+    <div class="input-group">
+        <label for="target_acceleration">target_acceleration:</label>
+        <input type="number" value="-1" id="target_acceleration" name="target_acceleration">
+    </div>
+</div>
+
+<div class="container" style="background-color: #ffdf2f;">
+    <div class="input-group">
+        <label for="max_jerk">max_jerk:</label>
+        <input type="number" value="-1" id="max_jerk" name="max_jerk">
+    </div>
+    <div class="input-group">
+        <label for="max_velocity">max_velocity:</label>
+        <input type="number" value="-1" id="max_velocity" name="max_velocity">
+    </div>
+    <div class="input-group">
+        <label for="max_acceleration">max_acceleration:</label>
+        <input type="number" value="-1" id="max_acceleration" name="max_acceleration">
+    </div>
+
+</div>
+</div>
+<div id="gd"></div>
+</div>
+
+<script src="web-visualization.js"></script>
+
+<script>
+  function updateGraphCallback(rawjson) {
+      console.log("updateGraphCallback has been called", rawjson)
+      updateGraph(rawjson)
+  }
+
+  function updateGraph(rawjson) {
+      var t = [], p = [], v = [], a = [], j = [];
+
+      json = JSON.parse(rawjson)
+      console.log(json)
+
+      for (var i = 0; i < json["curve"]["data"].length; i++) {
+          //time, position, velocity, acceleration, jerk
+          row = json["curve"]["data"][i]
+          t.push(row[0]);
+          p.push(row[1]);
+          v.push(row[2]);
+          a.push(row[3]);
+          j.push(row[4]);
+      }
+      var data = [
+          {x: t, y: p, name: "position [m]"},
+          {x: t, y: v, name: "velocity [m/s]"},
+          {x: t, y: a, name: "acceleration [m/s^2]"},
+          {x: t, y: j, name: "jerk [m/s^3]"},
+      ];
+      var shapes = [{
+          type: 'line',
+          yref: 'paper',
+          xref: 'x',
+          x0: json["trajectory_duration"],
+          y0: -10,
+          x1: json["trajectory_duration"],
+          y1: 10,
+          line: {
+              color: 'black',
+              width: 0.5,
+          }
+      }]
+      var layout = {
+          "title": "S-Curve diagram",
+              autosize: true,
+              dragmode: 'pan',
+              margin: {
+                  l: 50,
+                  r: 10,
+                  b: 70,
+                  t: 50,
+                  pad: 10
+              },
+          hovermode: "x",
+          shapes
+      };
+      var config = {
+          'modeBarButtonsToRemove': ['zoom'],
+          scrollZoom: true,
+      }
+      Plotly.newPlot("gd", data, layout, config);
+  }
+</script>
+
+<script>
+computeCurve = Module.cwrap('computeCurve', 'string', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'])
+
+function getParamterAndUpdateURL(key) {
+    value = document.getElementById(key).value
+    var url = new URL(window.location);
+    url.searchParams.set(key, value);
+    window.history.pushState({}, '', url);
+    return value
+}
+
+function GetParamtersAndComputeCurve() {
+    var ret = computeCurve(
+        getParamterAndUpdateURL("current_position"),
+        getParamterAndUpdateURL("current_velocity"),
+        getParamterAndUpdateURL("current_acceleration"),
+    
+        getParamterAndUpdateURL("target_position"),
+        getParamterAndUpdateURL("target_velocity"),
+        getParamterAndUpdateURL("target_acceleration"),
+    
+        getParamterAndUpdateURL("max_velocity"),
+        getParamterAndUpdateURL("max_jerk"),
+        getParamterAndUpdateURL("max_acceleration")
+    );
+    if (ret !== "") {
+        document.getElementById('error-box-text').innerHTML = ret;
+        document.getElementById('error-box').style.visibility = "visible";
+    } else {
+        document.getElementById('error-box').style.visibility = "hidden";
+    }
+};
+
+function setDefaultValue(key, defaultValue) {
+    const urlParams = new URLSearchParams(document.URL);
+    value = defaultValue;
+    if (urlParams.has(key)) {
+        value = urlParams.get(key)
+    }
+    document.getElementById(key).setAttribute('value', value);
+    document.getElementById(key).setAttribute( "onchange", "GetParamtersAndComputeCurve()" );
+}
+
+function InitParameters() {
+    console.log("InitParameters")
+    setDefaultValue("current_position", -5)
+    setDefaultValue("current_velocity", 0)
+    setDefaultValue("current_acceleration", 0)
+
+    setDefaultValue("target_position", 5)
+    setDefaultValue("target_velocity", 0)
+    setDefaultValue("target_acceleration", 0)
+
+    setDefaultValue("max_velocity", 21)
+    setDefaultValue("max_jerk", 1)
+    setDefaultValue("max_acceleration", 1.148)
+
+    GetParamtersAndComputeCurve()
+}
+
+Module['onRuntimeInitialized'] = InitParameters;
+
+</script>
+</body>
