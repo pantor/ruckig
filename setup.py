@@ -54,7 +54,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='ruckig',
-    version='0.9.3',
+    version='0.10.0',
     description='Instantaneous Motion Generation for Robots and Machines.',
     long_description=long_description,
     long_description_content_type='text/markdown',

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(ruckig VERSION 0.9.3 LANGUAGES CXX)
+project(ruckig VERSION 0.10.0 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
