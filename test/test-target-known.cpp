@@ -259,6 +259,51 @@ TEST_CASE("known" * doctest::description("Known examples")) {
     input.minimum_duration = 3.408914;
     check_full_duration(otg, input, 3.408914);
 
+    input.current_position = {0.0, -2.0, 0.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {0.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    input.max_velocity = {1.0, 1.0, 1.0};
+    input.max_acceleration = {1.0, 1.0, 1.0};
+    input.max_jerk = {std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity()};
+    input.minimum_duration = std::nullopt;
+    input.min_velocity = std::nullopt;
+    input.min_acceleration = std::nullopt;
+    check_full_duration(otg, input, 3.0);
+
+    input.current_position = {0.0, -2.0, 1.0};
+    input.current_velocity = {0.0, 0.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {1.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.5, 0.0};
+    input.max_velocity = {10.0, 10.0, 10.0};
+    check_full_duration(otg, input, 2.0);
+
+    input.current_position = {0.0, -2.0, -2.0};
+    input.current_velocity = {0.1, 0.1, 1.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {1.0, -3.0, 2.0};
+    input.target_velocity = {1.0, 0.0, 0.0};
+    input.target_acceleration = {0.0, 0.5, 0.0};
+    check_full_duration(otg, input, 3.2426);
+
+    input.current_position = {0.0, 0.0, 0.0};
+    input.current_velocity = {0.0, 1.0, 0.0};
+    input.current_acceleration = {0.0, 0.0, 0.0};
+    input.target_position = {0.0, 0.0, 0.0};
+    input.target_velocity = {0.0, 1.0, 0.0};
+    input.target_acceleration = {0.0, 0.0, 0.0};
+    check_full_duration(otg, input, 0.0);
+
+    input.target_position = {0.0, 1e-4, 0.0};
+    check_full_duration(otg, input, 0.0001);
+
+    input.target_position = {1e-4, 0.0, 0.0};
+    check_full_duration(otg, input, 4.0);
+
     input.current_position = {0.2473592757796861, 0.2921606775204735, 0.7758663276711127};
     input.current_velocity = {-0.2426115138900957, 0.2200706500820608, -0.01891492763905089};
     input.current_acceleration = {0.01877538437863763, -0.6573642866096158, 0.5};
