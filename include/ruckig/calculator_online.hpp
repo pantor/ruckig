@@ -41,7 +41,7 @@ public:
 
     template<bool throw_error>
     Result calculate(const InputParameter<DOFs, CustomVector>& input, Trajectory<DOFs, CustomVector>& traj, double, bool& was_interrupted) {
-        std::cout << "[ruckig] calculate trajectory via online API server." << std::endl;
+        std::cout << "[ruckig] calculate trajectory via cloud API server." << std::endl;
 
         nlohmann::json params;
         params["degrees_of_freedom"] = input.degrees_of_freedom;
@@ -102,11 +102,19 @@ public:
         }
 
         const auto res = cli.Post("/calculate", params.dump(), "application/json");
+        if (!res) {
+            if constexpr (throw_error) {
+                throw RuckigError("could not reach cloud API server");
+            } else {
+                std::cout << "[ruckig] could not reach cloud API server" << std::endl;
+                return Result::Error;
+            }
+        }
         if (res->status != 200) {
             if constexpr (throw_error) {
-                throw RuckigError("could not reach online API server, error code: " + std::to_string(res->status) + " " + res->body);
+                throw RuckigError("could not reach cloud API server, error code: " + std::to_string(res->status) + " " + res->body);
             } else {
-                std::cout << "[ruckig] could not reach online API server, error code: " << res->status << " " << res->body << std::endl;
+                std::cout << "[ruckig] could not reach cloud API server, error code: " << res->status << " " << res->body << std::endl;
                 return Result::Error;
             }
         }
