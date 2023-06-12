@@ -163,7 +163,7 @@ public:
             }
 
             const double aMax = max_acceleration[dof];
-            if (std::isnan(aMax) || std::isinf(aMax) || aMax < 0.0) {
+            if (std::isnan(aMax) || aMax < 0.0) {
                 if constexpr (throw_validation_error) {
                     throw RuckigError("maximum acceleration limit " + std::to_string(aMax) + " of DoF " + std::to_string(dof) + " should be larger than or equal to zero.");
                 }
@@ -171,7 +171,7 @@ public:
             }
 
             const double aMin = min_acceleration ? min_acceleration.value()[dof] : -max_acceleration[dof];
-            if (std::isnan(aMin) || std::isinf(aMin) || aMin > 0.0) {
+            if (std::isnan(aMin) || aMin > 0.0) {
                 if constexpr (throw_validation_error) {
                     throw RuckigError("minimum acceleration limit " + std::to_string(aMin) + " of DoF " + std::to_string(dof) + " should be smaller than or equal to zero.");
                 }

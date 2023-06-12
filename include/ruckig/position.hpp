@@ -151,4 +151,28 @@ public:
     bool get_profile(Profile& profile);
 };
 
+
+//! Mathematical equations for Step 1 in first-order position interface: Extremal profiles
+class PositionFirstOrderStep1 {
+    const double _vMax, _vMin;
+    double pd; // Pre-calculated expressions
+
+public:
+    explicit PositionFirstOrderStep1(double p0, double pf, double vMax, double vMin);
+
+    bool get_profile(const Profile& input, Block& block);
+};
+
+
+//! Mathematical equations for Step 2 in first-order position interface: Time synchronization
+class PositionFirstOrderStep2 {
+    const double tf, _vMax, _vMin;
+    double pd; // Pre-calculated expressions
+
+public:
+    explicit PositionFirstOrderStep2(double tf, double p0, double pf, double vMax, double vMin);
+
+    bool get_profile(Profile& profile);
+};
+
 } // namespace ruckig

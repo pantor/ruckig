@@ -22,6 +22,8 @@ endif()
 
 add_library(ruckig
   src/ruckig/brake.cpp
+  src/ruckig/position-first-step1.cpp
+  src/ruckig/position-first-step2.cpp
   src/ruckig/position-second-step1.cpp
   src/ruckig/position-second-step2.cpp
   src/ruckig/position-third-step1.cpp
