@@ -15,8 +15,8 @@
 
 namespace ruckig {
 
-template <size_t, template<class, size_t> class> class TargetCalculator;
-template <size_t, template<class, size_t> class> class WaypointsCalculator;
+template<size_t, template<class, size_t> class> class TargetCalculator;
+template<size_t, template<class, size_t> class> class WaypointsCalculator;
 
 
 //! Interface for the generated trajectory.
@@ -44,13 +44,13 @@ class Trajectory {
     size_t continue_calculation_counter {0};
 
 #if defined WITH_ONLINE_CLIENT
-    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     void resize(size_t max_number_of_waypoints) {
         profiles.resize(max_number_of_waypoints + 1);
         cumulative_times.resize(max_number_of_waypoints + 1);
     }
 
-    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     void resize(size_t max_number_of_waypoints) {
         resize<1>(max_number_of_waypoints); // Also call resize method above
 
@@ -145,14 +145,14 @@ class Trajectory {
 public:
     size_t degrees_of_freedom;
 
-    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     Trajectory(): degrees_of_freedom(DOFs) {
 #if defined WITH_ONLINE_CLIENT
         resize(0);
 #endif
     }
 
-    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     Trajectory(size_t dofs): degrees_of_freedom(dofs) {
 #if defined WITH_ONLINE_CLIENT
         resize(0);
@@ -164,12 +164,12 @@ public:
     }
 
 #if defined WITH_ONLINE_CLIENT
-    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     Trajectory(size_t max_number_of_waypoints): degrees_of_freedom(DOFs) {
         resize(max_number_of_waypoints);
     }
 
-    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     Trajectory(size_t dofs, size_t max_number_of_waypoints): degrees_of_freedom(dofs) {
         resize(max_number_of_waypoints);
 
@@ -222,7 +222,7 @@ public:
     }
 
     //! Get the kinematic state, the jerk, and the section at a given time without vectors for a single DoF
-    template <size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
     void at_time(double time, double& new_position, double& new_velocity, double& new_acceleration, double& new_jerk, size_t& new_section) const {
         state_to_integrate_from(time, new_section, [&](size_t, double t, double p, double v, double a, double j) {
             std::tie(new_position, new_velocity, new_acceleration) = integrate(t, p, v, a, j);
@@ -231,7 +231,7 @@ public:
     }
 
     //! Get the kinematic state at a given time without vectors for a single DoF
-    template <size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
     void at_time(double time, double& new_position, double& new_velocity, double& new_acceleration) const {
         size_t new_section;
         state_to_integrate_from(time, new_section, [&](size_t, double t, double p, double v, double a, double j) {
@@ -240,7 +240,7 @@ public:
     }
 
     //! Get the position at a given time without vectors for a single DoF
-    template <size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 1), int>::type = 0>
     void at_time(double time, double& new_position) const {
         size_t new_section;
         state_to_integrate_from(time, new_section, [&](size_t, double t, double p, double v, double a, double j) {

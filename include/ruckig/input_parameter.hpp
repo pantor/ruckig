@@ -1,8 +1,8 @@
 #pragma once
 
 #include <array>
-#include <limits>
 #include <iomanip>
+#include <limits>
 #include <optional>
 #include <sstream>
 #include <type_traits>
@@ -39,7 +39,7 @@ class InputParameter {
     template<class T> using Vector = CustomVector<T, DOFs>;
 
     inline static double v_at_a_zero(double v0, double a0, double j) {
-        return v0 + (a0 * a0)/(2 * j);
+        return v0 + (a0 * a0) / (2 * j);
     }
 
     void initialize() {
@@ -124,25 +124,25 @@ public:
     //! which should be considered (subtracted) here.
     std::optional<double> interrupt_calculation_duration;
 
-    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     InputParameter(): degrees_of_freedom(DOFs) {
         initialize();
     }
 
-    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     InputParameter(size_t dofs): degrees_of_freedom(dofs) {
         resize(dofs);
         initialize();
     }
 
 #if defined WITH_ONLINE_CLIENT
-    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     InputParameter(size_t max_number_of_waypoints): degrees_of_freedom(DOFs) {
         reserve(max_number_of_waypoints);
         initialize();
     }
 
-    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     InputParameter(size_t dofs, size_t max_number_of_waypoints): degrees_of_freedom(dofs) {
         reserve(max_number_of_waypoints);
         resize(dofs);
@@ -152,7 +152,7 @@ public:
 
     //! Validate the input for trajectory calculation
     template<bool throw_validation_error = true>
-    bool validate(bool check_current_state_within_limits=false, bool check_target_state_within_limits=true) const {
+    bool validate(bool check_current_state_within_limits = false, bool check_target_state_within_limits = true) const {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             const double jMax = max_jerk[dof];
             if (std::isnan(jMax) || jMax < 0.0) {

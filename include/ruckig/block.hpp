@@ -26,7 +26,7 @@ public:
         double left, right; // [s]
         Profile profile; // Profile corresponding to right (end) time
 
-        explicit Interval(double left, double right): left(left), right(right) {}
+        explicit Interval(double left, double right): left(left), right(right) { }
 
         explicit Interval(const Profile& profile_left, const Profile& profile_right) {
             const double left_duration = profile_left.t_sum.back() + profile_left.brake.duration + profile_left.accel.duration;
@@ -68,7 +68,7 @@ public:
             return true;
 
         } else if (valid_profile_counter == 2) {
-            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 8*std::numeric_limits<double>::epsilon()) {
+            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 8 * std::numeric_limits<double>::epsilon()) {
                 block.set_min_profile(valid_profiles[0]);
                 return true;
             }
@@ -85,11 +85,11 @@ public:
         // Only happens due to numerical issues
         } else if (valid_profile_counter == 4) {
             // Find "identical" profiles
-            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 32*std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[1].direction) {
+            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 32 * std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[1].direction) {
                 remove_profile<N>(valid_profiles, valid_profile_counter, 1);
-            } else if (std::abs(valid_profiles[2].t_sum.back() - valid_profiles[3].t_sum.back()) < 256*std::numeric_limits<double>::epsilon() && valid_profiles[2].direction != valid_profiles[3].direction) {
+            } else if (std::abs(valid_profiles[2].t_sum.back() - valid_profiles[3].t_sum.back()) < 256 * std::numeric_limits<double>::epsilon() && valid_profiles[2].direction != valid_profiles[3].direction) {
                 remove_profile<N>(valid_profiles, valid_profile_counter, 3);
-            } else if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[3].t_sum.back()) < 256*std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[3].direction) {
+            } else if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[3].t_sum.back()) < 256 * std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[3].direction) {
                 remove_profile<N>(valid_profiles, valid_profile_counter, 3);
             } else {
                 return false;

@@ -27,16 +27,16 @@ class WaypointsCalculator {
 public:
     size_t degrees_of_freedom;
 
-    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     explicit WaypointsCalculator(): degrees_of_freedom(DOFs) { }
 
-    template <size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     explicit WaypointsCalculator(size_t): degrees_of_freedom(DOFs) { }
 
-    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     explicit WaypointsCalculator(size_t dofs): degrees_of_freedom(dofs) { }
 
-    template <size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
+    template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     explicit WaypointsCalculator(size_t dofs, size_t): degrees_of_freedom(dofs) { }
 
     template<bool throw_error>

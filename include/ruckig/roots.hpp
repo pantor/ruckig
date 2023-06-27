@@ -339,7 +339,7 @@ constexpr double tolerance {1e-14};
 
 // Calculate a single zero of polynom p(x) inside [lbound, ubound]
 // Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
-template <size_t N, size_t maxIts = 128>
+template<size_t N, size_t maxIts = 128>
 inline double shrinkInterval(const std::array<double, N>& p, double l, double h) {
     const double fl = polyEval(p, l);
     const double fh = polyEval(p, h);

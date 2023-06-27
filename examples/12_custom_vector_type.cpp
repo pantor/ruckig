@@ -8,7 +8,7 @@ class MinimalVector {
     T data[DOFs];
 
 public:
-    MinimalVector() {}
+    MinimalVector() { }
     MinimalVector(std::initializer_list<T> a) {
         std::copy_n(a.begin(), DOFs, std::begin(data));
     }

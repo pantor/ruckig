@@ -28,7 +28,7 @@ if __name__ == '__main__':
     inp.max_jerk = [4.0, 3.0, 2.0]
 
     # Set minimum duration (equals the trajectory duration when target velocity and acceleration are zero)
-    inp.minimum_duration = 5.0;
+    inp.minimum_duration = 5.0
 
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))

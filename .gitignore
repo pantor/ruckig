@@ -1,6 +1,7 @@
 .vscode
 .DS_Store
 
+.ruff_cache
 .mypy_cache
 *.pyc
 __pycache__

@@ -9,7 +9,7 @@ class MinimalDynamicDofsVector {
     std::deque<T> data;
 
 public:
-    MinimalDynamicDofsVector() {}
+    MinimalDynamicDofsVector() { }
     MinimalDynamicDofsVector(std::initializer_list<T> a) {
         data.resize(a.size());
         std::copy_n(a.begin(), a.size(), std::begin(data));
