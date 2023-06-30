@@ -54,21 +54,21 @@ jobs:
 
     - name: Run C++ Examples
       run: |
-        ./build/example-1_position > "$HIDDEN"
-        ./build/example-2_position_offline > "$HIDDEN"
-        ./build/example-5_velocity > "$HIDDEN"
-        ./build/example-6_stop > "$HIDDEN"
-        ./build/example-7_minimum_duration > "$HIDDEN"
-        ./build/example-9_dynamic_dofs > "$HIDDEN"
+        ./build/example-01_position > "$HIDDEN"
+        ./build/example-02_position_offline > "$HIDDEN"
+        ./build/example-05_velocity > "$HIDDEN"
+        ./build/example-06_stop > "$HIDDEN"
+        ./build/example-07_minimum_duration > "$HIDDEN"
+        ./build/example-09_dynamic_dofs > "$HIDDEN"
 
     - name: Run Python Examples
       if: matrix.name != 'ubuntu-20.04-gcc-5'
       run: |
-        python3 ./examples/1_position.py > "$HIDDEN"
-        python3 ./examples/2_position_offline.py > "$HIDDEN"
-        python3 ./examples/5_velocity.py > "$HIDDEN"
-        python3 ./examples/6_stop.py > "$HIDDEN"
-        python3 ./examples/7_minimum_duration.py > "$HIDDEN"
+        python3 ./examples/01_position.py > "$HIDDEN"
+        python3 ./examples/02_position_offline.py > "$HIDDEN"
+        python3 ./examples/05_velocity.py > "$HIDDEN"
+        python3 ./examples/06_stop.py > "$HIDDEN"
+        python3 ./examples/07_minimum_duration.py > "$HIDDEN"
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'

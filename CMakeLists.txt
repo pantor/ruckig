@@ -62,10 +62,10 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  set(EXAMPLES_LIST 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 9_dynamic_dofs)
+  set(EXAMPLES_LIST 01_position 02_position_offline 05_velocity 06_stop 07_minimum_duration 09_dynamic_dofs)
 
   if(BUILD_CLOUD_CLIENT)
-    list(APPEND EXAMPLES_LIST 3_waypoints 4_waypoints_online 8_per_section_minimum_duration 10_dynamic_dofs_waypoints)
+    list(APPEND EXAMPLES_LIST 03_waypoints 04_waypoints_online 08_per_section_minimum_duration 10_dynamic_dofs_waypoints)
   else()
     list(APPEND EXAMPLES_LIST 12_custom_vector_type 13_custom_vector_type_dynamic_dofs)
     if(TARGET Eigen3::Eigen)

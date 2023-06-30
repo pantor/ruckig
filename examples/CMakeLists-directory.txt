@@ -8,7 +8,7 @@ include_directories(include)
 link_directories(lib)
 
 # Build the position example
-add_executable(example-position examples/1_position.cpp)
+add_executable(example-position examples/01_position.cpp)
 target_compile_features(example-position PUBLIC cxx_std_17)
 
 target_link_libraries(example-position ruckig)
