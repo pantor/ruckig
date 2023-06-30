@@ -1,8 +1,8 @@
 #pragma once
 
 #include <ruckig/calculator_target.hpp>
-#ifdef WITH_ONLINE_CLIENT
-#include <ruckig/calculator_online.hpp>
+#ifdef WITH_CLOUD_CLIENT
+#include <ruckig/calculator_cloud.hpp>
 #endif
 #include <ruckig/input_parameter.hpp>
 #include <ruckig/trajectory.hpp>
@@ -21,7 +21,7 @@ public:
     //! State-to-state calculator
     TargetCalculator<DOFs, CustomVector> target_calculator;
 
-#if defined WITH_ONLINE_CLIENT
+#if defined WITH_CLOUD_CLIENT
     //! Intermediate waypoints calculator
     WaypointsCalculator<DOFs, CustomVector> waypoints_calculator;
 #endif
@@ -29,7 +29,7 @@ public:
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     explicit Calculator() { }
 
-#if defined WITH_ONLINE_CLIENT
+#if defined WITH_CLOUD_CLIENT
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     explicit Calculator(size_t max_waypoints): waypoints_calculator(WaypointsCalculator<DOFs, CustomVector>(max_waypoints)) { }
 
@@ -47,7 +47,7 @@ public:
     template<bool throw_error>
     Result calculate(const InputParameter<DOFs, CustomVector>& input, Trajectory<DOFs, CustomVector>& trajectory, double delta_time, bool& was_interrupted) {
         Result result;
-#if defined WITH_ONLINE_CLIENT
+#if defined WITH_CLOUD_CLIENT
         if (use_waypoints_trajectory(input)) {
             result = waypoints_calculator.template calculate<throw_error>(input, trajectory, delta_time, was_interrupted);
         } else {
@@ -64,7 +64,7 @@ public:
     template<bool throw_error>
     Result continue_calculation(const InputParameter<DOFs, CustomVector>& input, Trajectory<DOFs, CustomVector>& trajectory, double delta_time, bool& was_interrupted) {
         Result result;
-#if defined WITH_ONLINE_CLIENT
+#if defined WITH_CLOUD_CLIENT
         if (use_waypoints_trajectory(input)) {
             result = waypoints_calculator.template continue_calculation<throw_error>(input, trajectory, delta_time, was_interrupted);
         } else {

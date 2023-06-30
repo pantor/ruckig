@@ -225,7 +225,7 @@ public:
     template<bool throw_error>
     Result calculate(const InputParameter<DOFs, CustomVector>& inp, Trajectory<DOFs, CustomVector>& traj, double delta_time, bool& was_interrupted) {
         was_interrupted = false;
-#if defined WITH_ONLINE_CLIENT
+#if defined WITH_CLOUD_CLIENT
         traj.resize(0);
 #endif
 

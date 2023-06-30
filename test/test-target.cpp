@@ -875,7 +875,7 @@ TEST_CASE("zero-limits" * doctest::description("Kinematic limits that are partly
     CHECK( output.trajectory.get_duration() == doctest::Approx(1.1) );
 }
 
-#ifndef WITH_ONLINE_CLIENT
+#ifndef WITH_CLOUD_CLIENT
 TEST_CASE("custom-vector-type" * doctest::description("Custom Vector Type")) {
     SUBCASE("DOFs compile-time") {
         RuckigThrow<3, MinimalVector> otg {0.005};

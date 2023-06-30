@@ -35,7 +35,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. To enable the [Online API](http://api.ruckig.com/docs) for intermediate waypoints, just pass the `BUILD_ONLINE_CLIENT` flag to CMake.
+To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. To enable the [Cloud API](http://api.ruckig.com/docs) for intermediate waypoints, just pass the `BUILD_CLOUD_CLIENT` flag to CMake.
 
 Ruckig is also available as a Python module, in particular for development or debugging purposes. The Ruckig *Community Version* can be installed from [PyPI](https://pypi.org/project/ruckig/) via
 ```bash
@@ -94,7 +94,7 @@ Within the control loop, you need to update the *current state* of the input par
 
 ### Intermediate Waypoints
 
-The Ruckig Community Version now supports intermediate waypoints via a [remote API](http://api.ruckig.com/docs). Make sure to include `-DBUILD_ONLINE_CLIENT=ON` as a CMake flag when compiling - the PyPI Python version should bring that out of the box. To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
+The Ruckig Community Version now supports intermediate waypoints via a [remote API](http://api.ruckig.com/docs). Make sure to include `-DBUILD_CLOUD_CLIENT=ON` as a CMake flag when compiling - the PyPI Python version should bring that out of the box. To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
 ```.cpp
 Ruckig<6> otg {0.001, 8};
 InputParameter<6> input {8};

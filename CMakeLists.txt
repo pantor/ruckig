@@ -9,7 +9,7 @@ include(GNUInstallDirs)
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module with pybind11" OFF)
-option(BUILD_ONLINE_CLIENT "Build online client to calculate Ruckig Pro trajectories" OFF)
+option(BUILD_CLOUD_CLIENT "Build cloud client to calculate Ruckig Pro trajectories remotely" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
@@ -52,19 +52,19 @@ if(EXPOSE_INTERNAL)
 endif()
 
 
-if(BUILD_ONLINE_CLIENT)
+if(BUILD_CLOUD_CLIENT)
   target_include_directories(ruckig PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
-  target_compile_definitions(ruckig PUBLIC WITH_ONLINE_CLIENT WITH_SERIALIZATION)
+  target_compile_definitions(ruckig PUBLIC WITH_CLOUD_CLIENT WITH_SERIALIZATION)
 endif()
 
 
 if(BUILD_EXAMPLES)
   set(EXAMPLES_LIST 1_position 2_position_offline 5_velocity 6_stop 7_minimum_duration 9_dynamic_dofs)
 
-  if(BUILD_ONLINE_CLIENT)
+  if(BUILD_CLOUD_CLIENT)
     list(APPEND EXAMPLES_LIST 3_waypoints 4_waypoints_online 8_per_section_minimum_duration 10_dynamic_dofs_waypoints)
   else()
     list(APPEND EXAMPLES_LIST 12_custom_vector_type 13_custom_vector_type_dynamic_dofs)
@@ -91,8 +91,8 @@ if(BUILD_PYTHON_MODULE)
   pybind11_add_module(python_ruckig src/ruckig/python.cpp)
   target_compile_features(python_ruckig PUBLIC cxx_std_17)
   target_link_libraries(python_ruckig PUBLIC ruckig)
-  if(BUILD_ONLINE_CLIENT)
-    target_compile_definitions(python_ruckig PUBLIC WITH_ONLINE_CLIENT)
+  if(BUILD_CLOUD_CLIENT)
+    target_compile_definitions(python_ruckig PUBLIC WITH_CLOUD_CLIENT)
   endif()
 
   set_target_properties(python_ruckig PROPERTIES OUTPUT_NAME ruckig)
