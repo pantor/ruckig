@@ -35,8 +35,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-To install Ruckig in a system-wide directory, you can either use `(sudo) make install`
-or install it as debian package using cpack by running
+To install Ruckig in a system-wide directory, you can either use `(sudo) make install` or install it as debian package using cpack by running
 
 ```bash
 cpack
@@ -363,8 +362,9 @@ Ruckig is used by over hundred research labs, companies, and open-source project
 - [Fuzzy Logic Robotics](https://flr.io)
 - [Gestalt Robotics](https://www.gestalt-robotics.com)
 - [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Structered Text (ST - IEC61131-3) for usage on PLCs.
+- [Scanlab](https://www.scanlab.de/de) for controlling lasers.
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
-- [Wiredworks](https://wiredworks.com) coded a simple [GUI](https://github.com/wiredworks/ruckig-showcase)
+- [Wiredworks](https://wiredworks.com) made a simple Kivy [GUI application](https://github.com/wiredworks/ruckig-showcase)
 - and many others!
 
 
