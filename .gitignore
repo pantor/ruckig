@@ -4,6 +4,8 @@
 .mypy_cache
 *.pyc
 __pycache__
+node_modules
+.parcel-cache
 *.egg-info
 
 .env
