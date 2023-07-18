@@ -35,7 +35,15 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-To install Ruckig in a system-wide directory, use `(sudo) make install`. An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. To enable the [Cloud API](http://api.ruckig.com/docs) for intermediate waypoints, just pass the `BUILD_CLOUD_CLIENT` flag to CMake.
+To install Ruckig in a system-wide directory, you can either use `(sudo) make install`
+or install it as debian package using cpack by running
+
+```bash
+cpack
+sudo dpkg -i ruckig*.deb
+```
+
+An example of using Ruckig in your CMake project is given by `examples/CMakeLists.txt`. However, you can also include Ruckig as a directory within your project and call `add_subdirectory(ruckig)` in your parent `CMakeLists.txt`. To enable the [Cloud API](http://api.ruckig.com/docs) for intermediate waypoints, just pass the `BUILD_CLOUD_CLIENT` flag to CMake.
 
 Ruckig is also available as a Python module, in particular for development or debugging purposes. The Ruckig *Community Version* can be installed from [PyPI](https://pypi.org/project/ruckig/) via
 ```bash
