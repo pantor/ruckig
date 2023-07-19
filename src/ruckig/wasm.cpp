@@ -100,14 +100,14 @@ EMSCRIPTEN_BINDINGS(ruckig) {
         .property("interrupt_calculation_duration", &InputParameter<DynamicDOFs>::interrupt_calculation_duration)
         .function("validate", &InputParameter<DynamicDOFs>::validate<true>);
 
-    em::class_<RuckigThrow<DynamicDOFs>>("Ruckig")
+    em::class_<Ruckig<DynamicDOFs>>("Ruckig")
         .constructor<size_t>()
         .constructor<size_t, double>()
-        .property("max_number_of_waypoints", &RuckigThrow<DynamicDOFs>::max_number_of_waypoints)
-        .property("degrees_of_freedom", &RuckigThrow<DynamicDOFs>::degrees_of_freedom)
-        .property("delta_time", &RuckigThrow<DynamicDOFs>::delta_time)
-        .function("reset", &RuckigThrow<DynamicDOFs>::reset)
-        .function("validate_input", &RuckigThrow<DynamicDOFs>::validate_input<true>)
-        .function("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&RuckigThrow<DynamicDOFs>::calculate))
-        .function("update", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, OutputParameter<DynamicDOFs>&)>(&RuckigThrow<DynamicDOFs>::update));
+        .property("max_number_of_waypoints", &Ruckig<DynamicDOFs>::max_number_of_waypoints)
+        .property("degrees_of_freedom", &Ruckig<DynamicDOFs>::degrees_of_freedom)
+        .property("delta_time", &Ruckig<DynamicDOFs>::delta_time)
+        .function("reset", &Ruckig<DynamicDOFs>::reset)
+        .function("validate_input", &Ruckig<DynamicDOFs>::validate_input<true>)
+        .function("calculate", static_cast<Result (Ruckig<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&Ruckig<DynamicDOFs>::calculate))
+        .function("update", static_cast<Result (Ruckig<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, OutputParameter<DynamicDOFs>&)>(&Ruckig<DynamicDOFs>::update));
 }

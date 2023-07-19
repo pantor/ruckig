@@ -22,6 +22,8 @@ RuckigModule().then(lib => {
         max_velocity: 1.0,
         max_acceleration: 1.0,
         max_jerk: 2.0,
+        hasError: false,
+        errorMessage: '',
 
         updatePlot() {
             const input = new lib.InputParameter(1);
@@ -40,12 +42,19 @@ RuckigModule().then(lib => {
             const ruckig = new lib.Ruckig(1);
             const result = ruckig.calculate(input, trajectory);
 
-            const duration = trajectory.get_duration();
-
+            this.hasError = (result.value !== 0);
             if (result.value !== 0) {
-                console.log('error');
+                if (result.value === -100) {
+                    this.errorMessage = 'Invalid input parameters.';
+                } else if (result.value === -101) {
+                    this.errorMessage = 'The trajectory duration exceeds its numerical limits.';
+                } else {
+                    this.errorMessage = 'Unknown error.';
+                }
                 return;
             }
+
+            const duration = trajectory.get_duration();
 
             let ts = [], ps = [], vs = [], as = [], js = [];
             for (let t = 0; t < duration; t += duration / 100) {

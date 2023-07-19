@@ -84,6 +84,13 @@
       </div>
     </div>
 
+    <template x-if="hasError">
+      <div class="notification is-danger is-light">
+        <strong>Error</strong><br>
+        <span x-text="errorMessage"></span>
+      </div>
+    </template>
+
     <div class="my-4" id="plot"></div>
   </div>
 
