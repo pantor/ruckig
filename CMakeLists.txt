@@ -154,6 +154,15 @@ if(BUILD_TESTS)
     target_compile_options(test-target PRIVATE /W4)
   else()
     target_compile_options(test-target PRIVATE -Wall -Wextra)
+    find_program(MEMORYCHECK_COMMAND valgrind)
+    set(MEMORYCHECK_COMMAND_OPTIONS
+       "--tool=memcheck \
+       --leak-check=full \
+       --trace-children=yes \
+       --track-origins=yes \
+       --keep-debuginfo=yes \
+       --error-exitcode=100")
+    include(CTest)
   endif()
 
   add_test(NAME test-target COMMAND test-target)

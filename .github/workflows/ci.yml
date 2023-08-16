@@ -74,3 +74,8 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         env CTEST_OUTPUT_ON_FAILURE=1 ./build/test-target 5000000
+
+    - name: Memory Test
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        ctest --test-dir ./build -T memcheck

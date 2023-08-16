@@ -191,7 +191,7 @@ public:
         output.new_calculation = false;
 
         Result result {Result::Working};
-        if (input != current_input || !current_input_initialized) {
+        if (!current_input_initialized || input != current_input) {
             result = calculate(input, output.trajectory, output.was_calculation_interrupted);
             if (result != Result::Working && result != Result::ErrorPositionalLimits) {
                 return result;
