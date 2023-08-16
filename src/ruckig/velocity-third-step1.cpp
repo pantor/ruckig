@@ -46,6 +46,11 @@ void VelocityThirdOrderStep1::time_none(ProfileIter& profile, double aMax, doubl
             }
         }
 
+        profile->t[3] = 0;
+        profile->t[4] = 0;
+        profile->t[5] = 0;
+        profile->t[6] = 0;
+
         // Solution 2
         {
             profile->t[0] = (-a0 + h1)/jMax;

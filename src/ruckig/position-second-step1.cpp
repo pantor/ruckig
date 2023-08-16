@@ -32,6 +32,8 @@ void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, doub
         profile->t[5] = 0;
         profile->t[6] = 0;
 
+        //std::fill(profile->t.begin()+3, profile->t.end(), 0.);
+
         // Solution 1
         {
             profile->t[0] = -(v0 + h1)/aMax;
@@ -45,6 +47,11 @@ void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, doub
                 }
             }
         }
+
+        profile->t[3] = 0;
+        profile->t[4] = 0;
+        profile->t[5] = 0;
+        profile->t[6] = 0;
 
         // Solution 2
         {

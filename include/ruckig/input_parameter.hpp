@@ -74,7 +74,7 @@ class InputParameter {
 #endif
 
 public:
-    size_t degrees_of_freedom;
+    size_t degrees_of_freedom{DOFs};
 
     ControlInterface control_interface {ControlInterface::Position};
     Synchronization synchronization {Synchronization::Time};
@@ -88,33 +88,33 @@ public:
 
     // Kinematic constraints
     Vector<double> max_velocity, max_acceleration, max_jerk;
-    std::optional<Vector<double>> min_velocity, min_acceleration;
+    std::optional<Vector<double>> min_velocity{}, min_acceleration{};
 
     //! Intermediate waypoints (only in Ruckig Pro)
     std::vector<Vector<double>> intermediate_positions;
 
     // Kinematic constraints for intermediate sections (between waypoints) (only in Ruckig Pro)
-    std::optional<std::vector<Vector<double>>> per_section_max_velocity, per_section_max_acceleration, per_section_max_jerk;
-    std::optional<std::vector<Vector<double>>> per_section_min_velocity, per_section_min_acceleration;
-    std::optional<std::vector<Vector<double>>> per_section_max_position, per_section_min_position;
+    std::optional<std::vector<Vector<double>>> per_section_max_velocity{}, per_section_max_acceleration{}, per_section_max_jerk{};
+    std::optional<std::vector<Vector<double>>> per_section_min_velocity{}, per_section_min_acceleration{};
+    std::optional<std::vector<Vector<double>>> per_section_max_position{}, per_section_min_position{};
 
     // Positional constraints (only in Ruckig Pro)
-    std::optional<Vector<double>> max_position, min_position;
+    std::optional<Vector<double>> max_position{}, min_position{};
 
     //! Is the DoF considered for calculation?
     Vector<bool> enabled;
 
     //! Per-DoF control_interface (overwrites global control_interface)
-    std::optional<Vector<ControlInterface>> per_dof_control_interface;
+    std::optional<Vector<ControlInterface>> per_dof_control_interface{};
 
     //! Per-DoF synchronization (overwrites global synchronization)
-    std::optional<Vector<Synchronization>> per_dof_synchronization;
+    std::optional<Vector<Synchronization>> per_dof_synchronization{};
 
     //! Optional minimum trajectory duration
-    std::optional<double> minimum_duration;
+    std::optional<double> minimum_duration{};
 
     //! Optional minimum trajectory duration for each intermediate sections (only in Ruckig Pro)
-    std::optional<std::vector<double>> per_section_minimum_duration;
+    std::optional<std::vector<double>> per_section_minimum_duration{};
 
     //! Optional duration [µs] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
     //!
@@ -122,7 +122,7 @@ public:
     //! is applied to the iterative phase only, and the real-time capable (constant) second phase is computed
     //! afterwards. Therefore, the total calculation duration might exceed this interrupt signal by a constant offset,
     //! which should be considered (subtracted) here.
-    std::optional<double> interrupt_calculation_duration;
+    std::optional<double> interrupt_calculation_duration{};
 
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
     InputParameter(): degrees_of_freedom(DOFs) {
