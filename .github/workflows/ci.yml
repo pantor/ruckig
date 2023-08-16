@@ -47,6 +47,10 @@ jobs:
         echo "CXX=g++-${{ matrix.version }}" >> $GITHUB_ENV
         bash scripts/patch-c++11.sh inplace
 
+    - name: Install valgrind
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt-get install -y valgrind
+
     - name: Configure and make
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ${{ matrix.cmake_flags }} -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=. -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=.
