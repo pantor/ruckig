@@ -3,11 +3,10 @@ from pathlib import Path
 from sys import path
 
 from plotter import Plotter
-import numpy as np
 
 path.insert(0, str(Path(__file__).parent.absolute().parent / 'build'))
 
-from ruckig import InputParameter, OutputParameter, Result, Ruckig, Trajectory, ControlInterface
+from ruckig import InputParameter, OutputParameter, Result, Ruckig, ControlInterface  # noqa: F401
 
 
 def walk_through_trajectory(otg, inp):

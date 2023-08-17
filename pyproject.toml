@@ -1,3 +1,12 @@
 [build-system]
 requires = ["setuptools>=42", "wheel", "pybind11~=2.6.1", "ninja", "cmake>=3.10"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+select = ["A", "COM", "E", "F", "G", "N", "PIE", "PTH", "PYI", "RSE", "RET", "SIM", "TCH", "W", "Q", "E201", "E202", "E203"]
+line-length = 160
+ignore = ["E402"]
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "single"
