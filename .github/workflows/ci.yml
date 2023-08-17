@@ -74,3 +74,15 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         env CTEST_OUTPUT_ON_FAILURE=1 ./build/test-target 5000000
+
+
+  lint-python:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Lint Python
+      run: |
+        python3 -m pip install ruff
+        ruff examples test
