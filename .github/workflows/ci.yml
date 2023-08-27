@@ -53,13 +53,14 @@ jobs:
         cmake --build build --config Release -j2
 
     - name: Run C++ Examples
+      working-directory: build
       run: |
-        ./build/example-01_position > "$HIDDEN"
-        ./build/example-02_position_offline > "$HIDDEN"
-        ./build/example-05_velocity > "$HIDDEN"
-        ./build/example-06_stop > "$HIDDEN"
-        ./build/example-07_minimum_duration > "$HIDDEN"
-        ./build/example-09_dynamic_dofs > "$HIDDEN"
+        ./example-01_position > "$HIDDEN"
+        ./example-02_position_offline > "$HIDDEN"
+        ./example-05_velocity > "$HIDDEN"
+        ./example-06_stop > "$HIDDEN"
+        ./example-07_minimum_duration > "$HIDDEN"
+        ./example-09_dynamic_dofs > "$HIDDEN"
 
     - name: Run Python Examples
       if: matrix.name != 'ubuntu-20.04-gcc-5'
@@ -69,11 +70,15 @@ jobs:
         python3 ./examples/05_velocity.py > "$HIDDEN"
         python3 ./examples/06_stop.py > "$HIDDEN"
         python3 ./examples/07_minimum_duration.py > "$HIDDEN"
+      env:
+        PYTHONPATH: build
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
       run: |
-        env CTEST_OUTPUT_ON_FAILURE=1 ./build/test-target 5000000
+        ./build/test-target 5000000
+      env:
+        CTEST_OUTPUT_ON_FAILURE: 1
 
 
   lint-python:
