@@ -1,12 +1,6 @@
 # This example shows the usage of intermediate waypoints. It will only work with Ruckig Pro or enabled cloud API (e.g. default when installed by pip / PyPI).
 
 from copy import copy
-from pathlib import Path
-from sys import path
-
-# Path to the build directory including a file similar to 'ruckig.cpython-37m-x86_64-linux-gnu'.
-build_path = Path(__file__).parent.absolute().parent / 'build'
-path.insert(0, str(build_path))
 
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
@@ -57,7 +51,6 @@ if __name__ == '__main__':
     print(f'Trajectory duration: {first_output.trajectory.duration:0.4f} [s]')
 
     # Plot the trajectory
-    # path.insert(0, str(Path(__file__).parent.absolute().parent / 'test'))
     # from plotter import Plotter
 
     # Plotter.plot_trajectory(Path(__file__).parent.absolute() / '3_trajectory.pdf', otg, inp, out_list, plot_jerk=False)
