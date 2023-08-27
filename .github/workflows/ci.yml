@@ -27,7 +27,7 @@ jobs:
       run: |
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
-        git checkout v2.10.3
+        git checkout v2.11.1
 
     - name: Set compiler version and patch C++11
       if: matrix.name == 'ubuntu-20.04-gcc-5'
