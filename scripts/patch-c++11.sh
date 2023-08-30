@@ -24,6 +24,7 @@ replace include/ruckig/roots.hpp -e 's|if constexpr|if|g'
 replace include/ruckig/ruckig.hpp -e 's|<optional>|<nonstd/optional.hpp>|g' -e 's|if constexpr|if|g'
 replace include/ruckig/trajectory.hpp -e 's|if constexpr|if|g'
 replace include/ruckig/velocity.hpp -e 's|<optional>|<nonstd/optional.hpp>|g'
+replace include/ruckig/calculator_cloud.hpp -e 's|if constexpr|if|g'
 replace test/test_target.cpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|<optional>|<nonstd/optional.hpp>|g'
 replace test/test_target_known.cpp -e 's|std::nullopt|nonstd::nullopt|g' -e 's|<optional>|<nonstd/optional.hpp>|g'
 
