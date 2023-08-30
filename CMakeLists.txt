@@ -53,6 +53,7 @@ endif()
 
 
 if(BUILD_CLOUD_CLIENT)
+  target_sources(ruckig PRIVATE src/ruckig/cloud_client.cpp)
   target_include_directories(ruckig PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
