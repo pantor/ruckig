@@ -5,10 +5,10 @@
 #include <chrono>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <tuple>
 #include <vector>
 
-#include <httplib/httplib.h>
 #include <json/json.hpp>
 
 #include <ruckig/error.hpp>
@@ -17,12 +17,24 @@
 #include <ruckig/trajectory.hpp>
 
 
+namespace httplib { class Client; }
+
 namespace ruckig {
+
+class CloudClient {
+    std::shared_ptr<httplib::Client> cli;
+
+public:
+    explicit CloudClient();
+
+    nlohmann::json post(const nlohmann::json& params, bool throw_error);
+};
+
 
 //! Calculation class for a trajectory along waypoints.
 template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class WaypointsCalculator {
-    httplib::Client cli {"http://api.ruckig.com"};
+    CloudClient client;
 
 public:
     size_t degrees_of_freedom;
@@ -41,7 +53,7 @@ public:
 
     template<bool throw_error>
     Result calculate(const InputParameter<DOFs, CustomVector>& input, Trajectory<DOFs, CustomVector>& traj, double, bool& was_interrupted) {
-        std::cout << "[ruckig] calculate trajectory via cloud API server." << std::endl;
+        std::cout << "[ruckig] calculate trajectory via cloud API." << std::endl;
 
         nlohmann::json params;
         params["degrees_of_freedom"] = input.degrees_of_freedom;
@@ -101,25 +113,7 @@ public:
             params["per_section_minimum_duration"] = *input.per_section_minimum_duration;
         }
 
-        const auto res = cli.Post("/calculate", params.dump(), "application/json");
-        if (!res) {
-            if constexpr (throw_error) {
-                throw RuckigError("could not reach cloud API server");
-            } else {
-                std::cout << "[ruckig] could not reach cloud API server" << std::endl;
-                return Result::Error;
-            }
-        }
-        if (res->status != 200) {
-            if constexpr (throw_error) {
-                throw RuckigError("could not reach cloud API server, error code: " + std::to_string(res->status) + " " + res->body);
-            } else {
-                std::cout << "[ruckig] could not reach cloud API server, error code: " << res->status << " " << res->body << std::endl;
-                return Result::Error;
-            }
-        }
-
-        const auto result = nlohmann::json::parse(res->body);
+        const auto result = client.post(params, throw_error);
 
         was_interrupted = false;
         traj.degrees_of_freedom = input.degrees_of_freedom;

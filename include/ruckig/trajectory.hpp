@@ -5,10 +5,6 @@
 #include <tuple>
 #include <vector>
 
-#ifdef WITH_SERIALIZATION
-#include <json/json.hpp>
-#endif
-
 #include <ruckig/error.hpp>
 #include <ruckig/profile.hpp>
 
@@ -309,10 +305,6 @@ public:
         }
         return false;
     }
-
-#ifdef WITH_SERIALIZATION
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Trajectory<DOFs>, degrees_of_freedom, profiles, duration, cumulative_times, independent_min_durations)
-#endif
 };
 
 } // namespace ruckig
