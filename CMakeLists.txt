@@ -22,16 +22,16 @@ endif()
 
 add_library(ruckig
   src/ruckig/brake.cpp
-  src/ruckig/position-first-step1.cpp
-  src/ruckig/position-first-step2.cpp
-  src/ruckig/position-second-step1.cpp
-  src/ruckig/position-second-step2.cpp
-  src/ruckig/position-third-step1.cpp
-  src/ruckig/position-third-step2.cpp
-  src/ruckig/velocity-second-step1.cpp
-  src/ruckig/velocity-second-step2.cpp
-  src/ruckig/velocity-third-step1.cpp
-  src/ruckig/velocity-third-step2.cpp
+  src/ruckig/position_first_step1.cpp
+  src/ruckig/position_first_step2.cpp
+  src/ruckig/position_second_step1.cpp
+  src/ruckig/position_second_step2.cpp
+  src/ruckig/position_third_step1.cpp
+  src/ruckig/position_third_step2.cpp
+  src/ruckig/velocity_second_step1.cpp
+  src/ruckig/velocity_second_step2.cpp
+  src/ruckig/velocity_third_step1.cpp
+  src/ruckig/velocity_third_step2.cpp
 )
 add_library(ruckig::ruckig ALIAS ruckig)
 
@@ -146,7 +146,7 @@ install(FILES
 if(BUILD_TESTS)
   enable_testing()
 
-  add_executable(test-target test/test-target.cpp test/test-target-known.cpp)
+  add_executable(test-target test/test_target.cpp test/test_target_known.cpp)
 
   target_link_libraries(test-target PRIVATE ruckig)
   target_include_directories(test-target PRIVATE third_party)
@@ -170,7 +170,7 @@ endif()
 
 
 if(BUILD_BENCHMARK)
-  add_executable(benchmark-target test/benchmark-target.cpp)
+  add_executable(benchmark-target test/benchmark_target.cpp)
 
   target_link_libraries(benchmark-target PRIVATE ruckig)
 endif()
