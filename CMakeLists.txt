@@ -9,7 +9,7 @@ include(GNUInstallDirs)
 
 option(BUILD_EXAMPLES "Build example programs" ON)
 option(BUILD_PYTHON_MODULE "Build python module with pybind11" OFF)
-option(BUILD_CLOUD_CLIENT "Build cloud client to calculate Ruckig Pro trajectories remotely" OFF)
+option(BUILD_CLOUD_CLIENT "Build cloud client to calculate Ruckig Pro trajectories remotely" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
