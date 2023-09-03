@@ -37,7 +37,7 @@ public:
     void get_velocity_brake_trajectory(double a0, double aMax, double aMin, double jMax);
 
     //! Calculate brake trajectory for second-order velocity interface
-    void get_second_order_velocity_brake_trajectory() { }
+    void get_second_order_velocity_brake_trajectory();
 
     //! Finalize third-order braking by integrating along kinematic state
     void finalize(double& ps, double& vs, double& as) {

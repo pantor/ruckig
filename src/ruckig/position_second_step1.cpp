@@ -27,16 +27,15 @@ void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, doub
     if (h1 >= 0.0) {
         h1 = std::sqrt(h1);
 
-        profile->t[3] = 0;
-        profile->t[4] = 0;
-        profile->t[5] = 0;
-        profile->t[6] = 0;
-
         // Solution 1
         {
             profile->t[0] = -(v0 + h1)/aMax;
             profile->t[1] = 0;
             profile->t[2] = (vf + h1)/aMin;
+            profile->t[3] = 0;
+            profile->t[4] = 0;
+            profile->t[5] = 0;
+            profile->t[6] = 0;
 
             if (profile->check_for_second_order<ControlSigns::UDDU, ReachedLimits::NONE>(aMax, aMin, vMax, vMin)) {
                 add_profile(profile);
@@ -51,6 +50,10 @@ void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, doub
             profile->t[0] = (-v0 + h1)/aMax;
             profile->t[1] = 0;
             profile->t[2] = (vf - h1)/aMin;
+            profile->t[3] = 0;
+            profile->t[4] = 0;
+            profile->t[5] = 0;
+            profile->t[6] = 0;
 
             if (profile->check_for_second_order<ControlSigns::UDDU, ReachedLimits::NONE>(aMax, aMin, vMax, vMin)) {
                 add_profile(profile);

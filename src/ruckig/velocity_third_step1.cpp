@@ -27,16 +27,15 @@ void VelocityThirdOrderStep1::time_none(ProfileIter& profile, double aMax, doubl
     if (h1 >= 0.0) {
         h1 = std::sqrt(h1);
 
-        profile->t[3] = 0;
-        profile->t[4] = 0;
-        profile->t[5] = 0;
-        profile->t[6] = 0;
-
         // Solution 1
         {
             profile->t[0] = -(a0 + h1)/jMax;
             profile->t[1] = 0;
             profile->t[2] = -(af + h1)/jMax;
+            profile->t[3] = 0;
+            profile->t[4] = 0;
+            profile->t[5] = 0;
+            profile->t[6] = 0;
 
             if (profile->check_for_velocity<ControlSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
                 add_profile(profile);
@@ -51,6 +50,10 @@ void VelocityThirdOrderStep1::time_none(ProfileIter& profile, double aMax, doubl
             profile->t[0] = (-a0 + h1)/jMax;
             profile->t[1] = 0;
             profile->t[2] = (-af + h1)/jMax;
+            profile->t[3] = 0;
+            profile->t[4] = 0;
+            profile->t[5] = 0;
+            profile->t[6] = 0;
 
             if (profile->check_for_velocity<ControlSigns::UDDU, ReachedLimits::NONE>(jMax, aMax, aMin)) {
                 add_profile(profile);
