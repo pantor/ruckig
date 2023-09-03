@@ -101,7 +101,7 @@ Within the control loop, you need to update the *current state* of the input par
 
 ### Intermediate Waypoints
 
-The Ruckig Community Version now supports intermediate waypoints via a [remote API](http://api.ruckig.com/docs). To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
+The Ruckig Community Version now supports intermediate waypoints via a [cloud API](http://api.ruckig.com/docs). To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
 ```.cpp
 Ruckig<6> otg {0.001, 8};
 InputParameter<6> input {8};
@@ -114,7 +114,7 @@ input.intermediate_positions = {
   {0.8, ...},
 };
 ```
-As soon as at least one intermediate positions is given, the Ruckig Community Version switches to the mentioned (of course, non real-time capable) remote API. If you require real-time calculation on your own hardware, please contact us for the *Ruckig Pro Version*.
+As soon as at least one intermediate positions is given, the Ruckig Community Version switches to the mentioned (of course, non real-time capable) cloud API. If you require real-time calculation on your own hardware, please contact us for the *Ruckig Pro Version*.
 
 When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. In particular, there are some fundamental limitations for jerk-limited online trajectory generation regarding the usage of waypoints. Please find more information about these limitations [here](https://docs.ruckig.com/md_pages__intermediate_waypoints.html), and in general we recommend to use
 ```.cpp
