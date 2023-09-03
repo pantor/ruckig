@@ -13,7 +13,6 @@ option(BUILD_CLOUD_CLIENT "Build cloud client to calculate Ruckig Pro trajectori
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
-option(EXPOSE_INTERNAL "Expose some internal classes and methods" OFF)
 
 if(WIN32 AND BUILD_SHARED_LIBS)
   option(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS "On Windows, export all symbols when building a shared library." ON)
@@ -45,10 +44,6 @@ target_link_libraries(ruckig PUBLIC)
 
 if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
-endif()
-
-if(EXPOSE_INTERNAL)
-  target_compile_definitions(ruckig PUBLIC WITH_EXPOSE_INTERNAL)
 endif()
 
 
