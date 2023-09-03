@@ -230,12 +230,13 @@ public:
 #endif
 
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            auto& p = traj.profiles[0][dof];
+
             inp_min_velocity[dof] = inp.min_velocity ? inp.min_velocity.value()[dof] : -inp.max_velocity[dof];
             inp_min_acceleration[dof] = inp.min_acceleration ? inp.min_acceleration.value()[dof] : -inp.max_acceleration[dof];
             inp_per_dof_control_interface[dof] = inp.per_dof_control_interface ? inp.per_dof_control_interface.value()[dof] : inp.control_interface;
             inp_per_dof_synchronization[dof] = inp.per_dof_synchronization ? inp.per_dof_synchronization.value()[dof] : inp.synchronization;
 
-            auto& p = traj.profiles[0][dof];
             if (!inp.enabled[dof]) {
                 p.p.back() = inp.current_position[dof];
                 p.v.back() = inp.current_velocity[dof];
