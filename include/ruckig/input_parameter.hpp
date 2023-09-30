@@ -80,25 +80,25 @@ public:
     Synchronization synchronization {Synchronization::Time};
     DurationDiscretization duration_discretization {DurationDiscretization::Continuous};
 
-    // Current state
+    //! Current state
     Vector<double> current_position, current_velocity, current_acceleration;
 
-    // Target state
+    //! Target state
     Vector<double> target_position, target_velocity, target_acceleration;
 
-    // Kinematic constraints
+    //! Kinematic constraints
     Vector<double> max_velocity, max_acceleration, max_jerk;
     std::optional<Vector<double>> min_velocity, min_acceleration;
 
     //! Intermediate waypoints (only in Ruckig Pro)
     std::vector<Vector<double>> intermediate_positions;
 
-    // Kinematic constraints for intermediate sections (between waypoints) (only in Ruckig Pro)
+    //! Kinematic constraints for intermediate sections (between waypoints) (only in Ruckig Pro)
     std::optional<std::vector<Vector<double>>> per_section_max_velocity, per_section_max_acceleration, per_section_max_jerk;
     std::optional<std::vector<Vector<double>>> per_section_min_velocity, per_section_min_acceleration;
     std::optional<std::vector<Vector<double>>> per_section_max_position, per_section_min_position;
 
-    // Positional constraints (only in Ruckig Pro)
+    //! Positional constraints (only in Ruckig Pro)
     std::optional<Vector<double>> max_position, min_position;
 
     //! Is the DoF considered for calculation?
