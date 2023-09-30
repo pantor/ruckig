@@ -34,6 +34,32 @@ public:
 //! Calculation class for a trajectory along waypoints.
 template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class WaypointsCalculator {
+    template<class T> using Vector = CustomVector<T, DOFs>;
+
+    // Convert the custom MinimumVector type to json, using only .size() and []
+    template<class V>
+    static void vector_to_json(nlohmann::json& j, const V& vector) {
+        j = nlohmann::json::array();
+        auto& j_vector = j.get_ref<nlohmann::json::array_t&>();
+
+        j_vector.resize(vector.size());
+        for (size_t i = 0; i < vector.size(); ++i) {
+            j_vector[i] = vector[i];
+        }
+    }
+
+    // Convert a double vector to json
+    template<class V>
+    static void double_vector_to_json(nlohmann::json& j, const std::vector<V>& vector) {
+        j = nlohmann::json::array();
+        auto& j_vector = j.get_ref<nlohmann::json::array_t&>();
+
+        j_vector.resize(vector.size());
+        for (size_t i = 0; i < vector.size(); ++i) {
+            vector_to_json(j_vector[i], vector[i]);
+        }
+    }
+
     CloudClient client;
 
 public:
@@ -57,60 +83,60 @@ public:
 
         nlohmann::json params;
         params["degrees_of_freedom"] = input.degrees_of_freedom;
-        params["current_position"] = input.current_position;
-        params["current_velocity"] = input.current_velocity;
-        params["current_acceleration"] = input.current_acceleration;
-        params["target_position"] = input.target_position;
-        params["target_velocity"] = input.target_velocity;
-        params["target_acceleration"] = input.target_acceleration;
-        params["max_velocity"] = input.max_velocity;
-        params["max_acceleration"] = input.max_acceleration;
-        params["max_jerk"] = input.max_jerk;
+        vector_to_json<Vector<double>>(params["current_position"], input.current_position);
+        vector_to_json<Vector<double>>(params["current_velocity"], input.current_velocity);
+        vector_to_json<Vector<double>>(params["current_acceleration"], input.current_acceleration);
+        vector_to_json<Vector<double>>(params["target_position"], input.target_position);
+        vector_to_json<Vector<double>>(params["target_velocity"], input.target_velocity);
+        vector_to_json<Vector<double>>(params["target_acceleration"], input.target_acceleration);
+        vector_to_json<Vector<double>>(params["max_velocity"], input.max_velocity);
+        vector_to_json<Vector<double>>(params["max_acceleration"], input.max_acceleration);
+        vector_to_json<Vector<double>>(params["max_jerk"], input.max_jerk);
         if (input.min_velocity) {
-            params["min_velocity"] = *input.min_velocity;
+            vector_to_json<Vector<double>>(params["min_velocity"], input.min_velocity.value());
         }
         if (input.min_acceleration) {
-            params["min_acceleration"] = *input.min_acceleration;
+            vector_to_json<Vector<double>>(params["min_acceleration"], input.min_acceleration.value());
         }
         if (!input.intermediate_positions.empty()) {
-            params["intermediate_positions"] = input.intermediate_positions;
+            double_vector_to_json<Vector<double>>(params["intermediate_positions"], input.intermediate_positions);
         }
         if (input.per_section_max_velocity) {
-            params["per_section_max_velocity"] = *input.per_section_max_velocity;
+            double_vector_to_json<Vector<double>>(params["per_section_max_velocity"], input.per_section_max_velocity.value());
         }
         if (input.per_section_max_acceleration) {
-            params["per_section_max_acceleration"] = *input.per_section_max_acceleration;
+            double_vector_to_json<Vector<double>>(params["per_section_max_acceleration"], input.per_section_max_acceleration.value());
         }
         if (input.per_section_max_jerk) {
-            params["per_section_max_jerk"] = *input.per_section_max_jerk;
+            double_vector_to_json<Vector<double>>(params["per_section_max_jerk"], input.per_section_max_jerk.value());
         }
         if (input.per_section_min_velocity) {
-            params["per_section_min_velocity"] = *input.per_section_min_velocity;
+            double_vector_to_json<Vector<double>>(params["per_section_min_velocity"], input.per_section_min_velocity.value());
         }
         if (input.per_section_min_acceleration) {
-            params["per_section_min_acceleration"] = *input.per_section_min_acceleration;
+            double_vector_to_json<Vector<double>>(params["per_section_min_acceleration"], input.per_section_min_acceleration.value());
         }
         if (input.max_position) {
-            params["max_position"] = *input.max_position;
+            vector_to_json<Vector<double>>(params["max_position"], input.max_position.value());
         }
         if (input.min_position) {
-            params["min_position"] = *input.min_position;
+            vector_to_json<Vector<double>>(params["min_position"], input.min_position.value());
         }
-        params["enabled"] = input.enabled;
+        vector_to_json<Vector<bool>>(params["enabled"], input.enabled);
         params["control_interface"] = input.control_interface;
         params["synchronization"] = input.synchronization;
         params["duration_discretization"] = input.duration_discretization;
         if (input.per_dof_control_interface) {
-            params["per_dof_control_interface"] = *input.per_dof_control_interface;
+            vector_to_json<Vector<ControlInterface>>(params["per_dof_control_interface"], input.per_dof_control_interface.value());
         }
         if (input.per_dof_synchronization) {
-            params["per_dof_synchronization"] = *input.per_dof_synchronization;
+            vector_to_json<Vector<Synchronization>>(params["per_dof_synchronization"], input.per_dof_synchronization.value());
         }
         if (input.minimum_duration) {
-            params["minimum_duration"] = *input.minimum_duration;
+            params["minimum_duration"] = input.minimum_duration.value();
         }
         if (input.per_section_minimum_duration) {
-            params["per_section_minimum_duration"] = *input.per_section_minimum_duration;
+            vector_to_json<std::vector<double>>(params["per_section_minimum_duration"], input.per_section_minimum_duration.value());
         }
 
         const auto result = client.post(params, throw_error);

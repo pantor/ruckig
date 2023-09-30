@@ -875,7 +875,6 @@ TEST_CASE("zero-limits") {
     CHECK( output.trajectory.get_duration() == doctest::Approx(1.1) );
 }
 
-#ifndef WITH_CLOUD_CLIENT
 TEST_CASE("custom-vector-type") {
     SUBCASE("DOFs compile-time") {
         RuckigThrow<3, MinimalVector> otg {0.005};
@@ -934,7 +933,6 @@ TEST_CASE("custom-vector-type") {
         CHECK( new_position[2] == doctest::Approx(input.current_position[2]) );
     }
 }
-#endif
 
 TEST_CASE("random-discrete-3") {
     constexpr size_t DOFs {3};
