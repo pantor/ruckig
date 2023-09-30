@@ -42,30 +42,62 @@ public:
     double delta_time {0.0};
 
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
-    explicit Ruckig(): max_number_of_waypoints(0), degrees_of_freedom(DOFs), delta_time(-1.0) {
+    explicit Ruckig():
+        max_number_of_waypoints(0),
+        degrees_of_freedom(DOFs),
+        delta_time(-1.0)
+    {
     }
 
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
-    explicit Ruckig(double delta_time): max_number_of_waypoints(0), degrees_of_freedom(DOFs), delta_time(delta_time) {
+    explicit Ruckig(double delta_time):
+        max_number_of_waypoints(0),
+        degrees_of_freedom(DOFs),
+        delta_time(delta_time)
+    {
     }
 
 #if defined WITH_CLOUD_CLIENT
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
-    explicit Ruckig(double delta_time, size_t max_number_of_waypoints): current_input(InputParameter<DOFs, CustomVector>(max_number_of_waypoints)), calculator(Calculator<DOFs, CustomVector>(max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), degrees_of_freedom(DOFs), delta_time(delta_time) {
+    explicit Ruckig(double delta_time, size_t max_number_of_waypoints):
+        current_input(InputParameter<DOFs, CustomVector>(max_number_of_waypoints)),
+        calculator(Calculator<DOFs, CustomVector>(max_number_of_waypoints)),
+        max_number_of_waypoints(max_number_of_waypoints),
+        degrees_of_freedom(DOFs),
+        delta_time(delta_time)
+    {
     }
 #endif
 
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
-    explicit Ruckig(size_t dofs): current_input(InputParameter<DOFs, CustomVector>(dofs)), calculator(Calculator<DOFs, CustomVector>(dofs)), max_number_of_waypoints(0), degrees_of_freedom(dofs), delta_time(-1.0) {
+    explicit Ruckig(size_t dofs):
+        current_input(InputParameter<DOFs, CustomVector>(dofs)),
+        calculator(Calculator<DOFs, CustomVector>(dofs)),
+        max_number_of_waypoints(0),
+        degrees_of_freedom(dofs),
+        delta_time(-1.0)
+    {
     }
 
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
-    explicit Ruckig(size_t dofs, double delta_time): current_input(InputParameter<DOFs, CustomVector>(dofs)), calculator(Calculator<DOFs, CustomVector>(dofs)), max_number_of_waypoints(0), degrees_of_freedom(dofs), delta_time(delta_time) {
+    explicit Ruckig(size_t dofs, double delta_time):
+        current_input(InputParameter<DOFs, CustomVector>(dofs)),
+        calculator(Calculator<DOFs, CustomVector>(dofs)),
+        max_number_of_waypoints(0),
+        degrees_of_freedom(dofs),
+        delta_time(delta_time)
+    {
     }
 
 #if defined WITH_CLOUD_CLIENT
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
-    explicit Ruckig(size_t dofs, double delta_time, size_t max_number_of_waypoints): current_input(InputParameter<DOFs, CustomVector>(dofs, max_number_of_waypoints)), calculator(Calculator<DOFs, CustomVector>(dofs, max_number_of_waypoints)), max_number_of_waypoints(max_number_of_waypoints), degrees_of_freedom(dofs), delta_time(delta_time) {
+    explicit Ruckig(size_t dofs, double delta_time, size_t max_number_of_waypoints):
+        current_input(InputParameter<DOFs, CustomVector>(dofs, max_number_of_waypoints)),
+        calculator(Calculator<DOFs, CustomVector>(dofs, max_number_of_waypoints)),
+        max_number_of_waypoints(max_number_of_waypoints),
+        degrees_of_freedom(dofs),
+        delta_time(delta_time)
+    {
     }
 #endif
 

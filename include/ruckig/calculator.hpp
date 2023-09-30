@@ -31,13 +31,21 @@ public:
 
 #if defined WITH_CLOUD_CLIENT
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
-    explicit Calculator(size_t max_waypoints): waypoints_calculator(WaypointsCalculator<DOFs, CustomVector>(max_waypoints)) { }
+    explicit Calculator(size_t max_waypoints):
+        waypoints_calculator(WaypointsCalculator<DOFs, CustomVector>(max_waypoints))
+        { }
 
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
-    explicit Calculator(size_t dofs): target_calculator(TargetCalculator<DOFs, CustomVector>(dofs)), waypoints_calculator(WaypointsCalculator<DOFs, CustomVector>(dofs)) { }
+    explicit Calculator(size_t dofs):
+        target_calculator(TargetCalculator<DOFs, CustomVector>(dofs)),
+        waypoints_calculator(WaypointsCalculator<DOFs, CustomVector>(dofs))
+        { }
 
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
-    explicit Calculator(size_t dofs, size_t max_waypoints): target_calculator(TargetCalculator<DOFs, CustomVector>(dofs)), waypoints_calculator(WaypointsCalculator<DOFs, CustomVector>(dofs, max_waypoints)) { }
+    explicit Calculator(size_t dofs, size_t max_waypoints):
+        target_calculator(TargetCalculator<DOFs, CustomVector>(dofs)),
+        waypoints_calculator(WaypointsCalculator<DOFs, CustomVector>(dofs, max_waypoints))
+        { }
 #else
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
     explicit Calculator(size_t dofs): target_calculator(TargetCalculator<DOFs, CustomVector>(dofs)) { }

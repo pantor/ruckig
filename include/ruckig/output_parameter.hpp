@@ -53,16 +53,25 @@ public:
     OutputParameter(): degrees_of_freedom(DOFs) { }
 
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
-    OutputParameter(size_t dofs): degrees_of_freedom(dofs), trajectory(Trajectory<0, CustomVector>(dofs)) {
+    OutputParameter(size_t dofs):
+        degrees_of_freedom(dofs),
+        trajectory(Trajectory<0, CustomVector>(dofs))
+    {
         resize(dofs);
     }
 
 #if defined WITH_CLOUD_CLIENT
     template<size_t D = DOFs, typename std::enable_if<(D >= 1), int>::type = 0>
-    OutputParameter(size_t max_number_of_waypoints): degrees_of_freedom(DOFs), trajectory(Trajectory<DOFs, CustomVector>(max_number_of_waypoints)) { }
+    OutputParameter(size_t max_number_of_waypoints):
+        degrees_of_freedom(DOFs),
+        trajectory(Trajectory<DOFs, CustomVector>(max_number_of_waypoints))
+    { }
 
     template<size_t D = DOFs, typename std::enable_if<(D == 0), int>::type = 0>
-    OutputParameter(size_t dofs, size_t max_number_of_waypoints): degrees_of_freedom(dofs), trajectory(Trajectory<0, CustomVector>(dofs, max_number_of_waypoints)) {
+    OutputParameter(size_t dofs, size_t max_number_of_waypoints):
+        degrees_of_freedom(dofs),
+        trajectory(Trajectory<0, CustomVector>(dofs, max_number_of_waypoints))
+    {
         resize(dofs);
     }
 #endif
