@@ -57,7 +57,7 @@ public:
 
 
 //! Calculate all roots of a*x^3 + b*x^2 + c*x + d = 0
-inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
+inline PositiveSet<double, 3> solve_cubic(double a, double b, double c, double d) {
     PositiveSet<double, 3> roots;
 
     if (std::abs(d) < DBL_EPSILON) {
@@ -151,7 +151,7 @@ inline PositiveSet<double, 3> solveCub(double a, double b, double c, double d) {
 // Solve resolvent eqaution of corresponding Quartic equation
 // The input x must be of length 3
 // Number of zeros are returned
-inline int solveResolvent(std::array<double, 3>& x, double a, double b, double c) {
+inline int solve_resolvent(std::array<double, 3>& x, double a, double b, double c) {
     constexpr double cos120 = -0.50;
     constexpr double sin120 = 0.866025403784438646764;
 
@@ -195,7 +195,7 @@ inline int solveResolvent(std::array<double, 3>& x, double a, double b, double c
 }
 
 //! Calculate all roots of the monic quartic equation: x^4 + a*x^3 + b*x^2 + c*x + d = 0
-inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, double d) {
+inline PositiveSet<double, 4> solve_quart_monic(double a, double b, double c, double d) {
     PositiveSet<double, 4> roots;
 
     if (std::abs(d) < DBL_EPSILON) {
@@ -225,7 +225,7 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
     const double c3 = -a * a * d - c * c + 4 * b * d;
 
     std::array<double, 3> x3;
-    const int number_zeroes = solveResolvent(x3, a3, b3, c3);
+    const int number_zeroes = solve_resolvent(x3, a3, b3, c3);
 
     double y = x3[0];
     // Choosing Y with maximal absolute value.
@@ -283,14 +283,14 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
 }
 
 //! Calculate the quartic equation: x^4 + b*x^3 + c*x^2 + d*x + e = 0
-inline PositiveSet<double, 4> solveQuartMonic(const std::array<double, 4>& polynom) {
-    return solveQuartMonic(polynom[0], polynom[1], polynom[2], polynom[3]);
+inline PositiveSet<double, 4> solve_quart_monic(const std::array<double, 4>& polynom) {
+    return solve_quart_monic(polynom[0], polynom[1], polynom[2], polynom[3]);
 }
 
 
 //! Evaluate a polynomial of order N at x
 template<size_t N>
-inline double polyEval(const std::array<double, N>& p, double x) {
+inline double poly_eval(const std::array<double, N>& p, double x) {
     double retVal = 0.0;
     if constexpr (N == 0) {
         return retVal;
@@ -316,7 +316,7 @@ inline double polyEval(const std::array<double, N>& p, double x) {
 
 // Calculate the derivative poly coefficients of a given poly
 template<size_t N>
-inline std::array<double, N-1> polyDeri(const std::array<double, N>& coeffs) {
+inline std::array<double, N-1> poly_derivative(const std::array<double, N>& coeffs) {
     std::array<double, N-1> deriv;
     for (size_t i = 0; i < N - 1; ++i) {
         deriv[i] = (N - 1 - i) * coeffs[i];
@@ -325,7 +325,7 @@ inline std::array<double, N-1> polyDeri(const std::array<double, N>& coeffs) {
 }
 
 template<size_t N>
-inline std::array<double, N-1> polyMonicDeri(const std::array<double, N>& monic_coeffs) {
+inline std::array<double, N-1> poly_monic_derivative(const std::array<double, N>& monic_coeffs) {
     std::array<double, N-1> deriv;
     deriv[0] = 1.0;
     for (size_t i = 1; i < N - 1; ++i) {
@@ -340,9 +340,9 @@ constexpr double tolerance {1e-14};
 // Calculate a single zero of polynom p(x) inside [lbound, ubound]
 // Requirements: p(lbound)*p(ubound) < 0, lbound < ubound
 template<size_t N, size_t maxIts = 128>
-inline double shrinkInterval(const std::array<double, N>& p, double l, double h) {
-    const double fl = polyEval(p, l);
-    const double fh = polyEval(p, h);
+inline double shrink_interval(const std::array<double, N>& p, double l, double h) {
+    const double fl = poly_eval(p, l);
+    const double fh = poly_eval(p, h);
     if (fl == 0.0) {
         return l;
     }
@@ -356,9 +356,9 @@ inline double shrinkInterval(const std::array<double, N>& p, double l, double h)
     double rts = (l + h) / 2;
     double dxold = std::abs(h - l);
     double dx = dxold;
-    const auto deriv = polyDeri(p);
-    double f = polyEval(p, rts);
-    double df = polyEval(deriv, rts);
+    const auto deriv = poly_derivative(p);
+    double f = poly_eval(p, rts);
+    double df = poly_eval(deriv, rts);
     double temp;
     for (size_t j = 0; j < maxIts; j++) {
         if ((((rts - h) * df - f) * ((rts - l) * df - f) > 0.0) || (std::abs(2 * f) > std::abs(dxold * df))) {
@@ -382,8 +382,8 @@ inline double shrinkInterval(const std::array<double, N>& p, double l, double h)
             break;
         }
 
-        f = polyEval(p, rts);
-        df = polyEval(deriv, rts);
+        f = poly_eval(p, rts);
+        df = poly_eval(deriv, rts);
         if (f < 0.0) {
             l = rts;
         } else {

@@ -488,7 +488,7 @@ public:
                 continue;
             }
 
-            for (const double _t: roots::solveCub(j[i]/6, a[i]/2, v[i], p[i]-pt)) {
+            for (const double _t: roots::solve_cubic(j[i]/6, a[i]/2, v[i], p[i]-pt)) {
                 if (0 < _t && _t <= t[i]) {
                     time = offset + _t + ((i > 0) ? t_sum[i-1] : 0.0);
                     std::tie(std::ignore, vt, at) = integrate(_t, p[i], v[i], a[i], j[i]);

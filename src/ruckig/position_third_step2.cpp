@@ -90,7 +90,7 @@ bool PositionThirdOrderStep2::time_acc1_vel(Profile& profile, double vMax, doubl
         const double t_min = -a0/jMax;
         const double t_max = std::min((tf + 2*aMin/jMax - (a0 + af)/jMax)/2, (aMax - a0)/jMax);
 
-        auto roots = roots::solveQuartMonic(polynom);
+        auto roots = roots::solve_quart_monic(polynom);
         for (double t: roots) {
             if (t < t_min || t > t_max) {
                 continue;
@@ -137,7 +137,7 @@ bool PositionThirdOrderStep2::time_acc1_vel(Profile& profile, double vMax, doubl
         const double t_min = -a0/jMax;
         const double t_max = std::min((tf + ad/jMax - 2*aMax/jMax)/2, (aMax - a0)/jMax);
 
-        auto roots = roots::solveQuartMonic(polynom);
+        auto roots = roots::solve_quart_monic(polynom);
         for (double t: roots) {
             if (t > t_max || t < t_min) {
                 continue;
@@ -180,7 +180,7 @@ bool PositionThirdOrderStep2::time_acc0_vel(Profile& profile, double vMax, doubl
         const double t_min = -af/jMax;
         const double t_max = std::min(tf - (2*aMax - a0)/jMax, -aMin/jMax);
 
-        auto roots = roots::solveQuartMonic(polynom);
+        auto roots = roots::solve_quart_monic(polynom);
         for (double t: roots) {
             if (t < t_min || t > t_max) {
                 continue;
@@ -222,7 +222,7 @@ bool PositionThirdOrderStep2::time_acc0_vel(Profile& profile, double vMax, doubl
         const double t_min = af/jMax;
         const double t_max = std::min(tf - aMax/jMax, aMax/jMax);
 
-        auto roots = roots::solveQuartMonic(polynom);
+        auto roots = roots::solve_quart_monic(polynom);
         for (double t: roots) {
             if (t < t_min || t > t_max) {
                 continue;
@@ -268,7 +268,7 @@ bool PositionThirdOrderStep2::time_vel(Profile& profile, double vMax, double vMi
         polynom[2] = 0;
         polynom[3] = pd/(2*jMax);
 
-        auto roots = roots::solveCub(polynom[0], polynom[1], polynom[2], polynom[3]);
+        auto roots = roots::solve_cubic(polynom[0], polynom[1], polynom[2], polynom[3]);
         for (double t: roots) {
             if (t > tf/4) {
                 continue;
@@ -310,11 +310,11 @@ bool PositionThirdOrderStep2::time_vel(Profile& profile, double vMax, double vMi
         polynom[4] = (a0*(7*a0_p4 - 10*a0_a0*ph3 - 4*a0*ph1 + 6*a0_a0*p1 + ph2))/(12*jMax_jMax*jMax*ph4);
         polynom[5] = (7*a0_p6 + af_p6 - 12*a0_p4*ph3 + 48*af_p3*jMax_jMax*g1 - 8*a0_p3*ph1 - 72*jMax_jMax*jMax*(jMax*g1*g1 + vd_vd*vd + 2*af*g1*vd) - 6*af_p4*jMax*vd + 36*af_af*jMax_jMax*vd_vd + 9*a0_p4*p1 + 3*a0_a0*ph2)/(144*jMax_jMax*jMax_jMax*ph4);
 
-        auto deriv = roots::polyMonicDeri(polynom);
-        auto dderiv = roots::polyDeri(deriv);
+        auto deriv = roots::poly_monic_derivative(polynom);
+        auto dderiv = roots::poly_derivative(deriv);
 
         // Solve 4th order derivative analytically
-        auto d_extremas = roots::solveQuartMonic(deriv[1], deriv[2], deriv[3], deriv[4]);
+        auto d_extremas = roots::solve_quart_monic(deriv[1], deriv[2], deriv[3], deriv[4]);
 
         double tz_current {tz_min};
 
@@ -351,26 +351,26 @@ bool PositionThirdOrderStep2::time_vel(Profile& profile, double vMax, double vMi
                 continue;
             }
 
-            const double orig = roots::polyEval(deriv, tz);
+            const double orig = roots::poly_eval(deriv, tz);
             if (std::abs(orig) > roots::tolerance) {
-                tz -= orig / roots::polyEval(dderiv, tz);
+                tz -= orig / roots::poly_eval(dderiv, tz);
             }
 
-            const double val_new = roots::polyEval(polynom, tz);
-            if (std::abs(val_new) < 64 * std::abs(roots::polyEval(dderiv, tz)) * roots::tolerance) {
+            const double val_new = roots::poly_eval(polynom, tz);
+            if (std::abs(val_new) < 64 * std::abs(roots::poly_eval(dderiv, tz)) * roots::tolerance) {
                 if (check_root(tz)) {
                     return true;
                 }
-            } else if (roots::polyEval(polynom, tz_current) * val_new < 0) {
-                if (check_root(roots::shrinkInterval(polynom, tz_current, tz))) {
+            } else if (roots::poly_eval(polynom, tz_current) * val_new < 0) {
+                if (check_root(roots::shrink_interval(polynom, tz_current, tz))) {
                     return true;
                 }
             }
             tz_current = tz;
         }
-        const double val_max = roots::polyEval(polynom, tz_max);
-        if (roots::polyEval(polynom, tz_current) * val_max < 0) {
-            if (check_root(roots::shrinkInterval(polynom, tz_current, tz_max))) {
+        const double val_max = roots::poly_eval(polynom, tz_max);
+        if (roots::poly_eval(polynom, tz_current) * val_max < 0) {
+            if (check_root(roots::shrink_interval(polynom, tz_current, tz_max))) {
                 return true;
             }
         } else if (std::abs(val_max) < 8 * DBL_EPSILON) {
@@ -398,29 +398,29 @@ bool PositionThirdOrderStep2::time_vel(Profile& profile, double vMax, double vMi
         polynom[5] = (a0*(11*a0_p4 + ph4 - 10*a0_p3*ph5 - 6*a0_a0*ph1 + 4*a0*ph2))/(12*jMax_jMax*jMax_jMax*jMax);
         polynom[6] = (11*a0_p6 - af_p6 - 12*a0_p5*ph5 - 48*af_p3*jMax_jMax*g1 - 9*a0_p4*ph1 + 72*jMax_jMax*jMax*(jMax*g1*g1 - vd_vd*vd - 2*af*g1*vd) - 6*af_p4*jMax*vd - 36*af_af*jMax_jMax*vd_vd + 8*a0_p3*ph2 + 3*a0_a0*ph4)/(144*jMax_jMax*jMax_jMax*jMax_jMax);
 
-        std::array<double, 6> deriv = roots::polyMonicDeri(polynom);
-        std::array<double, 5> dderiv = roots::polyMonicDeri(deriv);
+        std::array<double, 6> deriv = roots::poly_monic_derivative(polynom);
+        std::array<double, 5> dderiv = roots::poly_monic_derivative(deriv);
 
         double dd_tz_current {tz_min};
         roots::Set<std::pair<double, double>, 6> dd_tz_intervals;
 
-        auto dd_extremas = roots::solveQuartMonic(dderiv[1], dderiv[2], dderiv[3], dderiv[4]);
+        auto dd_extremas = roots::solve_quart_monic(dderiv[1], dderiv[2], dderiv[3], dderiv[4]);
         for (double tz: dd_extremas) {
             if (tz >= tz_max) {
                 continue;
             }
 
-            const double orig = roots::polyEval(dderiv, tz);
+            const double orig = roots::poly_eval(dderiv, tz);
             if (std::abs(orig) > roots::tolerance) {
-                tz -= orig / roots::polyEval(roots::polyDeri(dderiv), tz);
+                tz -= orig / roots::poly_eval(roots::poly_derivative(dderiv), tz);
             }
 
-            if (roots::polyEval(deriv, dd_tz_current) * roots::polyEval(deriv, tz) < 0) {
+            if (roots::poly_eval(deriv, dd_tz_current) * roots::poly_eval(deriv, tz) < 0) {
                 dd_tz_intervals.insert({dd_tz_current, tz});
             }
             dd_tz_current = tz;
         }
-        if (roots::polyEval(deriv, dd_tz_current) * roots::polyEval(deriv, tz_max) < 0) {
+        if (roots::poly_eval(deriv, dd_tz_current) * roots::poly_eval(deriv, tz_max) < 0) {
             dd_tz_intervals.insert({dd_tz_current, tz_max});
         }
 
@@ -458,27 +458,27 @@ bool PositionThirdOrderStep2::time_vel(Profile& profile, double vMax, double vMi
         };
 
         for (auto interval: dd_tz_intervals) {
-            const double tz = roots::shrinkInterval(deriv, interval.first, interval.second);
+            const double tz = roots::shrink_interval(deriv, interval.first, interval.second);
 
             if (tz >= tz_max) {
                 continue;
             }
 
-            const double p_val = roots::polyEval(polynom, tz);
-            if (std::abs(p_val) < 64 * std::abs(roots::polyEval(dderiv, tz)) * roots::tolerance) {
+            const double p_val = roots::poly_eval(polynom, tz);
+            if (std::abs(p_val) < 64 * std::abs(roots::poly_eval(dderiv, tz)) * roots::tolerance) {
                 if (check_root(tz)) {
                     return true;
                 }
 
-            } else if (roots::polyEval(polynom, tz_current) * p_val < 0) {
-                if (check_root(roots::shrinkInterval(polynom, tz_current, tz))) {
+            } else if (roots::poly_eval(polynom, tz_current) * p_val < 0) {
+                if (check_root(roots::shrink_interval(polynom, tz_current, tz))) {
                     return true;
                 }
             }
             tz_current = tz;
         }
-        if (roots::polyEval(polynom, tz_current) * roots::polyEval(polynom, tz_max) < 0) {
-            if (check_root(roots::shrinkInterval(polynom, tz_current, tz_max))) {
+        if (roots::poly_eval(polynom, tz_current) * roots::poly_eval(polynom, tz_max) < 0) {
+            if (check_root(roots::shrink_interval(polynom, tz_current, tz_max))) {
                 return true;
             }
         }
@@ -735,7 +735,7 @@ bool PositionThirdOrderStep2::time_none(Profile& profile, double vMax, double vM
                 polynom[2] = 4*(pd - tf*vf)/jMax;
                 polynom[3] = (vd_vd + jMax*tf*g2)/(jMax_jMax);
 
-                auto roots = roots::solveQuartMonic(polynom);
+                auto roots = roots::solve_quart_monic(polynom);
                 for (double t: roots) {
                     if (t > tf/2 || t > (aMax - a0)/jMax) {
                         continue;
@@ -802,7 +802,7 @@ bool PositionThirdOrderStep2::time_none(Profile& profile, double vMax, double vM
             const double t_min = ad/jMax;
             const double t_max = std::min((aMax - a0)/jMax, (ad/jMax + tf) / 2);
 
-            auto roots = roots::solveQuartMonic(polynom);
+            auto roots = roots::solve_quart_monic(polynom);
             for (double t: roots) {
                 if (t < t_min || t > t_max) {
                     continue;
@@ -869,7 +869,7 @@ bool PositionThirdOrderStep2::time_none(Profile& profile, double vMax, double vM
 
             const double t_max = (a0 - aMin)/jMax;
 
-            auto roots = roots::solveQuartMonic(polynom);
+            auto roots = roots::solve_quart_monic(polynom);
             for (double t: roots) {
                 if (t > t_max) {
                     continue;
@@ -923,7 +923,7 @@ bool PositionThirdOrderStep2::time_none(Profile& profile, double vMax, double vM
             polynom[2] = (-a0_p5 + af_p5 - af_p4*jMax*tf + 5*a0_p4*(af - jMax*tf) - 2*a0_p3*ph3 - 4*af_p3*jMax*(jMax*tf_tf + vd) + 12*af_af*jMax_jMax*g2 - 12*af*jMax_jMax*ph6 + 2*a0_a0*(5*af_p3 - 9*af_af*jMax*tf - 6*af*jMax*vd + 6*jMax_jMax*ph0) + 12*jMax_jMax*jMax*ph2 + a0*(-5*af_p4 + 8*af_p3*jMax*tf + 12*af_af*jMax*(jMax*tf_tf + vd) - 24*af*jMax_jMax*(-2*pd + jMax*tf_p3 + 2*tf*vf) + 6*jMax_jMax*ph4))/(jMax*ph7);
             polynom[3] = -(a0_p6 + af_p6 - 6*a0_p5*(af - jMax*tf) + 48*af_p3*jMax_jMax*g1 - 72*jMax_jMax*jMax*(jMax*g1*g1 + vd_vd*vd + 2*af*g1*vd) + 3*a0_p4*ph3 - 6*af_p4*jMax*vd + 36*af_af*jMax_jMax*vd_vd - 4*a0_p3*(5*af_p3 - 9*af_af*jMax*tf - 6*af*jMax*vd + 6*jMax_jMax*ph0) + 3*a0_a0*ph5 - 6*a0*(af_p5 - af_p4*jMax*tf - 4*af_p3*jMax*(jMax*tf_tf + vd) + 12*jMax_jMax*(af_af*g2 - af*ph6 + jMax*ph2)))/(6*jMax_jMax*ph7);
 
-            auto roots = roots::solveQuartMonic(polynom);
+            auto roots = roots::solve_quart_monic(polynom);
             for (double t: roots) {
                 if (t > tf || t > (aMax - a0)/jMax) {
                     continue;
@@ -971,7 +971,7 @@ bool PositionThirdOrderStep2::time_none(Profile& profile, double vMax, double vM
         polynom[2] = (a0_a0 + af_af + 10*a0*af)*tf_tf + 24*(tf*(af*v0 - a0*vf) - pd*ad) + 12*vd_vd;
         polynom[3] = -3*tf*((a0_a0 + af_af + 2*a0*af)*tf_tf - 4*vd*(a0 + af)*tf + 4*vd_vd);
 
-        auto roots = roots::solveCub(polynom[0], polynom[1], polynom[2], polynom[3]);
+        auto roots = roots::solve_cubic(polynom[0], polynom[1], polynom[2], polynom[3]);
         for (double t: roots) {
             if (t > tf) {
                 continue;

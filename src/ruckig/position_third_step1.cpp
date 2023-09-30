@@ -191,9 +191,9 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
     const bool polynom_acc0_has_solution = (polynom_acc0_min[0] < 0.0) || (polynom_acc0_min[1] < 0.0) || (polynom_acc0_min[2] < 0.0) || (polynom_acc0_min[3] <= 0.0);
     const bool polynom_acc1_has_solution = (polynom_acc1[0] < 0.0) || (polynom_acc1[1] < 0.0) || (polynom_acc1[2] < 0.0) || (polynom_acc1[3] <= 0.0);
 
-    auto roots_none = roots::solveQuartMonic(polynom_none);
-    auto roots_acc0 = polynom_acc0_has_solution ? roots::solveQuartMonic(polynom_acc0) : roots::PositiveSet<double, 4>{};
-    auto roots_acc1 = polynom_acc1_has_solution ? roots::solveQuartMonic(polynom_acc1) : roots::PositiveSet<double, 4>{};
+    auto roots_none = roots::solve_quart_monic(polynom_none);
+    auto roots_acc0 = polynom_acc0_has_solution ? roots::solve_quart_monic(polynom_acc0) : roots::PositiveSet<double, 4>{};
+    auto roots_acc1 = polynom_acc1_has_solution ? roots::solve_quart_monic(polynom_acc1) : roots::PositiveSet<double, 4>{};
 
 
     for (double t: roots_none) {
