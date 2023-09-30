@@ -186,7 +186,7 @@ bool array_eq(const T& first, const T& second) {
 }
 
 
-TEST_CASE("at_time" * doctest::description("Single DoF")) {
+TEST_CASE("at-time") {
     RuckigThrow<1> otg {0.005};
     InputParameter<1> input;
     OutputParameter<1> output;
@@ -215,7 +215,7 @@ TEST_CASE("at_time" * doctest::description("Single DoF")) {
     CHECK( new_position_element == doctest::Approx(0.5) );
 }
 
-TEST_CASE("secondary" * doctest::description("Secondary Features")) {
+TEST_CASE("secondary") {
     RuckigThrow<3> otg {0.005};
     InputParameter<3> input;
     OutputParameter<3> output;
@@ -355,7 +355,7 @@ TEST_CASE("secondary" * doctest::description("Secondary Features")) {
     CHECK( independent_min_durations[2] == doctest::Approx(0.0) );
 }
 
-TEST_CASE("input-validation" * doctest::description("Secondary Features")) {
+TEST_CASE("input-validation") {
     RuckigThrow<2> otg;
     InputParameter<2> input;
 
@@ -441,7 +441,7 @@ TEST_CASE("input-validation" * doctest::description("Secondary Features")) {
     CHECK_FALSE( otg.validate_input<false>(input) );
 }
 
-TEST_CASE("enabled" * doctest::description("Enabled DoF")) {
+TEST_CASE("enabled") {
     RuckigThrow<3> otg {0.005};
     InputParameter<3> input;
     OutputParameter<3> output;
@@ -491,7 +491,7 @@ TEST_CASE("enabled" * doctest::description("Enabled DoF")) {
     CHECK( output.trajectory.get_duration() == doctest::Approx(3.6578610221) );
 }
 
-TEST_CASE("phase-synchronization" * doctest::description("Phase Synchronization")) {
+TEST_CASE("phase-synchronization") {
     RuckigThrow<3> otg {0.005};
     InputParameter<3> input;
     OutputParameter<3> output;
@@ -621,7 +621,7 @@ TEST_CASE("phase-synchronization" * doctest::description("Phase Synchronization"
     CHECK( result == Result::Working );
 }
 
-TEST_CASE("discretization" * doctest::description("Duration Discretization")) {
+TEST_CASE("discretization") {
     RuckigThrow<3> otg {0.01};
     InputParameter<3> input;
     OutputParameter<3> output;
@@ -646,7 +646,7 @@ TEST_CASE("discretization" * doctest::description("Duration Discretization")) {
     CHECK( array_eq(new_position, {1.0, -3.0, 2.0}) );
 }
 
-TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
+TEST_CASE("per-dof-setting") {
     RuckigThrow<3> otg {0.005};
     InputParameter<3> input;
     Trajectory<3> traj;
@@ -778,7 +778,7 @@ TEST_CASE("per-dof-setting" * doctest::description("Per DoF Settings")) {
     CHECK( array_eq(traj.get_profiles()[0][0].t, traj.get_profiles()[0][2].t) );
 }
 
-TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
+TEST_CASE("dynamic-dofs") {
     RuckigThrow<DynamicDOFs> otg {3, 0.005};
     InputParameter<DynamicDOFs> input {3};
     OutputParameter<DynamicDOFs> output {3};
@@ -805,7 +805,7 @@ TEST_CASE("dynamic-dofs" * doctest::description("Dynamic DoFs")) {
     CHECK( array_eq(new_acceleration, input.current_acceleration) );
 }
 
-TEST_CASE("zero-limits" * doctest::description("Kinematic limits that are partly zero")) {
+TEST_CASE("zero-limits") {
     RuckigThrow<3> otg {0.005};
     InputParameter<3> input;
     OutputParameter<3> output;
@@ -876,7 +876,7 @@ TEST_CASE("zero-limits" * doctest::description("Kinematic limits that are partly
 }
 
 #ifndef WITH_CLOUD_CLIENT
-TEST_CASE("custom-vector-type" * doctest::description("Custom Vector Type")) {
+TEST_CASE("custom-vector-type") {
     SUBCASE("DOFs compile-time") {
         RuckigThrow<3, MinimalVector> otg {0.005};
         InputParameter<3, MinimalVector> input;
@@ -936,7 +936,7 @@ TEST_CASE("custom-vector-type" * doctest::description("Custom Vector Type")) {
 }
 #endif
 
-TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
+TEST_CASE("random-discrete-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -975,7 +975,7 @@ TEST_CASE("random_discrete_3" * doctest::description("Random discrete input with
     }
 }
 
-TEST_CASE("position_random_1" * doctest::description("Random input with 1 DoF and target velocity, acceleration")) {
+TEST_CASE("position-random-1") {
     constexpr size_t DOFs {1};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -1004,7 +1004,7 @@ TEST_CASE("position_random_1" * doctest::description("Random input with 1 DoF an
     }
 }
 
-TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration in velocity control")) {
+TEST_CASE("velocity-random-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -1028,7 +1028,7 @@ TEST_CASE("velocity_random_3" * doctest::description("Random input with 3 DoF an
     }
 }
 
-TEST_CASE("velocity_random_discrete_3" * doctest::description("Random discrete input with 3 DoF and target velocity, acceleration")) {
+TEST_CASE("velocity-random-discrete-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -1068,7 +1068,7 @@ TEST_CASE("velocity_random_discrete_3" * doctest::description("Random discrete i
     }
 }
 
-TEST_CASE("velocity_second_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration in velocity control")) {
+TEST_CASE("velocity-second-random-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -1094,7 +1094,7 @@ TEST_CASE("velocity_second_random_3" * doctest::description("Random input with 3
     }
 }
 
-TEST_CASE("random_3_high" * doctest::description("Random input with 3 DoF and target velocity, acceleration and high limits")) {
+TEST_CASE("random-3-high") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -1123,7 +1123,7 @@ TEST_CASE("random_3_high" * doctest::description("Random input with 3 DoF and ta
     }
 }
 
-TEST_CASE("step_through_3" * doctest::description("Step through random input with 3 DoF and target velocity, acceleration")) {
+TEST_CASE("step-through-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.01};
     InputParameter<DOFs> input;
@@ -1152,7 +1152,7 @@ TEST_CASE("step_through_3" * doctest::description("Step through random input wit
     }
 }
 
-TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration and min velocity, acceleration")) {
+TEST_CASE("random-direction-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -1188,7 +1188,7 @@ TEST_CASE("random_direction_3" * doctest::description("Random input with 3 DoF a
     }
 }
 
-TEST_CASE("position_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration")) {
+TEST_CASE("position-random-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;
@@ -1244,7 +1244,7 @@ TEST_CASE("position_random_3" * doctest::description("Random input with 3 DoF an
     }
 }
 
-TEST_CASE("position_second_random_3" * doctest::description("Random input with 3 DoF and target velocity, acceleration")) {
+TEST_CASE("position-second-random-3") {
     constexpr size_t DOFs {3};
     RuckigThrow<DOFs> otg {0.005};
     InputParameter<DOFs> input;

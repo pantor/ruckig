@@ -30,7 +30,7 @@ void check_full_duration(OTGType& otg, InputParameter<DOFs>& input, double durat
 }
 
 
-TEST_CASE("known" * doctest::description("Known examples")) {
+TEST_CASE("known") {
     RuckigThrow<3> otg {0.004};
     InputParameter<3> input;
     input.current_position = {0.0, 0.0, 0.0};
