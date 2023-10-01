@@ -19,7 +19,7 @@
 
 namespace ruckig {
 
-//! Main class for the Ruckig algorithm.
+//! Main interface for the Ruckig algorithm
 template<size_t DOFs = 0, template<class, size_t> class CustomVector = StandardVector, bool throw_error = false>
 class Ruckig {
     //! Current input, only for comparison for recalculation

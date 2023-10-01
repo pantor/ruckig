@@ -33,7 +33,7 @@ enum class DurationDiscretization {
 };
 
 
-//! Input type of Ruckig
+//! Input of the Ruckig algorithm
 template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class InputParameter {
     template<class T> using Vector = CustomVector<T, DOFs>;
@@ -116,7 +116,7 @@ public:
     //! Optional minimum trajectory duration for each intermediate sections (only in Ruckig Pro)
     std::optional<std::vector<double>> per_section_minimum_duration;
 
-    //! Optional duration [µs] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
+    //! @brief Optional duration [µs] after which the trajectory calculation is (softly) interrupted (only in Ruckig Pro)
     //!
     //! The total calculation consists of a first iterative phase and a second fixed phase. The interrupt signal
     //! is applied to the iterative phase only, and the real-time capable (constant) second phase is computed

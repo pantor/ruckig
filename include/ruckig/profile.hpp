@@ -29,7 +29,7 @@ struct PositionExtrema {
 };
 
 
-//! The state profile for position, velocity, acceleration and jerk for a single DoF
+//! A single-dof kinematic profile with position, velocity, acceleration and jerk
 class Profile {
     constexpr static double v_eps {1e-12};
     constexpr static double a_eps {1e-12};

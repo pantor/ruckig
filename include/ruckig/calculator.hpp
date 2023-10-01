@@ -10,7 +10,7 @@
 
 namespace ruckig {
 
-//! Calculation interface.
+//! Internal interface for the main calculator and its hyperparameters
 template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class Calculator {
     inline bool use_waypoints_trajectory(const InputParameter<DOFs, CustomVector>& input) {
