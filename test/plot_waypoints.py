@@ -60,7 +60,7 @@ if __name__ == '__main__':
     i = 1
     while out_list[i].new_calculation:
         print(f'{i}\tCalculation duration: {out_list[i].calculation_duration:0.1f} [µs]')
-        print(f'\tTrajectory duration: {i*otg.delta_time + out_list[i].trajectory.duration:0.4f} [s]')
+        print(f'\tTrajectory duration: {i * otg.delta_time + out_list[i].trajectory.duration:0.4f} [s]')
         i += 1
 
     Plotter.plot_trajectory('otg_trajectory.png', otg, inp, out_list, plot_jerk=False, time_offsets=time_offsets)

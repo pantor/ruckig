@@ -32,13 +32,13 @@ class Plotter:
                 global_min = min(global_min, np.min(dddqaxis[:, dof]))
 
             plt.subplot(inp.degrees_of_freedom, 1, dof + 1)
-            plt.ylabel(f'DoF {dof+1}')
-            plt.plot(taxis, qaxis[:, dof], label=f'Position {dof+1}')
-            plt.plot(taxis, dqaxis[:, dof], label=f'Velocity {dof+1}')
+            plt.ylabel(f'DoF {dof + 1}')
+            plt.plot(taxis, qaxis[:, dof], label=f'Position {dof + 1}')
+            plt.plot(taxis, dqaxis[:, dof], label=f'Velocity {dof + 1}')
             if plot_acceleration:
-                plt.plot(taxis, ddqaxis[:, dof], label=f'Acceleration {dof+1}')
+                plt.plot(taxis, ddqaxis[:, dof], label=f'Acceleration {dof + 1}')
             if plot_jerk:
-                plt.plot(taxis, dddqaxis[:, dof], label=f'Jerk {dof+1}')
+                plt.plot(taxis, dddqaxis[:, dof], label=f'Jerk {dof + 1}')
 
             # Plot sections
             if hasattr(out_list[-1], 'trajectory'):

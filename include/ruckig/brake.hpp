@@ -4,10 +4,6 @@
 #include <cmath>
 #include <iostream>
 
-#ifdef WITH_SERIALIZATION
-#include <json/json.hpp>
-#endif
-
 #include <ruckig/utils.hpp>
 
 
@@ -73,10 +69,6 @@ public:
         v[0] = vs;
         std::tie(ps, vs, as) = integrate(t[0], ps, vs, a[0], 0.0);
     }
-
-#ifdef WITH_SERIALIZATION
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(BrakeProfile, duration, t, j, a, v, p)
-#endif
 };
 
 } // namespace ruckig

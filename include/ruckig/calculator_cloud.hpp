@@ -31,6 +31,10 @@ public:
 };
 
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(BrakeProfile, duration, t, j, a, v, p)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Profile, t, t_sum, j, a, v, p, pf, vf, af, brake, accel)
+
+
 //! Calculation class for a trajectory along waypoints.
 template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 class WaypointsCalculator {

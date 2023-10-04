@@ -53,7 +53,7 @@ if(BUILD_CLOUD_CLIENT)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
-  target_compile_definitions(ruckig PUBLIC WITH_CLOUD_CLIENT WITH_SERIALIZATION)
+  target_compile_definitions(ruckig PUBLIC WITH_CLOUD_CLIENT)
 endif()
 
 

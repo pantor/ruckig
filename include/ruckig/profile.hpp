@@ -8,10 +8,6 @@
 #include <limits>
 #include <optional>
 
-#ifdef WITH_SERIALIZATION
-#include <json/json.hpp>
-#endif
-
 #include <ruckig/brake.hpp>
 #include <ruckig/roots.hpp>
 #include <ruckig/utils.hpp>
@@ -29,7 +25,9 @@ struct PositionExtrema {
 };
 
 
-//! A single-dof kinematic profile with position, velocity, acceleration and jerk
+//! @brief A single-dof kinematic profile with position, velocity, acceleration and jerk
+//!
+//! The class members are only available in the Ruckig Community Version.
 class Profile {
     constexpr static double v_eps {1e-12};
     constexpr static double a_eps {1e-12};
@@ -529,10 +527,6 @@ public:
         }
         return result;
     }
-
-#ifdef WITH_SERIALIZATION
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Profile, t, t_sum, j, a, v, p, pf, vf, af, brake, accel)
-#endif
 };
 
 } // namespace ruckig
