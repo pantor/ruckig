@@ -18,11 +18,11 @@ class Calculator {
     }
 
 public:
-    //! State-to-state calculator
+    //! Calculator for state-to-state trajectories
     TargetCalculator<DOFs, CustomVector> target_calculator;
 
 #if defined WITH_CLOUD_CLIENT
-    //! Intermediate waypoints calculator
+    //! Calculator for trajectories with intermediate waypoints
     WaypointsCalculator<DOFs, CustomVector> waypoints_calculator;
 #endif
 

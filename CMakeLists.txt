@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(RUCKIG_VERSION 0.10.1)
+set(RUCKIG_VERSION 0.11.0)
 project(ruckig VERSION ${RUCKIG_VERSION} LANGUAGES CXX)
 
 
