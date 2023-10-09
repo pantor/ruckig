@@ -52,6 +52,11 @@ if __name__ == '__main__':
         out.pass_to_input(inp)
 
     # Plot the trajectory
+    # from pathlib import Path
+    # import sys
+    # project_path = Path(__file__).parent.parent.absolute()
+    # sys.path.append(str(project_path / 'test'))  # For plotter.py
+
     # from plotter import Plotter
 
-    # Plotter.plot_trajectory(Path(__file__).parent.absolute() / '4_trajectory.pdf', otg, inp, out_list, plot_jerk=False)
+    # Plotter.plot_trajectory(project_path / 'examples' / '04_trajectory.pdf', otg, inp, out_list, plot_jerk=False)

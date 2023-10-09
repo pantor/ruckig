@@ -66,6 +66,9 @@ if __name__ == '__main__':
 
 
     # Plot the trajectory
+    # from pathlib import Path
+    # project_path = Path(__file__).parent.parent.absolute()
+
     # import numpy as np
     # import matplotlib.pyplot as plt
 
@@ -80,4 +83,4 @@ if __name__ == '__main__':
     # plt.grid(True)
     # plt.legend()
 
-    # plt.savefig(Path(__file__).parent.absolute() / '13_trajectory.pdf')
+    # plt.savefig(project_path / 'examples' / '13_trajectory.pdf')
