@@ -1,4 +1,5 @@
-#include <ruckig/ruckig.hpp>
+#include <ruckig/block.hpp>
+#include <ruckig/position.hpp>
 
 
 namespace ruckig {
