@@ -140,7 +140,10 @@ install(FILES
 if(BUILD_TESTS)
   enable_testing()
 
-  add_executable(test-target test/test_target.cpp test/test_target_known.cpp)
+
+  add_executable(test-target
+    test/test_target.cpp
+  )
 
   target_link_libraries(test-target PRIVATE ruckig)
   target_include_directories(test-target PRIVATE third_party)
