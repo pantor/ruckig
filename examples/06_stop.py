@@ -57,10 +57,7 @@ if __name__ == '__main__':
 
     # Plot the trajectory
     # from pathlib import Path
-    # import sys
-    # project_path = Path(__file__).parent.parent.absolute()
-    # sys.path.append(str(project_path / 'test'))  # For plotter.py
-
     # from plotter import Plotter
 
+    # project_path = Path(__file__).parent.parent.absolute()
     # Plotter.plot_trajectory(project_path / 'examples' / '06_trajectory.pdf', otg, inp, out_list, plot_jerk=False, time_offsets=time_offsets)
