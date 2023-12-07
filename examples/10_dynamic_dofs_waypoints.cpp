@@ -8,14 +8,14 @@
 using namespace ruckig;
 
 int main() {
-    double control_cycle {0.01};
-    size_t DOFs {3};
-    size_t max_number_of_waypoints {10};  // for memory allocation
+    double control_cycle = 0.01;
+    size_t DOFs = 3;
+    size_t max_number_of_waypoints = 10;  // for memory allocation
 
     // Create instances: the Ruckig OTG as well as input and output parameters
-    Ruckig<DynamicDOFs> otg {DOFs, control_cycle, max_number_of_waypoints};
-    InputParameter<DynamicDOFs> input {DOFs};
-    OutputParameter<DynamicDOFs> output {DOFs, max_number_of_waypoints};
+    Ruckig<DynamicDOFs> otg(DOFs, control_cycle, max_number_of_waypoints);
+    InputParameter<DynamicDOFs> input(DOFs);
+    OutputParameter<DynamicDOFs> output(DOFs, max_number_of_waypoints);
 
     // Set input parameters
     input.current_position = {0.2, 0.0, -0.3};
@@ -37,11 +37,10 @@ int main() {
     input.max_acceleration = {3.0, 2.0, 2.0};
     input.max_jerk = {6.0, 10.0, 20.0};
 
-    std::cout << "t | p1 | p2 | p3" << std::endl;
-    double calculation_duration {0.0};
+    std::cout << "t | position" << std::endl;
+    double calculation_duration = 0.0;
     while (otg.update(input, output) == Result::Working) {
-        auto& p = output.new_position;
-        std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << std::endl;
+        std::cout << output.time << " | " << join(output.new_position) << std::endl;
 
         output.pass_to_input(input);
 

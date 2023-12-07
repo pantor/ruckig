@@ -38,15 +38,15 @@ int main() {
     // Get duration of the trajectory
     std::cout << "Trajectory duration: " << trajectory.get_duration() << " [s]." << std::endl;
 
-    double new_time {1.0};
+    double new_time = 1.0;
 
     // Then, we can calculate the kinematic state at a given time
     std::array<double, 3> new_position, new_velocity, new_acceleration;
     trajectory.at_time(new_time, new_position, new_velocity, new_acceleration);
 
-    std::cout << "Position at time "  << new_time << " [s]: " << new_position[0] << ", " << new_position[1] << ", " << new_position[2] << std::endl;
+    std::cout << "Position at time " << new_time << " [s]: " << join(new_position) << std::endl;
 
     // Get some info about the position extrema of the trajectory
-    std::array<PositionExtrema, 3> position_extrema = trajectory.get_position_extrema();
+    std::array<Bound, 3> position_extrema = trajectory.get_position_extrema();
     std::cout << "Position extremas for DoF 4 are " << position_extrema[2].min << " (min) to " << position_extrema[2].max << " (max)" << std::endl;
 }

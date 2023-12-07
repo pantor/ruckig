@@ -9,9 +9,9 @@ int main() {
     // Create instances: the Ruckig OTG as well as input and output parameters
     size_t degrees_of_freedom = 3;
 
-    Ruckig<DynamicDOFs> otg {degrees_of_freedom, 0.01};
-    InputParameter<DynamicDOFs> input {degrees_of_freedom};
-    OutputParameter<DynamicDOFs> output {degrees_of_freedom};
+    Ruckig<DynamicDOFs> otg(degrees_of_freedom, 0.01);
+    InputParameter<DynamicDOFs> input(degrees_of_freedom);
+    OutputParameter<DynamicDOFs> output(degrees_of_freedom);
 
     // Set input parameters
     input.current_position = {0.0, 0.0, 0.5};
@@ -27,10 +27,9 @@ int main() {
     input.max_jerk = {4.0, 3.0, 2.0};
 
     // Generate the trajectory within the control loop
-    std::cout << "t | p1 | p2 | p3" << std::endl;
+    std::cout << "t | position" << std::endl;
     while (otg.update(input, output) == Result::Working) {
-        auto& p = output.new_position;
-        std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << " " << std::endl;
+        std::cout << output.time << " | " << join(output.new_position) << std::endl;
 
         output.pass_to_input(input);
     }

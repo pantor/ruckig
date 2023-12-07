@@ -48,12 +48,12 @@ limited by velocity, acceleration, and jerk constraints.";
 
     py::register_exception<RuckigError>(m, "RuckigError");
 
-    py::class_<PositionExtrema>(m, "PositionExtrema")
-        .def_readonly("min", &PositionExtrema::min)
-        .def_readonly("max", &PositionExtrema::max)
-        .def_readonly("t_min", &PositionExtrema::t_min)
-        .def_readonly("t_max", &PositionExtrema::t_max)
-        .def("__repr__", [](const PositionExtrema& ext) {
+    py::class_<Bound>(m, "Bound")
+        .def_readonly("min", &Bound::min)
+        .def_readonly("max", &Bound::max)
+        .def_readonly("t_min", &Bound::t_min)
+        .def_readonly("t_max", &Bound::t_max)
+        .def("__repr__", [](const Bound& ext) {
             return "[" + std::to_string(ext.min) + ", " + std::to_string(ext.max) + "]";
         });
 

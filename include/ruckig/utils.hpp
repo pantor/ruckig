@@ -29,11 +29,12 @@ template<class T, size_t DOFs, size_t SIZE> using StandardSizeVector = typename 
 
 
 template<class Vector>
-inline std::string join(const Vector& array, size_t size) {
+inline std::string join(const Vector& array, bool high_precision = false) {
     std::ostringstream ss;
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < array.size(); ++i) {
         if (i) ss << ", ";
-        ss << std::setprecision(16) << array[i];
+        if (high_precision) ss << std::setprecision(16);
+        ss << array[i];
     }
     return ss.str();
 }

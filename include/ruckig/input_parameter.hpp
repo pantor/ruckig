@@ -395,27 +395,50 @@ public:
 
     std::string to_string() const {
         std::stringstream ss;
-        ss << "\ninp.current_position = [" << join(current_position, degrees_of_freedom) << "]\n";
-        ss << "inp.current_velocity = [" << join(current_velocity, degrees_of_freedom) << "]\n";
-        ss << "inp.current_acceleration = [" << join(current_acceleration, degrees_of_freedom) << "]\n";
-        ss << "inp.target_position = [" << join(target_position, degrees_of_freedom) << "]\n";
-        ss << "inp.target_velocity = [" << join(target_velocity, degrees_of_freedom) << "]\n";
-        ss << "inp.target_acceleration = [" << join(target_acceleration, degrees_of_freedom) << "]\n";
-        ss << "inp.max_velocity = [" << join(max_velocity, degrees_of_freedom) << "]\n";
-        ss << "inp.max_acceleration = [" << join(max_acceleration, degrees_of_freedom) << "]\n";
-        ss << "inp.max_jerk = [" << join(max_jerk, degrees_of_freedom) << "]\n";
+        ss << "\n";
+        if (control_interface == ControlInterface::Velocity) {
+            ss << "inp.control_interface = ControlInterface.Velocity\n";
+        }
+        if (synchronization == Synchronization::Phase) {
+            ss << "inp.synchronization = Synchronization.Phase\n";
+        } else if (synchronization == Synchronization::None) {
+            ss << "inp.synchronization = Synchronization.No\n";
+        }
+        if (duration_discretization == DurationDiscretization::Discrete) {
+            ss << "inp.duration_discretization = DurationDiscretization.Discrete\n";
+        }
+
+        ss << "inp.current_position = [" << join(current_position, true) << "]\n";
+        ss << "inp.current_velocity = [" << join(current_velocity, true) << "]\n";
+        ss << "inp.current_acceleration = [" << join(current_acceleration, true) << "]\n";
+        ss << "inp.target_position = [" << join(target_position, true) << "]\n";
+        ss << "inp.target_velocity = [" << join(target_velocity, true) << "]\n";
+        ss << "inp.target_acceleration = [" << join(target_acceleration, true) << "]\n";
+        ss << "inp.max_velocity = [" << join(max_velocity, true) << "]\n";
+        ss << "inp.max_acceleration = [" << join(max_acceleration, true) << "]\n";
+        ss << "inp.max_jerk = [" << join(max_jerk, true) << "]\n";
         if (min_velocity) {
-            ss << "inp.min_velocity = [" << join(min_velocity.value(), degrees_of_freedom) << "]\n";
+            ss << "inp.min_velocity = [" << join(min_velocity.value(), true) << "]\n";
         }
         if (min_acceleration) {
-            ss << "inp.min_acceleration = [" << join(min_acceleration.value(), degrees_of_freedom) << "]\n";
+            ss << "inp.min_acceleration = [" << join(min_acceleration.value(), true) << "]\n";
         }
+        if (minimum_duration) {
+            ss << "inp.minimum_duration = " << minimum_duration.value() << "\n";
+        }
+
         if (!intermediate_positions.empty()) {
             ss << "inp.intermediate_positions = [\n";
             for (auto p: intermediate_positions) {
-                ss << "    [" << join(p, degrees_of_freedom) << "],\n";
+                ss << "    [" << join(p, true) << "],\n";
             }
             ss << "]\n";
+        }
+        if (min_position) {
+            ss << "inp.min_position = [" << join(min_position.value(), true) << "]\n";
+        }
+        if (max_position) {
+            ss << "inp.max_position = [" << join(max_position.value(), true) << "]\n";
         }
         return ss.str();
     }

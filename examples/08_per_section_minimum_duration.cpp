@@ -8,14 +8,14 @@
 using namespace ruckig;
 
 int main() {
-    const double control_cycle {0.01};
-    const size_t DOFs {3};
-    const size_t max_number_of_waypoints {10};  // for memory allocation
+    const double control_cycle = 0.01;
+    const size_t DOFs = 3;
+    const size_t max_number_of_waypoints = 10;  // for memory allocation
 
     // Create instances: the Ruckig OTG as well as input and output parameters
-    Ruckig<DOFs> otg {control_cycle, max_number_of_waypoints};
+    Ruckig<DOFs> otg(control_cycle, max_number_of_waypoints);
     InputParameter<DOFs> input;
-    OutputParameter<DOFs> output {max_number_of_waypoints};
+    OutputParameter<DOFs> output(max_number_of_waypoints);
 
     // Set input parameters
     input.current_position = {0.8, 0.0, 0.5};
@@ -42,11 +42,10 @@ int main() {
     // Define a minimum duration per section of the trajectory (number waypoints + 1)
     input.per_section_minimum_duration = {0, 2.0, 0.0, 1.0, 0.0, 2.0, 0};
 
-    std::cout << "t | p1 | p2 | p3" << std::endl;
+    std::cout << "t | position" << std::endl;
     double calculation_duration {0.0};
     while (otg.update(input, output) == Result::Working) {
-        auto& p = output.new_position;
-        std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << std::endl;
+        std::cout << output.time << " | " << join(output.new_position) << std::endl;
 
         output.pass_to_input(input);
 

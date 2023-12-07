@@ -37,7 +37,7 @@ TargetState<1> model_sinus(double t, double ramp_vel=0.4) {
 
 int main() {
     // Create instances: the Trackig OTG as well as input and output parameters
-    Trackig<1> otg {0.01};  // control cycle
+    Trackig<1> otg(0.01);  // control cycle
     InputParameter<1> input;
     OutputParameter<1> output;
 

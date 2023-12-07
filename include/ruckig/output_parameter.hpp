@@ -89,10 +89,10 @@ public:
 
     std::string to_string() const {
         std::stringstream ss;
-        ss << "\nout.new_position = [" << join(new_position, degrees_of_freedom) << "]\n";
-        ss << "out.new_velocity = [" << join(new_velocity, degrees_of_freedom) << "]\n";
-        ss << "out.new_acceleration = [" << join(new_acceleration, degrees_of_freedom) << "]\n";
-        ss << "out.new_jerk = [" << join(new_jerk, degrees_of_freedom) << "]\n";
+        ss << "\nout.new_position = [" << join(new_position, true) << "]\n";
+        ss << "out.new_velocity = [" << join(new_velocity, true) << "]\n";
+        ss << "out.new_acceleration = [" << join(new_acceleration, true) << "]\n";
+        ss << "out.new_jerk = [" << join(new_jerk, true) << "]\n";
         ss << "out.time = [" << std::setprecision(16) << time << "]\n";
         ss << "out.calculation_duration = [" << std::setprecision(16) << calculation_duration << "]\n";
         return ss.str();

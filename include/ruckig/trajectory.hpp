@@ -35,7 +35,7 @@ class Trajectory {
     Container<double> cumulative_times;
 
     Vector<double> independent_min_durations;
-    Vector<PositionExtrema> position_extrema;
+    Vector<Bound> position_extrema;
 
     size_t continue_calculation_counter {0};
 
@@ -266,7 +266,7 @@ public:
     }
 
     //! Get the min/max values of the position for each DoF
-    Vector<PositionExtrema> get_position_extrema() {
+    Vector<Bound> get_position_extrema() {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
             position_extrema[dof] = profiles[0][dof].get_position_extrema();
         }

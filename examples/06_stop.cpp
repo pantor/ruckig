@@ -7,7 +7,7 @@ using namespace ruckig;
 
 int main() {
     // Create instances: the ruckig otg as well as input and output parameters
-    Ruckig<3> otg {0.01};
+    Ruckig<3> otg(0.01);
     InputParameter<3> input;
     OutputParameter<3> output;
 
@@ -25,11 +25,10 @@ int main() {
     input.max_jerk = {4.0, 3.0, 2.0};
 
     // Generate the trajectory within the control loop
-    std::cout << "t | p1 | p2 | p3" << std::endl;
-    bool on_stop_trajectory {false};
+    std::cout << "t | position" << std::endl;
+    bool on_stop_trajectory = false;
     while (otg.update(input, output) == Result::Working) {
-        auto& p = output.new_position;
-        std::cout << output.time << " " << p[0] << " " << p[1] << " " << p[2] << " " << std::endl;
+        std::cout << output.time << " | " << join(output.new_position) << std::endl;
 
         // Activate stop trajectory after 1s
         if (output.time >= 1.0 && !on_stop_trajectory) {
