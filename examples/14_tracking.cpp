@@ -59,9 +59,9 @@ int main() {
     // Generate the trajectory within the control loop
     std::cout << "target | follow" << std::endl;
     for (size_t t = 0; t < 500; t += 1) {
-        auto target_state = model_ramp(otg.delta_time * t);
-        auto res = otg.update(target_state, input, output);
-        std::cout << target_state.position[0] << " " << output.new_position[0] << std::endl;
+        const TargetState<1> target_state = model_ramp(otg.delta_time * t);
+        const Result res = otg.update(target_state, input, output);
+        std::cout << join(target_state.position) << " " << join(output.new_position) << std::endl;
 
         output.pass_to_input(input);
     }

@@ -43,7 +43,7 @@ int main() {
     input.per_section_minimum_duration = {0, 2.0, 0.0, 1.0, 0.0, 2.0, 0};
 
     std::cout << "t | position" << std::endl;
-    double calculation_duration {0.0};
+    double calculation_duration = 0.0;
     while (otg.update(input, output) == Result::Working) {
         std::cout << output.time << " | " << join(output.new_position) << std::endl;
 

@@ -41,7 +41,6 @@ target_include_directories(ruckig PUBLIC
 )
 target_link_libraries(ruckig PUBLIC)
 
-
 if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
 endif()

@@ -40,7 +40,7 @@ int main() {
     input.interrupt_calculation_duration = 500; // [µs]
 
     std::cout << "t | position" << std::endl;
-    double calculation_duration {0.0};
+    double calculation_duration = 0.0;
     while (otg.update(input, output) == Result::Working) {
         if (output.new_calculation) {
             std::cout << "Updated the trajectory:" << std::endl;
