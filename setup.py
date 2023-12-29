@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 import sys
 
@@ -43,6 +44,9 @@ class CMakeBuild(build_ext):
             '-DBUILD_SHARED_LIBS=OFF',
             '-DCMAKE_POSITION_INDEPENDENT_CODE=ON',
         ]
+
+        if sys.platform == 'darwin' and platform.processor() == 'arm':
+            cmake_args += ['-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64']
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
