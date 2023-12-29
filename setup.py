@@ -45,7 +45,7 @@ class CMakeBuild(build_ext):
             '-DCMAKE_POSITION_INDEPENDENT_CODE=ON',
         ]
 
-        if sys.platform == 'darwin' and platform.processor() == 'arm':
+        if sys.platform == 'darwin' and 'universal binary' in platform._syscmd_file(sys.executable, ''):
             cmake_args += ['-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64']
 
         if not os.path.exists(self.build_temp):
