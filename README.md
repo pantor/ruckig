@@ -14,7 +14,7 @@
   <a href="https://github.com/pantor/ruckig/releases">
     <img src="https://img.shields.io/github/v/release/pantor/ruckig.svg?include_prereleases&sort=semver" alt="Releases">
   </a>
-  <a href="https://github.com/pantor/ruckig/blob/master/LICENSE">
+  <a href="https://github.com/pantor/ruckig/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT">
   </a>
 </p>
@@ -55,7 +55,7 @@ When using CMake, the Python module can be built using the `BUILD_PYTHON_MODULE`
 
 Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a [collection of examples](https://docs.ruckig.com/pages.html) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. We also added plots of the resulting trajectories for all examples. Let's get started!
 
-![Trajectory Profile](https://github.com/pantor/ruckig/raw/master/doc/example_profile.png?raw=true)
+![Trajectory Profile](https://github.com/pantor/ruckig/raw/main/doc/example_profile.png?raw=true)
 
 
 ### Waypoint-based Trajectory Generation
@@ -278,7 +278,7 @@ for (double t = 0; t < 10.0; t += otg.delta_time) {
   output.pass_to_input(input);
 }
 ```
-Please find a complete example [here](https://github.com/pantor/ruckig/blob/master/examples/13_tracking.cpp). This functionality can also be used in an offline manner, e.g. when the entire signal is known beforehand. Here, we call the
+Please find a complete example [here](https://github.com/pantor/ruckig/blob/main/examples/13_tracking.cpp). This functionality can also be used in an offline manner, e.g. when the entire signal is known beforehand. Here, we call the
 ```.cpp
 smooth_trajectory = otg.calculate_trajectory(target_states, input);
 ```
@@ -324,7 +324,7 @@ struct MinimalVector {
   void resize(size_t size);
 };
 ```
-Note that `DynamicDOFs` corresponds to `DOFs = 0`. We've included a range of examples for using Ruckig with [(10) Eigen](https://github.com/pantor/ruckig/blob/master/examples/10_eigen_vector_type.cpp), [(11) custom vector types](https://github.com/pantor/ruckig/blob/master/examples/11_custom_vector_type.cpp), and [(12) custom types with a dynamic number of DoFs](https://github.com/pantor/ruckig/blob/master/examples/12_custom_vector_type_dynamic_dofs.cpp).
+Note that `DynamicDOFs` corresponds to `DOFs = 0`. We've included a range of examples for using Ruckig with [(10) Eigen](https://github.com/pantor/ruckig/blob/main/examples/10_eigen_vector_type.cpp), [(11) custom vector types](https://github.com/pantor/ruckig/blob/main/examples/11_custom_vector_type.cpp), and [(12) custom types with a dynamic number of DoFs](https://github.com/pantor/ruckig/blob/main/examples/12_custom_vector_type_dynamic_dofs.cpp).
 
 
 ## Tests and Numerical Stability
@@ -336,11 +336,11 @@ The current test suite validates over 5.000.000.000 random trajectories as well 
 
 We find that Ruckig is more than twice as fast as Reflexxes Type IV for state-to-state motions and well-suited for control cycles as low as 250 microseconds. The Ruckig *Community Version* is in general a more powerful and open-source alternative to the [Reflexxes Type IV](http://reflexxes.ws/) library. In fact, Ruckig is the first Type V trajectory generator for arbitrary target states and even supports directional velocity and acceleration limits, while also being faster on top.
 
-![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/benchmark.png?raw=true)
+![Benchmark](https://github.com/pantor/ruckig/raw/main/doc/benchmark.png?raw=true)
 
 For trajectories with intermediate waypoints, we compare Ruckig to [Toppra](https://github.com/hungpham2511/toppra), a state-of-the-art library for robotic motion planning. Ruckig is able to improve the trajectory duration on average by around 10%, as the path planning and time parametrization are calculated jointly. Moreover, Ruckig is real-time capable and supports jerk-constraints.
 
-![Benchmark](https://github.com/pantor/ruckig/raw/master/doc/ruckig_toppra_example.png?raw=true)
+![Benchmark](https://github.com/pantor/ruckig/raw/main/doc/ruckig_toppra_example.png?raw=true)
 
 
 
