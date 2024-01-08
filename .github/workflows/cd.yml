@@ -19,6 +19,8 @@ jobs:
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.16.2
       env:
+        CIBW_ARCHS_LINUX: auto
+        CIBW_ARCHS_MACOS: x86_64 arm64
         CIBW_BEFORE_ALL: |
           git clone https://github.com/pybind/pybind11.git
           cd pybind11
@@ -45,8 +47,8 @@ jobs:
         path: dist/*.tar.gz
 
 
-  upload_all:
-    if: ${{ false }}
+  upload:
+    # if: ${{ false }}
     needs: [build-wheels, make-source-dist]
     runs-on: ubuntu-latest
 
@@ -56,4 +58,5 @@ jobs:
         name: artifact
         path: dist
 
-    - uses: pypa/gh-action-pypi-publish@release/v1
+    - name: Upload to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
