@@ -30,10 +30,12 @@ def model_sinus(t, ramp_vel=0.4):
 
 
 if __name__ == '__main__':
+    # Create instances: the Trackig OTG as well as input and output parameters
     inp = InputParameter(1)
     out = OutputParameter(inp.degrees_of_freedom)
     otg = Trackig(inp.degrees_of_freedom, 0.01)
 
+    # Set input parameters
     inp.current_position = [0.0]
     inp.current_velocity = [0.0]
     inp.current_acceleration = [0.0]
@@ -48,8 +50,9 @@ if __name__ == '__main__':
 
     # otg.reactiveness = 1.0 # default value, should be in [0, 1]
 
-    print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
+    print('target | follow')
 
+    # Generate the trajectory following the target state
     steps, target_list, follow_list = [], [], []
     for t in range(500):
         target_state = model_ramp(otg.delta_time * t)

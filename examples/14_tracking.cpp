@@ -56,7 +56,7 @@ int main() {
 
     otg.reactiveness = 1.0; // default value, should be in [0, 1]
 
-    // Generate the trajectory within the control loop
+    // Generate the trajectory following the target state
     std::cout << "target | follow" << std::endl;
     for (size_t t = 0; t < 500; t += 1) {
         const TargetState<1> target_state = model_ramp(otg.delta_time * t);

@@ -329,7 +329,17 @@ Note that `DynamicDOFs` corresponds to `DOFs = 0`. We've included a range of exa
 
 ## Tests and Numerical Stability
 
-The current test suite validates over 5.000.000.000 random trajectories as well as many additional edge cases. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the final acceleration to be within `1e-10`, and for the velocity, acceleration and jerk limit to be within of a numerical error of `1e-12`. These are absolute values - we suggest to scale your input so that these correspond to your required precision of the system. For example, for most real-world systems we suggest to use input values in `[m]` (instead of e.g. `[mm]`), as `1e-8m` is sufficient precise for practical trajectory generation. Furthermore, all kinematic limits should be below `1e12`. The maximal supported trajectory duration is `7e3`. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness. The Ruckig Pro version has additional tools to increase the numerical range and improve reliability.
+The current test suite validates over 5.000.000.000 random trajectories as well as many additional edge cases. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the final acceleration to be within `1e-10`, and for the velocity, acceleration and jerk limit to be within of a numerical error of `1e-12`. These are absolute values - we suggest to scale your input so that these correspond to your required precision of the system. For example, for most real-world systems we suggest to use input values in `[m]` (instead of e.g. `[mm]`), as `1e-8m` is sufficient precise for practical trajectory generation. Furthermore, all kinematic limits should be below `1e9`. The maximal supported trajectory duration is `7e3`. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
+
+The Ruckig Pro version has additional tools to increase the numerical range and improve reliability. For example, the`position_scale` and `time_scale` parameter of the `Calculator` class change the internal representation of the input parameters.
+```.cpp
+Ruckig<1> otg;
+// Works also for Trackig<1> otg;
+
+otg.calculator.position_scale = 1e2;  // Scales all positions in the input parameters
+otg.calculator.time_scale = 1e3;  // Scale all times in the input parameters
+```
+This way, you can easily achieve the requirements above even for very high jerk limits or very long trajectories. Note that the scale parameters don't effect the resulting trajectory - they are for internal calculation only.
 
 
 ## Benchmark
@@ -349,9 +359,9 @@ For trajectories with intermediate waypoints, we compare Ruckig to [Toppra](http
 Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos-latest`, and `windows-latest` against following versions
 
 - Doctest v2.4 (only for testing)
-- Pybind11 v2.9 (only for python wrapper)
+- Pybind11 v2.11 (only for python wrapper)
 
-If you still need to use C++11, you can apply a small patch by executing `bash scripts/patch-c++11.sh`. This will result in a performance drop of a few percent. Moreover, the Python module is not supported.
+A C++11 and C++03 version of Ruckig is also available - please contact us if you're interested.
 
 
 ## Used By

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(RUCKIG_VERSION 0.11.0)
+set(RUCKIG_VERSION 0.12.1)
 project(ruckig VERSION ${RUCKIG_VERSION} LANGUAGES CXX)
 
 
@@ -139,29 +139,27 @@ install(FILES
 if(BUILD_TESTS)
   enable_testing()
 
+  add_library(test-dependencies INTERFACE)
+  target_link_libraries(test-dependencies INTERFACE ruckig)
+  target_include_directories(test-dependencies INTERFACE third_party)
+  if(MSVC)
+    target_compile_options(test-dependencies INTERFACE /W4)
+  else()
+    target_compile_options(test-dependencies INTERFACE -Wall -Wextra)
+  endif()
 
   add_executable(test-target
     test/test_target.cpp
   )
-
-  target_link_libraries(test-target PRIVATE ruckig)
-  target_include_directories(test-target PRIVATE third_party)
-  if(MSVC)
-    target_compile_options(test-target PRIVATE /W4)
-  else()
-    target_compile_options(test-target PRIVATE -Wall -Wextra)
-    find_program(MEMORYCHECK_COMMAND valgrind)
-    set(MEMORYCHECK_COMMAND_OPTIONS
-       "--tool=memcheck \
-       --leak-check=full \
-       --trace-children=yes \
-       --track-origins=yes \
-       --keep-debuginfo=yes \
-       --error-exitcode=100")
+  target_link_libraries(test-target PRIVATE test-dependencies)
+  add_test(NAME test-target COMMAND test-target)
+  if(NOT MSVC)
     include(CTest)
+    find_program(MEMORYCHECK_COMMAND valgrind)
+    set(MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full --trace-children=yes \
+      --track-origins=yes  --keep-debuginfo=yes --error-exitcode=100")
   endif()
 
-  add_test(NAME test-target COMMAND test-target)
 endif()
 
 
