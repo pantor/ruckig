@@ -51,6 +51,8 @@ jobs:
     # if: ${{ false }}
     needs: [build-wheels, make-source-dist]
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
 
     steps:
     - uses: actions/download-artifact@v3
