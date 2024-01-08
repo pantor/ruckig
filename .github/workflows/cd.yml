@@ -18,6 +18,11 @@ jobs:
 
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.16.2
+      env:
+        CIBW_BEFORE_ALL: |
+          git clone https://github.com/pybind/pybind11.git
+          cd pybind11
+          git checkout v2.11.1
 
     - uses: actions/upload-artifact@v4
       with:
