@@ -34,6 +34,7 @@ cmake.targets = ["python_ruckig"]
 [tool.scikit-build.cmake.define]
 BUILD_PYTHON_MODULE = "ON"
 BUILD_SHARED_LIBS = "OFF"
+CMAKE_POSITION_INDEPENDENT_CODE = "ON"
 
 
 [tool.ruff]
