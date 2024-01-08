@@ -72,6 +72,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: C++',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     zip_safe=False,
 )

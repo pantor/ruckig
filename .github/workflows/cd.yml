@@ -23,6 +23,7 @@ jobs:
           git clone https://github.com/pybind/pybind11.git
           cd pybind11
           git checkout v2.11.1
+        MACOSX_DEPLOYMENT_TARGET: "10.14"
 
     - uses: actions/upload-artifact@v4
       with:
