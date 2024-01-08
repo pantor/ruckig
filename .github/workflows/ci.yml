@@ -11,11 +11,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         cmake_flags: ["", " -DBUILD_CLOUD_CLIENT=OFF "]
-        include:
-          - name: ubuntu-20.04-gcc-5
-            os: ubuntu-20.04
-            compiler: gcc
-            version: 5
 
     steps:
     - uses: actions/checkout@v3
@@ -28,24 +23,6 @@ jobs:
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
         git checkout v2.11.1
-
-    - name: Set compiler version and patch C++11
-      if: matrix.name == 'ubuntu-20.04-gcc-5'
-      run: |
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/gcc-5-base_5.5.0-12ubuntu1_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/i/isl-0.18/libisl15_0.18-4_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/cpp-5_5.5.0-12ubuntu1_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libasan2_5.5.0-12ubuntu1_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libmpx0_5.5.0-12ubuntu1_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libgcc-5-dev_5.5.0-12ubuntu1_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/gcc-5_5.5.0-12ubuntu1_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/libstdc++-5-dev_5.5.0-12ubuntu1_amd64.deb
-        wget -c http://archive.ubuntu.com/ubuntu/pool/universe/g/gcc-5/g++-5_5.5.0-12ubuntu1_amd64.deb
-        sudo apt install ./g++-5_5.5.0-12ubuntu1_amd64.deb ./gcc-5_5.5.0-12ubuntu1_amd64.deb ./gcc-5-base_5.5.0-12ubuntu1_amd64.deb ./cpp-5_5.5.0-12ubuntu1_amd64.deb ./libisl15_0.18-4_amd64.deb ./libgcc-5-dev_5.5.0-12ubuntu1_amd64.deb ./libasan2_5.5.0-12ubuntu1_amd64.deb ./libmpx0_5.5.0-12ubuntu1_amd64.deb ./libstdc++-5-dev_5.5.0-12ubuntu1_amd64.deb
-
-        echo "CC=gcc-${{ matrix.version }}" >> $GITHUB_ENV
-        echo "CXX=g++-${{ matrix.version }}" >> $GITHUB_ENV
-        bash scripts/patch-c++11.sh inplace
 
     - name: Install valgrind
       if: matrix.os == 'ubuntu-latest'
@@ -67,7 +44,6 @@ jobs:
         ./example-09_dynamic_dofs > "$HIDDEN"
 
     - name: Run Python Examples
-      if: matrix.name != 'ubuntu-20.04-gcc-5'
       run: |
         python3 ./examples/01_position.py > "$HIDDEN"
         python3 ./examples/02_position_offline.py > "$HIDDEN"

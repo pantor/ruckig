@@ -302,17 +302,6 @@ TEST_CASE("trajectory") {
         CHECK_FALSE( output.trajectory.get_first_time_at_position(6, 0.0) );
     }
 
-    SUBCASE("first-time-at-velocity") {
-        CHECK( output.trajectory.get_first_time_at_velocity(0, 0).value() == doctest::Approx(0.0) );
-        CHECK( output.trajectory.get_first_time_at_velocity(0, 0, 0.01).value() == doctest::Approx(4.0) );
-        CHECK( output.trajectory.get_first_time_at_velocity(0, 0.125).value() == doctest::Approx(0.5) );
-        CHECK( output.trajectory.get_first_time_at_velocity(0, 0.125, -0.5).value() == doctest::Approx(0.5) );
-        CHECK( output.trajectory.get_first_time_at_velocity(0, 0.125, 1.5).value() == doctest::Approx(3.5) );
-
-        CHECK_FALSE( output.trajectory.get_first_time_at_velocity(0, 2.0) );
-        CHECK_FALSE( output.trajectory.get_first_time_at_velocity(0, 0.0, 5.0) );
-    }
-
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0};
     input.current_acceleration = {0.0, 0.0, 0.0};

@@ -289,21 +289,19 @@ public:
     }
 
     //! Get the time that this trajectory passes a specific position of a given DoF the first time
-
-    //! If the position is passed, this method returns true, otherwise false
-    //! The Python wrapper takes `dof` and `position` as arguments and returns `time` (or `None`) instead
-    bool get_first_time_at_position(size_t dof, double position, double& time) const {
+    std::optional<double> get_first_time_at_position(size_t dof, double position, double time_after=0.0) const {
         if (dof >= degrees_of_freedom) {
-            return false;
+            return std::nullopt;
         }
 
-        double v, a;
-        for (auto& p: profiles) {
-            if (p[dof].get_first_state_at_position(position, time, v, a)) {
-                return true;
+        double time;
+        for (size_t i = 0; i < profiles.size(); ++i) {
+            if (profiles[i][dof].get_first_state_at_position(position, time, time_after)) {
+                const double section_time = (i > 0) ? cumulative_times[i-1] : 0.0;
+                return section_time + time;
             }
         }
-        return false;
+        return std::nullopt;
     }
 };
 
