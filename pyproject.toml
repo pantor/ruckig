@@ -28,10 +28,12 @@ Issues = "https://github.com/pantor/ruckig/issues"
 requires = ["scikit-build-core", "pybind11"]
 build-backend = "scikit_build_core.build"
 
+[tool.scikit-build]
+cmake.targets = ["python_ruckig"]
+
 [tool.scikit-build.cmake.define]
-BUILD_EXAMPLES = "OFF"
 BUILD_PYTHON_MODULE = "ON"
-BUILD_TESTS = "OFF"
+BUILD_SHARED_LIBS = "OFF"
 
 
 [tool.ruff]

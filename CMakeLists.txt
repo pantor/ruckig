@@ -90,14 +90,13 @@ if(BUILD_PYTHON_MODULE)
 
   set_target_properties(python_ruckig PROPERTIES OUTPUT_NAME ruckig)
   set_target_properties(python_ruckig PROPERTIES ARCHIVE_OUTPUT_NAME python_ruckig)
+
+  install(TARGETS python_ruckig LIBRARY DESTINATION .)
 endif()
 
 
 # Add support for installation
 include(CMakePackageConfigHelpers)
-
-# Install headers
-install(DIRECTORY include/ruckig DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # Install library
 install(TARGETS ruckig
@@ -105,6 +104,7 @@ install(TARGETS ruckig
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # Install CMake config files
