@@ -22,8 +22,8 @@ template<class T, size_t DOFs, size_t SIZE> using StandardSizeVector = typename 
 
 //! Vector data type based on the Eigen matrix type. Eigen needs to be included seperately
 #ifdef EIGEN_VERSION_AT_LEAST
-#if EIGEN_VERSION_AT_LEAST(3,4,0)
-    template<class T, size_t DOFs> using EigenVector = typename std::conditional<DOFs >= 1, Eigen::Vector<T, DOFs>, Eigen::Vector<T, Eigen::Dynamic>>::type;
+#if EIGEN_VERSION_AT_LEAST(3,3,0)
+    template<class T, size_t DOFs> using EigenVector = typename std::conditional<DOFs >= 1, Eigen::Matrix<T, DOFs, 1>, Eigen::Matrix<T, Eigen::Dynamic, 1>>::type;
 #endif
 #endif
 
