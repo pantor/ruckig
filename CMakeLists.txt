@@ -107,6 +107,11 @@ install(TARGETS ruckig
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
+# Install header files
+file(GLOB HEADERS "include/ruckig/*.hpp")
+install(FILES ${HEADERS}
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ruckig")
+
 # Install CMake config files
 set(ruckig_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
