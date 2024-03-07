@@ -30,7 +30,6 @@ if __name__ == '__main__':
     inp.max_acceleration = [3, 2, 2]
     inp.max_jerk = [6, 10, 20]
 
-
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
     # Generate the trajectory within the control loop

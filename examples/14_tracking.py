@@ -14,12 +14,14 @@ def model_ramp(t, ramp_vel=0.5, ramp_pos=1.0):
     target.acceleration = [0.0]
     return target
 
+
 def model_constant_acceleration(t, ramp_acc=0.05):
     target = TargetState(1)
     target.position = [t * t * ramp_acc]
     target.velocity = [t * ramp_acc]
     target.acceleration = [ramp_acc]
     return target
+
 
 def model_sinus(t, ramp_vel=0.4):
     target = TargetState(1)
@@ -66,7 +68,6 @@ if __name__ == '__main__':
 
         target_list.append([target_state.position, target_state.velocity, target_state.acceleration])
         follow_list.append([out.new_position, out.new_velocity, out.new_acceleration])
-
 
     # Plot the trajectory
     # from pathlib import Path

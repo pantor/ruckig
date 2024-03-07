@@ -24,7 +24,6 @@ if __name__ == '__main__':
     # Set minimum duration (equals the trajectory duration when target velocity and acceleration are zero)
     inp.minimum_duration = 5.0
 
-
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
     # Generate the trajectory within the control loop

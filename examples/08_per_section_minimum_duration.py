@@ -35,7 +35,6 @@ if __name__ == '__main__':
     # Define a minimum duration per section of the trajectory (number waypoints + 1)
     inp.per_section_minimum_duration = [0, 2.0, 0.0, 1.0, 0.0, 2.0, 0]
 
-
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
     # Generate the trajectory within the control loop

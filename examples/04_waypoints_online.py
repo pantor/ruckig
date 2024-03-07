@@ -32,7 +32,6 @@ if __name__ == '__main__':
 
     inp.interrupt_calculation_duration = 500  # [µs]
 
-
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
     # Generate the trajectory within the control loop
