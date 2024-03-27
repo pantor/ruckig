@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cfloat>
 #include <cmath>
-
+#include <numbers>
 
 namespace ruckig {
 
@@ -119,11 +119,11 @@ inline PositiveSet<double, 3> solve_cubic(double a, double b, double c, double d
 
             // Convert to polar form
             if (std::abs(x) > DBL_EPSILON) {
-                theta = (x > 0.0) ? std::atan(y / x) : (std::atan(y / x) + M_PI);
+                theta = (x > 0.0) ? std::atan(y / x) : (std::atan(y / x) + std::numbers::pi);
                 r = std::sqrt(x * x - yy);
             } else {
                 // Vertical line
-                theta = M_PI / 2;
+                theta = std::numbers::pi / 2;
                 r = y;
             }
             // Calculate cube root
