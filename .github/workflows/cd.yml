@@ -11,25 +11,21 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-11]
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.16.2
+      uses: pypa/cibuildwheel@v2.17.0
       env:
-        CIBW_ARCHS_LINUX: auto
-        CIBW_ARCHS_MACOS: x86_64 arm64
-        CIBW_BEFORE_ALL: |
-          git clone https://github.com/pybind/pybind11.git
-          cd pybind11
-          git checkout v2.11.1
+        CIBW_BEFORE_ALL: git clone --depth 1 --branch v2.12.0 https://github.com/pybind/pybind11.git
         CIBW_SKIP: pp*  # Skip PyPy
         MACOSX_DEPLOYMENT_TARGET: "10.14"
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
+        name: wheels-${{ matrix.os }}-${{ strategy.job-index }}
         path: ./wheelhouse/*.whl
 
 
@@ -42,7 +38,7 @@ jobs:
     - name: Build SDist
       run: pipx run build --sdist
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         path: dist/*.tar.gz
 
@@ -55,7 +51,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: artifact
         path: dist
