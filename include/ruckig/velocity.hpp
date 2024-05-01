@@ -1,6 +1,8 @@
 #pragma once
 
 #include <array>
+#include <cassert>
+#include <iterator>
 #include <optional>
 
 
@@ -28,6 +30,7 @@ class VelocityThirdOrderStep1 {
     bool time_all_single_step(Profile* profile, double aMax, double aMin, double jMax) const;
 
     inline void add_profile(ProfileIter& profile) const {
+        assert(std::next(profile) != valid_profiles.end() && "maximum number of profiles exceeded");
         const auto prev_profile = profile;
         ++profile;
         profile->set_boundary(*prev_profile);
