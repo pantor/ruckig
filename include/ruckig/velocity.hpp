@@ -20,8 +20,11 @@ class VelocityThirdOrderStep1 {
     double vd;
 
     // Max 3 valid profiles
-    using ProfileIter = std::array<Profile, 3>::iterator;
-    std::array<Profile, 3> valid_profiles;
+    static constexpr int max_num_valid_profiles = 3;
+    using Profiles =  std::array<Profile, max_num_valid_profiles + 1>;
+    using ProfileIter = Profiles::iterator;
+
+    Profiles valid_profiles;
 
     void time_acc0(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const;
     void time_none(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const;
