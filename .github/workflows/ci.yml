@@ -13,13 +13,13 @@ jobs:
         cmake_flags: ["", " -DBUILD_CLOUD_CLIENT=OFF "]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Get cross-platform /dev/null for hidden output
       run: echo "HIDDEN=$(python3 -c "import os; print(os.devnull)")" >> $GITHUB_ENV
 
     - name: Install pybind11
-      run: git clone --depth 1 --branch v2.12.0 https://github.com/pybind/pybind11.git
+      run: git clone --depth 1 --branch v2.13.1 https://github.com/pybind/pybind11.git
 
     - name: Install valgrind
       if: matrix.os == 'ubuntu-latest'
@@ -67,9 +67,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Lint Python
       run: |
         python3 -m pip install ruff
-        ruff examples test
+        ruff check examples test --preview

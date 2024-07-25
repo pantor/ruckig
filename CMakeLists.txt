@@ -32,7 +32,6 @@ add_library(ruckig
   src/ruckig/velocity_third_step1.cpp
   src/ruckig/velocity_third_step2.cpp
 )
-add_library(ruckig::ruckig ALIAS ruckig)
 
 target_compile_features(ruckig PUBLIC cxx_std_17)
 target_include_directories(ruckig PUBLIC
@@ -45,7 +44,6 @@ if(MSVC)
   target_compile_definitions(ruckig PUBLIC _USE_MATH_DEFINES)
 endif()
 
-
 if(BUILD_CLOUD_CLIENT)
   target_sources(ruckig PRIVATE src/ruckig/cloud_client.cpp)
   target_include_directories(ruckig PUBLIC
@@ -53,6 +51,39 @@ if(BUILD_CLOUD_CLIENT)
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
   target_compile_definitions(ruckig PUBLIC WITH_CLOUD_CLIENT)
+endif()
+
+add_library(ruckig::ruckig ALIAS ruckig)
+
+
+if(BUILD_TESTS)
+  enable_testing()
+
+  add_library(test-dependencies INTERFACE)
+  target_link_libraries(test-dependencies INTERFACE ruckig)
+  target_include_directories(test-dependencies INTERFACE third_party)
+  if(MSVC)
+    target_compile_options(test-dependencies INTERFACE /W4)
+  else()
+    target_compile_options(test-dependencies INTERFACE -Wall -Wextra)
+  endif()
+
+  add_executable(test-target test/test_target.cpp)
+  target_link_libraries(test-target PRIVATE test-dependencies)
+  add_test(NAME test-target COMMAND test-target)
+  if(NOT MSVC)
+    include(CTest)
+    find_program(MEMORYCHECK_COMMAND valgrind)
+    set(MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full --trace-children=yes \
+      --track-origins=yes  --keep-debuginfo=yes --error-exitcode=100")
+  endif()
+endif()
+
+
+if(BUILD_BENCHMARK)
+  add_executable(benchmark-target test/benchmark_target.cpp)
+
+  target_link_libraries(benchmark-target PRIVATE ruckig)
 endif()
 
 
@@ -136,40 +167,6 @@ install(FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/package.xml"
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
 )
-
-
-if(BUILD_TESTS)
-  enable_testing()
-
-  add_library(test-dependencies INTERFACE)
-  target_link_libraries(test-dependencies INTERFACE ruckig)
-  target_include_directories(test-dependencies INTERFACE third_party)
-  if(MSVC)
-    target_compile_options(test-dependencies INTERFACE /W4)
-  else()
-    target_compile_options(test-dependencies INTERFACE -Wall -Wextra)
-  endif()
-
-  add_executable(test-target
-    test/test_target.cpp
-  )
-  target_link_libraries(test-target PRIVATE test-dependencies)
-  add_test(NAME test-target COMMAND test-target)
-  if(NOT MSVC)
-    include(CTest)
-    find_program(MEMORYCHECK_COMMAND valgrind)
-    set(MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full --trace-children=yes \
-      --track-origins=yes  --keep-debuginfo=yes --error-exitcode=100")
-  endif()
-
-endif()
-
-
-if(BUILD_BENCHMARK)
-  add_executable(benchmark-target test/benchmark_target.cpp)
-
-  target_link_libraries(benchmark-target PRIVATE ruckig)
-endif()
 
 
 # Enable Packaging
