@@ -30,6 +30,7 @@ build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
 cmake.targets = ["python_ruckig"]
+sdist.exclude = [".github", "doc/web-gui"]
 
 [tool.scikit-build.cmake.define]
 BUILD_PYTHON_MODULE = "ON"
