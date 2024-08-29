@@ -170,13 +170,16 @@ install(FILES
 
 
 # Enable Packaging
-set(CPACK_PACKAGE_VENDOR "Lars Berscheid")
 set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_CONTACT "Lars Berscheid (lars.berscheid@ruckig.com)")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Motion Generation for Robots and Machines.")
+set(CPACK_PACKAGE_VENDOR "Lars Berscheid")
 set(CPACK_PACKAGE_VERSION ${RUCKIG_VERSION})
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_SYSTEM_NAME ${CMAKE_HOST_SYSTEM_PROCESSOR})
-
-# Settings for Debian package
-set(CPACK_DEBIAN_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION}-1)
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ruckig.com")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Lars Berscheid")
+set(CPACK_DEBIAN_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION}-1)
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "ros-melodic-ruckig, ros-noetic-ruckig, ros-foxy-ruckig, ros-galactic-ruckig, ros-humble-ruckig, ros-rolling-ruckig")
 include(CPack)
