@@ -76,7 +76,7 @@ jobs:
 
     - name: Install package
       working-directory: build
-      run: apt install ./ruckig-*.deb
+      run: sudo apt-get install ./ruckig-*.deb
 
     - name: Test building examples
       working-directory: examples
