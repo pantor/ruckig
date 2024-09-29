@@ -74,11 +74,15 @@ endif()
 
 
 if(BUILD_PYTHON_MODULE)
-  # Check if pybind11 exists as a subdirectory
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
-    add_subdirectory(pybind11)
-  else()
-    find_package(pybind11 2.6 REQUIRED)
+  
+  # check if pybind11 is already available
+  if(NOT TARGET pybind11::module)
+    # Check if pybind11 exists as a subdirectory
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
+      add_subdirectory(pybind11)
+    else()
+      find_package(pybind11 2.6 REQUIRED)
+    endif()
   endif()
 
   pybind11_add_module(python_ruckig src/ruckig/python.cpp)
