@@ -48,7 +48,7 @@ if(BUILD_CLOUD_CLIENT)
   target_sources(ruckig PRIVATE src/ruckig/cloud_client.cpp)
   target_include_directories(ruckig PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ruckig/third_party>
   )
   target_compile_definitions(ruckig PUBLIC WITH_CLOUD_CLIENT)
 endif()
@@ -135,6 +135,9 @@ include(CMakePackageConfigHelpers)
 
 # Install headers
 install(DIRECTORY include/ruckig DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+if(BUILD_CLOUD_CLIENT)
+  install(DIRECTORY third_party/httplib third_party/nlohmann DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ruckig/third_party)
+endif()
 
 # Install library
 install(TARGETS ruckig

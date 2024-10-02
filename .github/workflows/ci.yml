@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -61,6 +61,29 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         ctest --test-dir ./build -T memcheck
+
+
+  build-package:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure and make
+      run: |
+        cmake -B build
+        cmake --build build -j2 -- package
+
+    - name: Install package
+      working-directory: build
+      run: sudo apt-get install ./ruckig-*.deb
+
+    - name: Test building examples
+      working-directory: examples
+      run: |
+        mv CMakeLists-installed.txt CMakeLists.txt
+        cmake -B build
+        cmake --build build -j2
 
 
   lint-python:

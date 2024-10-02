@@ -7,7 +7,7 @@ project(ruckig_examples)
 find_package(ruckig REQUIRED)
 
 # Build the position example
-add_executable(example-position examples/01_position.cpp)
+add_executable(example-position 01_position.cpp)
 target_compile_features(example-position PUBLIC cxx_std_17)
 
 target_link_libraries(example-position PRIVATE ruckig::ruckig)
