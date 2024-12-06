@@ -57,8 +57,8 @@ class Trajectory {
 #endif
 
     //! Calculates the base values to then integrate from
-    using SetIntegrate = std::function<void(size_t, double, double, double, double, double)>;
-    void state_to_integrate_from(double time, size_t& new_section, const SetIntegrate& set_integrate) const {
+    template<typename Func>
+    void state_to_integrate_from(double time, size_t& new_section, Func&& set_integrate) const {
         if (time >= duration) {
             // Keep constant acceleration
             new_section = profiles.size();
