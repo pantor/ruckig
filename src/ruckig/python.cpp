@@ -77,6 +77,24 @@ limited by velocity, acceleration, and jerk constraints.";
             }
             return py::make_tuple(new_position, new_velocity, new_acceleration);
         }, "time"_a, "return_section"_a=false)
+        .def("at_time", [](const Trajectory<DynamicDOFs>& traj, const py::list& times, bool return_section=false) {
+            std::vector<double> new_position(traj.degrees_of_freedom), new_velocity(traj.degrees_of_freedom), new_acceleration(traj.degrees_of_freedom), new_jerk(traj.degrees_of_freedom);
+            py::list result_position(times.size()), result_velocity(times.size()), result_acceleration(times.size()), result_section(times.size());
+            for (std::size_t i = 0; i < times.size(); i++) {
+                const auto time = times[i].cast<double>();
+                size_t new_section;
+                traj.at_time(time, new_position, new_velocity, new_acceleration, new_jerk, new_section);
+                result_position[i] = new_position;
+                result_velocity[i] = new_velocity;
+                result_acceleration[i] = new_acceleration;
+                result_section[i] = new_section;
+            }
+
+            if (return_section) {
+                return py::make_tuple(result_position, result_velocity, result_acceleration, result_section);
+            }
+            return py::make_tuple(result_position, result_velocity, result_acceleration);
+        }, "times"_a, "return_section"_a=false)
         .def("get_first_time_at_position", [](const Trajectory<DynamicDOFs>& traj, size_t dof, double position) -> py::object {
             double time;
             if (traj.get_first_time_at_position(dof, position, time)) {
