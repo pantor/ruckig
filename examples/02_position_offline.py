@@ -38,5 +38,11 @@ if __name__ == '__main__':
 
     print(f'Position at time {new_time:0.4f} [s]: {new_position}')
 
+    # Or we can pass a list of time values to get the corresponding kinematic states
+    new_times = [0.5, 1.0, 1.5]
+    new_positions, new_velocities, new_accelerations = trajectory.at_time(new_times)
+
+    print(f'Positions at times {new_times[0]:0.4f} {new_times[1]:0.4f} {new_times[2]:0.4f} [s]: {new_positions}')
+
     # Get some info about the position extrema of the trajectory
     print(f'Position extremas are {trajectory.position_extrema}')
