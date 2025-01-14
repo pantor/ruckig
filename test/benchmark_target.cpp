@@ -5,7 +5,6 @@
 
 #include <ruckig/ruckig.hpp>
 
-
 using namespace ruckig;
 
 
@@ -51,17 +50,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
     Randomizer<DOFs, decltype(limit_dist)> l { limit_dist, 44 };
 
     InputParameter<DOFs> input;
-    // input.synchronization = Synchronization::None;
-    // input.control_interface = ControlInterface::Velocity;
     std::vector<double> average, worst, global;
-
-    // Initial warm-up calculation
-    // p.fill(input.current_position);
-    // p.fill(input.target_position);
-    // l.fill(input.max_velocity, input.target_velocity);
-    // l.fill(input.max_acceleration, input.target_acceleration);
-    // l.fill(input.max_jerk);
-    // check_calculation(otg, input);
 
     for (size_t j = 0; j < n; ++j) {
         double average_ = 0.0;
@@ -83,11 +72,6 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
             l.fill(input.max_velocity, input.target_velocity);
             l.fill(input.max_acceleration, input.target_acceleration);
             l.fill(input.max_jerk);
-
-            // input.current_velocity[0] = 0.5;
-            // input.target_velocity[0] = 0.5;
-            // input.target_position[0] = input.current_position[0] + 1.0;
-            // input.max_jerk[0] = 0.0;
 
             if constexpr (std::is_same<OTGType, RuckigThrow<DOFs>>::value) {
                 if (!otg.template validate_input<false>(input)) {
@@ -120,8 +104,6 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
         std::cout << "Worst Calculation Duration " << worst_mean << " pm " << worst_std << " [µs]" << std::endl;
         std::cout << "End-to-end Calculation Duration " << global_mean << " pm " << global_std << " [µs]" << std::endl;
     }
-
-    // std::cout << otg.degrees_of_freedom << "\t" << average_mean << "\t" << average_std << "\t" << worst_mean << "\t" << worst_std << std::endl;
 }
 
 
