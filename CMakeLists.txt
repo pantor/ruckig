@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
-set(RUCKIG_VERSION 0.14.0)
-project(ruckig VERSION ${RUCKIG_VERSION} LANGUAGES CXX)
+
+project(ruckig VERSION 0.14.0 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
@@ -105,7 +105,7 @@ endif()
 
 
 if(BUILD_PYTHON_MODULE)
-  
+
   # check if pybind11 is already available
   if(NOT TARGET pybind11::module)
     # Check if pybind11 exists as a subdirectory
@@ -181,7 +181,7 @@ set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_CONTACT "Lars Berscheid (lars.berscheid@ruckig.com)")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Motion Generation for Robots and Machines.")
 set(CPACK_PACKAGE_VENDOR "Lars Berscheid")
-set(CPACK_PACKAGE_VERSION ${RUCKIG_VERSION})
+set(CPACK_PACKAGE_VERSION ${ruckig_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_SYSTEM_NAME ${CMAKE_HOST_SYSTEM_PROCESSOR})
