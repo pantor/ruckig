@@ -18,16 +18,13 @@ jobs:
     - name: Get cross-platform /dev/null for hidden output
       run: echo "HIDDEN=$(python3 -c "import os; print(os.devnull)")" >> $GITHUB_ENV
 
-    - name: Install nanobind
-      run: pip install nanobind
-
     - name: Install valgrind
       if: matrix.os == 'ubuntu-latest'
       run: sudo apt-get update && sudo apt-get install -y valgrind
 
     - name: Configure and make
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_MODULE=ON -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ${{ matrix.cmake_flags }} -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=. -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=.
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=ON -DBUILD_BENCHMARK=ON ${{ matrix.cmake_flags }} -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=. -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=.
         cmake --build build --config Release -j2
 
     - name: Run C++ Examples
@@ -39,16 +36,6 @@ jobs:
         ./example-06_stop > "$HIDDEN"
         ./example-07_minimum_duration > "$HIDDEN"
         ./example-09_dynamic_dofs > "$HIDDEN"
-
-    - name: Run Python Examples
-      run: |
-        python3 ./examples/01_position.py > "$HIDDEN"
-        python3 ./examples/02_position_offline.py > "$HIDDEN"
-        python3 ./examples/05_velocity.py > "$HIDDEN"
-        python3 ./examples/06_stop.py > "$HIDDEN"
-        python3 ./examples/07_minimum_duration.py > "$HIDDEN"
-      env:
-        PYTHONPATH: build
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
@@ -63,7 +50,33 @@ jobs:
         ctest --test-dir ./build -T memcheck
 
 
-  build-package:
+  build-python-package:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Get cross-platform /dev/null for hidden output
+      run: echo "HIDDEN=$(python3 -c "import os; print(os.devnull)")" >> $GITHUB_ENV
+
+    - name: Install ruckig
+      run: python3 -m pip install .
+
+    - name: Run Python Examples
+      run: |
+        python3 ./examples/01_position.py > "$HIDDEN"
+        python3 ./examples/02_position_offline.py > "$HIDDEN"
+        python3 ./examples/05_velocity.py > "$HIDDEN"
+        python3 ./examples/06_stop.py > "$HIDDEN"
+        python3 ./examples/07_minimum_duration.py > "$HIDDEN"
+
+
+  build-debian-package:
     runs-on: ubuntu-latest
 
     steps:
