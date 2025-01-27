@@ -3,6 +3,7 @@
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/optional.h>
+#include <nanobind/stl/string.h>
 #include <nanobind/stl/vector.h>
 #include <nanobind/operators.h>
 
@@ -82,7 +83,9 @@ limited by velocity, acceleration, and jerk constraints.";
 
     nb::class_<InputParameter<DynamicDOFs>>(m, "InputParameter")
         .def(nb::init<size_t>(), "dofs"_a)
+#if defined WITH_CLOUD_CLIENT
         .def(nb::init<size_t, size_t>(), "dofs"_a, "max_number_of_waypoints"_a)
+#endif
         .def_ro("degrees_of_freedom", &InputParameter<DynamicDOFs>::degrees_of_freedom)
         .def_rw("current_position", &InputParameter<DynamicDOFs>::current_position)
         .def_rw("current_velocity", &InputParameter<DynamicDOFs>::current_velocity)
