@@ -18,8 +18,8 @@ jobs:
     - name: Get cross-platform /dev/null for hidden output
       run: echo "HIDDEN=$(python3 -c "import os; print(os.devnull)")" >> $GITHUB_ENV
 
-    - name: Install pybind11
-      run: git clone --depth 1 --branch v2.13.1 https://github.com/pybind/pybind11.git
+    - name: Install nanobind
+      run: pip install nanobind
 
     - name: Install valgrind
       if: matrix.os == 'ubuntu-latest'

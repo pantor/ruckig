@@ -8,7 +8,7 @@ include(GNUInstallDirs)
 
 
 option(BUILD_EXAMPLES "Build example programs" ON)
-option(BUILD_PYTHON_MODULE "Build python module with pybind11" OFF)
+option(BUILD_PYTHON_MODULE "Build Python wrapper with nanobind" OFF)
 option(BUILD_CLOUD_CLIENT "Build cloud client to calculate Ruckig Pro trajectories remotely" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCHMARK "Build benchmark" OFF)
@@ -105,18 +105,13 @@ endif()
 
 
 if(BUILD_PYTHON_MODULE)
+  find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
+  execute_process(
+    COMMAND "${Python_EXECUTABLE}" -m nanobind --cmake_dir
+    OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE nanobind_ROOT)
+  find_package(nanobind CONFIG REQUIRED)
 
-  # check if pybind11 is already available
-  if(NOT TARGET pybind11::module)
-    # Check if pybind11 exists as a subdirectory
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
-      add_subdirectory(pybind11)
-    else()
-      find_package(pybind11 2.6 REQUIRED)
-    endif()
-  endif()
-
-  pybind11_add_module(python_ruckig src/ruckig/python.cpp)
+  nanobind_add_module(python_ruckig NB_STATIC src/ruckig/python.cpp)
   target_compile_features(python_ruckig PUBLIC cxx_std_17)
   target_link_libraries(python_ruckig PUBLIC ruckig)
   if(BUILD_CLOUD_CLIENT)
