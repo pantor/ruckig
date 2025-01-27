@@ -66,18 +66,18 @@ jobs:
         python-version: '3.10'
 
     - name: Get cross-platform /dev/null for hidden output
-      run: echo "HIDDEN=$(python3 -c "import os; print(os.devnull)")" >> $GITHUB_ENV
+      run: echo "HIDDEN=$(python -c "import os; print(os.devnull)")" >> $GITHUB_ENV
 
     - name: Install ruckig
-      run: python3 -m pip install .
+      run: pip install .
 
     - name: Run Python Examples
       run: |
-        python3 ./examples/01_position.py > "$HIDDEN"
-        python3 ./examples/02_position_offline.py > "$HIDDEN"
-        python3 ./examples/05_velocity.py > "$HIDDEN"
-        python3 ./examples/06_stop.py > "$HIDDEN"
-        python3 ./examples/07_minimum_duration.py > "$HIDDEN"
+        python ./examples/01_position.py > "$HIDDEN"
+        python ./examples/02_position_offline.py > "$HIDDEN"
+        python ./examples/05_velocity.py > "$HIDDEN"
+        python ./examples/06_stop.py > "$HIDDEN"
+        python ./examples/07_minimum_duration.py > "$HIDDEN"
 
 
   build-debian-package:
