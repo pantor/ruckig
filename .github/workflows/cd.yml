@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.20.0
+      uses: pypa/cibuildwheel@v2.23.3
       env:
         CIBW_SKIP: pp*  # Skip PyPy
         MACOSX_DEPLOYMENT_TARGET: "10.14"
