@@ -131,6 +131,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_ro("new_position", &OutputParameter<DynamicDOFs>::new_position)
         .def_ro("new_velocity", &OutputParameter<DynamicDOFs>::new_velocity)
         .def_ro("new_acceleration", &OutputParameter<DynamicDOFs>::new_acceleration)
+        .def_ro("new_jerk", &OutputParameter<DynamicDOFs>::new_jerk)
         .def_ro("new_section", &OutputParameter<DynamicDOFs>::new_section)
         .def_ro("did_section_change", &OutputParameter<DynamicDOFs>::did_section_change)
         .def_ro("trajectory", &OutputParameter<DynamicDOFs>::trajectory)
