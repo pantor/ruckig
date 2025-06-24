@@ -20,7 +20,7 @@ jobs:
       uses: pypa/cibuildwheel@v2.23.3
       env:
         CIBW_SKIP: pp*  # Skip PyPy
-        MACOSX_DEPLOYMENT_TARGET: "10.14"
+        MACOSX_DEPLOYMENT_TARGET: "11.0"
 
     - uses: actions/upload-artifact@v4
       with:

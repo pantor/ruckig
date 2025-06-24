@@ -23,7 +23,6 @@ enum class Synchronization {
     Time, ///< Always synchronize the DoFs to reach the target at the same time (Default)
     TimeIfNecessary, ///< Synchronize only when necessary (e.g. for non-zero target velocity or acceleration)
     Phase, ///< Phase synchronize the DoFs when this is possible, else fallback to "Time" strategy. Phase synchronization will result a straight-line trajectory
-    // PhaseOnly, ///< Always phase synchronize the DoFs (even when this is not time-optimal), else returns "ErrorNoPhaseSynchronization". Ruckig will then guarantee a straight-line trajectory
     None, ///< Calculate every DoF independently
 };
 
