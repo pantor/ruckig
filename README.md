@@ -103,7 +103,7 @@ Within the control loop, you need to update the *current state* of the input par
 
 The Ruckig Community Version includes built-in support for intermediate waypoints, using our cloud API for remote calculation. Of course, the Ruckig Pro version is fully local. To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
 ```.cpp
-Ruckig<6> otg {0.001, 8};
+Ruckig<6> ruckig {0.001, 8};
 InputParameter<6> input {8};
 OutputParameter<6> output {8};
 ```
@@ -118,7 +118,7 @@ As soon as at least one intermediate positions is given, the Ruckig Community Ve
 
 When using *intermediate positions*, both the underlying motion planning problem as well as its calculation changes significantly. In particular, there are some fundamental limitations for jerk-limited online trajectory generation regarding the usage of waypoints. Please find more information about these limitations [here](https://docs.ruckig.com/md_pages_2__intermediate__waypoints.html), and in general we recommend to use
 ```.cpp
-input.intermediate_positions = otg.filter_intermediate_positions(input.intermediate_positions, {0.1, ...});
+input.intermediate_positions = ruckig.filter_intermediate_positions(input.intermediate_positions, {0.1, ...});
 ```
 to filter waypoints according to a (high) threshold distance. Setting *interrupt_calculation_duration* makes sure to be real-time capable by refining the solution in the next control invocation. Note that this is a soft interruption of the calculation. Currently, no minimum or discrete durations are supported when using intermediate positions.
 
@@ -257,7 +257,7 @@ When following an arbitrary signal with position, velocity, acceleration, and je
 
 To use the tracking interface, construct
 ```.cpp
-Trackig<1> otg {0.01};  // control cycle
+Trackig<1> trackig {0.01};  // control cycle
 ```
 and set the current state as well as the kinematic constraints via
 ```.cpp
@@ -270,9 +270,9 @@ input.max_jerk = {5.0};
 ```
 Then, we can track a signal in an online manner within the real-time control loop
 ```.cpp
-for (double t = 0; t < 10.0; t += otg.delta_time) {
+for (double t = 0; t < 10.0; t += trackig.delta_time) {
   auto target_state = signal(t); // signal returns position, velocity, and acceleration
-  auto res = otg.update(target_state, input, output);
+  auto res = trackig.update(target_state, input, output);
   // Make use of the smooth target motion here (e.g. output.new_position)
 
   output.pass_to_input(input);
@@ -280,7 +280,7 @@ for (double t = 0; t < 10.0; t += otg.delta_time) {
 ```
 Please find a complete example [here](https://github.com/pantor/ruckig/blob/main/examples/13_tracking.cpp). This functionality can also be used in an offline manner, e.g. when the entire signal is known beforehand. Here, we call the
 ```.cpp
-smooth_trajectory = otg.calculate_trajectory(target_states, input);
+smooth_trajectory = trackig.calculate_trajectory(target_states, input);
 ```
 method with the trajectory given as a `std::vector` of target states. The Tracking interface is available in the Ruckig Pro version.
 
@@ -290,7 +290,7 @@ method with the trajectory given as a `std::vector` of target states. The Tracki
 So far, we have told Ruckig the number of DoFs as a template parameter. If you don't know the number of DoFs at compile-time, you can set the template parameter to `ruckig::DynamicDOFs` and pass the DoFs to the constructor:
 
 ```.cpp
-Ruckig<DynamicDOFs> otg {6, 0.001};
+Ruckig<DynamicDOFs> ruckig {6, 0.001};
 InputParameter<DynamicDOFs> input {6};
 OutputParameter<DynamicDOFs> output {6};
 ```
@@ -307,7 +307,7 @@ Ruckig supports custom vector types to make interfacing with your code even easi
 ```
 and then call the constructors with the `ruckig::EigenVector` parameter.
 ```.cpp
-Ruckig<6, EigenVector> otg {0.001};
+Ruckig<6, EigenVector> ruckig {0.001};
 InputParameter<6, EigenVector> input;
 OutputParameter<6, EigenVector> output;
 ```
@@ -333,11 +333,10 @@ The current test suite validates over 5.000.000.000 random trajectories as well 
 
 The Ruckig Pro version has additional tools to increase the numerical range and improve reliability. For example, the`position_scale` and `time_scale` parameter of the `Calculator` class change the internal representation of the input parameters.
 ```.cpp
-Ruckig<1> otg;
-// Works also for Trackig<1> otg;
+Ruckig<1> ruckig;  // Works also for Trackig
 
-otg.calculator.position_scale = 1e2;  // Scales all positions in the input parameters
-otg.calculator.time_scale = 1e3;  // Scale all times in the input parameters
+ruckig.calculator.position_scale = 1e2;  // Scales all positions in the input parameters
+ruckig.calculator.time_scale = 1e3;  // Scale all times in the input parameters
 ```
 This way, you can easily achieve the requirements above even for very high jerk limits or very long trajectories. Note that the scale parameters don't effect the resulting trajectory - they are for internal calculation only.
 
