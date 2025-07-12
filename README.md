@@ -355,12 +355,12 @@ For trajectories with intermediate waypoints, we compare Ruckig to [Toppra](http
 
 ## Development
 
-Ruckig is written in C++17. It is continuously tested on `ubuntu-latest`, `macos-latest`, and `windows-latest` against following versions
+Ruckig is written in C++20. It is continuously tested on `ubuntu-latest`, `macos-latest`, and `windows-latest` against following versions:
 
 - Doctest v2.4 (only for testing)
-- Nanobind v2.4 (only for Python wrapper)
+- Nanobind v2.7 (only for Python wrapper)
 
-A C++11 and C++03 version of Ruckig is also available - please contact us if you're interested.
+A C++17, C++11, and C++03 version of Ruckig is also available - please contact us if you're interested.
 
 
 ## Used By
