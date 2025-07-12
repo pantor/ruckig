@@ -16,21 +16,21 @@ nlohmann::json CloudClient::post(const nlohmann::json& params, bool throw_error)
     if (!res) {
         if (throw_error) {
             throw RuckigError("could not reach cloud API server");
-        } else {
-            std::cout << "[ruckig] could not reach cloud API server" << std::endl;
-            return Result::Error;
         }
+
+        std::cout << "[ruckig] could not reach cloud API server" << std::endl;
+        return Result::Error;
     }
     if (res->status != 200) {
         if (throw_error) {
             throw RuckigError(std::format("could not reach cloud API server, error code: {} {}", res->status, res->body));
-        } else {
-            std::cout << "[ruckig] could not reach cloud API server, error code: " << res->status << " " << res->body << std::endl;
-            return Result::Error;
         }
+
+        std::cout << "[ruckig] could not reach cloud API server, error code: " << res->status << " " << res->body << std::endl;
+        return Result::Error;
     }
 
     return nlohmann::json::parse(res->body);
 }
 
-}
+} // namespace ruckig

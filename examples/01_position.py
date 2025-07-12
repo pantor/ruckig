@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     inp.max_velocity = [3.0, 1.0, 3.0]
     inp.max_acceleration = [3.0, 2.0, 1.0]
-    inp.max_jerk = [4.0, 1e19, 1e19]
+    inp.max_jerk = [4.0, 3.0, 2.0]
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 

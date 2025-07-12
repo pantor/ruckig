@@ -1119,13 +1119,6 @@ bool PositionThirdOrderStep2::get_profile(Profile& profile) {
     const double aMin = up_first ? _aMin : _aMax;
     const double jMax = up_first ? _jMax : -_jMax;
 
-    if (minimize_jerk && (
-        time_none_smooth(profile, vMax, vMin, aMax, aMin, jMax)
-        || time_none_smooth(profile, vMin, vMax, aMin, aMax, -jMax)
-    )) {
-        return true;
-    }
-
     return time_acc0_acc1_vel(profile, vMax, vMin, aMax, aMin, jMax)
         || time_vel(profile, vMax, vMin, aMax, aMin, jMax)
         || time_acc0_vel(profile, vMax, vMin, aMax, aMin, jMax)

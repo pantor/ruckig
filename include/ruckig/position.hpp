@@ -6,8 +6,6 @@
 
 namespace ruckig {
 
-
-
 //! Mathematical equations for Step 1 in third-order position interface: Extremal profiles
 class PositionThirdOrderStep1 {
     using ReachedLimits = Profile::ReachedLimits;
@@ -85,8 +83,6 @@ class PositionThirdOrderStep2 {
     bool time_none_smooth(Profile& profile, double vMax, double vMin, double aMax, double aMin, double jMax);
 
 public:
-    bool minimize_jerk {false};
-
     explicit PositionThirdOrderStep2(double tf, double p0, double v0, double a0, double pf, double vf, double af, double vMax, double vMin, double aMax, double aMin, double jMax);
 
     bool get_profile(Profile& profile);
