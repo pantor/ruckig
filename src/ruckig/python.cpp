@@ -1,4 +1,5 @@
 #include <array>
+#include <format>
 #include <string>
 
 #include <ruckig/ruckig.hpp>
@@ -56,9 +57,7 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_ro("max", &Bound::max)
         .def_ro("t_min", &Bound::t_min)
         .def_ro("t_max", &Bound::t_max)
-        .def("__repr__", [](const Bound& ext) {
-            return "[" + std::to_string(ext.min) + ", " + std::to_string(ext.max) + "]";
-        });
+        .def("__repr__", [](const Bound& ext) { return std::format("[{}, {}]", ext.min, ext.max); });
 
     nb::class_<Trajectory<DynamicDOFs>>(m, "Trajectory")
         .def(nb::init<size_t>(), "dofs"_a)

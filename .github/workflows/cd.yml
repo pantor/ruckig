@@ -11,16 +11,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.23.3
-      env:
-        CIBW_SKIP: pp*  # Skip PyPy
-        MACOSX_DEPLOYMENT_TARGET: "11.0"
+      uses: pypa/cibuildwheel@v3.0.1
 
     - uses: actions/upload-artifact@v4
       with:

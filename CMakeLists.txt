@@ -33,7 +33,7 @@ add_library(ruckig
   src/ruckig/velocity_third_step2.cpp
 )
 
-target_compile_features(ruckig PUBLIC cxx_std_17)
+target_compile_features(ruckig PUBLIC cxx_std_20)
 target_include_directories(ruckig PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>

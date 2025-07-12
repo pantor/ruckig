@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <format>
 #include <iostream>
 #include <limits>
 #include <math.h>
@@ -179,7 +180,7 @@ public:
         if (!input.intermediate_positions.empty() && input.control_interface == ControlInterface::Position) {
             if (input.intermediate_positions.size() > max_number_of_waypoints) {
                 if constexpr (throw_validation_error) {
-                    throw RuckigError("The number of intermediate positions " + std::to_string(input.intermediate_positions.size()) + " exceeds the maximum number of waypoints " + std::to_string(max_number_of_waypoints) + ".");
+                    throw RuckigError(std::format("The number of intermediate positions {} exceeds the maximum number of waypoints {}.", input.intermediate_positions.size(), max_number_of_waypoints));
                 }
                 return false;
             }
@@ -187,7 +188,7 @@ public:
 
         if (delta_time <= 0.0 && input.duration_discretization != DurationDiscretization::Continuous) {
             if constexpr (throw_validation_error) {
-                throw RuckigError("delta time (control rate) parameter " + std::to_string(delta_time) + " should be larger than zero.");
+                throw RuckigError(std::format("delta time (control rate) parameter {} should be larger than zero.", delta_time));
             }
             return false;
         }

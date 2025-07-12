@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <format>
 #include <limits>
 #include <numeric>
 #include <optional>
@@ -146,12 +147,12 @@ public:
     }
 
     std::string to_string() const {
-        std::string result = "[" + std::to_string(t_min) + " ";
+        std::string result = std::format("[{} ", t_min);
         if (a) {
-            result += std::to_string(a->left) + "] [" + std::to_string(a->right) + " ";
+            result += std::format("{}] [{} ", a->left, a->right);
         }
         if (b) {
-            result += std::to_string(b->left) + "] [" + std::to_string(b->right) + " ";
+            result += std::format("{}] [{} ", b->left, b->right);
         }
         return result + "-";
     }
