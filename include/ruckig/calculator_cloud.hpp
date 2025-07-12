@@ -178,9 +178,8 @@ public:
     Result continue_calculation(const InputParameter<DOFs, CustomVector>&, Trajectory<DOFs, CustomVector>&, double, bool&) {
         if constexpr (throw_error) {
             throw RuckigError("continue calculation not available in Ruckig Community Version.");
-        } else {
-            return Result::Error;
         }
+        return Result::Error;
     }
 };
 
