@@ -12,7 +12,6 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
   "Topic :: Scientific/Engineering",
-  "License :: OSI Approved :: MIT License",
   "Programming Language :: C++",
 ]
 requires-python = ">=3.8"
