@@ -1,0 +1,2608 @@
+ts=0:00:000 idx=1 src=sewmac space=needle mode=SEWMAC_STATE_IDLE phase=0.0000 x=0.0000 v=0.0000 a_cap=0.0000 tgt_x=0.0000 eta=0.0000 needle_homed=false mu=- nudge=inactive warn=
+ts=0:00:000 idx=2 src=scurve space=needle mode=SC_MODE_POSITION x=0.0000 v=0.0000 a=0.0000 tgt_x=0.0000 tgt_v=0.0000 t=0.0000/0.0000 eta=0.0000
+ts=0:00:000 idx=4 src=scurve mode=SC_MODE_VELOCITY
+ts=0:00:000 idx=5 src=stepgen cmd=0.0000 fb=0.0000 v_fb_mot=0.0000 v_fb_ms=0.0000 phase_ms=0.0000
+ts=0:00:000 idx=6 src=cascade xr=0.0000 vr=0.0000 ar=0.0000 theta_l=0.0000 e_p=0.0000 v_cmd=0.0000 v_meas=0.0000 u_fb=0.0000 u_ff=0.0000 phase_ms=0.0000
+ts=0:00:000 idx=7 src=cascade e_v=0.0000 u_raw=0.0000 u_sat=0.0000 cap=0.0000 deadband=yes sat=no
+ts=0:00:000 idx=8 src=tick space=needle phase=0.0000 x=0.0000 v=0.0000 tgt_x=0.0000 eta=0.0000 needle_homed=false table_homed=false warn=
+ts=0:00:094 idx=9 src=sewmac a_cap=10.0000
+ts=8:21:788 idx=35304 src=sewmac mode=SEWMAC_STATE_HOMING_NEEDLE
+ts=8:21:788 idx=35307 src=scurve tgt_v=0.5000 t=0.0000/0.2236 eta=0.2236
+ts=8:21:788 idx=35309 src=cascade vr=0.0020 ar=0.2000
+ts=8:21:788 idx=35310 src=cascade e_v=0.0000 u_raw=0.0000 u_sat=0.0000 cap=0.5000 deadband=yes sat=no
+ts=8:21:788 idx=35311 src=sewmac a_cap=5.0000 eta=0.2136 warn=stuck
+ts=8:21:788 idx=35312 src=tick eta=0.2136 warn=stuck
+ts=8:21:887 idx=35314 src=scurve a=0.4000 t=0.0100/0.2236 eta=0.2136
+ts=8:21:887 idx=35316 src=stepgen cmd=0.0001
+ts=8:21:887 idx=35317 src=cascade xr=0.0001 vr=0.0080 ar=0.6000 e_p=0.0001
+ts=8:21:887 idx=35318 src=cascade e_v=0.0000 u_raw=0.0000 u_sat=0.0000 cap=0.5000 deadband=yes sat=no
+ts=8:21:887 idx=35319 src=sewmac eta=0.2036
+ts=8:21:887 idx=35320 src=tick eta=0.2036
+ts=8:21:986 idx=35322 src=scurve a=0.8000 t=0.0200/0.2236 eta=0.2036
+ts=8:21:986 idx=35324 src=stepgen cmd=0.0002 fb=0.0001
+ts=8:21:986 idx=35325 src=cascade xr=0.0002 vr=0.0180 ar=1.0000 e_p=0.0002
+ts=8:21:986 idx=35326 src=cascade e_v=0.0000 u_raw=0.0000 u_sat=0.0000 cap=0.5000 deadband=yes sat=no
+ts=8:21:986 idx=35327 src=sewmac eta=0.1936
+ts=8:21:986 idx=35328 src=tick eta=0.1936
+ts=8:22:086 idx=35329 src=sewmac phase=0.0002
+ts=8:22:086 idx=35330 src=scurve a=1.2000 t=0.0300/0.2236 eta=0.1936
+ts=8:22:086 idx=35332 src=stepgen cmd=0.0006 fb=0.0002 v_fb_mot=0.0177 v_fb_ms=0.0133 phase_ms=0.0002
+ts=8:22:086 idx=35333 src=cascade xr=0.0004 vr=0.0320 ar=1.4000 e_p=0.0004 v_meas=0.0133 u_fb=-0.0560 phase_ms=0.0002
+ts=8:22:086 idx=35334 src=cascade e_v=-0.0133 u_raw=-0.0560 u_sat=-0.0560 cap=0.5000 deadband=yes sat=no
+ts=8:22:086 idx=35335 src=sewmac x=0.0002 v=0.0133 eta=0.1836 warn=
+ts=8:22:086 idx=35336 src=tick phase=0.0002 x=0.0002 v=0.0133 eta=0.1836 warn=
+ts=8:22:185 idx=35337 src=sewmac phase=0.0005
+ts=8:22:185 idx=35338 src=scurve x=0.0002 v=0.0133 a=1.6000 t=0.0400/0.2236 eta=0.1836
+ts=8:22:185 idx=35340 src=stepgen cmd=0.0011 fb=0.0006 v_fb_mot=0.0390 v_fb_ms=0.0293 phase_ms=0.0005
+ts=8:22:185 idx=35341 src=cascade xr=0.0008 vr=0.0500 ar=1.8000 theta_l=0.0002 e_p=0.0006 v_meas=0.0293 u_fb=-0.1259 phase_ms=0.0005
+ts=8:22:185 idx=35342 src=cascade e_v=-0.0293 u_raw=-0.1259 u_sat=-0.1259 cap=0.5000 deadband=yes sat=no
+ts=8:22:185 idx=35343 src=sewmac x=0.0005 v=0.0293 eta=0.1736
+ts=8:22:185 idx=35344 src=tick phase=0.0005 x=0.0005 v=0.0293 eta=0.1736
+ts=8:22:285 idx=35345 src=sewmac phase=0.0010
+ts=8:22:285 idx=35346 src=scurve x=0.0005 v=0.0293 a=2.0000 t=0.0500/0.2236 eta=0.1736
+ts=8:22:285 idx=35348 src=stepgen cmd=0.0019 fb=0.0011 v_fb_mot=0.0610 v_fb_ms=0.0459 phase_ms=0.0010
+ts=8:22:285 idx=35349 src=cascade xr=0.0014 vr=0.0720 ar=2.2000 theta_l=0.0005 e_p=0.0010 v_meas=0.0459 u_fb=-0.2012 phase_ms=0.0010
+ts=8:22:285 idx=35350 src=cascade e_v=-0.0459 u_raw=-0.2012 u_sat=-0.2012 cap=0.5000 deadband=yes sat=no
+ts=8:22:285 idx=35351 src=sewmac x=0.0010 v=0.0459 eta=0.1636
+ts=8:22:285 idx=35352 src=tick phase=0.0010 x=0.0010 v=0.0459 eta=0.1636
+ts=8:22:385 idx=35353 src=sewmac phase=0.0018
+ts=8:22:385 idx=35354 src=scurve x=0.0010 v=0.0459 a=2.4000 t=0.0600/0.2236 eta=0.1636
+ts=8:22:385 idx=35356 src=stepgen cmd=0.0030 fb=0.0019 v_fb_mot=0.1009 v_fb_ms=0.0758 phase_ms=0.0018
+ts=8:22:385 idx=35357 src=cascade xr=0.0023 vr=0.0980 ar=2.6000 theta_l=0.0009 e_p=0.0014 v_meas=0.0758 u_fb=-0.3362 phase_ms=0.0018
+ts=8:22:385 idx=35358 src=cascade e_v=-0.0758 u_raw=-0.3362 u_sat=-0.3362 cap=0.5000 deadband=yes sat=no
+ts=8:22:385 idx=35359 src=sewmac x=0.0018 v=0.0758 eta=0.1536
+ts=8:22:385 idx=35360 src=tick phase=0.0018 x=0.0018 v=0.0758 eta=0.1536
+ts=8:22:484 idx=35361 src=sewmac phase=0.0030
+ts=8:22:484 idx=35362 src=scurve x=0.0018 v=0.0758 a=2.8000 t=0.0700/0.2236 eta=0.1536
+ts=8:22:484 idx=35364 src=stepgen cmd=0.0045 fb=0.0030 v_fb_mot=0.1443 v_fb_ms=0.1085 phase_ms=0.0030
+ts=8:22:484 idx=35365 src=cascade xr=0.0034 vr=0.1280 ar=3.0000 theta_l=0.0016 e_p=0.0018 v_meas=0.1085 u_fb=-0.4886 phase_ms=0.0030
+ts=8:22:484 idx=35366 src=cascade e_v=-0.1085 u_raw=-0.4886 u_sat=-0.4886 cap=0.5000 deadband=yes sat=no
+ts=8:22:484 idx=35367 src=sewmac x=0.0030 v=0.1085 eta=0.1436
+ts=8:22:484 idx=35368 src=tick phase=0.0030 x=0.0030 v=0.1085 eta=0.1436
+ts=8:22:583 idx=35369 src=sewmac phase=0.0045
+ts=8:22:583 idx=35370 src=scurve x=0.0030 v=0.1085 a=3.2000 t=0.0800/0.2236 eta=0.1436
+ts=8:22:583 idx=35372 src=stepgen cmd=0.0065 fb=0.0045 v_fb_mot=0.1885 v_fb_ms=0.1417 phase_ms=0.0045
+ts=8:22:583 idx=35373 src=cascade xr=0.0049 vr=0.1620 ar=3.4000 theta_l=0.0027 e_p=0.0022 v_meas=0.1417 u_fb=-0.6497 phase_ms=0.0045
+ts=8:22:583 idx=35374 src=cascade e_v=-0.1417 u_raw=-0.6497 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:22:583 idx=35375 src=sewmac x=0.0045 v=0.1417 eta=0.1336
+ts=8:22:583 idx=35376 src=tick phase=0.0045 x=0.0045 v=0.1417 eta=0.1336
+ts=8:22:683 idx=35377 src=sewmac phase=0.0065
+ts=8:22:683 idx=35378 src=scurve x=0.0045 v=0.1417 a=3.6000 t=0.0900/0.2236 eta=0.1336
+ts=8:22:683 idx=35380 src=stepgen cmd=0.0089 fb=0.0065 v_fb_mot=0.2505 v_fb_ms=0.1883 phase_ms=0.0065
+ts=8:22:683 idx=35381 src=cascade xr=0.0067 vr=0.2000 ar=3.8000 theta_l=0.0041 e_p=0.0026 v_meas=0.1883 u_fb=-0.7242 phase_ms=0.0065
+ts=8:22:683 idx=35382 src=cascade e_v=-0.1883 u_raw=-0.7242 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:22:683 idx=35383 src=sewmac x=0.0065 v=0.1883 eta=0.1236
+ts=8:22:683 idx=35384 src=tick phase=0.0065 x=0.0065 v=0.1883 eta=0.1236
+ts=8:22:782 idx=35385 src=sewmac phase=0.0088
+ts=8:22:782 idx=35386 src=scurve x=0.0065 v=0.1883 a=4.0000 t=0.1000/0.2236 eta=0.1236
+ts=8:22:782 idx=35388 src=stepgen cmd=0.0118 fb=0.0089 v_fb_mot=0.2984 v_fb_ms=0.2243 phase_ms=0.0088
+ts=8:22:782 idx=35389 src=cascade xr=0.0089 vr=0.2420 ar=4.2000 theta_l=0.0059 e_p=0.0030 v_meas=0.2243 u_fb=-0.6888 phase_ms=0.0088
+ts=8:22:782 idx=35390 src=cascade e_v=-0.2243 u_raw=-0.6888 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:22:782 idx=35391 src=sewmac x=0.0088 v=0.2243 eta=0.1136
+ts=8:22:782 idx=35392 src=tick phase=0.0088 x=0.0088 v=0.2243 eta=0.1136
+ts=8:22:882 idx=35393 src=sewmac phase=0.0118
+ts=8:22:882 idx=35394 src=scurve x=0.0088 v=0.2243 a=4.4000 t=0.1100/0.2236 eta=0.1136
+ts=8:22:882 idx=35396 src=stepgen cmd=0.0153 fb=0.0118 v_fb_mot=0.3789 v_fb_ms=0.2849 phase_ms=0.0118
+ts=8:22:882 idx=35397 src=cascade xr=0.0115 vr=0.2853 ar=4.3313 theta_l=0.0082 e_p=0.0033 v_meas=0.2849 u_fb=-0.7991 phase_ms=0.0118
+ts=8:22:882 idx=35398 src=cascade e_v=-0.2849 u_raw=-0.7991 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:22:882 idx=35399 src=sewmac x=0.0118 v=0.2849 eta=0.1036
+ts=8:22:882 idx=35400 src=tick phase=0.0118 x=0.0118 v=0.2849 eta=0.1036
+ts=8:22:981 idx=35401 src=sewmac phase=0.0153
+ts=8:22:981 idx=35402 src=scurve x=0.0118 v=0.2849 a=4.1443 t=0.1200/0.2236 eta=0.1036
+ts=8:22:981 idx=35404 src=stepgen cmd=0.0194 fb=0.0153 v_fb_mot=0.4482 v_fb_ms=0.3370 phase_ms=0.0153
+ts=8:22:981 idx=35405 src=cascade xr=0.0146 vr=0.3248 ar=3.9443 theta_l=0.0110 e_p=0.0035 v_meas=0.3370 u_fb=-0.7758 phase_ms=0.0153
+ts=8:22:981 idx=35406 src=cascade e_v=-0.3370 u_raw=-0.7758 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:22:981 idx=35407 src=sewmac x=0.0153 v=0.3370 eta=0.0936
+ts=8:22:981 idx=35408 src=tick phase=0.0153 x=0.0153 v=0.3370 eta=0.0936
+ts=8:23:081 idx=35409 src=sewmac phase=0.0193
+ts=8:23:081 idx=35410 src=scurve x=0.0153 v=0.3370 a=3.7443 t=0.1300/0.2236 eta=0.0936
+ts=8:23:081 idx=35412 src=stepgen cmd=0.0239 fb=0.0194 v_fb_mot=0.5152 v_fb_ms=0.3874 phase_ms=0.0193
+ts=8:23:081 idx=35413 src=cascade xr=0.0180 vr=0.3602 ar=3.5443 theta_l=0.0144 v_meas=0.3874 u_fb=-0.7792 phase_ms=0.0193
+ts=8:23:081 idx=35414 src=cascade e_v=-0.3874 u_raw=-0.7792 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:081 idx=35415 src=sewmac x=0.0193 v=0.3874 eta=0.0836
+ts=8:23:081 idx=35416 src=tick phase=0.0193 x=0.0193 v=0.3874 eta=0.0836
+ts=8:23:182 idx=35417 src=sewmac phase=0.0238
+ts=8:23:182 idx=35418 src=scurve x=0.0193 v=0.3874 a=3.3443 t=0.1400/0.2236 eta=0.0836
+ts=8:23:182 idx=35420 src=stepgen cmd=0.0289 fb=0.0239 v_fb_mot=0.5818 v_fb_ms=0.4375 phase_ms=0.0238
+ts=8:23:182 idx=35421 src=cascade xr=0.0218 vr=0.3916 ar=3.1443 theta_l=0.0184 e_p=0.0033 v_meas=0.4375 u_fb=-0.7878 phase_ms=0.0238
+ts=8:23:182 idx=35422 src=cascade e_v=-0.4375 u_raw=-0.7878 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:182 idx=35423 src=sewmac x=0.0238 v=0.4375 eta=0.0736
+ts=8:23:182 idx=35424 src=tick phase=0.0238 x=0.0238 v=0.4375 eta=0.0736
+ts=8:23:280 idx=35425 src=sewmac phase=0.0288
+ts=8:23:280 idx=35426 src=scurve x=0.0238 v=0.4375 a=2.9443 t=0.1500/0.2236 eta=0.0736
+ts=8:23:280 idx=35428 src=stepgen cmd=0.0343 fb=0.0289 v_fb_mot=0.6484 v_fb_ms=0.4875 phase_ms=0.0288
+ts=8:23:280 idx=35429 src=cascade xr=0.0258 vr=0.4191 ar=2.7443 theta_l=0.0230 e_p=0.0028 v_meas=0.4875 u_fb=-0.7976 phase_ms=0.0288
+ts=8:23:280 idx=35430 src=cascade e_v=-0.4875 u_raw=-0.7976 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:280 idx=35431 src=sewmac x=0.0288 v=0.4875 eta=0.0636
+ts=8:23:280 idx=35432 src=tick phase=0.0288 x=0.0288 v=0.4875 eta=0.0636
+ts=8:23:379 idx=35433 src=sewmac phase=0.0342
+ts=8:23:379 idx=35434 src=scurve x=0.0288 v=0.4875 a=2.5443 t=0.1600/0.2236 eta=0.0636
+ts=8:23:379 idx=35436 src=stepgen cmd=0.0401 fb=0.0343 v_fb_mot=0.6617 v_fb_ms=0.4975 phase_ms=0.0342
+ts=8:23:379 idx=35437 src=cascade xr=0.0301 vr=0.4425 ar=2.3443 theta_l=0.0281 e_p=0.0021 v_meas=0.4975 u_fb=-0.6395 phase_ms=0.0342
+ts=8:23:379 idx=35438 src=cascade e_v=-0.4975 u_raw=-0.6395 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:379 idx=35439 src=sewmac x=0.0342 v=0.4975 eta=0.0536
+ts=8:23:379 idx=35440 src=tick phase=0.0342 x=0.0342 v=0.4975 eta=0.0536
+ts=8:23:478 idx=35441 src=sewmac phase=0.0398
+ts=8:23:478 idx=35442 src=scurve x=0.0342 v=0.4975 a=2.1443 t=0.1700/0.2236 eta=0.0536
+ts=8:23:478 idx=35444 src=stepgen cmd=0.0461 fb=0.0401 v_fb_mot=0.6643 v_fb_ms=0.4995 phase_ms=0.0398
+ts=8:23:478 idx=35445 src=cascade xr=0.0347 vr=0.4620 ar=1.9443 theta_l=0.0336 e_p=0.0010 v_meas=0.4995 u_fb=-0.6079 phase_ms=0.0398
+ts=8:23:478 idx=35446 src=cascade e_v=-0.4995 u_raw=-0.6079 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:478 idx=35447 src=sewmac x=0.0398 v=0.4995 eta=0.0436
+ts=8:23:478 idx=35448 src=tick phase=0.0398 x=0.0398 v=0.4995 eta=0.0436
+ts=8:23:577 idx=35449 src=sewmac phase=0.0458
+ts=8:23:577 idx=35450 src=scurve x=0.0398 v=0.4995 a=1.7443 t=0.1800/0.2236 eta=0.0436
+ts=8:23:577 idx=35452 src=stepgen cmd=0.0523 fb=0.0461 v_fb_mot=0.6649 v_fb_ms=0.4999 phase_ms=0.0458
+ts=8:23:577 idx=35453 src=cascade xr=0.0394 vr=0.4774 ar=1.5443 theta_l=0.0396 e_p=-0.0003 v_meas=0.4999 u_fb=-0.6016 phase_ms=0.0458
+ts=8:23:577 idx=35454 src=cascade e_v=-0.4999 u_raw=-0.6016 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:577 idx=35455 src=sewmac x=0.0458 v=0.4999 eta=0.0336
+ts=8:23:577 idx=35456 src=tick phase=0.0458 x=0.0458 v=0.4999 eta=0.0336
+ts=8:23:677 idx=35457 src=sewmac phase=0.0522
+ts=8:23:677 idx=35458 src=scurve x=0.0458 v=0.4999 a=1.3443 t=0.1900/0.2236 eta=0.0336
+ts=8:23:677 idx=35460 src=stepgen cmd=0.0588 fb=0.0523 v_fb_mot=0.6650 v_fb_ms=0.5000 phase_ms=0.0522
+ts=8:23:677 idx=35461 src=cascade xr=0.0442 vr=0.4889 ar=1.1443 theta_l=0.0460 e_p=-0.0019 v_meas=0.5000 u_fb=-0.6003 phase_ms=0.0522
+ts=8:23:677 idx=35462 src=cascade e_v=-0.5000 u_raw=-0.6003 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:677 idx=35463 src=sewmac x=0.0522 v=0.5000 eta=0.0236
+ts=8:23:677 idx=35464 src=tick phase=0.0522 x=0.0522 v=0.5000 eta=0.0236
+ts=8:23:776 idx=35465 src=sewmac phase=0.0587
+ts=8:23:776 idx=35466 src=scurve x=0.0522 v=0.5000 a=0.9443 t=0.2000/0.2236 eta=0.0236
+ts=8:23:776 idx=35468 src=stepgen cmd=0.0653 fb=0.0588 phase_ms=0.0587
+ts=8:23:776 idx=35469 src=cascade xr=0.0491 vr=0.4963 ar=0.7443 theta_l=0.0528 e_p=-0.0037 u_fb=-0.6001 phase_ms=0.0587
+ts=8:23:776 idx=35470 src=cascade e_v=-0.5000 u_raw=-0.6001 u_sat=-0.5000 cap=0.5000 deadband=yes sat=yes
+ts=8:23:776 idx=35471 src=sewmac x=0.0587 eta=0.0136
+ts=8:23:776 idx=35472 src=tick phase=0.0587 x=0.0587 eta=0.0136
+ts=8:23:876 idx=35473 src=sewmac phase=0.0652
+ts=8:23:876 idx=35474 src=scurve x=0.0587 a=0.5443 t=0.2100/0.2236 eta=0.0136
+ts=8:23:876 idx=35476 src=stepgen cmd=0.0720 fb=0.0653 phase_ms=0.0652
+ts=8:23:876 idx=35477 src=cascade xr=0.0541 vr=0.4997 ar=0.3443 theta_l=0.0598 e_p=-0.0057 v_cmd=0.4941 u_fb=1.4753 phase_ms=0.0652
+ts=8:23:876 idx=35478 src=cascade e_v=-0.0059 u_raw=1.4753 u_sat=0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:23:876 idx=35479 src=sewmac x=0.0652 eta=0.0036
+ts=8:23:876 idx=35480 src=tick phase=0.0652 x=0.0652 eta=0.0036
+ts=8:23:975 idx=35481 src=sewmac phase=0.0718
+ts=8:23:975 idx=35482 src=scurve x=0.0652 a=0.1443 t=0.2200/0.2236 eta=0.0036
+ts=8:23:975 idx=35484 src=stepgen cmd=0.0743 fb=0.0720 phase_ms=0.0718
+ts=8:23:975 idx=35485 src=cascade xr=0.0559 vr=0.5000 ar=0.0260 theta_l=0.0669 e_p=-0.0110 v_cmd=0.4890 u_fb=0.4774 phase_ms=0.0718
+ts=8:23:975 idx=35486 src=cascade e_v=-0.0110 u_raw=0.4774 u_sat=0.4774 cap=0.5000 deadband=no sat=no
+ts=8:23:975 idx=35487 src=sewmac x=0.0718 eta=0.0000
+ts=8:23:975 idx=35488 src=tick phase=0.0718 x=0.0718 eta=0.0000
+ts=8:24:076 idx=35489 src=sewmac phase=0.0742
+ts=8:24:076 idx=35490 src=scurve x=0.0718 a=0.0000 t=0.2236/0.2236 eta=0.0000
+ts=8:24:076 idx=35492 src=stepgen cmd=0.0810 fb=0.0743 v_fb_mot=0.3813 v_fb_ms=0.2867 phase_ms=0.0742
+ts=8:24:076 idx=35493 src=cascade xr=0.0609 ar=0.0000 theta_l=0.0729 e_p=-0.0120 v_cmd=0.4880 v_meas=0.2867 u_fb=1.3671 phase_ms=0.0742
+ts=8:24:076 idx=35494 src=cascade e_v=0.2014 u_raw=1.3671 u_sat=0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:24:076 idx=35495 src=sewmac x=0.0742 v=0.2867
+ts=8:24:076 idx=35496 src=tick phase=0.0742 x=0.0742 v=0.2867
+ts=8:24:175 idx=35497 src=sewmac phase=0.0808
+ts=8:24:175 idx=35498 src=scurve x=0.0742 v=0.2867
+ts=8:24:175 idx=35500 src=stepgen cmd=0.0876 fb=0.0810 v_fb_mot=0.6083 v_fb_ms=0.4573 phase_ms=0.0808
+ts=8:24:175 idx=35501 src=cascade xr=0.0659 theta_l=0.0791 e_p=-0.0132 v_cmd=0.4868 v_meas=0.4573 u_fb=-0.1818 phase_ms=0.0808
+ts=8:24:175 idx=35502 src=cascade e_v=0.0295 u_raw=-0.1818 u_sat=-0.1818 cap=0.5000 deadband=no sat=no
+ts=8:24:175 idx=35503 src=sewmac x=0.0808 v=0.4573
+ts=8:24:175 idx=35504 src=tick phase=0.0808 x=0.0808 v=0.4573
+ts=8:24:274 idx=35505 src=sewmac phase=0.0875
+ts=8:24:274 idx=35506 src=scurve x=0.0808 v=0.4573
+ts=8:24:274 idx=35508 src=stepgen cmd=0.0943 fb=0.0876 v_fb_mot=0.6537 v_fb_ms=0.4915 phase_ms=0.0875
+ts=8:24:274 idx=35509 src=cascade xr=0.0709 theta_l=0.0855 e_p=-0.0146 v_cmd=0.4853 v_meas=0.4915 u_fb=-0.3255 phase_ms=0.0875
+ts=8:24:274 idx=35510 src=cascade e_v=-0.0062 u_raw=-0.3255 u_sat=-0.3255 cap=0.5000 deadband=no sat=no
+ts=8:24:274 idx=35511 src=sewmac x=0.0875 v=0.4915
+ts=8:24:274 idx=35512 src=tick phase=0.0875 x=0.0875 v=0.4915
+ts=8:24:373 idx=35513 src=sewmac phase=0.0942
+ts=8:24:373 idx=35514 src=scurve x=0.0875 v=0.4915
+ts=8:24:373 idx=35516 src=stepgen cmd=0.1009 fb=0.0943 v_fb_mot=0.6627 v_fb_ms=0.4983 phase_ms=0.0942
+ts=8:24:373 idx=35517 src=cascade xr=0.0759 theta_l=0.0921 e_p=-0.0162 v_cmd=0.4837 v_meas=0.4983 u_fb=-0.3623 phase_ms=0.0942
+ts=8:24:373 idx=35518 src=cascade e_v=-0.0146 u_raw=-0.3623 u_sat=-0.3623 cap=0.5000 deadband=no sat=no
+ts=8:24:373 idx=35519 src=sewmac x=0.0942 v=0.4983
+ts=8:24:373 idx=35520 src=tick phase=0.0942 x=0.0942 v=0.4983
+ts=8:24:473 idx=35521 src=sewmac phase=0.1008
+ts=8:24:473 idx=35522 src=scurve x=0.0942 v=0.4983
+ts=8:24:473 idx=35524 src=stepgen cmd=0.1076 fb=0.1009 v_fb_mot=0.6645 v_fb_ms=0.4997 phase_ms=0.1008
+ts=8:24:473 idx=35525 src=cascade xr=0.0809 theta_l=0.0989 e_p=-0.0180 v_cmd=0.4819 v_meas=0.4997 u_fb=-0.3784 phase_ms=0.1008
+ts=8:24:473 idx=35526 src=cascade e_v=-0.0178 u_raw=-0.3784 u_sat=-0.3784 cap=0.5000 deadband=no sat=no
+ts=8:24:473 idx=35527 src=sewmac x=0.1008 v=0.4997
+ts=8:24:473 idx=35528 src=tick phase=0.1008 x=0.1008 v=0.4997
+ts=8:24:573 idx=35529 src=sewmac phase=0.1075
+ts=8:24:573 idx=35530 src=scurve x=0.1008 v=0.4997
+ts=8:24:573 idx=35532 src=stepgen cmd=0.1142 fb=0.1076 v_fb_mot=0.6649 v_fb_ms=0.4999 phase_ms=0.1075
+ts=8:24:573 idx=35533 src=cascade xr=0.0859 theta_l=0.1057 e_p=-0.0198 v_cmd=0.4801 v_meas=0.4999 u_fb=-0.3908 phase_ms=0.1075
+ts=8:24:573 idx=35534 src=cascade e_v=-0.0199 u_raw=-0.3908 u_sat=-0.3908 cap=0.5000 deadband=no sat=no
+ts=8:24:573 idx=35535 src=sewmac x=0.1075 v=0.4999
+ts=8:24:573 idx=35536 src=tick phase=0.1075 x=0.1075 v=0.4999
+ts=8:24:672 idx=35537 src=sewmac phase=0.1142
+ts=8:24:672 idx=35538 src=scurve x=0.1075 v=0.4999
+ts=8:24:672 idx=35540 src=stepgen cmd=0.1209 fb=0.1142 v_fb_mot=0.6650 v_fb_ms=0.5000 phase_ms=0.1142
+ts=8:24:672 idx=35541 src=cascade xr=0.0909 theta_l=0.1125 e_p=-0.0216 v_cmd=0.4782 v_meas=0.5000 u_fb=-0.4030 phase_ms=0.1142
+ts=8:24:672 idx=35542 src=cascade e_v=-0.0218 u_raw=-0.4030 u_sat=-0.4030 cap=0.5000 deadband=no sat=no
+ts=8:24:672 idx=35543 src=sewmac x=0.1142 v=0.5000
+ts=8:24:672 idx=35544 src=tick phase=0.1142 x=0.1142 v=0.5000
+ts=8:24:773 idx=35545 src=sewmac phase=0.1208
+ts=8:24:773 idx=35546 src=scurve x=0.1142 v=0.5000
+ts=8:24:773 idx=35548 src=stepgen cmd=0.1275 fb=0.1209 phase_ms=0.1208
+ts=8:24:773 idx=35549 src=cascade xr=0.0959 theta_l=0.1194 e_p=-0.0235 v_cmd=0.4762 u_fb=-0.4155 phase_ms=0.1208
+ts=8:24:773 idx=35550 src=cascade e_v=-0.0238 u_raw=-0.4155 u_sat=-0.4155 cap=0.5000 deadband=no sat=no
+ts=8:24:773 idx=35551 src=sewmac x=0.1208
+ts=8:24:773 idx=35552 src=tick phase=0.1208 x=0.1208
+ts=8:24:872 idx=35553 src=sewmac phase=0.1275
+ts=8:24:872 idx=35554 src=scurve x=0.1208
+ts=8:24:872 idx=35556 src=stepgen cmd=0.1342 fb=0.1275 phase_ms=0.1275
+ts=8:24:872 idx=35557 src=cascade xr=0.1009 theta_l=0.1263 e_p=-0.0254 v_cmd=0.4743 u_fb=-0.4284 phase_ms=0.1275
+ts=8:24:872 idx=35558 src=cascade e_v=-0.0257 u_raw=-0.4284 u_sat=-0.4284 cap=0.5000 deadband=no sat=no
+ts=8:24:872 idx=35559 src=sewmac x=0.1275
+ts=8:24:872 idx=35560 src=tick phase=0.1275 x=0.1275
+ts=8:24:971 idx=35561 src=sewmac phase=0.1342
+ts=8:24:971 idx=35562 src=scurve x=0.1275
+ts=8:24:971 idx=35564 src=stepgen cmd=0.1408 fb=0.1342 phase_ms=0.1342
+ts=8:24:971 idx=35565 src=cascade xr=0.1059 theta_l=0.1332 e_p=-0.0273 v_cmd=0.4724 u_fb=-0.4417 phase_ms=0.1342
+ts=8:24:971 idx=35566 src=cascade e_v=-0.0276 u_raw=-0.4417 u_sat=-0.4417 cap=0.5000 deadband=no sat=no
+ts=8:24:971 idx=35567 src=sewmac x=0.1342
+ts=8:24:971 idx=35568 src=tick phase=0.1342 x=0.1342
+ts=8:25:071 idx=35569 src=sewmac phase=0.1408
+ts=8:25:071 idx=35570 src=scurve x=0.1342
+ts=8:25:071 idx=35572 src=stepgen cmd=0.1475 fb=0.1408 phase_ms=0.1408
+ts=8:25:071 idx=35573 src=cascade xr=0.1109 theta_l=0.1401 e_p=-0.0292 v_cmd=0.4704 u_fb=-0.4553 phase_ms=0.1408
+ts=8:25:071 idx=35574 src=cascade e_v=-0.0296 u_raw=-0.4553 u_sat=-0.4553 cap=0.5000 deadband=no sat=no
+ts=8:25:071 idx=35575 src=sewmac x=0.1408
+ts=8:25:071 idx=35576 src=tick phase=0.1408 x=0.1408
+ts=8:25:171 idx=35577 src=sewmac phase=0.1475
+ts=8:25:171 idx=35578 src=scurve x=0.1408
+ts=8:25:171 idx=35580 src=stepgen cmd=0.1541 fb=0.1475 phase_ms=0.1475
+ts=8:25:171 idx=35581 src=cascade xr=0.1159 theta_l=0.1469 e_p=-0.0310 v_cmd=0.4685 u_fb=-0.4692 phase_ms=0.1475
+ts=8:25:171 idx=35582 src=cascade e_v=-0.0315 u_raw=-0.4692 u_sat=-0.4692 cap=0.5000 deadband=no sat=no
+ts=8:25:171 idx=35583 src=sewmac x=0.1475
+ts=8:25:171 idx=35584 src=tick phase=0.1475 x=0.1475
+ts=8:25:270 idx=35585 src=sewmac phase=0.1542
+ts=8:25:270 idx=35586 src=scurve x=0.1475
+ts=8:25:270 idx=35588 src=stepgen cmd=0.1608 fb=0.1541 phase_ms=0.1542
+ts=8:25:270 idx=35589 src=cascade xr=0.1209 theta_l=0.1537 e_p=-0.0328 v_cmd=0.4666 u_fb=-0.4835 phase_ms=0.1542
+ts=8:25:270 idx=35590 src=cascade e_v=-0.0334 u_raw=-0.4835 u_sat=-0.4835 cap=0.5000 deadband=no sat=no
+ts=8:25:270 idx=35591 src=sewmac x=0.1542
+ts=8:25:270 idx=35592 src=tick phase=0.1542 x=0.1542
+ts=8:25:369 idx=35593 src=sewmac phase=0.1608
+ts=8:25:369 idx=35594 src=scurve x=0.1542
+ts=8:25:369 idx=35596 src=stepgen cmd=0.1674 fb=0.1608 phase_ms=0.1608
+ts=8:25:369 idx=35597 src=cascade xr=0.1259 theta_l=0.1605 e_p=-0.0346 v_cmd=0.4648 u_fb=-0.4980 phase_ms=0.1608
+ts=8:25:369 idx=35598 src=cascade e_v=-0.0352 u_raw=-0.4980 u_sat=-0.4980 cap=0.5000 deadband=no sat=no
+ts=8:25:369 idx=35599 src=sewmac x=0.1608
+ts=8:25:369 idx=35600 src=tick phase=0.1608 x=0.1608
+ts=8:25:469 idx=35601 src=sewmac phase=0.1675
+ts=8:25:469 idx=35602 src=scurve x=0.1608
+ts=8:25:469 idx=35604 src=stepgen cmd=0.1741 fb=0.1674 phase_ms=0.1675
+ts=8:25:469 idx=35605 src=cascade xr=0.1309 theta_l=0.1673 e_p=-0.0364 v_cmd=0.4629 u_fb=-0.5128 phase_ms=0.1675
+ts=8:25:469 idx=35606 src=cascade e_v=-0.0371 u_raw=-0.5128 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:25:469 idx=35607 src=sewmac x=0.1675
+ts=8:25:469 idx=35608 src=tick phase=0.1675 x=0.1675
+ts=8:25:568 idx=35609 src=sewmac phase=0.1742
+ts=8:25:568 idx=35610 src=scurve x=0.1675
+ts=8:25:568 idx=35612 src=stepgen cmd=0.1807 fb=0.1741 phase_ms=0.1742
+ts=8:25:568 idx=35613 src=cascade xr=0.1359 theta_l=0.1740 e_p=-0.0381 v_cmd=0.4611 u_fb=-0.5151 phase_ms=0.1742
+ts=8:25:568 idx=35614 src=cascade e_v=-0.0389 u_raw=-0.5151 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:25:568 idx=35615 src=sewmac x=0.1742
+ts=8:25:568 idx=35616 src=tick phase=0.1742 x=0.1742
+ts=8:25:668 idx=35617 src=sewmac phase=0.1808
+ts=8:25:668 idx=35618 src=scurve x=0.1742
+ts=8:25:668 idx=35620 src=stepgen cmd=0.1874 fb=0.1807 phase_ms=0.1808
+ts=8:25:668 idx=35621 src=cascade xr=0.1409 theta_l=0.1808 e_p=-0.0399 v_cmd=0.4593 u_fb=-0.5154 phase_ms=0.1808
+ts=8:25:668 idx=35622 src=cascade e_v=-0.0407 u_raw=-0.5154 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:25:668 idx=35623 src=sewmac x=0.1808
+ts=8:25:668 idx=35624 src=tick phase=0.1808 x=0.1808
+ts=8:25:768 idx=35625 src=sewmac phase=0.1875
+ts=8:25:768 idx=35626 src=scurve x=0.1808
+ts=8:25:768 idx=35628 src=stepgen cmd=0.1940 fb=0.1874 phase_ms=0.1875
+ts=8:25:768 idx=35629 src=cascade xr=0.1459 theta_l=0.1875 e_p=-0.0416 v_cmd=0.4575 u_fb=-0.5157 phase_ms=0.1875
+ts=8:25:768 idx=35630 src=cascade e_v=-0.0425 u_raw=-0.5157 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:25:768 idx=35631 src=sewmac x=0.1875
+ts=8:25:768 idx=35632 src=tick phase=0.1875 x=0.1875
+ts=8:25:867 idx=35633 src=sewmac phase=0.1942
+ts=8:25:867 idx=35634 src=scurve x=0.1875
+ts=8:25:867 idx=35636 src=stepgen cmd=0.2007 fb=0.1940 phase_ms=0.1942
+ts=8:25:867 idx=35637 src=cascade xr=0.1509 theta_l=0.1942 e_p=-0.0433 v_cmd=0.4557 u_fb=-0.5160 phase_ms=0.1942
+ts=8:25:867 idx=35638 src=cascade e_v=-0.0443 u_raw=-0.5160 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:25:867 idx=35639 src=sewmac x=0.1942
+ts=8:25:867 idx=35640 src=tick phase=0.1942 x=0.1942
+ts=8:25:967 idx=35641 src=sewmac phase=0.2008
+ts=8:25:967 idx=35642 src=scurve x=0.1942
+ts=8:25:967 idx=35644 src=stepgen cmd=0.2073 fb=0.2007 phase_ms=0.2008
+ts=8:25:967 idx=35645 src=cascade xr=0.1559 theta_l=0.2009 e_p=-0.0450 v_cmd=0.4539 u_fb=-0.5163 phase_ms=0.2008
+ts=8:25:967 idx=35646 src=cascade e_v=-0.0461 u_raw=-0.5163 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:25:967 idx=35647 src=sewmac x=0.2008
+ts=8:25:967 idx=35648 src=tick phase=0.2008 x=0.2008
+ts=8:26:066 idx=35649 src=sewmac phase=0.2075
+ts=8:26:066 idx=35650 src=scurve x=0.2008
+ts=8:26:066 idx=35652 src=stepgen cmd=0.2140 fb=0.2073 phase_ms=0.2075
+ts=8:26:066 idx=35653 src=cascade xr=0.1609 theta_l=0.2076 e_p=-0.0467 v_cmd=0.4521 u_fb=-0.5167 phase_ms=0.2075
+ts=8:26:066 idx=35654 src=cascade e_v=-0.0479 u_raw=-0.5167 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:066 idx=35655 src=sewmac x=0.2075
+ts=8:26:066 idx=35656 src=tick phase=0.2075 x=0.2075
+ts=8:26:166 idx=35657 src=sewmac phase=0.2142
+ts=8:26:166 idx=35658 src=scurve x=0.2075
+ts=8:26:166 idx=35660 src=stepgen cmd=0.2206 fb=0.2140 phase_ms=0.2142
+ts=8:26:166 idx=35661 src=cascade xr=0.1659 theta_l=0.2142 e_p=-0.0483 v_cmd=0.4504 u_fb=-0.5170 phase_ms=0.2142
+ts=8:26:166 idx=35662 src=cascade e_v=-0.0496 u_raw=-0.5170 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:166 idx=35663 src=sewmac x=0.2142
+ts=8:26:166 idx=35664 src=tick phase=0.2142 x=0.2142
+ts=8:26:265 idx=35665 src=sewmac phase=0.2208
+ts=8:26:265 idx=35666 src=scurve x=0.2142
+ts=8:26:265 idx=35668 src=stepgen cmd=0.2273 fb=0.2206 phase_ms=0.2208
+ts=8:26:265 idx=35669 src=cascade xr=0.1709 theta_l=0.2209 e_p=-0.0500 v_cmd=0.4486 u_fb=-0.5174 phase_ms=0.2208
+ts=8:26:265 idx=35670 src=cascade e_v=-0.0514 u_raw=-0.5174 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:265 idx=35671 src=sewmac x=0.2208
+ts=8:26:265 idx=35672 src=tick phase=0.2208 x=0.2208
+ts=8:26:364 idx=35673 src=sewmac phase=0.2275
+ts=8:26:364 idx=35674 src=scurve x=0.2208
+ts=8:26:364 idx=35676 src=stepgen cmd=0.2339 fb=0.2273 phase_ms=0.2275
+ts=8:26:364 idx=35677 src=cascade xr=0.1759 theta_l=0.2276 e_p=-0.0517 v_cmd=0.4468 u_fb=-0.5177 phase_ms=0.2275
+ts=8:26:364 idx=35678 src=cascade e_v=-0.0532 u_raw=-0.5177 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:364 idx=35679 src=sewmac x=0.2275
+ts=8:26:364 idx=35680 src=tick phase=0.2275 x=0.2275
+ts=8:26:464 idx=35681 src=sewmac phase=0.2342
+ts=8:26:464 idx=35682 src=scurve x=0.2275
+ts=8:26:464 idx=35684 src=stepgen cmd=0.2406 fb=0.2339 phase_ms=0.2342
+ts=8:26:464 idx=35685 src=cascade xr=0.1809 theta_l=0.2342 e_p=-0.0533 v_cmd=0.4451 u_fb=-0.5181 phase_ms=0.2342
+ts=8:26:464 idx=35686 src=cascade e_v=-0.0549 u_raw=-0.5181 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:464 idx=35687 src=sewmac x=0.2342
+ts=8:26:464 idx=35688 src=tick phase=0.2342 x=0.2342
+ts=8:26:563 idx=35689 src=sewmac phase=0.2408
+ts=8:26:563 idx=35690 src=scurve x=0.2342
+ts=8:26:563 idx=35692 src=stepgen cmd=0.2472 fb=0.2406 phase_ms=0.2408
+ts=8:26:563 idx=35693 src=cascade xr=0.1859 theta_l=0.2409 e_p=-0.0550 v_cmd=0.4433 u_fb=-0.5184 phase_ms=0.2408
+ts=8:26:563 idx=35694 src=cascade e_v=-0.0567 u_raw=-0.5184 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:563 idx=35695 src=sewmac x=0.2408
+ts=8:26:563 idx=35696 src=tick phase=0.2408 x=0.2408
+ts=8:26:663 idx=35697 src=sewmac phase=0.2475
+ts=8:26:663 idx=35698 src=scurve x=0.2408
+ts=8:26:663 idx=35700 src=stepgen cmd=0.2539 fb=0.2472 phase_ms=0.2475
+ts=8:26:663 idx=35701 src=cascade xr=0.1909 theta_l=0.2475 e_p=-0.0566 v_cmd=0.4415 u_fb=-0.5188 phase_ms=0.2475
+ts=8:26:663 idx=35702 src=cascade e_v=-0.0585 u_raw=-0.5188 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:663 idx=35703 src=sewmac x=0.2475
+ts=8:26:663 idx=35704 src=tick phase=0.2475 x=0.2475
+ts=8:26:762 idx=35705 src=sewmac phase=0.2542
+ts=8:26:762 idx=35706 src=scurve x=0.2475
+ts=8:26:762 idx=35708 src=stepgen cmd=0.2605 fb=0.2539 phase_ms=0.2542
+ts=8:26:762 idx=35709 src=cascade xr=0.1959 theta_l=0.2542 e_p=-0.0583 v_cmd=0.4397 u_fb=-0.5192 phase_ms=0.2542
+ts=8:26:762 idx=35710 src=cascade e_v=-0.0603 u_raw=-0.5192 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:762 idx=35711 src=sewmac x=0.2542
+ts=8:26:762 idx=35712 src=tick phase=0.2542 x=0.2542
+ts=8:26:861 idx=35713 src=sewmac phase=0.2608
+ts=8:26:861 idx=35714 src=scurve x=0.2542
+ts=8:26:861 idx=35716 src=stepgen cmd=0.2672 fb=0.2605 phase_ms=0.2608
+ts=8:26:861 idx=35717 src=cascade xr=0.2009 theta_l=0.2609 e_p=-0.0600 v_cmd=0.4380 u_fb=-0.5195 phase_ms=0.2608
+ts=8:26:861 idx=35718 src=cascade e_v=-0.0620 u_raw=-0.5195 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:861 idx=35719 src=sewmac x=0.2608
+ts=8:26:861 idx=35720 src=tick phase=0.2608 x=0.2608
+ts=8:26:961 idx=35721 src=sewmac phase=0.2675
+ts=8:26:961 idx=35722 src=scurve x=0.2608
+ts=8:26:961 idx=35724 src=stepgen cmd=0.2738 fb=0.2672 phase_ms=0.2675
+ts=8:26:961 idx=35725 src=cascade xr=0.2059 theta_l=0.2675 e_p=-0.0616 v_cmd=0.4362 u_fb=-0.5199 phase_ms=0.2675
+ts=8:26:961 idx=35726 src=cascade e_v=-0.0638 u_raw=-0.5199 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:26:961 idx=35727 src=sewmac x=0.2675
+ts=8:26:961 idx=35728 src=tick phase=0.2675 x=0.2675
+ts=8:27:060 idx=35729 src=sewmac phase=0.2742
+ts=8:27:060 idx=35730 src=scurve x=0.2675
+ts=8:27:060 idx=35732 src=stepgen cmd=0.2805 fb=0.2738 phase_ms=0.2742
+ts=8:27:060 idx=35733 src=cascade xr=0.2109 theta_l=0.2742 e_p=-0.0633 v_cmd=0.4344 u_fb=-0.5203 phase_ms=0.2742
+ts=8:27:060 idx=35734 src=cascade e_v=-0.0656 u_raw=-0.5203 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:060 idx=35735 src=sewmac x=0.2742
+ts=8:27:060 idx=35736 src=tick phase=0.2742 x=0.2742
+ts=8:27:160 idx=35737 src=sewmac phase=0.2808
+ts=8:27:160 idx=35738 src=scurve x=0.2742
+ts=8:27:160 idx=35740 src=stepgen cmd=0.2871 fb=0.2805 phase_ms=0.2808
+ts=8:27:160 idx=35741 src=cascade xr=0.2159 theta_l=0.2808 e_p=-0.0649 v_cmd=0.4326 u_fb=-0.5206 phase_ms=0.2808
+ts=8:27:160 idx=35742 src=cascade e_v=-0.0674 u_raw=-0.5206 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:160 idx=35743 src=sewmac x=0.2808
+ts=8:27:160 idx=35744 src=tick phase=0.2808 x=0.2808
+ts=8:27:259 idx=35745 src=sewmac phase=0.2875
+ts=8:27:259 idx=35746 src=scurve x=0.2808
+ts=8:27:259 idx=35748 src=stepgen cmd=0.2938 fb=0.2871 phase_ms=0.2875
+ts=8:27:259 idx=35749 src=cascade xr=0.2209 theta_l=0.2875 e_p=-0.0666 v_cmd=0.4308 u_fb=-0.5210 phase_ms=0.2875
+ts=8:27:259 idx=35750 src=cascade e_v=-0.0692 u_raw=-0.5210 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:259 idx=35751 src=sewmac x=0.2875
+ts=8:27:259 idx=35752 src=tick phase=0.2875 x=0.2875
+ts=8:27:361 idx=35753 src=sewmac phase=0.2942
+ts=8:27:361 idx=35754 src=scurve x=0.2875
+ts=8:27:361 idx=35756 src=stepgen cmd=0.3004 fb=0.2938 phase_ms=0.2942
+ts=8:27:361 idx=35757 src=cascade xr=0.2259 theta_l=0.2942 e_p=-0.0683 v_cmd=0.4290 u_fb=-0.5214 phase_ms=0.2942
+ts=8:27:361 idx=35758 src=cascade e_v=-0.0710 u_raw=-0.5214 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:361 idx=35759 src=sewmac x=0.2942
+ts=8:27:361 idx=35760 src=tick phase=0.2942 x=0.2942
+ts=8:27:459 idx=35761 src=sewmac phase=0.3008
+ts=8:27:459 idx=35762 src=scurve x=0.2942
+ts=8:27:459 idx=35764 src=stepgen cmd=0.3071 fb=0.3004 phase_ms=0.3008
+ts=8:27:459 idx=35765 src=cascade xr=0.2309 theta_l=0.3008 e_p=-0.0699 v_cmd=0.4272 u_fb=-0.5218 phase_ms=0.3008
+ts=8:27:459 idx=35766 src=cascade e_v=-0.0728 u_raw=-0.5218 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:459 idx=35767 src=sewmac x=0.3008
+ts=8:27:459 idx=35768 src=tick phase=0.3008 x=0.3008
+ts=8:27:558 idx=35769 src=sewmac phase=0.3075
+ts=8:27:558 idx=35770 src=scurve x=0.3008
+ts=8:27:558 idx=35772 src=stepgen cmd=0.3137 fb=0.3071 phase_ms=0.3075
+ts=8:27:558 idx=35773 src=cascade xr=0.2359 theta_l=0.3075 e_p=-0.0716 v_cmd=0.4254 u_fb=-0.5222 phase_ms=0.3075
+ts=8:27:558 idx=35774 src=cascade e_v=-0.0746 u_raw=-0.5222 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:558 idx=35775 src=sewmac x=0.3075
+ts=8:27:558 idx=35776 src=tick phase=0.3075 x=0.3075
+ts=8:27:657 idx=35777 src=sewmac phase=0.3142
+ts=8:27:657 idx=35778 src=scurve x=0.3075
+ts=8:27:657 idx=35780 src=stepgen cmd=0.3204 fb=0.3137 phase_ms=0.3142
+ts=8:27:657 idx=35781 src=cascade xr=0.2409 theta_l=0.3142 e_p=-0.0733 v_cmd=0.4236 u_fb=-0.5225 phase_ms=0.3142
+ts=8:27:657 idx=35782 src=cascade e_v=-0.0764 u_raw=-0.5225 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:657 idx=35783 src=sewmac x=0.3142
+ts=8:27:657 idx=35784 src=tick phase=0.3142 x=0.3142
+ts=8:27:757 idx=35785 src=sewmac phase=0.3208
+ts=8:27:757 idx=35786 src=scurve x=0.3142
+ts=8:27:757 idx=35788 src=stepgen cmd=0.3270 fb=0.3204 phase_ms=0.3208
+ts=8:27:757 idx=35789 src=cascade xr=0.2459 theta_l=0.3208 e_p=-0.0749 v_cmd=0.4218 u_fb=-0.5229 phase_ms=0.3208
+ts=8:27:757 idx=35790 src=cascade e_v=-0.0782 u_raw=-0.5229 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:757 idx=35791 src=sewmac x=0.3208
+ts=8:27:757 idx=35792 src=tick phase=0.3208 x=0.3208
+ts=8:27:856 idx=35793 src=sewmac phase=0.3275
+ts=8:27:856 idx=35794 src=scurve x=0.3208
+ts=8:27:856 idx=35796 src=stepgen cmd=0.3337 fb=0.3270 phase_ms=0.3275
+ts=8:27:856 idx=35797 src=cascade xr=0.2509 theta_l=0.3275 e_p=-0.0766 v_cmd=0.4200 u_fb=-0.5233 phase_ms=0.3275
+ts=8:27:856 idx=35798 src=cascade e_v=-0.0800 u_raw=-0.5233 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:856 idx=35799 src=sewmac x=0.3275
+ts=8:27:856 idx=35800 src=tick phase=0.3275 x=0.3275
+ts=8:27:956 idx=35801 src=sewmac phase=0.3342
+ts=8:27:956 idx=35802 src=scurve x=0.3275
+ts=8:27:956 idx=35804 src=stepgen cmd=0.3403 fb=0.3337 phase_ms=0.3342
+ts=8:27:956 idx=35805 src=cascade xr=0.2559 theta_l=0.3342 e_p=-0.0783 v_cmd=0.4181 u_fb=-0.5237 phase_ms=0.3342
+ts=8:27:956 idx=35806 src=cascade e_v=-0.0819 u_raw=-0.5237 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:27:956 idx=35807 src=sewmac x=0.3342
+ts=8:27:956 idx=35808 src=tick phase=0.3342 x=0.3342
+ts=8:28:055 idx=35809 src=sewmac phase=0.3408
+ts=8:28:055 idx=35810 src=scurve x=0.3342
+ts=8:28:055 idx=35812 src=stepgen cmd=0.3470 fb=0.3403 phase_ms=0.3408
+ts=8:28:055 idx=35813 src=cascade xr=0.2609 theta_l=0.3408 e_p=-0.0799 v_cmd=0.4163 u_fb=-0.5240 phase_ms=0.3408
+ts=8:28:055 idx=35814 src=cascade e_v=-0.0837 u_raw=-0.5240 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:055 idx=35815 src=sewmac x=0.3408
+ts=8:28:055 idx=35816 src=tick phase=0.3408 x=0.3408
+ts=8:28:155 idx=35817 src=sewmac phase=0.3475
+ts=8:28:155 idx=35818 src=scurve x=0.3408
+ts=8:28:155 idx=35820 src=stepgen cmd=0.3536 fb=0.3470 phase_ms=0.3475
+ts=8:28:155 idx=35821 src=cascade xr=0.2659 theta_l=0.3475 e_p=-0.0816 v_cmd=0.4145 u_fb=-0.5244 phase_ms=0.3475
+ts=8:28:155 idx=35822 src=cascade e_v=-0.0855 u_raw=-0.5244 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:155 idx=35823 src=sewmac x=0.3475
+ts=8:28:155 idx=35824 src=tick phase=0.3475 x=0.3475
+ts=8:28:254 idx=35825 src=sewmac phase=0.3542
+ts=8:28:254 idx=35826 src=scurve x=0.3475
+ts=8:28:254 idx=35828 src=stepgen cmd=0.3603 fb=0.3536 phase_ms=0.3542
+ts=8:28:254 idx=35829 src=cascade xr=0.2709 theta_l=0.3542 e_p=-0.0833 v_cmd=0.4126 u_fb=-0.5248 phase_ms=0.3542
+ts=8:28:254 idx=35830 src=cascade e_v=-0.0874 u_raw=-0.5248 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:254 idx=35831 src=sewmac x=0.3542
+ts=8:28:254 idx=35832 src=tick phase=0.3542 x=0.3542
+ts=8:28:352 idx=35833 src=sewmac phase=0.3608
+ts=8:28:352 idx=35834 src=scurve x=0.3542
+ts=8:28:352 idx=35836 src=stepgen cmd=0.3669 fb=0.3603 phase_ms=0.3608
+ts=8:28:352 idx=35837 src=cascade xr=0.2759 theta_l=0.3608 e_p=-0.0849 v_cmd=0.4108 u_fb=-0.5252 phase_ms=0.3608
+ts=8:28:352 idx=35838 src=cascade e_v=-0.0892 u_raw=-0.5252 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:352 idx=35839 src=sewmac x=0.3608
+ts=8:28:352 idx=35840 src=tick phase=0.3608 x=0.3608
+ts=8:28:452 idx=35841 src=sewmac phase=0.3675
+ts=8:28:452 idx=35842 src=scurve x=0.3608
+ts=8:28:452 idx=35844 src=stepgen cmd=0.3736 fb=0.3669 phase_ms=0.3675
+ts=8:28:452 idx=35845 src=cascade xr=0.2809 theta_l=0.3675 e_p=-0.0866 v_cmd=0.4090 u_fb=-0.5256 phase_ms=0.3675
+ts=8:28:452 idx=35846 src=cascade e_v=-0.0910 u_raw=-0.5256 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:452 idx=35847 src=sewmac x=0.3675
+ts=8:28:452 idx=35848 src=tick phase=0.3675 x=0.3675
+ts=8:28:552 idx=35849 src=sewmac phase=0.3742
+ts=8:28:552 idx=35850 src=scurve x=0.3675
+ts=8:28:552 idx=35852 src=stepgen cmd=0.3802 fb=0.3736 phase_ms=0.3742
+ts=8:28:552 idx=35853 src=cascade xr=0.2859 theta_l=0.3742 e_p=-0.0883 v_cmd=0.4071 u_fb=-0.5259 phase_ms=0.3742
+ts=8:28:552 idx=35854 src=cascade e_v=-0.0929 u_raw=-0.5259 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:552 idx=35855 src=sewmac x=0.3742
+ts=8:28:552 idx=35856 src=tick phase=0.3742 x=0.3742
+ts=8:28:652 idx=35857 src=sewmac phase=0.3808
+ts=8:28:652 idx=35858 src=scurve x=0.3742
+ts=8:28:652 idx=35860 src=stepgen cmd=0.3869 fb=0.3802 phase_ms=0.3808
+ts=8:28:652 idx=35861 src=cascade xr=0.2909 theta_l=0.3808 e_p=-0.0899 v_cmd=0.4053 u_fb=-0.5263 phase_ms=0.3808
+ts=8:28:652 idx=35862 src=cascade e_v=-0.0947 u_raw=-0.5263 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:652 idx=35863 src=sewmac x=0.3808
+ts=8:28:652 idx=35864 src=tick phase=0.3808 x=0.3808
+ts=8:28:752 idx=35865 src=sewmac phase=0.3875
+ts=8:28:752 idx=35866 src=scurve x=0.3808
+ts=8:28:752 idx=35868 src=stepgen cmd=0.3935 fb=0.3869 phase_ms=0.3875
+ts=8:28:752 idx=35869 src=cascade xr=0.2959 theta_l=0.3875 e_p=-0.0916 v_cmd=0.4034 u_fb=-0.5267 phase_ms=0.3875
+ts=8:28:752 idx=35870 src=cascade e_v=-0.0966 u_raw=-0.5267 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:752 idx=35871 src=sewmac x=0.3875
+ts=8:28:752 idx=35872 src=tick phase=0.3875 x=0.3875
+ts=8:28:852 idx=35873 src=sewmac phase=0.3942
+ts=8:28:852 idx=35874 src=scurve x=0.3875
+ts=8:28:852 idx=35876 src=stepgen cmd=0.4002 fb=0.3935 phase_ms=0.3942
+ts=8:28:852 idx=35877 src=cascade xr=0.3009 theta_l=0.3942 e_p=-0.0933 v_cmd=0.4016 u_fb=-0.5271 phase_ms=0.3942
+ts=8:28:852 idx=35878 src=cascade e_v=-0.0984 u_raw=-0.5271 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:852 idx=35879 src=sewmac x=0.3942
+ts=8:28:852 idx=35880 src=tick phase=0.3942 x=0.3942
+ts=8:28:951 idx=35881 src=sewmac phase=0.4008
+ts=8:28:951 idx=35882 src=scurve x=0.3942
+ts=8:28:951 idx=35884 src=stepgen cmd=0.4068 fb=0.4002 phase_ms=0.4008
+ts=8:28:951 idx=35885 src=cascade xr=0.3059 theta_l=0.4008 e_p=-0.0949 v_cmd=0.3997 u_fb=-0.5275 phase_ms=0.4008
+ts=8:28:951 idx=35886 src=cascade e_v=-0.1003 u_raw=-0.5275 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:28:951 idx=35887 src=sewmac x=0.4008
+ts=8:28:951 idx=35888 src=tick phase=0.4008 x=0.4008
+ts=8:29:051 idx=35889 src=sewmac phase=0.4075
+ts=8:29:051 idx=35890 src=scurve x=0.4008
+ts=8:29:051 idx=35892 src=stepgen cmd=0.4135 fb=0.4068 phase_ms=0.4075
+ts=8:29:051 idx=35893 src=cascade xr=0.3109 theta_l=0.4075 e_p=-0.0966 v_cmd=0.3979 u_fb=-0.5279 phase_ms=0.4075
+ts=8:29:051 idx=35894 src=cascade e_v=-0.1021 u_raw=-0.5279 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:051 idx=35895 src=sewmac x=0.4075
+ts=8:29:051 idx=35896 src=tick phase=0.4075 x=0.4075
+ts=8:29:151 idx=35897 src=sewmac phase=0.4142
+ts=8:29:151 idx=35898 src=scurve x=0.4075
+ts=8:29:151 idx=35900 src=stepgen cmd=0.4201 fb=0.4135 phase_ms=0.4142
+ts=8:29:151 idx=35901 src=cascade xr=0.3159 theta_l=0.4142 e_p=-0.0983 v_cmd=0.3960 u_fb=-0.5283 phase_ms=0.4142
+ts=8:29:151 idx=35902 src=cascade e_v=-0.1040 u_raw=-0.5283 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:151 idx=35903 src=sewmac x=0.4142
+ts=8:29:151 idx=35904 src=tick phase=0.4142 x=0.4142
+ts=8:29:250 idx=35905 src=sewmac phase=0.4208
+ts=8:29:250 idx=35906 src=scurve x=0.4142
+ts=8:29:250 idx=35908 src=stepgen cmd=0.4268 fb=0.4201 phase_ms=0.4208
+ts=8:29:250 idx=35909 src=cascade xr=0.3209 theta_l=0.4208 e_p=-0.0999 v_cmd=0.3941 u_fb=-0.5286 phase_ms=0.4208
+ts=8:29:250 idx=35910 src=cascade e_v=-0.1059 u_raw=-0.5286 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:250 idx=35911 src=sewmac x=0.4208
+ts=8:29:250 idx=35912 src=tick phase=0.4208 x=0.4208
+ts=8:29:349 idx=35913 src=sewmac phase=0.4275
+ts=8:29:349 idx=35914 src=scurve x=0.4208
+ts=8:29:349 idx=35916 src=stepgen cmd=0.4334 fb=0.4268 phase_ms=0.4275
+ts=8:29:349 idx=35917 src=cascade xr=0.3259 theta_l=0.4275 e_p=-0.1016 v_cmd=0.3923 u_fb=-0.5290 phase_ms=0.4275
+ts=8:29:349 idx=35918 src=cascade e_v=-0.1077 u_raw=-0.5290 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:349 idx=35919 src=sewmac x=0.4275
+ts=8:29:349 idx=35920 src=tick phase=0.4275 x=0.4275
+ts=8:29:448 idx=35921 src=sewmac phase=0.4342
+ts=8:29:448 idx=35922 src=scurve x=0.4275
+ts=8:29:448 idx=35924 src=stepgen cmd=0.4401 fb=0.4334 phase_ms=0.4342
+ts=8:29:448 idx=35925 src=cascade xr=0.3309 theta_l=0.4342 e_p=-0.1033 v_cmd=0.3904 u_fb=-0.5294 phase_ms=0.4342
+ts=8:29:448 idx=35926 src=cascade e_v=-0.1096 u_raw=-0.5294 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:448 idx=35927 src=sewmac x=0.4342
+ts=8:29:448 idx=35928 src=tick phase=0.4342 x=0.4342
+ts=8:29:548 idx=35929 src=sewmac phase=0.4408
+ts=8:29:548 idx=35930 src=scurve x=0.4342
+ts=8:29:548 idx=35932 src=stepgen cmd=0.4467 fb=0.4401 phase_ms=0.4408
+ts=8:29:548 idx=35933 src=cascade xr=0.3359 theta_l=0.4408 e_p=-0.1049 v_cmd=0.3885 u_fb=-0.5298 phase_ms=0.4408
+ts=8:29:548 idx=35934 src=cascade e_v=-0.1115 u_raw=-0.5298 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:548 idx=35935 src=sewmac x=0.4408
+ts=8:29:548 idx=35936 src=tick phase=0.4408 x=0.4408
+ts=8:29:648 idx=35937 src=sewmac phase=0.4475
+ts=8:29:648 idx=35938 src=scurve x=0.4408
+ts=8:29:648 idx=35940 src=stepgen cmd=0.4534 fb=0.4467 phase_ms=0.4475
+ts=8:29:648 idx=35941 src=cascade xr=0.3409 theta_l=0.4475 e_p=-0.1066 v_cmd=0.3866 u_fb=-0.5302 phase_ms=0.4475
+ts=8:29:648 idx=35942 src=cascade e_v=-0.1134 u_raw=-0.5302 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:648 idx=35943 src=sewmac x=0.4475
+ts=8:29:648 idx=35944 src=tick phase=0.4475 x=0.4475
+ts=8:29:746 idx=35945 src=sewmac phase=0.4542
+ts=8:29:746 idx=35946 src=scurve x=0.4475
+ts=8:29:746 idx=35948 src=stepgen cmd=0.4600 fb=0.4534 phase_ms=0.4542
+ts=8:29:746 idx=35949 src=cascade xr=0.3459 theta_l=0.4542 e_p=-0.1083 v_cmd=0.3847 u_fb=-0.5306 phase_ms=0.4542
+ts=8:29:746 idx=35950 src=cascade e_v=-0.1153 u_raw=-0.5306 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:746 idx=35951 src=sewmac x=0.4542
+ts=8:29:746 idx=35952 src=tick phase=0.4542 x=0.4542
+ts=8:29:845 idx=35953 src=sewmac phase=0.4608
+ts=8:29:845 idx=35954 src=scurve x=0.4542
+ts=8:29:845 idx=35956 src=stepgen cmd=0.4667 fb=0.4600 phase_ms=0.4608
+ts=8:29:845 idx=35957 src=cascade xr=0.3509 theta_l=0.4608 e_p=-0.1099 v_cmd=0.3829 u_fb=-0.5310 phase_ms=0.4608
+ts=8:29:845 idx=35958 src=cascade e_v=-0.1171 u_raw=-0.5310 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:845 idx=35959 src=sewmac x=0.4608
+ts=8:29:845 idx=35960 src=tick phase=0.4608 x=0.4608
+ts=8:29:945 idx=35961 src=sewmac phase=0.4675
+ts=8:29:945 idx=35962 src=scurve x=0.4608
+ts=8:29:945 idx=35964 src=stepgen cmd=0.4733 fb=0.4667 phase_ms=0.4675
+ts=8:29:945 idx=35965 src=cascade xr=0.3559 theta_l=0.4675 e_p=-0.1116 v_cmd=0.3810 u_fb=-0.5314 phase_ms=0.4675
+ts=8:29:945 idx=35966 src=cascade e_v=-0.1190 u_raw=-0.5314 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:29:945 idx=35967 src=sewmac x=0.4675
+ts=8:29:945 idx=35968 src=tick phase=0.4675 x=0.4675
+ts=8:30:045 idx=35969 src=sewmac phase=0.4742
+ts=8:30:045 idx=35970 src=scurve x=0.4675
+ts=8:30:045 idx=35972 src=stepgen cmd=0.4800 fb=0.4733 phase_ms=0.4742
+ts=8:30:045 idx=35973 src=cascade xr=0.3609 theta_l=0.4742 e_p=-0.1133 v_cmd=0.3791 u_fb=-0.5318 phase_ms=0.4742
+ts=8:30:045 idx=35974 src=cascade e_v=-0.1209 u_raw=-0.5318 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:045 idx=35975 src=sewmac x=0.4742
+ts=8:30:045 idx=35976 src=tick phase=0.4742 x=0.4742
+ts=8:30:145 idx=35977 src=sewmac phase=0.4808
+ts=8:30:145 idx=35978 src=scurve x=0.4742
+ts=8:30:145 idx=35980 src=stepgen cmd=0.4866 fb=0.4800 phase_ms=0.4808
+ts=8:30:145 idx=35981 src=cascade xr=0.3659 theta_l=0.4808 e_p=-0.1149 v_cmd=0.3772 u_fb=-0.5322 phase_ms=0.4808
+ts=8:30:145 idx=35982 src=cascade e_v=-0.1228 u_raw=-0.5322 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:145 idx=35983 src=sewmac x=0.4808
+ts=8:30:145 idx=35984 src=tick phase=0.4808 x=0.4808
+ts=8:30:245 idx=35985 src=sewmac phase=0.4875
+ts=8:30:245 idx=35986 src=scurve x=0.4808
+ts=8:30:245 idx=35988 src=stepgen cmd=0.4933 fb=0.4866 phase_ms=0.4875
+ts=8:30:245 idx=35989 src=cascade xr=0.3709 theta_l=0.4875 e_p=-0.1166 v_cmd=0.3753 u_fb=-0.5325 phase_ms=0.4875
+ts=8:30:245 idx=35990 src=cascade e_v=-0.1247 u_raw=-0.5325 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:245 idx=35991 src=sewmac x=0.4875
+ts=8:30:245 idx=35992 src=tick phase=0.4875 x=0.4875
+ts=8:30:344 idx=35993 src=sewmac phase=0.4942
+ts=8:30:344 idx=35994 src=scurve x=0.4875
+ts=8:30:344 idx=35996 src=stepgen cmd=0.4999 fb=0.4933 phase_ms=0.4942
+ts=8:30:344 idx=35997 src=cascade xr=0.3759 theta_l=0.4942 e_p=-0.1183 v_cmd=0.3734 u_fb=-0.5329 phase_ms=0.4942
+ts=8:30:344 idx=35998 src=cascade e_v=-0.1266 u_raw=-0.5329 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:344 idx=35999 src=sewmac x=0.4942
+ts=8:30:344 idx=36000 src=tick phase=0.4942 x=0.4942
+ts=8:30:444 idx=36001 src=sewmac phase=0.5008
+ts=8:30:444 idx=36002 src=scurve x=0.4942
+ts=8:30:444 idx=36004 src=stepgen cmd=0.5066 fb=0.4999 phase_ms=0.5008
+ts=8:30:444 idx=36005 src=cascade xr=0.3809 theta_l=0.5008 e_p=-0.1199 v_cmd=0.3715 u_fb=-0.5333 phase_ms=0.5008
+ts=8:30:444 idx=36006 src=cascade e_v=-0.1285 u_raw=-0.5333 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:444 idx=36007 src=sewmac x=0.5008
+ts=8:30:444 idx=36008 src=tick phase=0.5008 x=0.5008
+ts=8:30:543 idx=36009 src=sewmac phase=0.5075
+ts=8:30:543 idx=36010 src=scurve x=0.5008
+ts=8:30:543 idx=36012 src=stepgen cmd=0.5132 fb=0.5066 phase_ms=0.5075
+ts=8:30:543 idx=36013 src=cascade xr=0.3859 theta_l=0.5075 e_p=-0.1216 v_cmd=0.3696 u_fb=-0.5337 phase_ms=0.5075
+ts=8:30:543 idx=36014 src=cascade e_v=-0.1304 u_raw=-0.5337 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:543 idx=36015 src=sewmac x=0.5075
+ts=8:30:543 idx=36016 src=tick phase=0.5075 x=0.5075
+ts=8:30:643 idx=36017 src=sewmac phase=0.5142
+ts=8:30:643 idx=36018 src=scurve x=0.5075
+ts=8:30:643 idx=36020 src=stepgen cmd=0.5199 fb=0.5132 phase_ms=0.5142
+ts=8:30:643 idx=36021 src=cascade xr=0.3909 theta_l=0.5142 e_p=-0.1233 v_cmd=0.3676 u_fb=-0.5341 phase_ms=0.5142
+ts=8:30:643 idx=36022 src=cascade e_v=-0.1324 u_raw=-0.5341 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:643 idx=36023 src=sewmac x=0.5142
+ts=8:30:643 idx=36024 src=tick phase=0.5142 x=0.5142
+ts=8:30:742 idx=36025 src=sewmac phase=0.5208
+ts=8:30:742 idx=36026 src=scurve x=0.5142
+ts=8:30:742 idx=36028 src=stepgen cmd=0.5265 fb=0.5199 phase_ms=0.5208
+ts=8:30:742 idx=36029 src=cascade xr=0.3959 theta_l=0.5208 e_p=-0.1249 v_cmd=0.3657 u_fb=-0.5345 phase_ms=0.5208
+ts=8:30:742 idx=36030 src=cascade e_v=-0.1343 u_raw=-0.5345 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:742 idx=36031 src=sewmac x=0.5208
+ts=8:30:742 idx=36032 src=tick phase=0.5208 x=0.5208
+ts=8:30:841 idx=36033 src=sewmac phase=0.5275
+ts=8:30:841 idx=36034 src=scurve x=0.5208
+ts=8:30:841 idx=36036 src=stepgen cmd=0.5332 fb=0.5265 phase_ms=0.5275
+ts=8:30:841 idx=36037 src=cascade xr=0.4009 theta_l=0.5275 e_p=-0.1266 v_cmd=0.3638 u_fb=-0.5349 phase_ms=0.5275
+ts=8:30:841 idx=36038 src=cascade e_v=-0.1362 u_raw=-0.5349 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:841 idx=36039 src=sewmac x=0.5275
+ts=8:30:841 idx=36040 src=tick phase=0.5275 x=0.5275
+ts=8:30:941 idx=36041 src=sewmac phase=0.5342
+ts=8:30:941 idx=36042 src=scurve x=0.5275
+ts=8:30:941 idx=36044 src=stepgen cmd=0.5398 fb=0.5332 phase_ms=0.5342
+ts=8:30:941 idx=36045 src=cascade xr=0.4059 theta_l=0.5342 e_p=-0.1283 v_cmd=0.3619 u_fb=-0.5353 phase_ms=0.5342
+ts=8:30:941 idx=36046 src=cascade e_v=-0.1381 u_raw=-0.5353 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:30:941 idx=36047 src=sewmac x=0.5342
+ts=8:30:941 idx=36048 src=tick phase=0.5342 x=0.5342
+ts=8:31:040 idx=36049 src=sewmac phase=0.5408
+ts=8:31:040 idx=36050 src=scurve x=0.5342
+ts=8:31:040 idx=36052 src=stepgen cmd=0.5465 fb=0.5398 phase_ms=0.5408
+ts=8:31:040 idx=36053 src=cascade xr=0.4109 theta_l=0.5408 e_p=-0.1299 v_cmd=0.3600 u_fb=-0.5357 phase_ms=0.5408
+ts=8:31:040 idx=36054 src=cascade e_v=-0.1400 u_raw=-0.5357 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:040 idx=36055 src=sewmac x=0.5408
+ts=8:31:040 idx=36056 src=tick phase=0.5408 x=0.5408
+ts=8:31:140 idx=36057 src=sewmac phase=0.5475
+ts=8:31:140 idx=36058 src=scurve x=0.5408
+ts=8:31:140 idx=36060 src=stepgen cmd=0.5531 fb=0.5465 phase_ms=0.5475
+ts=8:31:140 idx=36061 src=cascade xr=0.4159 theta_l=0.5475 e_p=-0.1316 v_cmd=0.3580 u_fb=-0.5361 phase_ms=0.5475
+ts=8:31:140 idx=36062 src=cascade e_v=-0.1420 u_raw=-0.5361 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:140 idx=36063 src=sewmac x=0.5475
+ts=8:31:140 idx=36064 src=tick phase=0.5475 x=0.5475
+ts=8:31:239 idx=36065 src=sewmac phase=0.5542
+ts=8:31:239 idx=36066 src=scurve x=0.5475
+ts=8:31:239 idx=36068 src=stepgen cmd=0.5598 fb=0.5531 phase_ms=0.5542
+ts=8:31:239 idx=36069 src=cascade xr=0.4209 theta_l=0.5542 e_p=-0.1333 v_cmd=0.3561 u_fb=-0.5365 phase_ms=0.5542
+ts=8:31:239 idx=36070 src=cascade e_v=-0.1439 u_raw=-0.5365 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:239 idx=36071 src=sewmac x=0.5542
+ts=8:31:239 idx=36072 src=tick phase=0.5542 x=0.5542
+ts=8:31:339 idx=36073 src=sewmac phase=0.5608
+ts=8:31:339 idx=36074 src=scurve x=0.5542
+ts=8:31:339 idx=36076 src=stepgen cmd=0.5664 fb=0.5598 phase_ms=0.5608
+ts=8:31:339 idx=36077 src=cascade xr=0.4259 theta_l=0.5608 e_p=-0.1349 v_cmd=0.3542 u_fb=-0.5369 phase_ms=0.5608
+ts=8:31:339 idx=36078 src=cascade e_v=-0.1458 u_raw=-0.5369 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:339 idx=36079 src=sewmac x=0.5608
+ts=8:31:339 idx=36080 src=tick phase=0.5608 x=0.5608
+ts=8:31:438 idx=36081 src=sewmac phase=0.5675
+ts=8:31:438 idx=36082 src=scurve x=0.5608
+ts=8:31:438 idx=36084 src=stepgen cmd=0.5731 fb=0.5664 phase_ms=0.5675
+ts=8:31:438 idx=36085 src=cascade xr=0.4309 theta_l=0.5675 e_p=-0.1366 v_cmd=0.3522 u_fb=-0.5373 phase_ms=0.5675
+ts=8:31:438 idx=36086 src=cascade e_v=-0.1478 u_raw=-0.5373 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:438 idx=36087 src=sewmac x=0.5675
+ts=8:31:438 idx=36088 src=tick phase=0.5675 x=0.5675
+ts=8:31:538 idx=36089 src=sewmac phase=0.5742
+ts=8:31:538 idx=36090 src=scurve x=0.5675
+ts=8:31:538 idx=36092 src=stepgen cmd=0.5797 fb=0.5731 phase_ms=0.5742
+ts=8:31:538 idx=36093 src=cascade xr=0.4359 theta_l=0.5742 e_p=-0.1383 v_cmd=0.3503 u_fb=-0.5377 phase_ms=0.5742
+ts=8:31:538 idx=36094 src=cascade e_v=-0.1497 u_raw=-0.5377 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:538 idx=36095 src=sewmac x=0.5742
+ts=8:31:538 idx=36096 src=tick phase=0.5742 x=0.5742
+ts=8:31:638 idx=36097 src=sewmac phase=0.5808
+ts=8:31:638 idx=36098 src=scurve x=0.5742
+ts=8:31:638 idx=36100 src=stepgen cmd=0.5864 fb=0.5797 phase_ms=0.5808
+ts=8:31:638 idx=36101 src=cascade xr=0.4409 theta_l=0.5808 e_p=-0.1399 v_cmd=0.3483 u_fb=-0.5381 phase_ms=0.5808
+ts=8:31:638 idx=36102 src=cascade e_v=-0.1517 u_raw=-0.5381 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:638 idx=36103 src=sewmac x=0.5808
+ts=8:31:638 idx=36104 src=tick phase=0.5808 x=0.5808
+ts=8:31:737 idx=36105 src=sewmac phase=0.5875
+ts=8:31:737 idx=36106 src=scurve x=0.5808
+ts=8:31:737 idx=36108 src=stepgen cmd=0.5930 fb=0.5864 phase_ms=0.5875
+ts=8:31:737 idx=36109 src=cascade xr=0.4459 theta_l=0.5875 e_p=-0.1416 v_cmd=0.3464 u_fb=-0.5385 phase_ms=0.5875
+ts=8:31:737 idx=36110 src=cascade e_v=-0.1536 u_raw=-0.5385 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:737 idx=36111 src=sewmac x=0.5875
+ts=8:31:737 idx=36112 src=tick phase=0.5875 x=0.5875
+ts=8:31:836 idx=36113 src=sewmac phase=0.5942
+ts=8:31:836 idx=36114 src=scurve x=0.5875
+ts=8:31:836 idx=36116 src=stepgen cmd=0.5997 fb=0.5930 phase_ms=0.5942
+ts=8:31:836 idx=36117 src=cascade xr=0.4509 theta_l=0.5942 e_p=-0.1433 v_cmd=0.3444 u_fb=-0.5389 phase_ms=0.5942
+ts=8:31:836 idx=36118 src=cascade e_v=-0.1556 u_raw=-0.5389 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:836 idx=36119 src=sewmac x=0.5942
+ts=8:31:836 idx=36120 src=tick phase=0.5942 x=0.5942
+ts=8:31:936 idx=36121 src=sewmac phase=0.6008
+ts=8:31:936 idx=36122 src=scurve x=0.5942
+ts=8:31:936 idx=36124 src=stepgen cmd=0.6063 fb=0.5997 phase_ms=0.6008
+ts=8:31:936 idx=36125 src=cascade xr=0.4559 theta_l=0.6008 e_p=-0.1449 v_cmd=0.3425 u_fb=-0.5393 phase_ms=0.6008
+ts=8:31:936 idx=36126 src=cascade e_v=-0.1575 u_raw=-0.5393 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:31:936 idx=36127 src=sewmac x=0.6008
+ts=8:31:936 idx=36128 src=tick phase=0.6008 x=0.6008
+ts=8:32:035 idx=36129 src=sewmac phase=0.6075
+ts=8:32:035 idx=36130 src=scurve x=0.6008
+ts=8:32:035 idx=36132 src=stepgen cmd=0.6130 fb=0.6063 phase_ms=0.6075
+ts=8:32:035 idx=36133 src=cascade xr=0.4609 theta_l=0.6075 e_p=-0.1466 v_cmd=0.3405 u_fb=-0.5397 phase_ms=0.6075
+ts=8:32:035 idx=36134 src=cascade e_v=-0.1595 u_raw=-0.5397 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:035 idx=36135 src=sewmac x=0.6075
+ts=8:32:035 idx=36136 src=tick phase=0.6075 x=0.6075
+ts=8:32:135 idx=36137 src=sewmac phase=0.6142
+ts=8:32:135 idx=36138 src=scurve x=0.6075
+ts=8:32:135 idx=36140 src=stepgen cmd=0.6196 fb=0.6130 phase_ms=0.6142
+ts=8:32:135 idx=36141 src=cascade xr=0.4659 theta_l=0.6142 e_p=-0.1483 v_cmd=0.3385 u_fb=-0.5401 phase_ms=0.6142
+ts=8:32:135 idx=36142 src=cascade e_v=-0.1615 u_raw=-0.5401 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:135 idx=36143 src=sewmac x=0.6142
+ts=8:32:135 idx=36144 src=tick phase=0.6142 x=0.6142
+ts=8:32:234 idx=36145 src=sewmac phase=0.6208
+ts=8:32:234 idx=36146 src=scurve x=0.6142
+ts=8:32:234 idx=36148 src=stepgen cmd=0.6263 fb=0.6196 phase_ms=0.6208
+ts=8:32:234 idx=36149 src=cascade xr=0.4709 theta_l=0.6208 e_p=-0.1499 v_cmd=0.3366 u_fb=-0.5406 phase_ms=0.6208
+ts=8:32:234 idx=36150 src=cascade e_v=-0.1634 u_raw=-0.5406 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:234 idx=36151 src=sewmac x=0.6208
+ts=8:32:234 idx=36152 src=tick phase=0.6208 x=0.6208
+ts=8:32:332 idx=36153 src=sewmac phase=0.6275
+ts=8:32:332 idx=36154 src=scurve x=0.6208
+ts=8:32:332 idx=36156 src=stepgen cmd=0.6329 fb=0.6263 phase_ms=0.6275
+ts=8:32:332 idx=36157 src=cascade xr=0.4759 theta_l=0.6275 e_p=-0.1516 v_cmd=0.3346 u_fb=-0.5410 phase_ms=0.6275
+ts=8:32:332 idx=36158 src=cascade e_v=-0.1654 u_raw=-0.5410 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:332 idx=36159 src=sewmac x=0.6275
+ts=8:32:332 idx=36160 src=tick phase=0.6275 x=0.6275
+ts=8:32:433 idx=36161 src=sewmac phase=0.6342
+ts=8:32:433 idx=36162 src=scurve x=0.6275
+ts=8:32:433 idx=36164 src=stepgen cmd=0.6396 fb=0.6329 phase_ms=0.6342
+ts=8:32:433 idx=36165 src=cascade xr=0.4809 theta_l=0.6342 e_p=-0.1533 v_cmd=0.3326 u_fb=-0.5414 phase_ms=0.6342
+ts=8:32:433 idx=36166 src=cascade e_v=-0.1674 u_raw=-0.5414 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:433 idx=36167 src=sewmac x=0.6342
+ts=8:32:433 idx=36168 src=tick phase=0.6342 x=0.6342
+ts=8:32:533 idx=36169 src=sewmac phase=0.6408
+ts=8:32:533 idx=36170 src=scurve x=0.6342
+ts=8:32:533 idx=36172 src=stepgen cmd=0.6462 fb=0.6396 phase_ms=0.6408
+ts=8:32:533 idx=36173 src=cascade xr=0.4859 theta_l=0.6408 e_p=-0.1549 v_cmd=0.3307 u_fb=-0.5418 phase_ms=0.6408
+ts=8:32:533 idx=36174 src=cascade e_v=-0.1693 u_raw=-0.5418 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:533 idx=36175 src=sewmac x=0.6408
+ts=8:32:533 idx=36176 src=tick phase=0.6408 x=0.6408
+ts=8:32:631 idx=36177 src=sewmac phase=0.6475
+ts=8:32:631 idx=36178 src=scurve x=0.6408
+ts=8:32:631 idx=36180 src=stepgen cmd=0.6529 fb=0.6462 phase_ms=0.6475
+ts=8:32:631 idx=36181 src=cascade xr=0.4909 theta_l=0.6475 e_p=-0.1566 v_cmd=0.3287 u_fb=-0.5422 phase_ms=0.6475
+ts=8:32:631 idx=36182 src=cascade e_v=-0.1713 u_raw=-0.5422 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:631 idx=36183 src=sewmac x=0.6475
+ts=8:32:631 idx=36184 src=tick phase=0.6475 x=0.6475
+ts=8:32:731 idx=36185 src=sewmac phase=0.6542
+ts=8:32:731 idx=36186 src=scurve x=0.6475
+ts=8:32:731 idx=36188 src=stepgen cmd=0.6595 fb=0.6529 phase_ms=0.6542
+ts=8:32:731 idx=36189 src=cascade xr=0.4959 theta_l=0.6542 e_p=-0.1583 v_cmd=0.3267 u_fb=-0.5426 phase_ms=0.6542
+ts=8:32:731 idx=36190 src=cascade e_v=-0.1733 u_raw=-0.5426 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:731 idx=36191 src=sewmac x=0.6542
+ts=8:32:731 idx=36192 src=tick phase=0.6542 x=0.6542
+ts=8:32:831 idx=36193 src=sewmac phase=0.6608
+ts=8:32:831 idx=36194 src=scurve x=0.6542
+ts=8:32:831 idx=36196 src=stepgen cmd=0.6662 fb=0.6595 phase_ms=0.6608
+ts=8:32:831 idx=36197 src=cascade xr=0.5009 theta_l=0.6608 e_p=-0.1599 v_cmd=0.3247 u_fb=-0.5430 phase_ms=0.6608
+ts=8:32:831 idx=36198 src=cascade e_v=-0.1753 u_raw=-0.5430 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:831 idx=36199 src=sewmac x=0.6608
+ts=8:32:831 idx=36200 src=tick phase=0.6608 x=0.6608
+ts=8:32:930 idx=36201 src=sewmac phase=0.6675
+ts=8:32:930 idx=36202 src=scurve x=0.6608
+ts=8:32:930 idx=36204 src=stepgen cmd=0.6728 fb=0.6662 phase_ms=0.6675
+ts=8:32:930 idx=36205 src=cascade xr=0.5059 theta_l=0.6675 e_p=-0.1616 v_cmd=0.3227 u_fb=-0.5434 phase_ms=0.6675
+ts=8:32:930 idx=36206 src=cascade e_v=-0.1773 u_raw=-0.5434 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:32:930 idx=36207 src=sewmac x=0.6675
+ts=8:32:930 idx=36208 src=tick phase=0.6675 x=0.6675
+ts=8:33:031 idx=36209 src=sewmac phase=0.6742
+ts=8:33:031 idx=36210 src=scurve x=0.6675
+ts=8:33:031 idx=36212 src=stepgen cmd=0.6795 fb=0.6728 phase_ms=0.6742
+ts=8:33:031 idx=36213 src=cascade xr=0.5109 theta_l=0.6742 e_p=-0.1633 v_cmd=0.3207 u_fb=-0.5438 phase_ms=0.6742
+ts=8:33:031 idx=36214 src=cascade e_v=-0.1793 u_raw=-0.5438 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:031 idx=36215 src=sewmac x=0.6742
+ts=8:33:031 idx=36216 src=tick phase=0.6742 x=0.6742
+ts=8:33:130 idx=36217 src=sewmac phase=0.6808
+ts=8:33:130 idx=36218 src=scurve x=0.6742
+ts=8:33:130 idx=36220 src=stepgen cmd=0.6861 fb=0.6795 phase_ms=0.6808
+ts=8:33:130 idx=36221 src=cascade xr=0.5159 theta_l=0.6808 e_p=-0.1649 v_cmd=0.3187 u_fb=-0.5442 phase_ms=0.6808
+ts=8:33:130 idx=36222 src=cascade e_v=-0.1813 u_raw=-0.5442 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:130 idx=36223 src=sewmac x=0.6808
+ts=8:33:130 idx=36224 src=tick phase=0.6808 x=0.6808
+ts=8:33:229 idx=36225 src=sewmac phase=0.6875
+ts=8:33:229 idx=36226 src=scurve x=0.6808
+ts=8:33:229 idx=36228 src=stepgen cmd=0.6928 fb=0.6861 phase_ms=0.6875
+ts=8:33:229 idx=36229 src=cascade xr=0.5209 theta_l=0.6875 e_p=-0.1666 v_cmd=0.3167 u_fb=-0.5447 phase_ms=0.6875
+ts=8:33:229 idx=36230 src=cascade e_v=-0.1833 u_raw=-0.5447 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:229 idx=36231 src=sewmac x=0.6875
+ts=8:33:229 idx=36232 src=tick phase=0.6875 x=0.6875
+ts=8:33:329 idx=36233 src=sewmac phase=0.6942
+ts=8:33:329 idx=36234 src=scurve x=0.6875
+ts=8:33:329 idx=36236 src=stepgen cmd=0.6994 fb=0.6928 phase_ms=0.6942
+ts=8:33:329 idx=36237 src=cascade xr=0.5259 theta_l=0.6942 e_p=-0.1683 v_cmd=0.3147 u_fb=-0.5451 phase_ms=0.6942
+ts=8:33:329 idx=36238 src=cascade e_v=-0.1853 u_raw=-0.5451 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:329 idx=36239 src=sewmac x=0.6942
+ts=8:33:329 idx=36240 src=tick phase=0.6942 x=0.6942
+ts=8:33:429 idx=36241 src=sewmac phase=0.7008
+ts=8:33:429 idx=36242 src=scurve x=0.6942
+ts=8:33:429 idx=36244 src=stepgen cmd=0.7061 fb=0.6994 phase_ms=0.7008
+ts=8:33:429 idx=36245 src=cascade xr=0.5309 theta_l=0.7008 e_p=-0.1699 v_cmd=0.3127 u_fb=-0.5455 phase_ms=0.7008
+ts=8:33:429 idx=36246 src=cascade e_v=-0.1873 u_raw=-0.5455 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:429 idx=36247 src=sewmac x=0.7008
+ts=8:33:429 idx=36248 src=tick phase=0.7008 x=0.7008
+ts=8:33:528 idx=36249 src=sewmac phase=0.7075
+ts=8:33:528 idx=36250 src=scurve x=0.7008
+ts=8:33:528 idx=36252 src=stepgen cmd=0.7127 fb=0.7061 phase_ms=0.7075
+ts=8:33:528 idx=36253 src=cascade xr=0.5359 theta_l=0.7075 e_p=-0.1716 v_cmd=0.3107 u_fb=-0.5459 phase_ms=0.7075
+ts=8:33:528 idx=36254 src=cascade e_v=-0.1893 u_raw=-0.5459 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:528 idx=36255 src=sewmac x=0.7075
+ts=8:33:528 idx=36256 src=tick phase=0.7075 x=0.7075
+ts=8:33:628 idx=36257 src=sewmac phase=0.7142
+ts=8:33:628 idx=36258 src=scurve x=0.7075
+ts=8:33:628 idx=36260 src=stepgen cmd=0.7194 fb=0.7127 phase_ms=0.7142
+ts=8:33:628 idx=36261 src=cascade xr=0.5409 theta_l=0.7142 e_p=-0.1733 v_cmd=0.3087 u_fb=-0.5463 phase_ms=0.7142
+ts=8:33:628 idx=36262 src=cascade e_v=-0.1913 u_raw=-0.5463 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:628 idx=36263 src=sewmac x=0.7142
+ts=8:33:628 idx=36264 src=tick phase=0.7142 x=0.7142
+ts=8:33:727 idx=36265 src=sewmac phase=0.7208
+ts=8:33:727 idx=36266 src=scurve x=0.7142
+ts=8:33:727 idx=36268 src=stepgen cmd=0.7260 fb=0.7194 phase_ms=0.7208
+ts=8:33:727 idx=36269 src=cascade xr=0.5459 theta_l=0.7208 e_p=-0.1749 v_cmd=0.3067 u_fb=-0.5467 phase_ms=0.7208
+ts=8:33:727 idx=36270 src=cascade e_v=-0.1933 u_raw=-0.5467 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:727 idx=36271 src=sewmac x=0.7208
+ts=8:33:727 idx=36272 src=tick phase=0.7208 x=0.7208
+ts=8:33:826 idx=36273 src=sewmac phase=0.7275
+ts=8:33:826 idx=36274 src=scurve x=0.7208
+ts=8:33:826 idx=36276 src=stepgen cmd=0.7327 fb=0.7260 phase_ms=0.7275
+ts=8:33:826 idx=36277 src=cascade xr=0.5509 theta_l=0.7275 e_p=-0.1766 v_cmd=0.3047 u_fb=-0.5471 phase_ms=0.7275
+ts=8:33:826 idx=36278 src=cascade e_v=-0.1953 u_raw=-0.5471 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:826 idx=36279 src=sewmac x=0.7275
+ts=8:33:826 idx=36280 src=tick phase=0.7275 x=0.7275
+ts=8:33:927 idx=36281 src=sewmac phase=0.7342
+ts=8:33:927 idx=36282 src=scurve x=0.7275
+ts=8:33:927 idx=36284 src=stepgen cmd=0.7393 fb=0.7327 phase_ms=0.7342
+ts=8:33:927 idx=36285 src=cascade xr=0.5559 theta_l=0.7342 e_p=-0.1783 v_cmd=0.3026 u_fb=-0.5476 phase_ms=0.7342
+ts=8:33:927 idx=36286 src=cascade e_v=-0.1974 u_raw=-0.5476 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:33:927 idx=36287 src=sewmac x=0.7342
+ts=8:33:927 idx=36288 src=tick phase=0.7342 x=0.7342
+ts=8:34:027 idx=36289 src=sewmac phase=0.7408
+ts=8:34:027 idx=36290 src=scurve x=0.7342
+ts=8:34:027 idx=36292 src=stepgen cmd=0.7460 fb=0.7393 phase_ms=0.7408
+ts=8:34:027 idx=36293 src=cascade xr=0.5609 theta_l=0.7408 e_p=-0.1799 v_cmd=0.3006 u_fb=-0.5480 phase_ms=0.7408
+ts=8:34:027 idx=36294 src=cascade e_v=-0.1994 u_raw=-0.5480 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:027 idx=36295 src=sewmac x=0.7408
+ts=8:34:027 idx=36296 src=tick phase=0.7408 x=0.7408
+ts=8:34:125 idx=36297 src=sewmac phase=0.7475
+ts=8:34:125 idx=36298 src=scurve x=0.7408
+ts=8:34:125 idx=36300 src=stepgen cmd=0.7526 fb=0.7460 phase_ms=0.7475
+ts=8:34:125 idx=36301 src=cascade xr=0.5659 theta_l=0.7475 e_p=-0.1816 v_cmd=0.2986 u_fb=-0.5484 phase_ms=0.7475
+ts=8:34:125 idx=36302 src=cascade e_v=-0.2014 u_raw=-0.5484 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:125 idx=36303 src=sewmac x=0.7475
+ts=8:34:125 idx=36304 src=tick phase=0.7475 x=0.7475
+ts=8:34:225 idx=36305 src=sewmac phase=0.7542
+ts=8:34:225 idx=36306 src=scurve x=0.7475
+ts=8:34:225 idx=36308 src=stepgen cmd=0.7593 fb=0.7526 phase_ms=0.7542
+ts=8:34:225 idx=36309 src=cascade xr=0.5709 theta_l=0.7542 e_p=-0.1833 v_cmd=0.2965 u_fb=-0.5488 phase_ms=0.7542
+ts=8:34:225 idx=36310 src=cascade e_v=-0.2035 u_raw=-0.5488 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:225 idx=36311 src=sewmac x=0.7542
+ts=8:34:225 idx=36312 src=tick phase=0.7542 x=0.7542
+ts=8:34:324 idx=36313 src=sewmac phase=0.7608
+ts=8:34:324 idx=36314 src=scurve x=0.7542
+ts=8:34:324 idx=36316 src=stepgen cmd=0.7659 fb=0.7593 phase_ms=0.7608
+ts=8:34:324 idx=36317 src=cascade xr=0.5759 theta_l=0.7608 e_p=-0.1849 v_cmd=0.2945 u_fb=-0.5492 phase_ms=0.7608
+ts=8:34:324 idx=36318 src=cascade e_v=-0.2055 u_raw=-0.5492 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:324 idx=36319 src=sewmac x=0.7608
+ts=8:34:324 idx=36320 src=tick phase=0.7608 x=0.7608
+ts=8:34:423 idx=36321 src=sewmac phase=0.7675
+ts=8:34:423 idx=36322 src=scurve x=0.7608
+ts=8:34:423 idx=36324 src=stepgen cmd=0.7726 fb=0.7659 phase_ms=0.7675
+ts=8:34:423 idx=36325 src=cascade xr=0.5809 theta_l=0.7675 e_p=-0.1866 v_cmd=0.2925 u_fb=-0.5497 phase_ms=0.7675
+ts=8:34:423 idx=36326 src=cascade e_v=-0.2075 u_raw=-0.5497 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:423 idx=36327 src=sewmac x=0.7675
+ts=8:34:423 idx=36328 src=tick phase=0.7675 x=0.7675
+ts=8:34:523 idx=36329 src=sewmac phase=0.7742
+ts=8:34:523 idx=36330 src=scurve x=0.7675
+ts=8:34:523 idx=36332 src=stepgen cmd=0.7792 fb=0.7726 phase_ms=0.7742
+ts=8:34:523 idx=36333 src=cascade xr=0.5859 theta_l=0.7742 e_p=-0.1883 v_cmd=0.2904 u_fb=-0.5501 phase_ms=0.7742
+ts=8:34:523 idx=36334 src=cascade e_v=-0.2096 u_raw=-0.5501 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:523 idx=36335 src=sewmac x=0.7742
+ts=8:34:523 idx=36336 src=tick phase=0.7742 x=0.7742
+ts=8:34:622 idx=36337 src=sewmac phase=0.7808
+ts=8:34:622 idx=36338 src=scurve x=0.7742
+ts=8:34:622 idx=36340 src=stepgen cmd=0.7859 fb=0.7792 phase_ms=0.7808
+ts=8:34:622 idx=36341 src=cascade xr=0.5909 theta_l=0.7808 e_p=-0.1899 v_cmd=0.2884 u_fb=-0.5505 phase_ms=0.7808
+ts=8:34:622 idx=36342 src=cascade e_v=-0.2116 u_raw=-0.5505 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:622 idx=36343 src=sewmac x=0.7808
+ts=8:34:622 idx=36344 src=tick phase=0.7808 x=0.7808
+ts=8:34:723 idx=36345 src=sewmac phase=0.7875
+ts=8:34:723 idx=36346 src=scurve x=0.7808
+ts=8:34:723 idx=36348 src=stepgen cmd=0.7925 fb=0.7859 phase_ms=0.7875
+ts=8:34:723 idx=36349 src=cascade xr=0.5959 theta_l=0.7875 e_p=-0.1916 v_cmd=0.2863 u_fb=-0.5509 phase_ms=0.7875
+ts=8:34:723 idx=36350 src=cascade e_v=-0.2137 u_raw=-0.5509 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:723 idx=36351 src=sewmac x=0.7875
+ts=8:34:723 idx=36352 src=tick phase=0.7875 x=0.7875
+ts=8:34:821 idx=36353 src=sewmac phase=0.7942
+ts=8:34:821 idx=36354 src=scurve x=0.7875
+ts=8:34:821 idx=36356 src=stepgen cmd=0.7992 fb=0.7925 phase_ms=0.7942
+ts=8:34:821 idx=36357 src=cascade xr=0.6009 theta_l=0.7942 e_p=-0.1933 v_cmd=0.2843 u_fb=-0.5514 phase_ms=0.7942
+ts=8:34:821 idx=36358 src=cascade e_v=-0.2157 u_raw=-0.5514 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:821 idx=36359 src=sewmac x=0.7942
+ts=8:34:821 idx=36360 src=tick phase=0.7942 x=0.7942
+ts=8:34:920 idx=36361 src=sewmac phase=0.8008
+ts=8:34:920 idx=36362 src=scurve x=0.7942
+ts=8:34:920 idx=36364 src=stepgen cmd=0.8058 fb=0.7992 phase_ms=0.8008
+ts=8:34:920 idx=36365 src=cascade xr=0.6059 theta_l=0.8008 e_p=-0.1949 v_cmd=0.2822 u_fb=-0.5518 phase_ms=0.8008
+ts=8:34:920 idx=36366 src=cascade e_v=-0.2178 u_raw=-0.5518 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:34:920 idx=36367 src=sewmac x=0.8008
+ts=8:34:920 idx=36368 src=tick phase=0.8008 x=0.8008
+ts=8:35:020 idx=36369 src=sewmac phase=0.8075
+ts=8:35:020 idx=36370 src=scurve x=0.8008
+ts=8:35:020 idx=36372 src=stepgen cmd=0.8125 fb=0.8058 phase_ms=0.8075
+ts=8:35:020 idx=36373 src=cascade xr=0.6109 theta_l=0.8075 e_p=-0.1966 v_cmd=0.2802 u_fb=-0.5522 phase_ms=0.8075
+ts=8:35:020 idx=36374 src=cascade e_v=-0.2198 u_raw=-0.5522 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:020 idx=36375 src=sewmac x=0.8075
+ts=8:35:020 idx=36376 src=tick phase=0.8075 x=0.8075
+ts=8:35:120 idx=36377 src=sewmac phase=0.8142
+ts=8:35:120 idx=36378 src=scurve x=0.8075
+ts=8:35:120 idx=36380 src=stepgen cmd=0.8191 fb=0.8125 phase_ms=0.8142
+ts=8:35:120 idx=36381 src=cascade xr=0.6159 theta_l=0.8142 e_p=-0.1983 v_cmd=0.2781 u_fb=-0.5526 phase_ms=0.8142
+ts=8:35:120 idx=36382 src=cascade e_v=-0.2219 u_raw=-0.5526 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:120 idx=36383 src=sewmac x=0.8142
+ts=8:35:120 idx=36384 src=tick phase=0.8142 x=0.8142
+ts=8:35:220 idx=36385 src=sewmac phase=0.8208
+ts=8:35:220 idx=36386 src=scurve x=0.8142
+ts=8:35:220 idx=36388 src=stepgen cmd=0.8258 fb=0.8191 phase_ms=0.8208
+ts=8:35:220 idx=36389 src=cascade xr=0.6209 theta_l=0.8208 e_p=-0.1999 v_cmd=0.2760 u_fb=-0.5531 phase_ms=0.8208
+ts=8:35:220 idx=36390 src=cascade e_v=-0.2240 u_raw=-0.5531 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:220 idx=36391 src=sewmac x=0.8208
+ts=8:35:220 idx=36392 src=tick phase=0.8208 x=0.8208
+ts=8:35:319 idx=36393 src=sewmac phase=0.8275
+ts=8:35:319 idx=36394 src=scurve x=0.8208
+ts=8:35:319 idx=36396 src=stepgen cmd=0.8324 fb=0.8258 phase_ms=0.8275
+ts=8:35:319 idx=36397 src=cascade xr=0.6259 theta_l=0.8275 e_p=-0.2016 v_cmd=0.2740 u_fb=-0.5535 phase_ms=0.8275
+ts=8:35:319 idx=36398 src=cascade e_v=-0.2260 u_raw=-0.5535 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:319 idx=36399 src=sewmac x=0.8275
+ts=8:35:319 idx=36400 src=tick phase=0.8275 x=0.8275
+ts=8:35:418 idx=36401 src=sewmac phase=0.8342
+ts=8:35:418 idx=36402 src=scurve x=0.8275
+ts=8:35:418 idx=36404 src=stepgen cmd=0.8391 fb=0.8324 phase_ms=0.8342
+ts=8:35:418 idx=36405 src=cascade xr=0.6309 theta_l=0.8342 e_p=-0.2033 v_cmd=0.2719 u_fb=-0.5539 phase_ms=0.8342
+ts=8:35:418 idx=36406 src=cascade e_v=-0.2281 u_raw=-0.5539 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:418 idx=36407 src=sewmac x=0.8342
+ts=8:35:418 idx=36408 src=tick phase=0.8342 x=0.8342
+ts=8:35:518 idx=36409 src=sewmac phase=0.8408
+ts=8:35:518 idx=36410 src=scurve x=0.8342
+ts=8:35:518 idx=36412 src=stepgen cmd=0.8457 fb=0.8391 phase_ms=0.8408
+ts=8:35:518 idx=36413 src=cascade xr=0.6359 theta_l=0.8408 e_p=-0.2049 v_cmd=0.2698 u_fb=-0.5543 phase_ms=0.8408
+ts=8:35:518 idx=36414 src=cascade e_v=-0.2302 u_raw=-0.5543 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:518 idx=36415 src=sewmac x=0.8408
+ts=8:35:518 idx=36416 src=tick phase=0.8408 x=0.8408
+ts=8:35:618 idx=36417 src=sewmac phase=0.8475
+ts=8:35:618 idx=36418 src=scurve x=0.8408
+ts=8:35:618 idx=36420 src=stepgen cmd=0.8524 fb=0.8457 phase_ms=0.8475
+ts=8:35:618 idx=36421 src=cascade xr=0.6409 theta_l=0.8475 e_p=-0.2066 v_cmd=0.2677 u_fb=-0.5548 phase_ms=0.8475
+ts=8:35:618 idx=36422 src=cascade e_v=-0.2323 u_raw=-0.5548 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:618 idx=36423 src=sewmac x=0.8475
+ts=8:35:618 idx=36424 src=tick phase=0.8475 x=0.8475
+ts=8:35:718 idx=36425 src=sewmac phase=0.8542
+ts=8:35:718 idx=36426 src=scurve x=0.8475
+ts=8:35:718 idx=36428 src=stepgen cmd=0.8590 fb=0.8524 phase_ms=0.8542
+ts=8:35:718 idx=36429 src=cascade xr=0.6459 theta_l=0.8542 e_p=-0.2083 v_cmd=0.2657 u_fb=-0.5552 phase_ms=0.8542
+ts=8:35:718 idx=36430 src=cascade e_v=-0.2343 u_raw=-0.5552 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:718 idx=36431 src=sewmac x=0.8542
+ts=8:35:718 idx=36432 src=tick phase=0.8542 x=0.8542
+ts=8:35:817 idx=36433 src=sewmac phase=0.8608
+ts=8:35:817 idx=36434 src=scurve x=0.8542
+ts=8:35:817 idx=36436 src=stepgen cmd=0.8657 fb=0.8590 phase_ms=0.8608
+ts=8:35:817 idx=36437 src=cascade xr=0.6509 theta_l=0.8608 e_p=-0.2099 v_cmd=0.2636 u_fb=-0.5556 phase_ms=0.8608
+ts=8:35:817 idx=36438 src=cascade e_v=-0.2364 u_raw=-0.5556 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:817 idx=36439 src=sewmac x=0.8608
+ts=8:35:817 idx=36440 src=tick phase=0.8608 x=0.8608
+ts=8:35:917 idx=36441 src=sewmac phase=0.8675
+ts=8:35:917 idx=36442 src=scurve x=0.8608
+ts=8:35:917 idx=36444 src=stepgen cmd=0.8723 fb=0.8657 phase_ms=0.8675
+ts=8:35:917 idx=36445 src=cascade xr=0.6559 theta_l=0.8675 e_p=-0.2116 v_cmd=0.2615 u_fb=-0.5561 phase_ms=0.8675
+ts=8:35:917 idx=36446 src=cascade e_v=-0.2385 u_raw=-0.5561 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:35:917 idx=36447 src=sewmac x=0.8675
+ts=8:35:917 idx=36448 src=tick phase=0.8675 x=0.8675
+ts=8:36:016 idx=36449 src=sewmac phase=0.8742
+ts=8:36:016 idx=36450 src=scurve x=0.8675
+ts=8:36:016 idx=36452 src=stepgen cmd=0.8790 fb=0.8723 phase_ms=0.8742
+ts=8:36:016 idx=36453 src=cascade xr=0.6609 theta_l=0.8742 e_p=-0.2133 v_cmd=0.2594 u_fb=-0.5565 phase_ms=0.8742
+ts=8:36:016 idx=36454 src=cascade e_v=-0.2406 u_raw=-0.5565 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:016 idx=36455 src=sewmac x=0.8742
+ts=8:36:016 idx=36456 src=tick phase=0.8742 x=0.8742
+ts=8:36:116 idx=36457 src=sewmac phase=0.8808
+ts=8:36:116 idx=36458 src=scurve x=0.8742
+ts=8:36:116 idx=36460 src=stepgen cmd=0.8856 fb=0.8790 phase_ms=0.8808
+ts=8:36:116 idx=36461 src=cascade xr=0.6659 theta_l=0.8808 e_p=-0.2149 v_cmd=0.2573 u_fb=-0.5569 phase_ms=0.8808
+ts=8:36:116 idx=36462 src=cascade e_v=-0.2427 u_raw=-0.5569 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:116 idx=36463 src=sewmac x=0.8808
+ts=8:36:116 idx=36464 src=tick phase=0.8808 x=0.8808
+ts=8:36:215 idx=36465 src=sewmac phase=0.8875
+ts=8:36:215 idx=36466 src=scurve x=0.8808
+ts=8:36:215 idx=36468 src=stepgen cmd=0.8923 fb=0.8856 phase_ms=0.8875
+ts=8:36:215 idx=36469 src=cascade xr=0.6709 theta_l=0.8875 e_p=-0.2166 v_cmd=0.2552 u_fb=-0.5574 phase_ms=0.8875
+ts=8:36:215 idx=36470 src=cascade e_v=-0.2448 u_raw=-0.5574 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:215 idx=36471 src=sewmac x=0.8875
+ts=8:36:215 idx=36472 src=tick phase=0.8875 x=0.8875
+ts=8:36:315 idx=36473 src=sewmac phase=0.8942
+ts=8:36:315 idx=36474 src=scurve x=0.8875
+ts=8:36:315 idx=36476 src=stepgen cmd=0.8989 fb=0.8923 phase_ms=0.8942
+ts=8:36:315 idx=36477 src=cascade xr=0.6759 theta_l=0.8942 e_p=-0.2183 v_cmd=0.2531 u_fb=-0.5578 phase_ms=0.8942
+ts=8:36:315 idx=36478 src=cascade e_v=-0.2469 u_raw=-0.5578 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:315 idx=36479 src=sewmac x=0.8942
+ts=8:36:315 idx=36480 src=tick phase=0.8942 x=0.8942
+ts=8:36:414 idx=36481 src=sewmac phase=0.9008
+ts=8:36:414 idx=36482 src=scurve x=0.8942
+ts=8:36:414 idx=36484 src=stepgen cmd=0.9056 fb=0.8989 phase_ms=0.9008
+ts=8:36:414 idx=36485 src=cascade xr=0.6809 theta_l=0.9008 e_p=-0.2199 v_cmd=0.2510 u_fb=-0.5582 phase_ms=0.9008
+ts=8:36:414 idx=36486 src=cascade e_v=-0.2490 u_raw=-0.5582 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:414 idx=36487 src=sewmac x=0.9008
+ts=8:36:414 idx=36488 src=tick phase=0.9008 x=0.9008
+ts=8:36:513 idx=36489 src=sewmac phase=0.9075
+ts=8:36:513 idx=36490 src=scurve x=0.9008
+ts=8:36:513 idx=36492 src=stepgen cmd=0.9122 fb=0.9056 phase_ms=0.9075
+ts=8:36:513 idx=36493 src=cascade xr=0.6859 theta_l=0.9075 e_p=-0.2216 v_cmd=0.2489 u_fb=-0.5587 phase_ms=0.9075
+ts=8:36:513 idx=36494 src=cascade e_v=-0.2511 u_raw=-0.5587 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:513 idx=36495 src=sewmac x=0.9075
+ts=8:36:513 idx=36496 src=tick phase=0.9075 x=0.9075
+ts=8:36:613 idx=36497 src=sewmac phase=0.9142
+ts=8:36:613 idx=36498 src=scurve x=0.9075
+ts=8:36:613 idx=36500 src=stepgen cmd=0.9189 fb=0.9122 phase_ms=0.9142
+ts=8:36:613 idx=36501 src=cascade xr=0.6909 theta_l=0.9142 e_p=-0.2233 v_cmd=0.2468 u_fb=-0.5591 phase_ms=0.9142
+ts=8:36:613 idx=36502 src=cascade e_v=-0.2532 u_raw=-0.5591 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:613 idx=36503 src=sewmac x=0.9142
+ts=8:36:613 idx=36504 src=tick phase=0.9142 x=0.9142
+ts=8:36:712 idx=36505 src=sewmac phase=0.9208
+ts=8:36:712 idx=36506 src=scurve x=0.9142
+ts=8:36:712 idx=36508 src=stepgen cmd=0.9255 fb=0.9189 phase_ms=0.9208
+ts=8:36:712 idx=36509 src=cascade xr=0.6959 theta_l=0.9208 e_p=-0.2249 v_cmd=0.2446 u_fb=-0.5595 phase_ms=0.9208
+ts=8:36:712 idx=36510 src=cascade e_v=-0.2554 u_raw=-0.5595 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:712 idx=36511 src=sewmac x=0.9208
+ts=8:36:712 idx=36512 src=tick phase=0.9208 x=0.9208
+ts=8:36:812 idx=36513 src=sewmac phase=0.9275
+ts=8:36:812 idx=36514 src=scurve x=0.9208
+ts=8:36:812 idx=36516 src=stepgen cmd=0.9322 fb=0.9255 phase_ms=0.9275
+ts=8:36:812 idx=36517 src=cascade xr=0.7009 theta_l=0.9275 e_p=-0.2266 v_cmd=0.2425 u_fb=-0.5600 phase_ms=0.9275
+ts=8:36:812 idx=36518 src=cascade e_v=-0.2575 u_raw=-0.5600 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:812 idx=36519 src=sewmac x=0.9275
+ts=8:36:812 idx=36520 src=tick phase=0.9275 x=0.9275
+ts=8:36:911 idx=36521 src=sewmac phase=0.9342
+ts=8:36:911 idx=36522 src=scurve x=0.9275
+ts=8:36:911 idx=36524 src=stepgen cmd=0.9388 fb=0.9322 phase_ms=0.9342
+ts=8:36:911 idx=36525 src=cascade xr=0.7059 theta_l=0.9342 e_p=-0.2283 v_cmd=0.2404 u_fb=-0.5604 phase_ms=0.9342
+ts=8:36:911 idx=36526 src=cascade e_v=-0.2596 u_raw=-0.5604 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:36:911 idx=36527 src=sewmac x=0.9342
+ts=8:36:911 idx=36528 src=tick phase=0.9342 x=0.9342
+ts=8:37:011 idx=36529 src=sewmac phase=0.9408
+ts=8:37:011 idx=36530 src=scurve x=0.9342
+ts=8:37:011 idx=36532 src=stepgen cmd=0.9455 fb=0.9388 phase_ms=0.9408
+ts=8:37:011 idx=36533 src=cascade xr=0.7109 theta_l=0.9408 e_p=-0.2299 v_cmd=0.2383 u_fb=-0.5609 phase_ms=0.9408
+ts=8:37:011 idx=36534 src=cascade e_v=-0.2617 u_raw=-0.5609 u_sat=-0.5000 cap=0.5000 deadband=no sat=yes
+ts=8:37:011 idx=36535 src=sewmac x=0.9408
+ts=8:37:011 idx=36536 src=tick phase=0.9408 x=0.9408
+ts=8:37:110 idx=36537 src=sewmac phase=0.0000 needle_homed=true
+ts=8:37:110 idx=36538 src=scurve x=0.9408
+ts=8:37:110 idx=36540 src=needle_index phase=0.0000 dp_raw=-0.9408 wrap=- theta_abs=1.0000 cycles=1
+ts=8:37:110 idx=36541 src=stepgen cmd=0.9521 fb=0.9455 v_fb_mot=-0.3990 v_fb_ms=-0.3000 phase_ms=0.0000
+ts=8:37:110 idx=36542 src=cascade xr=0.7159 theta_l=0.9633 e_p=-0.2473 v_cmd=0.2204 v_meas=-0.3000 u_fb=2.7324 phase_ms=0.0000
+ts=8:37:110 idx=36543 src=cascade e_v=0.5204 u_raw=2.7324 u_sat=0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:110 idx=36544 src=sewmac mode=SEWMAC_STATE_MOVE_UP x=0.7519 v=-0.3000 mu=fast
+ts=8:37:110 idx=36545 src=tick phase=0.0000 x=0.7519 v=-0.3000 needle_homed=true
+ts=8:37:209 idx=36546 src=sewmac phase=0.0067
+ts=8:37:209 idx=36547 src=scurve x=0.7519 v=-0.3000
+ts=8:37:209 idx=36548 src=move_up stage=fast reason=activate
+ts=8:37:209 idx=36550 src=scurve mode=SC_MODE_POSITION tgt_x=1.3452 tgt_v=0.0000 t=0.0000/2.9125 eta=2.9125
+ts=8:37:209 idx=36551 src=stepgen cmd=0.9960 fb=0.9521 v_fb_mot=0.1862 v_fb_ms=0.1400 phase_ms=0.0067
+ts=8:37:209 idx=36552 src=cascade xr=0.7489 vr=-0.2500 ar=-75.0000 theta_l=0.9828 e_p=-0.2339 v_cmd=-0.5167 v_meas=0.1400 u_fb=-4.5894 u_ff=-0.0000 phase_ms=0.0067
+ts=8:37:209 idx=36553 src=cascade e_v=-0.6567 u_raw=-4.5894 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:209 idx=36554 src=sewmac x=0.7585 v=0.1400 a_cap=10.0000 tgt_x=1.3452 eta=2.9025
+ts=8:37:209 idx=36555 src=tick phase=0.0067 x=0.7585 v=0.1400 tgt_x=1.3452 eta=2.9025 warn=oscillation
+ts=8:37:309 idx=36556 src=sewmac phase=0.0505
+ts=8:37:309 idx=36557 src=scurve x=0.7585 v=0.1400 a=0.4000 t=0.0100/2.9125 eta=2.9025
+ts=8:37:309 idx=36559 src=stepgen cmd=0.9927 fb=0.9960 v_fb_mot=0.3032 v_fb_ms=0.2280 phase_ms=0.0505
+ts=8:37:309 idx=36560 src=cascade xr=0.7464 vr=-0.2440 ar=0.6000 theta_l=1.0108 e_p=-0.2644 v_cmd=-0.5417 v_meas=0.2280 u_fb=-0.8560 u_ff=0.0000 phase_ms=0.0505
+ts=8:37:309 idx=36561 src=cascade e_v=-0.7697 u_raw=-0.8560 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:309 idx=36562 src=sewmac x=0.8024 v=0.2280 eta=2.8925
+ts=8:37:309 idx=36563 src=tick phase=0.0505 x=0.8024 v=0.2280 eta=2.8925 warn=
+ts=8:37:408 idx=36564 src=sewmac phase=0.0472
+ts=8:37:408 idx=36565 src=scurve x=0.8024 v=0.2280 a=0.8000 t=0.0200/2.9125 eta=2.8925
+ts=8:37:408 idx=36567 src=stepgen cmd=0.9895 fb=0.9927 v_fb_mot=-0.2054 v_fb_ms=-0.1544 phase_ms=0.0472
+ts=8:37:408 idx=36568 src=cascade xr=0.7440 vr=-0.2340 ar=1.0000 theta_l=1.0314 e_p=-0.2874 v_cmd=-0.5552 v_meas=-0.1544 u_fb=1.1452 phase_ms=0.0472
+ts=8:37:408 idx=36569 src=cascade e_v=-0.4008 u_raw=1.1452 u_sat=0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:408 idx=36570 src=sewmac x=0.7990 v=-0.1544 eta=2.8825
+ts=8:37:408 idx=36571 src=tick phase=0.0472 x=0.7990 v=-0.1544 eta=2.8825
+ts=8:37:507 idx=36572 src=sewmac phase=0.0440
+ts=8:37:507 idx=36573 src=scurve x=0.7990 v=-0.1544 a=1.2000 t=0.0300/2.9125 eta=2.8825
+ts=8:37:507 idx=36575 src=stepgen cmd=0.9865 fb=0.9895 v_fb_mot=-0.3071 v_fb_ms=-0.2309 phase_ms=0.0440
+ts=8:37:507 idx=36576 src=cascade xr=0.7417 vr=-0.2200 ar=1.4000 theta_l=1.0456 e_p=-0.3039 v_cmd=-0.5584 v_meas=-0.2309 u_fb=0.4779 phase_ms=0.0440
+ts=8:37:507 idx=36577 src=cascade e_v=-0.3275 u_raw=0.4779 u_sat=0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:507 idx=36578 src=sewmac x=0.7959 v=-0.2309 eta=2.8725
+ts=8:37:507 idx=36579 src=tick phase=0.0440 x=0.7959 v=-0.2309 eta=2.8725
+ts=8:37:606 idx=36580 src=sewmac phase=0.0410
+ts=8:37:606 idx=36581 src=scurve x=0.7959 v=-0.2309 a=1.6000 t=0.0400/2.9125 eta=2.8725
+ts=8:37:606 idx=36583 src=stepgen cmd=0.9837 fb=0.9865 v_fb_mot=-0.3274 v_fb_ms=-0.2462 phase_ms=0.0410
+ts=8:37:606 idx=36584 src=cascade xr=0.7396 vr=-0.2020 ar=1.8000 theta_l=1.0546 e_p=-0.3150 v_cmd=-0.5521 v_meas=-0.2462 u_fb=0.2750 phase_ms=0.0410
+ts=8:37:606 idx=36585 src=cascade e_v=-0.3059 u_raw=0.2750 u_sat=0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:606 idx=36586 src=sewmac x=0.7929 v=-0.2462 eta=2.8625
+ts=8:37:606 idx=36587 src=tick phase=0.0410 x=0.7929 v=-0.2462 eta=2.8625
+ts=8:37:706 idx=36588 src=sewmac phase=0.0382
+ts=8:37:706 idx=36589 src=scurve x=0.7929 v=-0.2462 a=2.0000 t=0.0500/2.9125 eta=2.8625
+ts=8:37:706 idx=36591 src=stepgen cmd=0.9812 fb=0.9837 v_fb_mot=-0.3315 v_fb_ms=-0.2492 phase_ms=0.0382
+ts=8:37:706 idx=36592 src=cascade xr=0.7377 vr=-0.1800 ar=2.2000 theta_l=1.0594 e_p=-0.3217 v_cmd=-0.5374 v_meas=-0.2492 u_fb=0.2633 phase_ms=0.0382
+ts=8:37:706 idx=36593 src=cascade e_v=-0.2882 u_raw=0.2633 u_sat=0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:706 idx=36594 src=sewmac x=0.7900 v=-0.2492 eta=2.8525
+ts=8:37:706 idx=36595 src=tick phase=0.0382 x=0.7900 v=-0.2492 eta=2.8525
+ts=8:37:806 idx=36596 src=sewmac phase=0.0357
+ts=8:37:806 idx=36597 src=scurve x=0.7900 v=-0.2492 a=2.4000 t=0.0600/2.9125 eta=2.8525
+ts=8:37:806 idx=36599 src=stepgen cmd=0.9789 fb=0.9812 v_fb_mot=-0.3323 v_fb_ms=-0.2498 phase_ms=0.0357
+ts=8:37:806 idx=36600 src=cascade xr=0.7360 vr=-0.1540 ar=2.6000 theta_l=1.0609 e_p=-0.3249 v_cmd=-0.5153 v_meas=-0.2498 u_fb=0.2880 phase_ms=0.0357
+ts=8:37:806 idx=36601 src=cascade e_v=-0.2654 u_raw=0.2880 u_sat=0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:37:806 idx=36602 src=sewmac x=0.7875 v=-0.2498 eta=2.8425
+ts=8:37:806 idx=36603 src=tick phase=0.0357 x=0.7875 v=-0.2498 eta=2.8425
+ts=8:37:905 idx=36604 src=sewmac phase=0.0335
+ts=8:37:905 idx=36605 src=scurve x=0.7875 v=-0.2498 a=2.8000 t=0.0700/2.9125 eta=2.8425
+ts=8:37:905 idx=36607 src=stepgen cmd=0.9771 fb=0.9789 v_fb_mot=-0.2970 v_fb_ms=-0.2233 phase_ms=0.0335
+ts=8:37:905 idx=36608 src=cascade xr=0.7347 vr=-0.1240 ar=3.0000 theta_l=1.0601 e_p=-0.3254 v_cmd=-0.4865 v_meas=-0.2233 u_fb=0.2064 phase_ms=0.0335
+ts=8:37:905 idx=36609 src=cascade e_v=-0.2632 u_raw=0.2064 u_sat=0.2064 cap=0.2500 deadband=no sat=no
+ts=8:37:905 idx=36610 src=sewmac x=0.7854 v=-0.2233 eta=2.8325
+ts=8:37:905 idx=36611 src=tick phase=0.0335 x=0.7854 v=-0.2233 eta=2.8325
+ts=8:38:005 idx=36612 src=sewmac phase=0.0317
+ts=8:38:005 idx=36613 src=scurve x=0.7854 v=-0.2233 a=3.2000 t=0.0800/2.9125 eta=2.8325
+ts=8:38:005 idx=36615 src=stepgen cmd=0.9757 fb=0.9771 v_fb_mot=-0.2545 v_fb_ms=-0.1913 phase_ms=0.0317
+ts=8:38:005 idx=36616 src=cascade xr=0.7336 vr=-0.0905 ar=3.3538 theta_l=1.0576 e_p=-0.3240 v_cmd=-0.4522 v_meas=-0.1913 u_fb=0.1635 phase_ms=0.0317
+ts=8:38:005 idx=36617 src=cascade e_v=-0.2609 u_raw=0.1635 u_sat=0.1635 cap=0.2500 deadband=no sat=no
+ts=8:38:005 idx=36618 src=sewmac x=0.7835 v=-0.1913 eta=2.8225
+ts=8:38:005 idx=36619 src=tick phase=0.0317 x=0.7835 v=-0.1913 eta=2.8225
+ts=8:38:104 idx=36620 src=sewmac phase=0.0302
+ts=8:38:104 idx=36621 src=scurve x=0.7835 v=-0.1913 a=3.3282 t=0.0900/2.9125 eta=2.8225
+ts=8:38:104 idx=36623 src=stepgen cmd=0.9747 fb=0.9757 v_fb_mot=-0.2105 v_fb_ms=-0.1583 phase_ms=0.0302
+ts=8:38:104 idx=36624 src=cascade xr=0.7328 vr=-0.0592 ar=3.1282 theta_l=1.0541 e_p=-0.3213 v_cmd=-0.4188 v_meas=-0.1583 u_fb=0.1126 phase_ms=0.0302
+ts=8:38:104 idx=36625 src=cascade e_v=-0.2606 u_raw=0.1126 u_sat=0.1126 cap=0.2500 deadband=no sat=no
+ts=8:38:104 idx=36626 src=sewmac x=0.7820 v=-0.1583 eta=2.8125
+ts=8:38:104 idx=36627 src=tick phase=0.0302 x=0.7820 v=-0.1583 eta=2.8125
+ts=8:38:204 idx=36628 src=sewmac phase=0.0292
+ts=8:38:204 idx=36629 src=scurve x=0.7820 v=-0.1583 a=2.9282 t=0.1000/2.9125 eta=2.8125
+ts=8:38:204 idx=36631 src=stepgen cmd=0.9741 fb=0.9747 v_fb_mot=-0.1485 v_fb_ms=-0.1117 phase_ms=0.0292
+ts=8:38:204 idx=36632 src=cascade xr=0.7324 vr=-0.0319 ar=2.7282 theta_l=1.0502 e_p=-0.3178 v_cmd=-0.3887 v_meas=-0.1117 u_fb=-0.0087 phase_ms=0.0292
+ts=8:38:204 idx=36633 src=cascade e_v=-0.2770 u_raw=-0.0087 u_sat=-0.0087 cap=0.2500 deadband=no sat=no
+ts=8:38:204 idx=36634 src=sewmac x=0.7810 v=-0.1117 eta=2.8025
+ts=8:38:204 idx=36635 src=tick phase=0.0292 x=0.7810 v=-0.1117 eta=2.8025
+ts=8:38:303 idx=36636 src=sewmac phase=0.0285
+ts=8:38:303 idx=36637 src=scurve x=0.7810 v=-0.1117 a=2.5282 t=0.1100/2.9125 eta=2.8025
+ts=8:38:303 idx=36639 src=stepgen cmd=0.9738 fb=0.9741 v_fb_mot=-0.1006 v_fb_ms=-0.0757 phase_ms=0.0285
+ts=8:38:303 idx=36640 src=cascade xr=0.7322 vr=-0.0086 ar=2.3282 theta_l=1.0462 e_p=-0.3140 v_cmd=-0.3622 v_meas=-0.0757 u_fb=-0.1042 phase_ms=0.0285
+ts=8:38:303 idx=36641 src=cascade e_v=-0.2866 u_raw=-0.1042 u_sat=-0.1042 cap=0.2500 deadband=no sat=no
+ts=8:38:303 idx=36642 src=sewmac x=0.7804 v=-0.0757 eta=2.7925
+ts=8:38:303 idx=36643 src=tick phase=0.0285 x=0.7804 v=-0.0757 eta=2.7925
+ts=8:38:402 idx=36644 src=sewmac phase=0.0282
+ts=8:38:402 idx=36645 src=scurve x=0.7804 v=-0.0757 a=2.1282 t=0.1200/2.9125 eta=2.7925
+ts=8:38:402 idx=36647 src=stepgen fb=0.9738 v_fb_mot=-0.0556 v_fb_ms=-0.0418 phase_ms=0.0282
+ts=8:38:402 idx=36648 src=cascade vr=0.0107 ar=1.9282 theta_l=1.0424 e_p=-0.3102 v_cmd=-0.3398 v_meas=-0.0418 u_fb=-0.2094 phase_ms=0.0282
+ts=8:38:402 idx=36649 src=cascade e_v=-0.2980 u_raw=-0.2094 u_sat=-0.2094 cap=0.2500 deadband=no sat=no
+ts=8:38:402 idx=36650 src=sewmac x=0.7800 v=-0.0418 eta=2.7825
+ts=8:38:402 idx=36651 src=tick phase=0.0282 x=0.7800 v=-0.0418 eta=2.7825
+ts=8:38:501 idx=36653 src=scurve x=0.7800 v=-0.0418 a=1.7282 t=0.1300/2.9125 eta=2.7825
+ts=8:38:501 idx=36655 src=stepgen cmd=0.9741 v_fb_mot=-0.0111 v_fb_ms=-0.0084
+ts=8:38:501 idx=36656 src=cascade xr=0.7324 vr=0.0259 ar=1.5282 theta_l=1.0390 e_p=-0.3067 v_cmd=-0.3216 v_meas=-0.0084 u_fb=-0.3329
+ts=8:38:501 idx=36657 src=cascade e_v=-0.3132 u_raw=-0.3329 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:38:501 idx=36658 src=sewmac v=-0.0084 eta=2.7725
+ts=8:38:501 idx=36659 src=tick v=-0.0084 eta=2.7725
+ts=8:38:601 idx=36660 src=sewmac phase=0.0283
+ts=8:38:601 idx=36661 src=scurve v=-0.0084 a=1.3282 t=0.1400/2.9125 eta=2.7725
+ts=8:38:601 idx=36663 src=stepgen cmd=0.9745 fb=0.9741 v_fb_mot=0.0155 v_fb_ms=0.0117 phase_ms=0.0283
+ts=8:38:601 idx=36664 src=cascade xr=0.7327 vr=0.0372 ar=1.1282 theta_l=1.0362 e_p=-0.3035 v_cmd=-0.3077 v_meas=0.0117 u_fb=-0.3386 phase_ms=0.0283
+ts=8:38:601 idx=36665 src=cascade e_v=-0.3194 u_raw=-0.3386 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:38:601 idx=36666 src=sewmac x=0.7802 v=0.0117 eta=2.7625
+ts=8:38:601 idx=36667 src=tick phase=0.0283 x=0.7802 v=0.0117 eta=2.7625
+ts=8:38:700 idx=36668 src=sewmac phase=0.0288
+ts=8:38:700 idx=36669 src=scurve x=0.7802 v=0.0117 a=0.9282 t=0.1500/2.9125 eta=2.7625
+ts=8:38:700 idx=36671 src=stepgen cmd=0.9750 fb=0.9745 v_fb_mot=0.0563 v_fb_ms=0.0423 phase_ms=0.0288
+ts=8:38:700 idx=36672 src=cascade xr=0.7331 vr=0.0445 ar=0.7282 theta_l=1.0340 e_p=-0.3008 v_cmd=-0.2984 v_meas=0.0423 u_fb=-0.4035 phase_ms=0.0288
+ts=8:38:700 idx=36673 src=cascade e_v=-0.3407 u_raw=-0.4035 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:38:700 idx=36674 src=sewmac x=0.7807 v=0.0423 eta=2.7525
+ts=8:38:700 idx=36675 src=tick phase=0.0288 x=0.7807 v=0.0423 eta=2.7525
+ts=8:38:799 idx=36676 src=sewmac phase=0.0293
+ts=8:38:799 idx=36677 src=scurve x=0.7807 v=0.0423 a=0.5282 t=0.1600/2.9125 eta=2.7525
+ts=8:38:799 idx=36679 src=stepgen cmd=0.9757 fb=0.9750 v_fb_mot=0.0645 v_fb_ms=0.0485 phase_ms=0.0293
+ts=8:38:799 idx=36680 src=cascade xr=0.7336 vr=0.0478 ar=0.3282 theta_l=1.0323 e_p=-0.2987 v_cmd=-0.2936 v_meas=0.0485 u_fb=-0.3237 phase_ms=0.0293
+ts=8:38:799 idx=36681 src=cascade e_v=-0.3420 u_raw=-0.3237 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:38:799 idx=36682 src=sewmac x=0.7812 v=0.0485 eta=2.7425
+ts=8:38:799 idx=36683 src=tick phase=0.0293 x=0.7812 v=0.0485 eta=2.7425
+ts=8:38:898 idx=36684 src=sewmac phase=0.0300
+ts=8:38:898 idx=36685 src=scurve x=0.7812 v=0.0485 a=0.1282 t=0.1700/2.9125 eta=2.7425
+ts=8:38:898 idx=36687 src=stepgen cmd=0.9763 fb=0.9757 v_fb_mot=0.0838 v_fb_ms=0.0630 phase_ms=0.0300
+ts=8:38:898 idx=36688 src=cascade xr=0.7341 vr=0.0489 ar=0.1129 theta_l=1.0312 e_p=-0.2971 v_cmd=-0.2914 v_meas=0.0630 u_fb=-0.3706 phase_ms=0.0300
+ts=8:38:898 idx=36689 src=cascade e_v=-0.3544 u_raw=-0.3706 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:38:898 idx=36690 src=sewmac x=0.7819 v=0.0630 eta=2.7325
+ts=8:38:898 idx=36691 src=tick phase=0.0300 x=0.7819 v=0.0630 eta=2.7325
+ts=8:38:998 idx=36692 src=sewmac phase=0.0307
+ts=8:38:998 idx=36693 src=scurve x=0.7819 v=0.0630 a=0.2718 t=0.1800/2.9125 eta=2.7325
+ts=8:38:998 idx=36695 src=stepgen cmd=0.9770 fb=0.9763 v_fb_mot=0.0877 v_fb_ms=0.0659 phase_ms=0.0307
+ts=8:38:998 idx=36696 src=cascade xr=0.7346 vr=0.0536 ar=0.4718 theta_l=1.0305 e_p=-0.2960 v_cmd=-0.2861 v_meas=0.0659 u_fb=-0.3110 phase_ms=0.0307
+ts=8:38:998 idx=36697 src=cascade e_v=-0.3521 u_raw=-0.3110 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:38:998 idx=36698 src=sewmac x=0.7825 v=0.0659 eta=2.7225
+ts=8:38:998 idx=36699 src=tick phase=0.0307 x=0.7825 v=0.0659 eta=2.7225
+ts=8:39:097 idx=36700 src=sewmac phase=0.0313
+ts=8:39:097 idx=36701 src=scurve x=0.7825 v=0.0659 a=0.6718 t=0.1900/2.9125 eta=2.7225
+ts=8:39:097 idx=36703 src=stepgen cmd=0.9777 fb=0.9770 v_fb_mot=0.0885 v_fb_ms=0.0665 phase_ms=0.0313
+ts=8:39:097 idx=36704 src=cascade xr=0.7351 vr=0.0624 ar=0.8718 theta_l=1.0303 e_p=-0.2951 v_cmd=-0.2772 v_meas=0.0665 u_fb=-0.2853 phase_ms=0.0313
+ts=8:39:097 idx=36705 src=cascade e_v=-0.3437 u_raw=-0.2853 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:097 idx=36706 src=sewmac x=0.7832 v=0.0665 eta=2.7125
+ts=8:39:097 idx=36707 src=tick phase=0.0313 x=0.7832 v=0.0665 eta=2.7125
+ts=8:39:197 idx=36708 src=sewmac phase=0.0322
+ts=8:39:197 idx=36709 src=scurve x=0.7832 v=0.0665 a=1.0718 t=0.2000/2.9125 eta=2.7125
+ts=8:39:197 idx=36711 src=stepgen cmd=0.9787 fb=0.9777 v_fb_mot=0.1064 v_fb_ms=0.0800 phase_ms=0.0322
+ts=8:39:197 idx=36712 src=cascade xr=0.7358 vr=0.0751 ar=1.2718 theta_l=1.0304 e_p=-0.2946 v_cmd=-0.2645 v_meas=0.0800 u_fb=-0.3220 phase_ms=0.0322
+ts=8:39:197 idx=36713 src=cascade e_v=-0.3445 u_raw=-0.3220 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:197 idx=36714 src=sewmac x=0.7840 v=0.0800 eta=2.7025
+ts=8:39:197 idx=36715 src=tick phase=0.0322 x=0.7840 v=0.0800 eta=2.7025
+ts=8:39:296 idx=36716 src=sewmac phase=0.0330
+ts=8:39:296 idx=36717 src=scurve x=0.7840 v=0.0800 a=1.4718 t=0.2100/2.9125 eta=2.7025
+ts=8:39:296 idx=36719 src=stepgen cmd=0.9798 fb=0.9787 v_fb_mot=0.1099 v_fb_ms=0.0827 phase_ms=0.0330
+ts=8:39:296 idx=36720 src=cascade xr=0.7367 vr=0.0918 ar=1.6718 theta_l=1.0308 e_p=-0.2942 v_cmd=-0.2480 v_meas=0.0827 u_fb=-0.2608 phase_ms=0.0330
+ts=8:39:296 idx=36721 src=cascade e_v=-0.3307 u_raw=-0.2608 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:296 idx=36722 src=sewmac x=0.7849 v=0.0827 eta=2.6925
+ts=8:39:296 idx=36723 src=tick phase=0.0330 x=0.7849 v=0.0827 eta=2.6925
+ts=8:39:395 idx=36724 src=sewmac phase=0.0342
+ts=8:39:395 idx=36725 src=scurve x=0.7849 v=0.0827 a=1.8718 t=0.2200/2.9125 eta=2.6925
+ts=8:39:395 idx=36727 src=stepgen cmd=0.9811 fb=0.9798 v_fb_mot=0.1461 v_fb_ms=0.1099 phase_ms=0.0342
+ts=8:39:395 idx=36728 src=cascade xr=0.7377 vr=0.1125 ar=2.0718 theta_l=1.0316 e_p=-0.2939 v_cmd=-0.2276 v_meas=0.1099 u_fb=-0.3448 phase_ms=0.0342
+ts=8:39:395 idx=36729 src=cascade e_v=-0.3375 u_raw=-0.3448 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:395 idx=36730 src=sewmac x=0.7860 v=0.1099 eta=2.6825
+ts=8:39:395 idx=36731 src=tick phase=0.0342 x=0.7860 v=0.1099 eta=2.6825
+ts=8:39:494 idx=36732 src=sewmac phase=0.0355
+ts=8:39:494 idx=36733 src=scurve x=0.7860 v=0.1099 a=2.2718 t=0.2300/2.9125 eta=2.6825
+ts=8:39:494 idx=36735 src=stepgen cmd=0.9828 fb=0.9811 v_fb_mot=0.1711 v_fb_ms=0.1286 phase_ms=0.0355
+ts=8:39:494 idx=36736 src=cascade xr=0.7389 vr=0.1372 ar=2.4718 theta_l=1.0327 e_p=-0.2937 v_cmd=-0.2033 v_meas=0.1286 u_fb=-0.2942 phase_ms=0.0355
+ts=8:39:494 idx=36737 src=cascade e_v=-0.3319 u_raw=-0.2942 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:494 idx=36738 src=sewmac x=0.7874 v=0.1286 eta=2.6725
+ts=8:39:494 idx=36739 src=tick phase=0.0355 x=0.7874 v=0.1286 eta=2.6725
+ts=8:39:593 idx=36740 src=sewmac phase=0.0372
+ts=8:39:593 idx=36741 src=scurve x=0.7874 v=0.1286 a=2.6718 t=0.2400/2.9125 eta=2.6725
+ts=8:39:593 idx=36743 src=stepgen cmd=0.9848 fb=0.9828 v_fb_mot=0.2116 v_fb_ms=0.1591 phase_ms=0.0372
+ts=8:39:593 idx=36744 src=cascade xr=0.7404 vr=0.1659 ar=2.8718 theta_l=1.0341 e_p=-0.2936 v_cmd=-0.1750 v_meas=0.1591 u_fb=-0.3255 phase_ms=0.0372
+ts=8:39:593 idx=36745 src=cascade e_v=-0.3341 u_raw=-0.3255 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:593 idx=36746 src=sewmac x=0.7890 v=0.1591 eta=2.6625
+ts=8:39:593 idx=36747 src=tick phase=0.0372 x=0.7890 v=0.1591 eta=2.6625
+ts=8:39:693 idx=36748 src=sewmac phase=0.0392
+ts=8:39:693 idx=36749 src=scurve x=0.7890 v=0.1591 a=3.0718 t=0.2500/2.9125 eta=2.6625
+ts=8:39:693 idx=36751 src=stepgen cmd=0.9872 fb=0.9848 v_fb_mot=0.2551 v_fb_ms=0.1918 phase_ms=0.0392
+ts=8:39:693 idx=36752 src=cascade xr=0.7423 vr=0.1963 ar=3.0323 theta_l=1.0358 e_p=-0.2935 v_cmd=-0.1452 v_meas=0.1918 u_fb=-0.3291 phase_ms=0.0392
+ts=8:39:693 idx=36753 src=cascade e_v=-0.3370 u_raw=-0.3291 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:693 idx=36754 src=sewmac x=0.7910 v=0.1918 eta=2.6525
+ts=8:39:693 idx=36755 src=tick phase=0.0392 x=0.7910 v=0.1918 eta=2.6525
+ts=8:39:792 idx=36756 src=sewmac phase=0.0415
+ts=8:39:792 idx=36757 src=scurve x=0.7910 v=0.1918 a=2.8528 t=0.2600/2.9125 eta=2.6525
+ts=8:39:792 idx=36759 src=stepgen cmd=0.9900 fb=0.9872 v_fb_mot=0.2993 v_fb_ms=0.2250 phase_ms=0.0415
+ts=8:39:792 idx=36760 src=cascade xr=0.7444 vr=0.2228 ar=2.6528 theta_l=1.0379 v_cmd=-0.1192 v_meas=0.2250 u_fb=-0.3479 phase_ms=0.0415
+ts=8:39:792 idx=36761 src=cascade e_v=-0.3443 u_raw=-0.3479 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:792 idx=36762 src=sewmac x=0.7934 v=0.2250 eta=2.6425
+ts=8:39:792 idx=36763 src=tick phase=0.0415 x=0.7934 v=0.2250 eta=2.6425
+ts=8:39:892 idx=36764 src=sewmac phase=0.0443
+ts=8:39:892 idx=36765 src=scurve x=0.7934 v=0.2250 a=2.4528 t=0.2700/2.9125 eta=2.6425
+ts=8:39:892 idx=36767 src=stepgen cmd=0.9931 fb=0.9900 v_fb_mot=0.3259 v_fb_ms=0.2450 phase_ms=0.0443
+ts=8:39:892 idx=36768 src=cascade xr=0.7467 vr=0.2453 ar=2.2528 theta_l=1.0403 e_p=-0.2936 v_cmd=-0.0974 v_meas=0.2450 u_fb=-0.3112 phase_ms=0.0443
+ts=8:39:892 idx=36769 src=cascade e_v=-0.3424 u_raw=-0.3112 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:892 idx=36770 src=sewmac x=0.7962 v=0.2450 eta=2.6325
+ts=8:39:892 idx=36771 src=tick phase=0.0443 x=0.7962 v=0.2450 eta=2.6325
+ts=8:39:991 idx=36772 src=sewmac phase=0.0475
+ts=8:39:991 idx=36773 src=scurve x=0.7962 v=0.2450 a=2.0528 t=0.2800/2.9125 eta=2.6325
+ts=8:39:991 idx=36775 src=stepgen cmd=0.9965 fb=0.9931 v_fb_mot=0.3312 v_fb_ms=0.2490 phase_ms=0.0475
+ts=8:39:991 idx=36776 src=cascade xr=0.7492 vr=0.2500 ar=0.4673 theta_l=1.0432 e_p=-0.2940 v_cmd=-0.0937 v_meas=0.2490 u_fb=-0.3195 phase_ms=0.0475
+ts=8:39:991 idx=36777 src=cascade e_v=-0.3427 u_raw=-0.3195 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:39:991 idx=36778 src=sewmac x=0.7994 v=0.2490 eta=2.6225
+ts=8:39:991 idx=36779 src=tick phase=0.0475 x=0.7994 v=0.2490 eta=2.6225
+ts=8:40:091 idx=36780 src=sewmac phase=0.0508
+ts=8:40:091 idx=36781 src=scurve x=0.7994 v=0.2490 a=1.6528 t=0.2900/2.9125 eta=2.6225
+ts=8:40:091 idx=36783 src=stepgen cmd=0.9999 fb=0.9965 v_fb_mot=0.3322 v_fb_ms=0.2498 phase_ms=0.0508
+ts=8:40:091 idx=36784 src=cascade xr=0.7518 ar=0.0000 theta_l=1.0465 e_p=-0.2946 v_cmd=-0.0949 v_meas=0.2498 u_fb=-0.3271 phase_ms=0.0508
+ts=8:40:091 idx=36785 src=cascade e_v=-0.3447 u_raw=-0.3271 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:091 idx=36786 src=sewmac x=0.8027 v=0.2498 eta=2.6125
+ts=8:40:091 idx=36787 src=tick phase=0.0508 x=0.8027 v=0.2498 eta=2.6125
+ts=8:40:191 idx=36788 src=sewmac phase=0.0543
+ts=8:40:191 idx=36789 src=scurve x=0.8027 v=0.2498 a=1.2528 t=0.3000/2.9125 eta=2.6125
+ts=8:40:191 idx=36791 src=stepgen cmd=1.0033 fb=0.9999 v_fb_mot=0.3324 v_fb_ms=0.2500 phase_ms=0.0543
+ts=8:40:191 idx=36792 src=cascade xr=0.7544 theta_l=1.0500 e_p=-0.2956 v_cmd=-0.0965 v_meas=0.2500 u_fb=-0.3262 phase_ms=0.0543
+ts=8:40:191 idx=36793 src=cascade e_v=-0.3465 u_raw=-0.3262 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:191 idx=36794 src=sewmac x=0.8062 v=0.2500 eta=2.6025
+ts=8:40:191 idx=36795 src=tick phase=0.0543 x=0.8062 v=0.2500 eta=2.6025
+ts=8:40:290 idx=36796 src=sewmac phase=0.0577
+ts=8:40:290 idx=36797 src=scurve x=0.8062 v=0.2500 a=0.8528 t=0.3100/2.9125 eta=2.6025
+ts=8:40:290 idx=36799 src=stepgen cmd=1.0067 fb=1.0033 v_fb_mot=0.3325 phase_ms=0.0577
+ts=8:40:290 idx=36800 src=cascade xr=0.7569 theta_l=1.0537 e_p=-0.2968 v_cmd=-0.0983 u_fb=-0.3268 phase_ms=0.0577
+ts=8:40:290 idx=36801 src=cascade e_v=-0.3483 u_raw=-0.3268 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:290 idx=36802 src=sewmac x=0.8095 eta=2.5925
+ts=8:40:290 idx=36803 src=tick phase=0.0577 x=0.8095 eta=2.5925
+ts=8:40:390 idx=36804 src=sewmac phase=0.0610
+ts=8:40:390 idx=36805 src=scurve x=0.8095 a=0.4528 t=0.3200/2.9125 eta=2.5925
+ts=8:40:390 idx=36807 src=stepgen cmd=1.0100 fb=1.0067 phase_ms=0.0610
+ts=8:40:390 idx=36808 src=cascade xr=0.7594 theta_l=1.0575 e_p=-0.2980 v_cmd=-0.1001 u_fb=-0.3275 phase_ms=0.0610
+ts=8:40:390 idx=36809 src=cascade e_v=-0.3501 u_raw=-0.3275 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:390 idx=36810 src=sewmac x=0.8129 eta=2.5825
+ts=8:40:390 idx=36811 src=tick phase=0.0610 x=0.8129 eta=2.5825
+ts=8:40:490 idx=36812 src=sewmac phase=0.0643
+ts=8:40:490 idx=36813 src=scurve x=0.8129 a=0.0528 t=0.3300/2.9125 eta=2.5825
+ts=8:40:490 idx=36815 src=stepgen cmd=1.0134 fb=1.0100 phase_ms=0.0643
+ts=8:40:490 idx=36816 src=cascade xr=0.7619 theta_l=1.0613 e_p=-0.2994 v_cmd=-0.1020 u_fb=-0.3281 phase_ms=0.0643
+ts=8:40:490 idx=36817 src=cascade e_v=-0.3520 u_raw=-0.3281 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:490 idx=36818 src=sewmac x=0.8162 eta=2.5725
+ts=8:40:490 idx=36819 src=tick phase=0.0643 x=0.8162 eta=2.5725
+ts=8:40:590 idx=36820 src=sewmac phase=0.0677
+ts=8:40:590 idx=36821 src=scurve x=0.8162 a=0.0000 t=0.3400/2.9125 eta=2.5725
+ts=8:40:590 idx=36823 src=stepgen cmd=1.0167 fb=1.0134 phase_ms=0.0677
+ts=8:40:590 idx=36824 src=cascade xr=0.7644 theta_l=1.0651 e_p=-0.3007 v_cmd=-0.1040 u_fb=-0.3285 phase_ms=0.0677
+ts=8:40:590 idx=36825 src=cascade e_v=-0.3540 u_raw=-0.3285 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:590 idx=36826 src=sewmac x=0.8195 eta=2.5625
+ts=8:40:590 idx=36827 src=tick phase=0.0677 x=0.8195 eta=2.5625
+ts=8:40:689 idx=36828 src=sewmac phase=0.0710
+ts=8:40:689 idx=36829 src=scurve x=0.8195 t=0.3500/2.9125 eta=2.5625
+ts=8:40:689 idx=36831 src=stepgen cmd=1.0200 fb=1.0167 phase_ms=0.0710
+ts=8:40:689 idx=36832 src=cascade xr=0.7669 theta_l=1.0689 e_p=-0.3020 v_cmd=-0.1059 u_fb=-0.3288 phase_ms=0.0710
+ts=8:40:689 idx=36833 src=cascade e_v=-0.3559 u_raw=-0.3288 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:689 idx=36834 src=sewmac x=0.8229 eta=2.5525
+ts=8:40:689 idx=36835 src=tick phase=0.0710 x=0.8229 eta=2.5525
+ts=8:40:788 idx=36836 src=sewmac phase=0.0743
+ts=8:40:788 idx=36837 src=scurve x=0.8229 t=0.3600/2.9125 eta=2.5525
+ts=8:40:788 idx=36839 src=stepgen cmd=1.0233 fb=1.0200 phase_ms=0.0743
+ts=8:40:788 idx=36840 src=cascade xr=0.7694 theta_l=1.0727 e_p=-0.3033 v_cmd=-0.1078 u_fb=-0.3291 phase_ms=0.0743
+ts=8:40:788 idx=36841 src=cascade e_v=-0.3578 u_raw=-0.3291 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:788 idx=36842 src=sewmac x=0.8262 eta=2.5425
+ts=8:40:788 idx=36843 src=tick phase=0.0743 x=0.8262 eta=2.5425
+ts=8:40:888 idx=36844 src=sewmac phase=0.0777
+ts=8:40:888 idx=36845 src=scurve x=0.8262 t=0.3700/2.9125 eta=2.5425
+ts=8:40:888 idx=36847 src=stepgen cmd=1.0267 fb=1.0233 phase_ms=0.0777
+ts=8:40:888 idx=36848 src=cascade xr=0.7719 theta_l=1.0764 e_p=-0.3045 v_cmd=-0.1096 u_fb=-0.3292 phase_ms=0.0777
+ts=8:40:888 idx=36849 src=cascade e_v=-0.3596 u_raw=-0.3292 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:888 idx=36850 src=sewmac x=0.8295 eta=2.5325
+ts=8:40:888 idx=36851 src=tick phase=0.0777 x=0.8295 eta=2.5325
+ts=8:40:988 idx=36852 src=sewmac phase=0.0810
+ts=8:40:988 idx=36853 src=scurve x=0.8295 t=0.3800/2.9125 eta=2.5325
+ts=8:40:988 idx=36855 src=stepgen cmd=1.0300 fb=1.0267 phase_ms=0.0810
+ts=8:40:988 idx=36856 src=cascade xr=0.7744 theta_l=1.0801 e_p=-0.3057 v_cmd=-0.1114 u_fb=-0.3294 phase_ms=0.0810
+ts=8:40:988 idx=36857 src=cascade e_v=-0.3614 u_raw=-0.3294 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:40:988 idx=36858 src=sewmac x=0.8329 eta=2.5225
+ts=8:40:988 idx=36859 src=tick phase=0.0810 x=0.8329 eta=2.5225
+ts=8:41:088 idx=36860 src=sewmac phase=0.0843
+ts=8:41:088 idx=36861 src=scurve x=0.8329 t=0.3900/2.9125 eta=2.5225
+ts=8:41:088 idx=36863 src=stepgen cmd=1.0333 fb=1.0300 phase_ms=0.0843
+ts=8:41:088 idx=36864 src=cascade xr=0.7769 theta_l=1.0837 e_p=-0.3068 v_cmd=-0.1131 u_fb=-0.3295 phase_ms=0.0843
+ts=8:41:088 idx=36865 src=cascade e_v=-0.3631 u_raw=-0.3295 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:088 idx=36866 src=sewmac x=0.8362 eta=2.5125
+ts=8:41:088 idx=36867 src=tick phase=0.0843 x=0.8362 eta=2.5125
+ts=8:41:186 idx=36868 src=sewmac phase=0.0877
+ts=8:41:186 idx=36869 src=scurve x=0.8362 t=0.4000/2.9125 eta=2.5125
+ts=8:41:186 idx=36871 src=stepgen cmd=1.0366 fb=1.0333 phase_ms=0.0877
+ts=8:41:186 idx=36872 src=cascade xr=0.7794 theta_l=1.0873 e_p=-0.3078 v_cmd=-0.1148 u_fb=-0.3297 phase_ms=0.0877
+ts=8:41:186 idx=36873 src=cascade e_v=-0.3648 u_raw=-0.3297 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:186 idx=36874 src=sewmac x=0.8395 eta=2.5025
+ts=8:41:186 idx=36875 src=tick phase=0.0877 x=0.8395 eta=2.5025
+ts=8:41:285 idx=36876 src=sewmac phase=0.0910
+ts=8:41:285 idx=36877 src=scurve x=0.8395 t=0.4100/2.9125 eta=2.5025
+ts=8:41:285 idx=36879 src=stepgen cmd=1.0400 fb=1.0366 phase_ms=0.0910
+ts=8:41:285 idx=36880 src=cascade xr=0.7819 theta_l=1.0908 e_p=-0.3088 v_cmd=-0.1164 u_fb=-0.3298 phase_ms=0.0910
+ts=8:41:285 idx=36881 src=cascade e_v=-0.3664 u_raw=-0.3298 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:285 idx=36882 src=sewmac x=0.8429 eta=2.4925
+ts=8:41:285 idx=36883 src=tick phase=0.0910 x=0.8429 eta=2.4925
+ts=8:41:385 idx=36884 src=sewmac phase=0.0943
+ts=8:41:385 idx=36885 src=scurve x=0.8429 t=0.4200/2.9125 eta=2.4925
+ts=8:41:385 idx=36887 src=stepgen cmd=1.0433 fb=1.0400 phase_ms=0.0943
+ts=8:41:385 idx=36888 src=cascade xr=0.7844 theta_l=1.0942 e_p=-0.3098 v_cmd=-0.1180 u_fb=-0.3300 phase_ms=0.0943
+ts=8:41:385 idx=36889 src=cascade e_v=-0.3680 u_raw=-0.3300 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:385 idx=36890 src=sewmac x=0.8462 eta=2.4825
+ts=8:41:385 idx=36891 src=tick phase=0.0943 x=0.8462 eta=2.4825
+ts=8:41:486 idx=36892 src=sewmac phase=0.0977
+ts=8:41:486 idx=36893 src=scurve x=0.8462 t=0.4300/2.9125 eta=2.4825
+ts=8:41:486 idx=36895 src=stepgen cmd=1.0466 fb=1.0433 phase_ms=0.0977
+ts=8:41:486 idx=36896 src=cascade xr=0.7869 theta_l=1.0977 e_p=-0.3107 v_cmd=-0.1195 u_fb=-0.3301 phase_ms=0.0977
+ts=8:41:486 idx=36897 src=cascade e_v=-0.3695 u_raw=-0.3301 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:486 idx=36898 src=sewmac x=0.8495 eta=2.4725
+ts=8:41:486 idx=36899 src=tick phase=0.0977 x=0.8495 eta=2.4725
+ts=8:41:585 idx=36900 src=sewmac phase=0.1010
+ts=8:41:585 idx=36901 src=scurve x=0.8495 t=0.4400/2.9125 eta=2.4725
+ts=8:41:585 idx=36903 src=stepgen cmd=1.0499 fb=1.0466 phase_ms=0.1010
+ts=8:41:585 idx=36904 src=cascade xr=0.7894 theta_l=1.1011 e_p=-0.3117 v_cmd=-0.1211 u_fb=-0.3303 phase_ms=0.1010
+ts=8:41:585 idx=36905 src=cascade e_v=-0.3711 u_raw=-0.3303 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:585 idx=36906 src=sewmac x=0.8529 eta=2.4625
+ts=8:41:585 idx=36907 src=tick phase=0.1010 x=0.8529 eta=2.4625
+ts=8:41:685 idx=36908 src=sewmac phase=0.1043
+ts=8:41:685 idx=36909 src=scurve x=0.8529 t=0.4500/2.9125 eta=2.4625
+ts=8:41:685 idx=36911 src=stepgen cmd=1.0533 fb=1.0499 phase_ms=0.1043
+ts=8:41:685 idx=36912 src=cascade xr=0.7919 theta_l=1.1045 e_p=-0.3125 v_cmd=-0.1226 u_fb=-0.3305 phase_ms=0.1043
+ts=8:41:685 idx=36913 src=cascade e_v=-0.3726 u_raw=-0.3305 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:685 idx=36914 src=sewmac x=0.8562 eta=2.4525
+ts=8:41:685 idx=36915 src=tick phase=0.1043 x=0.8562 eta=2.4525
+ts=8:41:785 idx=36916 src=sewmac phase=0.1077
+ts=8:41:785 idx=36917 src=scurve x=0.8562 t=0.4600/2.9125 eta=2.4525
+ts=8:41:785 idx=36919 src=stepgen cmd=1.0566 fb=1.0533 phase_ms=0.1077
+ts=8:41:785 idx=36920 src=cascade xr=0.7944 theta_l=1.1078 e_p=-0.3134 v_cmd=-0.1241 u_fb=-0.3308 phase_ms=0.1077
+ts=8:41:785 idx=36921 src=cascade e_v=-0.3741 u_raw=-0.3308 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:785 idx=36922 src=sewmac x=0.8595 eta=2.4425
+ts=8:41:785 idx=36923 src=tick phase=0.1077 x=0.8595 eta=2.4425
+ts=8:41:884 idx=36924 src=sewmac phase=0.1110
+ts=8:41:884 idx=36925 src=scurve x=0.8595 t=0.4700/2.9125 eta=2.4425
+ts=8:41:884 idx=36927 src=stepgen cmd=1.0599 fb=1.0566 phase_ms=0.1110
+ts=8:41:884 idx=36928 src=cascade xr=0.7969 theta_l=1.1112 e_p=-0.3142 v_cmd=-0.1255 u_fb=-0.3310 phase_ms=0.1110
+ts=8:41:884 idx=36929 src=cascade e_v=-0.3755 u_raw=-0.3310 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:884 idx=36930 src=sewmac x=0.8629 eta=2.4325
+ts=8:41:884 idx=36931 src=tick phase=0.1110 x=0.8629 eta=2.4325
+ts=8:41:984 idx=36932 src=sewmac phase=0.1143
+ts=8:41:984 idx=36933 src=scurve x=0.8629 t=0.4800/2.9125 eta=2.4325
+ts=8:41:984 idx=36935 src=stepgen cmd=1.0632 fb=1.0599 phase_ms=0.1143
+ts=8:41:984 idx=36936 src=cascade xr=0.7994 theta_l=1.1145 e_p=-0.3151 v_cmd=-0.1270 u_fb=-0.3313 phase_ms=0.1143
+ts=8:41:984 idx=36937 src=cascade e_v=-0.3770 u_raw=-0.3313 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:41:984 idx=36938 src=sewmac x=0.8662 eta=2.4225
+ts=8:41:984 idx=36939 src=tick phase=0.1143 x=0.8662 eta=2.4225
+ts=8:42:083 idx=36940 src=sewmac phase=0.1177
+ts=8:42:083 idx=36941 src=scurve x=0.8662 t=0.4900/2.9125 eta=2.4225
+ts=8:42:083 idx=36943 src=stepgen cmd=1.0666 fb=1.0632 phase_ms=0.1177
+ts=8:42:083 idx=36944 src=cascade xr=0.8019 theta_l=1.1178 e_p=-0.3159 v_cmd=-0.1285 u_fb=-0.3315 phase_ms=0.1177
+ts=8:42:083 idx=36945 src=cascade e_v=-0.3785 u_raw=-0.3315 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:083 idx=36946 src=sewmac x=0.8695 eta=2.4125
+ts=8:42:083 idx=36947 src=tick phase=0.1177 x=0.8695 eta=2.4125
+ts=8:42:182 idx=36948 src=sewmac phase=0.1210
+ts=8:42:182 idx=36949 src=scurve x=0.8695 t=0.5000/2.9125 eta=2.4125
+ts=8:42:182 idx=36951 src=stepgen cmd=1.0699 fb=1.0666 phase_ms=0.1210
+ts=8:42:182 idx=36952 src=cascade xr=0.8044 theta_l=1.1211 e_p=-0.3167 v_cmd=-0.1299 u_fb=-0.3318 phase_ms=0.1210
+ts=8:42:182 idx=36953 src=cascade e_v=-0.3799 u_raw=-0.3318 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:182 idx=36954 src=sewmac x=0.8729 eta=2.4025
+ts=8:42:182 idx=36955 src=tick phase=0.1210 x=0.8729 eta=2.4025
+ts=8:42:282 idx=36956 src=sewmac phase=0.1243
+ts=8:42:282 idx=36957 src=scurve x=0.8729 t=0.5100/2.9125 eta=2.4025
+ts=8:42:282 idx=36959 src=stepgen cmd=1.0732 fb=1.0699 phase_ms=0.1243
+ts=8:42:282 idx=36960 src=cascade xr=0.8069 theta_l=1.1245 e_p=-0.3175 v_cmd=-0.1314 u_fb=-0.3321 phase_ms=0.1243
+ts=8:42:282 idx=36961 src=cascade e_v=-0.3814 u_raw=-0.3321 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:282 idx=36962 src=sewmac x=0.8762 eta=2.3925
+ts=8:42:282 idx=36963 src=tick phase=0.1243 x=0.8762 eta=2.3925
+ts=8:42:381 idx=36964 src=sewmac phase=0.1277
+ts=8:42:381 idx=36965 src=scurve x=0.8762 t=0.5200/2.9125 eta=2.3925
+ts=8:42:381 idx=36967 src=stepgen cmd=1.0765 fb=1.0732 phase_ms=0.1277
+ts=8:42:381 idx=36968 src=cascade xr=0.8094 theta_l=1.1278 e_p=-0.3183 v_cmd=-0.1328 u_fb=-0.3324 phase_ms=0.1277
+ts=8:42:381 idx=36969 src=cascade e_v=-0.3828 u_raw=-0.3324 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:381 idx=36970 src=sewmac x=0.8795 eta=2.3825
+ts=8:42:381 idx=36971 src=tick phase=0.1277 x=0.8795 eta=2.3825
+ts=8:42:480 idx=36972 src=sewmac phase=0.1310
+ts=8:42:480 idx=36973 src=scurve x=0.8795 t=0.5300/2.9125 eta=2.3825
+ts=8:42:480 idx=36975 src=stepgen cmd=1.0799 fb=1.0765 phase_ms=0.1310
+ts=8:42:480 idx=36976 src=cascade xr=0.8119 theta_l=1.1311 e_p=-0.3192 v_cmd=-0.1343 u_fb=-0.3327 phase_ms=0.1310
+ts=8:42:480 idx=36977 src=cascade e_v=-0.3843 u_raw=-0.3327 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:480 idx=36978 src=sewmac x=0.8829 eta=2.3725
+ts=8:42:480 idx=36979 src=tick phase=0.1310 x=0.8829 eta=2.3725
+ts=8:42:580 idx=36980 src=sewmac phase=0.1343
+ts=8:42:580 idx=36981 src=scurve x=0.8829 t=0.5400/2.9125 eta=2.3725
+ts=8:42:580 idx=36983 src=stepgen cmd=1.0832 fb=1.0799 phase_ms=0.1343
+ts=8:42:580 idx=36984 src=cascade xr=0.8144 theta_l=1.1344 e_p=-0.3200 v_cmd=-0.1357 u_fb=-0.3330 phase_ms=0.1343
+ts=8:42:580 idx=36985 src=cascade e_v=-0.3857 u_raw=-0.3330 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:580 idx=36986 src=sewmac x=0.8862 eta=2.3625
+ts=8:42:580 idx=36987 src=tick phase=0.1343 x=0.8862 eta=2.3625
+ts=8:42:679 idx=36988 src=sewmac phase=0.1377
+ts=8:42:679 idx=36989 src=scurve x=0.8862 t=0.5500/2.9125 eta=2.3625
+ts=8:42:679 idx=36991 src=stepgen cmd=1.0865 fb=1.0832 phase_ms=0.1377
+ts=8:42:679 idx=36992 src=cascade xr=0.8169 theta_l=1.1377 e_p=-0.3208 v_cmd=-0.1372 u_fb=-0.3333 phase_ms=0.1377
+ts=8:42:679 idx=36993 src=cascade e_v=-0.3872 u_raw=-0.3333 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:679 idx=36994 src=sewmac x=0.8895 eta=2.3525
+ts=8:42:679 idx=36995 src=tick phase=0.1377 x=0.8895 eta=2.3525
+ts=8:42:779 idx=36996 src=sewmac phase=0.1410
+ts=8:42:779 idx=36997 src=scurve x=0.8895 t=0.5600/2.9125 eta=2.3525
+ts=8:42:779 idx=36999 src=stepgen cmd=1.0898 fb=1.0865 phase_ms=0.1410
+ts=8:42:779 idx=37000 src=cascade xr=0.8194 theta_l=1.1410 e_p=-0.3216 v_cmd=-0.1386 u_fb=-0.3336 phase_ms=0.1410
+ts=8:42:779 idx=37001 src=cascade e_v=-0.3886 u_raw=-0.3336 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:779 idx=37002 src=sewmac x=0.8929 eta=2.3425
+ts=8:42:779 idx=37003 src=tick phase=0.1410 x=0.8929 eta=2.3425
+ts=8:42:879 idx=37004 src=sewmac phase=0.1443
+ts=8:42:879 idx=37005 src=scurve x=0.8929 t=0.5700/2.9125 eta=2.3425
+ts=8:42:879 idx=37007 src=stepgen cmd=1.0932 fb=1.0898 phase_ms=0.1443
+ts=8:42:879 idx=37008 src=cascade xr=0.8219 theta_l=1.1444 e_p=-0.3224 v_cmd=-0.1401 u_fb=-0.3339 phase_ms=0.1443
+ts=8:42:879 idx=37009 src=cascade e_v=-0.3901 u_raw=-0.3339 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:879 idx=37010 src=sewmac x=0.8962 eta=2.3325
+ts=8:42:879 idx=37011 src=tick phase=0.1443 x=0.8962 eta=2.3325
+ts=8:42:979 idx=37012 src=sewmac phase=0.1477
+ts=8:42:979 idx=37013 src=scurve x=0.8962 t=0.5800/2.9125 eta=2.3325
+ts=8:42:979 idx=37015 src=stepgen cmd=1.0965 fb=1.0932 phase_ms=0.1477
+ts=8:42:979 idx=37016 src=cascade xr=0.8244 theta_l=1.1477 e_p=-0.3233 v_cmd=-0.1416 u_fb=-0.3342 phase_ms=0.1477
+ts=8:42:979 idx=37017 src=cascade e_v=-0.3916 u_raw=-0.3342 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:42:979 idx=37018 src=sewmac x=0.8995 eta=2.3225
+ts=8:42:979 idx=37019 src=tick phase=0.1477 x=0.8995 eta=2.3225
+ts=8:43:079 idx=37020 src=sewmac phase=0.1510
+ts=8:43:079 idx=37021 src=scurve x=0.8995 t=0.5900/2.9125 eta=2.3225
+ts=8:43:079 idx=37023 src=stepgen cmd=1.0998 fb=1.0965 phase_ms=0.1510
+ts=8:43:079 idx=37024 src=cascade xr=0.8269 theta_l=1.1510 e_p=-0.3241 v_cmd=-0.1431 u_fb=-0.3345 phase_ms=0.1510
+ts=8:43:079 idx=37025 src=cascade e_v=-0.3931 u_raw=-0.3345 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:079 idx=37026 src=sewmac x=0.9029 eta=2.3125
+ts=8:43:079 idx=37027 src=tick phase=0.1510 x=0.9029 eta=2.3125
+ts=8:43:178 idx=37028 src=sewmac phase=0.1543
+ts=8:43:178 idx=37029 src=scurve x=0.9029 t=0.6000/2.9125 eta=2.3125
+ts=8:43:178 idx=37031 src=stepgen cmd=1.1031 fb=1.0998 phase_ms=0.1543
+ts=8:43:178 idx=37032 src=cascade xr=0.8294 theta_l=1.1543 e_p=-0.3249 v_cmd=-0.1445 u_fb=-0.3348 phase_ms=0.1543
+ts=8:43:178 idx=37033 src=cascade e_v=-0.3945 u_raw=-0.3348 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:178 idx=37034 src=sewmac x=0.9062 eta=2.3025
+ts=8:43:178 idx=37035 src=tick phase=0.1543 x=0.9062 eta=2.3025
+ts=8:43:277 idx=37036 src=sewmac phase=0.1577
+ts=8:43:277 idx=37037 src=scurve x=0.9062 t=0.6100/2.9125 eta=2.3025
+ts=8:43:277 idx=37039 src=stepgen cmd=1.1065 fb=1.1031 phase_ms=0.1577
+ts=8:43:277 idx=37040 src=cascade xr=0.8319 theta_l=1.1577 e_p=-0.3257 v_cmd=-0.1460 u_fb=-0.3351 phase_ms=0.1577
+ts=8:43:277 idx=37041 src=cascade e_v=-0.3960 u_raw=-0.3351 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:277 idx=37042 src=sewmac x=0.9095 eta=2.2925
+ts=8:43:277 idx=37043 src=tick phase=0.1577 x=0.9095 eta=2.2925
+ts=8:43:377 idx=37044 src=sewmac phase=0.1610
+ts=8:43:377 idx=37045 src=scurve x=0.9095 t=0.6200/2.9125 eta=2.2925
+ts=8:43:377 idx=37047 src=stepgen cmd=1.1098 fb=1.1065 phase_ms=0.1610
+ts=8:43:377 idx=37048 src=cascade xr=0.8344 theta_l=1.1610 e_p=-0.3266 v_cmd=-0.1475 u_fb=-0.3354 phase_ms=0.1610
+ts=8:43:377 idx=37049 src=cascade e_v=-0.3975 u_raw=-0.3354 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:377 idx=37050 src=sewmac x=0.9129 eta=2.2825
+ts=8:43:377 idx=37051 src=tick phase=0.1610 x=0.9129 eta=2.2825
+ts=8:43:477 idx=37052 src=sewmac phase=0.1643
+ts=8:43:477 idx=37053 src=scurve x=0.9129 t=0.6300/2.9125 eta=2.2825
+ts=8:43:477 idx=37055 src=stepgen cmd=1.1131 fb=1.1098 phase_ms=0.1643
+ts=8:43:477 idx=37056 src=cascade xr=0.8369 theta_l=1.1643 e_p=-0.3274 v_cmd=-0.1490 u_fb=-0.3357 phase_ms=0.1643
+ts=8:43:477 idx=37057 src=cascade e_v=-0.3990 u_raw=-0.3357 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:477 idx=37058 src=sewmac x=0.9162 eta=2.2725
+ts=8:43:477 idx=37059 src=tick phase=0.1643 x=0.9162 eta=2.2725
+ts=8:43:576 idx=37060 src=sewmac phase=0.1677
+ts=8:43:576 idx=37061 src=scurve x=0.9162 t=0.6400/2.9125 eta=2.2725
+ts=8:43:576 idx=37063 src=stepgen cmd=1.1164 fb=1.1131 phase_ms=0.1677
+ts=8:43:576 idx=37064 src=cascade xr=0.8394 theta_l=1.1677 e_p=-0.3282 v_cmd=-0.1505 u_fb=-0.3360 phase_ms=0.1677
+ts=8:43:576 idx=37065 src=cascade e_v=-0.4005 u_raw=-0.3360 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:576 idx=37066 src=sewmac x=0.9195 eta=2.2625
+ts=8:43:576 idx=37067 src=tick phase=0.1677 x=0.9195 eta=2.2625
+ts=8:43:675 idx=37068 src=sewmac phase=0.1710
+ts=8:43:675 idx=37069 src=scurve x=0.9195 t=0.6500/2.9125 eta=2.2625
+ts=8:43:675 idx=37071 src=stepgen cmd=1.1198 fb=1.1164 phase_ms=0.1710
+ts=8:43:675 idx=37072 src=cascade xr=0.8419 theta_l=1.1710 e_p=-0.3291 v_cmd=-0.1520 u_fb=-0.3364 phase_ms=0.1710
+ts=8:43:675 idx=37073 src=cascade e_v=-0.4020 u_raw=-0.3364 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:675 idx=37074 src=sewmac x=0.9229 eta=2.2525
+ts=8:43:675 idx=37075 src=tick phase=0.1710 x=0.9229 eta=2.2525
+ts=8:43:775 idx=37076 src=sewmac phase=0.1743
+ts=8:43:775 idx=37077 src=scurve x=0.9229 t=0.6600/2.9125 eta=2.2525
+ts=8:43:775 idx=37079 src=stepgen cmd=1.1231 fb=1.1198 phase_ms=0.1743
+ts=8:43:775 idx=37080 src=cascade xr=0.8444 theta_l=1.1743 e_p=-0.3299 v_cmd=-0.1535 u_fb=-0.3367 phase_ms=0.1743
+ts=8:43:775 idx=37081 src=cascade e_v=-0.4035 u_raw=-0.3367 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:775 idx=37082 src=sewmac x=0.9262 eta=2.2425
+ts=8:43:775 idx=37083 src=tick phase=0.1743 x=0.9262 eta=2.2425
+ts=8:43:874 idx=37084 src=sewmac phase=0.1777
+ts=8:43:874 idx=37085 src=scurve x=0.9262 t=0.6700/2.9125 eta=2.2425
+ts=8:43:874 idx=37087 src=stepgen cmd=1.1264 fb=1.1231 phase_ms=0.1777
+ts=8:43:874 idx=37088 src=cascade xr=0.8469 theta_l=1.1777 e_p=-0.3307 v_cmd=-0.1550 u_fb=-0.3370 phase_ms=0.1777
+ts=8:43:874 idx=37089 src=cascade e_v=-0.4050 u_raw=-0.3370 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:874 idx=37090 src=sewmac x=0.9295 eta=2.2325
+ts=8:43:874 idx=37091 src=tick phase=0.1777 x=0.9295 eta=2.2325
+ts=8:43:974 idx=37092 src=sewmac phase=0.1810
+ts=8:43:974 idx=37093 src=scurve x=0.9295 t=0.6800/2.9125 eta=2.2325
+ts=8:43:974 idx=37095 src=stepgen cmd=1.1297 fb=1.1264 phase_ms=0.1810
+ts=8:43:974 idx=37096 src=cascade xr=0.8494 theta_l=1.1810 e_p=-0.3316 v_cmd=-0.1564 u_fb=-0.3373 phase_ms=0.1810
+ts=8:43:974 idx=37097 src=cascade e_v=-0.4064 u_raw=-0.3373 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:43:974 idx=37098 src=sewmac x=0.9329 eta=2.2225
+ts=8:43:974 idx=37099 src=tick phase=0.1810 x=0.9329 eta=2.2225
+ts=8:44:073 idx=37100 src=sewmac phase=0.1843
+ts=8:44:073 idx=37101 src=scurve x=0.9329 t=0.6900/2.9125 eta=2.2225
+ts=8:44:073 idx=37103 src=stepgen cmd=1.1331 fb=1.1297 phase_ms=0.1843
+ts=8:44:073 idx=37104 src=cascade xr=0.8519 theta_l=1.1843 e_p=-0.3324 v_cmd=-0.1579 u_fb=-0.3376 phase_ms=0.1843
+ts=8:44:073 idx=37105 src=cascade e_v=-0.4079 u_raw=-0.3376 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:073 idx=37106 src=sewmac x=0.9362 eta=2.2125
+ts=8:44:073 idx=37107 src=tick phase=0.1843 x=0.9362 eta=2.2125
+ts=8:44:173 idx=37108 src=sewmac phase=0.1877
+ts=8:44:173 idx=37109 src=scurve x=0.9362 t=0.7000/2.9125 eta=2.2125
+ts=8:44:173 idx=37111 src=stepgen cmd=1.1364 fb=1.1331 phase_ms=0.1877
+ts=8:44:173 idx=37112 src=cascade xr=0.8544 theta_l=1.1877 e_p=-0.3332 v_cmd=-0.1594 u_fb=-0.3379 phase_ms=0.1877
+ts=8:44:173 idx=37113 src=cascade e_v=-0.4094 u_raw=-0.3379 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:173 idx=37114 src=sewmac x=0.9395 eta=2.2025
+ts=8:44:173 idx=37115 src=tick phase=0.1877 x=0.9395 eta=2.2025
+ts=8:44:273 idx=37116 src=sewmac phase=0.1910
+ts=8:44:273 idx=37117 src=scurve x=0.9395 t=0.7100/2.9125 eta=2.2025
+ts=8:44:273 idx=37119 src=stepgen cmd=1.1397 fb=1.1364 phase_ms=0.1910
+ts=8:44:273 idx=37120 src=cascade xr=0.8569 theta_l=1.1910 e_p=-0.3341 v_cmd=-0.1609 u_fb=-0.3382 phase_ms=0.1910
+ts=8:44:273 idx=37121 src=cascade e_v=-0.4109 u_raw=-0.3382 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:273 idx=37122 src=sewmac x=0.9429 eta=2.1925
+ts=8:44:273 idx=37123 src=tick phase=0.1910 x=0.9429 eta=2.1925
+ts=8:44:372 idx=37124 src=sewmac phase=0.1943
+ts=8:44:372 idx=37125 src=scurve x=0.9429 t=0.7200/2.9125 eta=2.1925
+ts=8:44:372 idx=37127 src=stepgen cmd=1.1430 fb=1.1397 phase_ms=0.1943
+ts=8:44:372 idx=37128 src=cascade xr=0.8594 theta_l=1.1943 e_p=-0.3349 v_cmd=-0.1625 u_fb=-0.3385 phase_ms=0.1943
+ts=8:44:372 idx=37129 src=cascade e_v=-0.4125 u_raw=-0.3385 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:372 idx=37130 src=sewmac x=0.9462 eta=2.1825
+ts=8:44:372 idx=37131 src=tick phase=0.1943 x=0.9462 eta=2.1825
+ts=8:44:472 idx=37132 src=sewmac phase=0.1977
+ts=8:44:472 idx=37133 src=scurve x=0.9462 t=0.7300/2.9125 eta=2.1825
+ts=8:44:472 idx=37135 src=stepgen cmd=1.1464 fb=1.1430 phase_ms=0.1977
+ts=8:44:472 idx=37136 src=cascade xr=0.8619 theta_l=1.1977 e_p=-0.3357 v_cmd=-0.1640 u_fb=-0.3388 phase_ms=0.1977
+ts=8:44:472 idx=37137 src=cascade e_v=-0.4140 u_raw=-0.3388 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:472 idx=37138 src=sewmac x=0.9495 eta=2.1725
+ts=8:44:472 idx=37139 src=tick phase=0.1977 x=0.9495 eta=2.1725
+ts=8:44:571 idx=37140 src=sewmac phase=0.2010
+ts=8:44:571 idx=37141 src=scurve x=0.9495 t=0.7400/2.9125 eta=2.1725
+ts=8:44:571 idx=37143 src=stepgen cmd=1.1497 fb=1.1464 phase_ms=0.2010
+ts=8:44:571 idx=37144 src=cascade xr=0.8644 theta_l=1.2010 e_p=-0.3366 v_cmd=-0.1655 u_fb=-0.3391 phase_ms=0.2010
+ts=8:44:571 idx=37145 src=cascade e_v=-0.4155 u_raw=-0.3391 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:571 idx=37146 src=sewmac x=0.9529 eta=2.1625
+ts=8:44:571 idx=37147 src=tick phase=0.2010 x=0.9529 eta=2.1625
+ts=8:44:670 idx=37148 src=sewmac phase=0.2043
+ts=8:44:670 idx=37149 src=scurve x=0.9529 t=0.7500/2.9125 eta=2.1625
+ts=8:44:670 idx=37151 src=stepgen cmd=1.1530 fb=1.1497 phase_ms=0.2043
+ts=8:44:670 idx=37152 src=cascade xr=0.8669 theta_l=1.2043 e_p=-0.3374 v_cmd=-0.1670 u_fb=-0.3394 phase_ms=0.2043
+ts=8:44:670 idx=37153 src=cascade e_v=-0.4170 u_raw=-0.3394 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:670 idx=37154 src=sewmac x=0.9562 eta=2.1525
+ts=8:44:670 idx=37155 src=tick phase=0.2043 x=0.9562 eta=2.1525
+ts=8:44:770 idx=37156 src=sewmac phase=0.2077
+ts=8:44:770 idx=37157 src=scurve x=0.9562 t=0.7600/2.9125 eta=2.1525
+ts=8:44:770 idx=37159 src=stepgen cmd=1.1563 fb=1.1530 phase_ms=0.2077
+ts=8:44:770 idx=37160 src=cascade xr=0.8694 theta_l=1.2077 e_p=-0.3382 v_cmd=-0.1685 u_fb=-0.3397 phase_ms=0.2077
+ts=8:44:770 idx=37161 src=cascade e_v=-0.4185 u_raw=-0.3397 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:770 idx=37162 src=sewmac x=0.9595 eta=2.1425
+ts=8:44:770 idx=37163 src=tick phase=0.2077 x=0.9595 eta=2.1425
+ts=8:44:870 idx=37164 src=sewmac phase=0.2110
+ts=8:44:870 idx=37165 src=scurve x=0.9595 t=0.7700/2.9125 eta=2.1425
+ts=8:44:870 idx=37167 src=stepgen cmd=1.1597 fb=1.1563 phase_ms=0.2110
+ts=8:44:870 idx=37168 src=cascade xr=0.8719 theta_l=1.2110 e_p=-0.3391 v_cmd=-0.1700 u_fb=-0.3400 phase_ms=0.2110
+ts=8:44:870 idx=37169 src=cascade e_v=-0.4200 u_raw=-0.3400 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:870 idx=37170 src=sewmac x=0.9629 eta=2.1325
+ts=8:44:870 idx=37171 src=tick phase=0.2110 x=0.9629 eta=2.1325
+ts=8:44:969 idx=37172 src=sewmac phase=0.2143
+ts=8:44:969 idx=37173 src=scurve x=0.9629 t=0.7800/2.9125 eta=2.1325
+ts=8:44:969 idx=37175 src=stepgen cmd=1.1630 fb=1.1597 phase_ms=0.2143
+ts=8:44:969 idx=37176 src=cascade xr=0.8744 theta_l=1.2143 e_p=-0.3399 v_cmd=-0.1715 u_fb=-0.3404 phase_ms=0.2143
+ts=8:44:969 idx=37177 src=cascade e_v=-0.4215 u_raw=-0.3404 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:44:969 idx=37178 src=sewmac x=0.9662 eta=2.1225
+ts=8:44:969 idx=37179 src=tick phase=0.2143 x=0.9662 eta=2.1225
+ts=8:45:068 idx=37180 src=sewmac phase=0.2177
+ts=8:45:068 idx=37181 src=scurve x=0.9662 t=0.7900/2.9125 eta=2.1225
+ts=8:45:068 idx=37183 src=stepgen cmd=1.1663 fb=1.1630 phase_ms=0.2177
+ts=8:45:068 idx=37184 src=cascade xr=0.8769 theta_l=1.2177 e_p=-0.3407 v_cmd=-0.1730 u_fb=-0.3407 phase_ms=0.2177
+ts=8:45:068 idx=37185 src=cascade e_v=-0.4230 u_raw=-0.3407 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:068 idx=37186 src=sewmac x=0.9695 eta=2.1125
+ts=8:45:068 idx=37187 src=tick phase=0.2177 x=0.9695 eta=2.1125
+ts=8:45:168 idx=37188 src=sewmac phase=0.2210
+ts=8:45:168 idx=37189 src=scurve x=0.9695 t=0.8000/2.9125 eta=2.1125
+ts=8:45:168 idx=37191 src=stepgen cmd=1.1696 fb=1.1663 phase_ms=0.2210
+ts=8:45:168 idx=37192 src=cascade xr=0.8794 theta_l=1.2210 e_p=-0.3416 v_cmd=-0.1745 u_fb=-0.3410 phase_ms=0.2210
+ts=8:45:168 idx=37193 src=cascade e_v=-0.4245 u_raw=-0.3410 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:168 idx=37194 src=sewmac x=0.9729 eta=2.1025
+ts=8:45:168 idx=37195 src=tick phase=0.2210 x=0.9729 eta=2.1025
+ts=8:45:268 idx=37196 src=sewmac phase=0.2243
+ts=8:45:268 idx=37197 src=scurve x=0.9729 t=0.8100/2.9125 eta=2.1025
+ts=8:45:268 idx=37199 src=stepgen cmd=1.1730 fb=1.1696 phase_ms=0.2243
+ts=8:45:268 idx=37200 src=cascade xr=0.8819 theta_l=1.2243 e_p=-0.3424 v_cmd=-0.1761 u_fb=-0.3413 phase_ms=0.2243
+ts=8:45:268 idx=37201 src=cascade e_v=-0.4261 u_raw=-0.3413 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:268 idx=37202 src=sewmac x=0.9762 eta=2.0925
+ts=8:45:268 idx=37203 src=tick phase=0.2243 x=0.9762 eta=2.0925
+ts=8:45:367 idx=37204 src=sewmac phase=0.2277
+ts=8:45:367 idx=37205 src=scurve x=0.9762 t=0.8200/2.9125 eta=2.0925
+ts=8:45:367 idx=37207 src=stepgen cmd=1.1763 fb=1.1730 phase_ms=0.2277
+ts=8:45:367 idx=37208 src=cascade xr=0.8844 theta_l=1.2277 e_p=-0.3432 v_cmd=-0.1776 u_fb=-0.3416 phase_ms=0.2277
+ts=8:45:367 idx=37209 src=cascade e_v=-0.4276 u_raw=-0.3416 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:367 idx=37210 src=sewmac x=0.9795 eta=2.0825
+ts=8:45:367 idx=37211 src=tick phase=0.2277 x=0.9795 eta=2.0825
+ts=8:45:466 idx=37212 src=sewmac phase=0.2310
+ts=8:45:466 idx=37213 src=scurve x=0.9795 t=0.8300/2.9125 eta=2.0825
+ts=8:45:466 idx=37215 src=stepgen cmd=1.1796 fb=1.1763 phase_ms=0.2310
+ts=8:45:466 idx=37216 src=cascade xr=0.8869 theta_l=1.2310 e_p=-0.3441 v_cmd=-0.1791 u_fb=-0.3419 phase_ms=0.2310
+ts=8:45:466 idx=37217 src=cascade e_v=-0.4291 u_raw=-0.3419 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:466 idx=37218 src=sewmac x=0.9829 eta=2.0725
+ts=8:45:466 idx=37219 src=tick phase=0.2310 x=0.9829 eta=2.0725
+ts=8:45:566 idx=37220 src=sewmac phase=0.2343
+ts=8:45:566 idx=37221 src=scurve x=0.9829 t=0.8400/2.9125 eta=2.0725
+ts=8:45:566 idx=37223 src=stepgen cmd=1.1829 fb=1.1796 phase_ms=0.2343
+ts=8:45:566 idx=37224 src=cascade xr=0.8894 theta_l=1.2343 e_p=-0.3449 v_cmd=-0.1806 u_fb=-0.3422 phase_ms=0.2343
+ts=8:45:566 idx=37225 src=cascade e_v=-0.4306 u_raw=-0.3422 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:566 idx=37226 src=sewmac x=0.9862 eta=2.0625
+ts=8:45:566 idx=37227 src=tick phase=0.2343 x=0.9862 eta=2.0625
+ts=8:45:665 idx=37228 src=sewmac phase=0.2377
+ts=8:45:665 idx=37229 src=scurve x=0.9862 t=0.8500/2.9125 eta=2.0625
+ts=8:45:665 idx=37231 src=stepgen cmd=1.1863 fb=1.1829 phase_ms=0.2377
+ts=8:45:665 idx=37232 src=cascade xr=0.8919 theta_l=1.2377 e_p=-0.3457 v_cmd=-0.1821 u_fb=-0.3425 phase_ms=0.2377
+ts=8:45:665 idx=37233 src=cascade e_v=-0.4321 u_raw=-0.3425 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:665 idx=37234 src=sewmac x=0.9895 eta=2.0525
+ts=8:45:665 idx=37235 src=tick phase=0.2377 x=0.9895 eta=2.0525
+ts=8:45:764 idx=37236 src=sewmac phase=0.2410
+ts=8:45:764 idx=37237 src=scurve x=0.9895 t=0.8600/2.9125 eta=2.0525
+ts=8:45:764 idx=37239 src=stepgen cmd=1.1896 fb=1.1863 phase_ms=0.2410
+ts=8:45:764 idx=37240 src=cascade xr=0.8944 theta_l=1.2410 e_p=-0.3466 v_cmd=-0.1837 u_fb=-0.3428 phase_ms=0.2410
+ts=8:45:764 idx=37241 src=cascade e_v=-0.4337 u_raw=-0.3428 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:764 idx=37242 src=sewmac x=0.9929 eta=2.0425
+ts=8:45:764 idx=37243 src=tick phase=0.2410 x=0.9929 eta=2.0425
+ts=8:45:864 idx=37244 src=sewmac phase=0.2443
+ts=8:45:864 idx=37245 src=scurve x=0.9929 t=0.8700/2.9125 eta=2.0425
+ts=8:45:864 idx=37247 src=stepgen cmd=1.1929 fb=1.1896 phase_ms=0.2443
+ts=8:45:864 idx=37248 src=cascade xr=0.8969 theta_l=1.2443 e_p=-0.3474 v_cmd=-0.1852 u_fb=-0.3432 phase_ms=0.2443
+ts=8:45:864 idx=37249 src=cascade e_v=-0.4352 u_raw=-0.3432 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:864 idx=37250 src=sewmac x=0.9962 eta=2.0325
+ts=8:45:864 idx=37251 src=tick phase=0.2443 x=0.9962 eta=2.0325
+ts=8:45:963 idx=37252 src=sewmac phase=0.2477
+ts=8:45:963 idx=37253 src=scurve x=0.9962 t=0.8800/2.9125 eta=2.0325
+ts=8:45:963 idx=37255 src=stepgen cmd=1.1962 fb=1.1929 phase_ms=0.2477
+ts=8:45:963 idx=37256 src=cascade xr=0.8994 theta_l=1.2477 e_p=-0.3482 v_cmd=-0.1867 u_fb=-0.3435 phase_ms=0.2477
+ts=8:45:963 idx=37257 src=cascade e_v=-0.4367 u_raw=-0.3435 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:45:963 idx=37258 src=sewmac x=0.9995 eta=2.0225
+ts=8:45:963 idx=37259 src=tick phase=0.2477 x=0.9995 eta=2.0225
+ts=8:46:063 idx=37260 src=sewmac phase=0.2510
+ts=8:46:063 idx=37261 src=scurve x=0.9995 t=0.8900/2.9125 eta=2.0225
+ts=8:46:063 idx=37263 src=stepgen cmd=1.1996 fb=1.1962 phase_ms=0.2510
+ts=8:46:063 idx=37264 src=cascade xr=0.9019 theta_l=1.2510 e_p=-0.3491 v_cmd=-0.1883 u_fb=-0.3438 phase_ms=0.2510
+ts=8:46:063 idx=37265 src=cascade e_v=-0.4383 u_raw=-0.3438 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:063 idx=37266 src=sewmac x=1.0029 eta=2.0125
+ts=8:46:063 idx=37267 src=tick phase=0.2510 x=1.0029 eta=2.0125
+ts=8:46:162 idx=37268 src=sewmac phase=0.2543
+ts=8:46:162 idx=37269 src=scurve x=1.0029 t=0.9000/2.9125 eta=2.0125
+ts=8:46:162 idx=37271 src=stepgen cmd=1.2029 fb=1.1996 phase_ms=0.2543
+ts=8:46:162 idx=37272 src=cascade xr=0.9044 theta_l=1.2543 e_p=-0.3499 v_cmd=-0.1898 u_fb=-0.3441 phase_ms=0.2543
+ts=8:46:162 idx=37273 src=cascade e_v=-0.4398 u_raw=-0.3441 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:162 idx=37274 src=sewmac x=1.0062 eta=2.0025
+ts=8:46:162 idx=37275 src=tick phase=0.2543 x=1.0062 eta=2.0025
+ts=8:46:261 idx=37276 src=sewmac phase=0.2577
+ts=8:46:261 idx=37277 src=scurve x=1.0062 t=0.9100/2.9125 eta=2.0025
+ts=8:46:261 idx=37279 src=stepgen cmd=1.2062 fb=1.2029 phase_ms=0.2577
+ts=8:46:261 idx=37280 src=cascade xr=0.9069 theta_l=1.2577 e_p=-0.3507 v_cmd=-0.1913 u_fb=-0.3444 phase_ms=0.2577
+ts=8:46:261 idx=37281 src=cascade e_v=-0.4413 u_raw=-0.3444 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:261 idx=37282 src=sewmac x=1.0095 eta=1.9925
+ts=8:46:261 idx=37283 src=tick phase=0.2577 x=1.0095 eta=1.9925
+ts=8:46:361 idx=37284 src=sewmac phase=0.2610
+ts=8:46:361 idx=37285 src=scurve x=1.0095 t=0.9200/2.9125 eta=1.9925
+ts=8:46:361 idx=37287 src=stepgen cmd=1.2095 fb=1.2062 phase_ms=0.2610
+ts=8:46:361 idx=37288 src=cascade xr=0.9094 theta_l=1.2610 e_p=-0.3516 v_cmd=-0.1929 u_fb=-0.3447 phase_ms=0.2610
+ts=8:46:361 idx=37289 src=cascade e_v=-0.4429 u_raw=-0.3447 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:361 idx=37290 src=sewmac x=1.0129 eta=1.9825
+ts=8:46:361 idx=37291 src=tick phase=0.2610 x=1.0129 eta=1.9825
+ts=8:46:461 idx=37292 src=sewmac phase=0.2643
+ts=8:46:461 idx=37293 src=scurve x=1.0129 t=0.9300/2.9125 eta=1.9825
+ts=8:46:461 idx=37295 src=stepgen cmd=1.2129 fb=1.2095 phase_ms=0.2643
+ts=8:46:461 idx=37296 src=cascade xr=0.9119 theta_l=1.2643 e_p=-0.3524 v_cmd=-0.1944 u_fb=-0.3450 phase_ms=0.2643
+ts=8:46:461 idx=37297 src=cascade e_v=-0.4444 u_raw=-0.3450 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:461 idx=37298 src=sewmac x=1.0162 eta=1.9725
+ts=8:46:461 idx=37299 src=tick phase=0.2643 x=1.0162 eta=1.9725
+ts=8:46:560 idx=37300 src=sewmac phase=0.2677
+ts=8:46:560 idx=37301 src=scurve x=1.0162 t=0.9400/2.9125 eta=1.9725
+ts=8:46:560 idx=37303 src=stepgen cmd=1.2162 fb=1.2129 phase_ms=0.2677
+ts=8:46:560 idx=37304 src=cascade xr=0.9144 theta_l=1.2677 e_p=-0.3532 v_cmd=-0.1959 u_fb=-0.3453 phase_ms=0.2677
+ts=8:46:560 idx=37305 src=cascade e_v=-0.4459 u_raw=-0.3453 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:560 idx=37306 src=sewmac x=1.0195 eta=1.9625
+ts=8:46:560 idx=37307 src=tick phase=0.2677 x=1.0195 eta=1.9625
+ts=8:46:660 idx=37308 src=sewmac phase=0.2710
+ts=8:46:660 idx=37309 src=scurve x=1.0195 t=0.9500/2.9125 eta=1.9625
+ts=8:46:660 idx=37311 src=stepgen cmd=1.2195 fb=1.2162 phase_ms=0.2710
+ts=8:46:660 idx=37312 src=cascade xr=0.9169 theta_l=1.2710 e_p=-0.3541 v_cmd=-0.1975 u_fb=-0.3457 phase_ms=0.2710
+ts=8:46:660 idx=37313 src=cascade e_v=-0.4475 u_raw=-0.3457 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:660 idx=37314 src=sewmac x=1.0229 eta=1.9525
+ts=8:46:660 idx=37315 src=tick phase=0.2710 x=1.0229 eta=1.9525
+ts=8:46:760 idx=37316 src=sewmac phase=0.2743
+ts=8:46:760 idx=37317 src=scurve x=1.0229 t=0.9600/2.9125 eta=1.9525
+ts=8:46:760 idx=37319 src=stepgen cmd=1.2228 fb=1.2195 phase_ms=0.2743
+ts=8:46:760 idx=37320 src=cascade xr=0.9194 theta_l=1.2743 e_p=-0.3549 v_cmd=-0.1990 u_fb=-0.3460 phase_ms=0.2743
+ts=8:46:760 idx=37321 src=cascade e_v=-0.4490 u_raw=-0.3460 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:760 idx=37322 src=sewmac x=1.0262 eta=1.9425
+ts=8:46:760 idx=37323 src=tick phase=0.2743 x=1.0262 eta=1.9425
+ts=8:46:859 idx=37324 src=sewmac phase=0.2777
+ts=8:46:859 idx=37325 src=scurve x=1.0262 t=0.9700/2.9125 eta=1.9425
+ts=8:46:859 idx=37327 src=stepgen cmd=1.2262 fb=1.2228 phase_ms=0.2777
+ts=8:46:859 idx=37328 src=cascade xr=0.9219 theta_l=1.2777 e_p=-0.3557 v_cmd=-0.2006 u_fb=-0.3463 phase_ms=0.2777
+ts=8:46:859 idx=37329 src=cascade e_v=-0.4506 u_raw=-0.3463 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:859 idx=37330 src=sewmac x=1.0295 eta=1.9325
+ts=8:46:859 idx=37331 src=tick phase=0.2777 x=1.0295 eta=1.9325
+ts=8:46:958 idx=37332 src=sewmac phase=0.2810
+ts=8:46:958 idx=37333 src=scurve x=1.0295 t=0.9800/2.9125 eta=1.9325
+ts=8:46:958 idx=37335 src=stepgen cmd=1.2295 fb=1.2262 phase_ms=0.2810
+ts=8:46:958 idx=37336 src=cascade xr=0.9244 theta_l=1.2810 e_p=-0.3566 v_cmd=-0.2021 u_fb=-0.3466 phase_ms=0.2810
+ts=8:46:958 idx=37337 src=cascade e_v=-0.4521 u_raw=-0.3466 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:46:958 idx=37338 src=sewmac x=1.0329 eta=1.9225
+ts=8:46:958 idx=37339 src=tick phase=0.2810 x=1.0329 eta=1.9225
+ts=8:47:057 idx=37340 src=sewmac phase=0.2843
+ts=8:47:057 idx=37341 src=scurve x=1.0329 t=0.9900/2.9125 eta=1.9225
+ts=8:47:057 idx=37343 src=stepgen cmd=1.2328 fb=1.2295 phase_ms=0.2843
+ts=8:47:057 idx=37344 src=cascade xr=0.9269 theta_l=1.2843 e_p=-0.3574 v_cmd=-0.2037 u_fb=-0.3469 phase_ms=0.2843
+ts=8:47:057 idx=37345 src=cascade e_v=-0.4537 u_raw=-0.3469 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:057 idx=37346 src=sewmac x=1.0362 eta=1.9125
+ts=8:47:057 idx=37347 src=tick phase=0.2843 x=1.0362 eta=1.9125
+ts=8:47:157 idx=37348 src=sewmac phase=0.2877
+ts=8:47:157 idx=37349 src=scurve x=1.0362 t=1.0000/2.9125 eta=1.9125
+ts=8:47:157 idx=37351 src=stepgen cmd=1.2361 fb=1.2328 phase_ms=0.2877
+ts=8:47:157 idx=37352 src=cascade xr=0.9294 theta_l=1.2877 e_p=-0.3582 v_cmd=-0.2052 u_fb=-0.3472 phase_ms=0.2877
+ts=8:47:157 idx=37353 src=cascade e_v=-0.4552 u_raw=-0.3472 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:157 idx=37354 src=sewmac x=1.0395 eta=1.9025
+ts=8:47:157 idx=37355 src=tick phase=0.2877 x=1.0395 eta=1.9025
+ts=8:47:257 idx=37356 src=sewmac phase=0.2910
+ts=8:47:257 idx=37357 src=scurve x=1.0395 t=1.0100/2.9125 eta=1.9025
+ts=8:47:257 idx=37359 src=stepgen cmd=1.2395 fb=1.2361 phase_ms=0.2910
+ts=8:47:257 idx=37360 src=cascade xr=0.9319 theta_l=1.2910 e_p=-0.3591 v_cmd=-0.2068 u_fb=-0.3476 phase_ms=0.2910
+ts=8:47:257 idx=37361 src=cascade e_v=-0.4568 u_raw=-0.3476 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:257 idx=37362 src=sewmac x=1.0429 eta=1.8925
+ts=8:47:257 idx=37363 src=tick phase=0.2910 x=1.0429 eta=1.8925
+ts=8:47:356 idx=37364 src=sewmac phase=0.2943
+ts=8:47:356 idx=37365 src=scurve x=1.0429 t=1.0200/2.9125 eta=1.8925
+ts=8:47:356 idx=37367 src=stepgen cmd=1.2428 fb=1.2395 phase_ms=0.2943
+ts=8:47:356 idx=37368 src=cascade xr=0.9344 theta_l=1.2943 e_p=-0.3599 v_cmd=-0.2083 u_fb=-0.3479 phase_ms=0.2943
+ts=8:47:356 idx=37369 src=cascade e_v=-0.4583 u_raw=-0.3479 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:356 idx=37370 src=sewmac x=1.0462 eta=1.8825
+ts=8:47:356 idx=37371 src=tick phase=0.2943 x=1.0462 eta=1.8825
+ts=8:47:456 idx=37372 src=sewmac phase=0.2977
+ts=8:47:456 idx=37373 src=scurve x=1.0462 t=1.0300/2.9125 eta=1.8825
+ts=8:47:456 idx=37375 src=stepgen cmd=1.2461 fb=1.2428 phase_ms=0.2977
+ts=8:47:456 idx=37376 src=cascade xr=0.9369 theta_l=1.2977 e_p=-0.3607 v_cmd=-0.2099 u_fb=-0.3482 phase_ms=0.2977
+ts=8:47:456 idx=37377 src=cascade e_v=-0.4599 u_raw=-0.3482 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:456 idx=37378 src=sewmac x=1.0495 eta=1.8725
+ts=8:47:456 idx=37379 src=tick phase=0.2977 x=1.0495 eta=1.8725
+ts=8:47:555 idx=37380 src=sewmac phase=0.3010
+ts=8:47:555 idx=37381 src=scurve x=1.0495 t=1.0400/2.9125 eta=1.8725
+ts=8:47:555 idx=37383 src=stepgen cmd=1.2494 fb=1.2461 phase_ms=0.3010
+ts=8:47:555 idx=37384 src=cascade xr=0.9394 theta_l=1.3010 e_p=-0.3616 v_cmd=-0.2114 u_fb=-0.3485 phase_ms=0.3010
+ts=8:47:555 idx=37385 src=cascade e_v=-0.4614 u_raw=-0.3485 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:555 idx=37386 src=sewmac x=1.0529 eta=1.8625
+ts=8:47:555 idx=37387 src=tick phase=0.3010 x=1.0529 eta=1.8625
+ts=8:47:655 idx=37388 src=sewmac phase=0.3043
+ts=8:47:655 idx=37389 src=scurve x=1.0529 t=1.0500/2.9125 eta=1.8625
+ts=8:47:655 idx=37391 src=stepgen cmd=1.2528 fb=1.2494 phase_ms=0.3043
+ts=8:47:655 idx=37392 src=cascade xr=0.9419 theta_l=1.3043 e_p=-0.3624 v_cmd=-0.2124 u_fb=-0.3464 phase_ms=0.3043
+ts=8:47:655 idx=37393 src=cascade e_v=-0.4624 u_raw=-0.3464 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:655 idx=37394 src=sewmac x=1.0562 eta=1.8525
+ts=8:47:655 idx=37395 src=tick phase=0.3043 x=1.0562 eta=1.8525
+ts=8:47:754 idx=37396 src=sewmac phase=0.3077
+ts=8:47:754 idx=37397 src=scurve x=1.0562 t=1.0600/2.9125 eta=1.8525
+ts=8:47:754 idx=37399 src=stepgen cmd=1.2561 fb=1.2528 phase_ms=0.3077
+ts=8:47:754 idx=37400 src=cascade xr=0.9444 theta_l=1.3077 e_p=-0.3632 v_cmd=-0.2132 u_fb=-0.3460 phase_ms=0.3077
+ts=8:47:754 idx=37401 src=cascade e_v=-0.4632 u_raw=-0.3460 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:754 idx=37402 src=sewmac x=1.0595 eta=1.8425
+ts=8:47:754 idx=37403 src=tick phase=0.3077 x=1.0595 eta=1.8425
+ts=8:47:855 idx=37404 src=sewmac phase=0.3110
+ts=8:47:855 idx=37405 src=scurve x=1.0595 t=1.0700/2.9125 eta=1.8425
+ts=8:47:855 idx=37407 src=stepgen cmd=1.2594 fb=1.2561 phase_ms=0.3110
+ts=8:47:855 idx=37408 src=cascade xr=0.9469 theta_l=1.3110 e_p=-0.3641 v_cmd=-0.2141 u_fb=-0.3461 phase_ms=0.3110
+ts=8:47:855 idx=37409 src=cascade e_v=-0.4641 u_raw=-0.3461 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:855 idx=37410 src=sewmac x=1.0629 eta=1.8325
+ts=8:47:855 idx=37411 src=tick phase=0.3110 x=1.0629 eta=1.8325
+ts=8:47:956 idx=37412 src=sewmac phase=0.3143
+ts=8:47:956 idx=37413 src=scurve x=1.0629 t=1.0800/2.9125 eta=1.8325
+ts=8:47:956 idx=37415 src=stepgen cmd=1.2627 fb=1.2594 phase_ms=0.3143
+ts=8:47:956 idx=37416 src=cascade xr=0.9494 theta_l=1.3143 e_p=-0.3649 v_cmd=-0.2149 u_fb=-0.3463 phase_ms=0.3143
+ts=8:47:956 idx=37417 src=cascade e_v=-0.4649 u_raw=-0.3463 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:47:956 idx=37418 src=sewmac x=1.0662 eta=1.8225
+ts=8:47:956 idx=37419 src=tick phase=0.3143 x=1.0662 eta=1.8225
+ts=8:48:052 idx=37420 src=sewmac phase=0.3177
+ts=8:48:052 idx=37421 src=scurve x=1.0662 t=1.0900/2.9125 eta=1.8225
+ts=8:48:052 idx=37423 src=stepgen cmd=1.2661 fb=1.2627 phase_ms=0.3177
+ts=8:48:052 idx=37424 src=cascade xr=0.9519 theta_l=1.3177 e_p=-0.3657 v_cmd=-0.2157 u_fb=-0.3465 phase_ms=0.3177
+ts=8:48:052 idx=37425 src=cascade e_v=-0.4657 u_raw=-0.3465 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:052 idx=37426 src=sewmac x=1.0695 eta=1.8125
+ts=8:48:052 idx=37427 src=tick phase=0.3177 x=1.0695 eta=1.8125
+ts=8:48:152 idx=37428 src=sewmac phase=0.3210
+ts=8:48:152 idx=37429 src=scurve x=1.0695 t=1.1000/2.9125 eta=1.8125
+ts=8:48:152 idx=37431 src=stepgen cmd=1.2694 fb=1.2661 phase_ms=0.3210
+ts=8:48:152 idx=37432 src=cascade xr=0.9544 theta_l=1.3210 e_p=-0.3666 v_cmd=-0.2166 u_fb=-0.3466 phase_ms=0.3210
+ts=8:48:152 idx=37433 src=cascade e_v=-0.4666 u_raw=-0.3466 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:152 idx=37434 src=sewmac x=1.0729 eta=1.8025
+ts=8:48:152 idx=37435 src=tick phase=0.3210 x=1.0729 eta=1.8025
+ts=8:48:252 idx=37436 src=sewmac phase=0.3243
+ts=8:48:252 idx=37437 src=scurve x=1.0729 t=1.1100/2.9125 eta=1.8025
+ts=8:48:252 idx=37439 src=stepgen cmd=1.2727 fb=1.2694 phase_ms=0.3243
+ts=8:48:252 idx=37440 src=cascade xr=0.9569 theta_l=1.3243 e_p=-0.3674 v_cmd=-0.2174 u_fb=-0.3468 phase_ms=0.3243
+ts=8:48:252 idx=37441 src=cascade e_v=-0.4674 u_raw=-0.3468 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:252 idx=37442 src=sewmac x=1.0762 eta=1.7925
+ts=8:48:252 idx=37443 src=tick phase=0.3243 x=1.0762 eta=1.7925
+ts=8:48:352 idx=37444 src=sewmac phase=0.3277
+ts=8:48:352 idx=37445 src=scurve x=1.0762 t=1.1200/2.9125 eta=1.7925
+ts=8:48:352 idx=37447 src=stepgen cmd=1.2760 fb=1.2727 phase_ms=0.3277
+ts=8:48:352 idx=37448 src=cascade xr=0.9594 theta_l=1.3277 e_p=-0.3682 v_cmd=-0.2182 u_fb=-0.3470 phase_ms=0.3277
+ts=8:48:352 idx=37449 src=cascade e_v=-0.4682 u_raw=-0.3470 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:352 idx=37450 src=sewmac x=1.0795 eta=1.7825
+ts=8:48:352 idx=37451 src=tick phase=0.3277 x=1.0795 eta=1.7825
+ts=8:48:450 idx=37452 src=sewmac phase=0.3310
+ts=8:48:450 idx=37453 src=scurve x=1.0795 t=1.1300/2.9125 eta=1.7825
+ts=8:48:450 idx=37455 src=stepgen cmd=1.2794 fb=1.2760 phase_ms=0.3310
+ts=8:48:450 idx=37456 src=cascade xr=0.9619 theta_l=1.3310 e_p=-0.3691 v_cmd=-0.2191 u_fb=-0.3471 phase_ms=0.3310
+ts=8:48:450 idx=37457 src=cascade e_v=-0.4691 u_raw=-0.3471 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:450 idx=37458 src=sewmac x=1.0829 eta=1.7725
+ts=8:48:450 idx=37459 src=tick phase=0.3310 x=1.0829 eta=1.7725
+ts=8:48:549 idx=37460 src=sewmac phase=0.3343
+ts=8:48:549 idx=37461 src=scurve x=1.0829 t=1.1400/2.9125 eta=1.7725
+ts=8:48:549 idx=37463 src=stepgen cmd=1.2827 fb=1.2794 phase_ms=0.3343
+ts=8:48:549 idx=37464 src=cascade xr=0.9644 theta_l=1.3343 e_p=-0.3699 v_cmd=-0.2199 u_fb=-0.3473 phase_ms=0.3343
+ts=8:48:549 idx=37465 src=cascade e_v=-0.4699 u_raw=-0.3473 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:549 idx=37466 src=sewmac x=1.0862 eta=1.7625
+ts=8:48:549 idx=37467 src=tick phase=0.3343 x=1.0862 eta=1.7625
+ts=8:48:649 idx=37468 src=sewmac phase=0.3377
+ts=8:48:649 idx=37469 src=scurve x=1.0862 t=1.1500/2.9125 eta=1.7625
+ts=8:48:649 idx=37471 src=stepgen cmd=1.2860 fb=1.2827 phase_ms=0.3377
+ts=8:48:649 idx=37472 src=cascade xr=0.9669 theta_l=1.3377 e_p=-0.3707 v_cmd=-0.2207 u_fb=-0.3475 phase_ms=0.3377
+ts=8:48:649 idx=37473 src=cascade e_v=-0.4707 u_raw=-0.3475 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:649 idx=37474 src=sewmac x=1.0895 eta=1.7525
+ts=8:48:649 idx=37475 src=tick phase=0.3377 x=1.0895 eta=1.7525
+ts=8:48:749 idx=37476 src=sewmac phase=0.3410
+ts=8:48:749 idx=37477 src=scurve x=1.0895 t=1.1600/2.9125 eta=1.7525
+ts=8:48:749 idx=37479 src=stepgen cmd=1.2893 fb=1.2860 phase_ms=0.3410
+ts=8:48:749 idx=37480 src=cascade xr=0.9694 theta_l=1.3410 e_p=-0.3716 v_cmd=-0.2216 u_fb=-0.3476 phase_ms=0.3410
+ts=8:48:749 idx=37481 src=cascade e_v=-0.4716 u_raw=-0.3476 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:749 idx=37482 src=sewmac x=1.0929 eta=1.7425
+ts=8:48:749 idx=37483 src=tick phase=0.3410 x=1.0929 eta=1.7425
+ts=8:48:848 idx=37484 src=sewmac phase=0.3443
+ts=8:48:848 idx=37485 src=scurve x=1.0929 t=1.1700/2.9125 eta=1.7425
+ts=8:48:848 idx=37487 src=stepgen cmd=1.2927 fb=1.2893 phase_ms=0.3443
+ts=8:48:848 idx=37488 src=cascade xr=0.9719 theta_l=1.3443 e_p=-0.3724 v_cmd=-0.2224 u_fb=-0.3478 phase_ms=0.3443
+ts=8:48:848 idx=37489 src=cascade e_v=-0.4724 u_raw=-0.3478 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:848 idx=37490 src=sewmac x=1.0962 eta=1.7325
+ts=8:48:848 idx=37491 src=tick phase=0.3443 x=1.0962 eta=1.7325
+ts=8:48:948 idx=37492 src=sewmac phase=0.3477
+ts=8:48:948 idx=37493 src=scurve x=1.0962 t=1.1800/2.9125 eta=1.7325
+ts=8:48:948 idx=37495 src=stepgen cmd=1.2960 fb=1.2927 phase_ms=0.3477
+ts=8:48:948 idx=37496 src=cascade xr=0.9744 theta_l=1.3477 e_p=-0.3732 v_cmd=-0.2232 u_fb=-0.3480 phase_ms=0.3477
+ts=8:48:948 idx=37497 src=cascade e_v=-0.4732 u_raw=-0.3480 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:48:948 idx=37498 src=sewmac x=1.0995 eta=1.7225
+ts=8:48:948 idx=37499 src=tick phase=0.3477 x=1.0995 eta=1.7225
+ts=8:49:048 idx=37500 src=sewmac phase=0.3510
+ts=8:49:048 idx=37501 src=scurve x=1.0995 t=1.1900/2.9125 eta=1.7225
+ts=8:49:048 idx=37503 src=stepgen cmd=1.2993 fb=1.2960 phase_ms=0.3510
+ts=8:49:048 idx=37504 src=cascade xr=0.9769 theta_l=1.3510 e_p=-0.3741 v_cmd=-0.2241 u_fb=-0.3481 phase_ms=0.3510
+ts=8:49:048 idx=37505 src=cascade e_v=-0.4741 u_raw=-0.3481 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:048 idx=37506 src=sewmac x=1.1029 eta=1.7125
+ts=8:49:048 idx=37507 src=tick phase=0.3510 x=1.1029 eta=1.7125
+ts=8:49:147 idx=37508 src=sewmac phase=0.3543
+ts=8:49:147 idx=37509 src=scurve x=1.1029 t=1.2000/2.9125 eta=1.7125
+ts=8:49:147 idx=37511 src=stepgen cmd=1.3026 fb=1.2993 phase_ms=0.3543
+ts=8:49:147 idx=37512 src=cascade xr=0.9794 theta_l=1.3543 e_p=-0.3749 v_cmd=-0.2249 u_fb=-0.3483 phase_ms=0.3543
+ts=8:49:147 idx=37513 src=cascade e_v=-0.4749 u_raw=-0.3483 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:147 idx=37514 src=sewmac x=1.1062 eta=1.7025
+ts=8:49:147 idx=37515 src=tick phase=0.3543 x=1.1062 eta=1.7025
+ts=8:49:246 idx=37516 src=sewmac phase=0.3577
+ts=8:49:246 idx=37517 src=scurve x=1.1062 t=1.2100/2.9125 eta=1.7025
+ts=8:49:246 idx=37519 src=stepgen cmd=1.3060 fb=1.3026 phase_ms=0.3577
+ts=8:49:246 idx=37520 src=cascade xr=0.9819 theta_l=1.3577 e_p=-0.3757 v_cmd=-0.2257 u_fb=-0.3485 phase_ms=0.3577
+ts=8:49:246 idx=37521 src=cascade e_v=-0.4757 u_raw=-0.3485 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:246 idx=37522 src=sewmac x=1.1095 eta=1.6925
+ts=8:49:246 idx=37523 src=tick phase=0.3577 x=1.1095 eta=1.6925
+ts=8:49:345 idx=37524 src=sewmac phase=0.3610
+ts=8:49:345 idx=37525 src=scurve x=1.1095 t=1.2200/2.9125 eta=1.6925
+ts=8:49:345 idx=37527 src=stepgen cmd=1.3093 fb=1.3060 phase_ms=0.3610
+ts=8:49:345 idx=37528 src=cascade xr=0.9844 theta_l=1.3610 e_p=-0.3766 v_cmd=-0.2266 u_fb=-0.3486 phase_ms=0.3610
+ts=8:49:345 idx=37529 src=cascade e_v=-0.4766 u_raw=-0.3486 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:345 idx=37530 src=sewmac x=1.1129 eta=1.6825
+ts=8:49:345 idx=37531 src=tick phase=0.3610 x=1.1129 eta=1.6825
+ts=8:49:445 idx=37532 src=sewmac phase=0.3643
+ts=8:49:445 idx=37533 src=scurve x=1.1129 t=1.2300/2.9125 eta=1.6825
+ts=8:49:445 idx=37535 src=stepgen cmd=1.3126 fb=1.3093 phase_ms=0.3643
+ts=8:49:445 idx=37536 src=cascade xr=0.9869 theta_l=1.3643 e_p=-0.3774 v_cmd=-0.2274 u_fb=-0.3488 phase_ms=0.3643
+ts=8:49:445 idx=37537 src=cascade e_v=-0.4774 u_raw=-0.3488 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:445 idx=37538 src=sewmac x=1.1162 eta=1.6725
+ts=8:49:445 idx=37539 src=tick phase=0.3643 x=1.1162 eta=1.6725
+ts=8:49:544 idx=37540 src=sewmac phase=0.3677
+ts=8:49:544 idx=37541 src=scurve x=1.1162 t=1.2400/2.9125 eta=1.6725
+ts=8:49:544 idx=37543 src=stepgen cmd=1.3159 fb=1.3126 phase_ms=0.3677
+ts=8:49:544 idx=37544 src=cascade xr=0.9894 theta_l=1.3677 e_p=-0.3782 v_cmd=-0.2282 u_fb=-0.3490 phase_ms=0.3677
+ts=8:49:544 idx=37545 src=cascade e_v=-0.4782 u_raw=-0.3490 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:544 idx=37546 src=sewmac x=1.1195 eta=1.6625
+ts=8:49:544 idx=37547 src=tick phase=0.3677 x=1.1195 eta=1.6625
+ts=8:49:644 idx=37548 src=sewmac phase=0.3710
+ts=8:49:644 idx=37549 src=scurve x=1.1195 t=1.2500/2.9125 eta=1.6625
+ts=8:49:644 idx=37551 src=stepgen cmd=1.3193 fb=1.3159 phase_ms=0.3710
+ts=8:49:644 idx=37552 src=cascade xr=0.9919 theta_l=1.3710 e_p=-0.3791 v_cmd=-0.2291 u_fb=-0.3491 phase_ms=0.3710
+ts=8:49:644 idx=37553 src=cascade e_v=-0.4791 u_raw=-0.3491 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:644 idx=37554 src=sewmac x=1.1229 eta=1.6525
+ts=8:49:644 idx=37555 src=tick phase=0.3710 x=1.1229 eta=1.6525
+ts=8:49:743 idx=37556 src=sewmac phase=0.3743
+ts=8:49:743 idx=37557 src=scurve x=1.1229 t=1.2600/2.9125 eta=1.6525
+ts=8:49:743 idx=37559 src=stepgen cmd=1.3226 fb=1.3193 phase_ms=0.3743
+ts=8:49:743 idx=37560 src=cascade xr=0.9944 theta_l=1.3743 e_p=-0.3799 v_cmd=-0.2299 u_fb=-0.3493 phase_ms=0.3743
+ts=8:49:743 idx=37561 src=cascade e_v=-0.4799 u_raw=-0.3493 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:743 idx=37562 src=sewmac x=1.1262 eta=1.6425
+ts=8:49:743 idx=37563 src=tick phase=0.3743 x=1.1262 eta=1.6425
+ts=8:49:842 idx=37564 src=sewmac phase=0.3777
+ts=8:49:842 idx=37565 src=scurve x=1.1262 t=1.2700/2.9125 eta=1.6425
+ts=8:49:842 idx=37567 src=stepgen cmd=1.3259 fb=1.3226 phase_ms=0.3777
+ts=8:49:842 idx=37568 src=cascade xr=0.9969 theta_l=1.3777 e_p=-0.3807 v_cmd=-0.2307 u_fb=-0.3495 phase_ms=0.3777
+ts=8:49:842 idx=37569 src=cascade e_v=-0.4807 u_raw=-0.3495 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:842 idx=37570 src=sewmac x=1.1295 eta=1.6325
+ts=8:49:842 idx=37571 src=tick phase=0.3777 x=1.1295 eta=1.6325
+ts=8:49:942 idx=37572 src=sewmac phase=0.3810
+ts=8:49:942 idx=37573 src=scurve x=1.1295 t=1.2800/2.9125 eta=1.6325
+ts=8:49:942 idx=37575 src=stepgen cmd=1.3292 fb=1.3259 phase_ms=0.3810
+ts=8:49:942 idx=37576 src=cascade xr=0.9994 theta_l=1.3810 e_p=-0.3816 v_cmd=-0.2316 u_fb=-0.3496 phase_ms=0.3810
+ts=8:49:942 idx=37577 src=cascade e_v=-0.4816 u_raw=-0.3496 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:49:942 idx=37578 src=sewmac x=1.1329 eta=1.6225
+ts=8:49:942 idx=37579 src=tick phase=0.3810 x=1.1329 eta=1.6225
+ts=8:50:042 idx=37580 src=sewmac phase=0.3843
+ts=8:50:042 idx=37581 src=scurve x=1.1329 t=1.2900/2.9125 eta=1.6225
+ts=8:50:042 idx=37583 src=stepgen cmd=1.3326 fb=1.3292 phase_ms=0.3843
+ts=8:50:042 idx=37584 src=cascade xr=1.0019 theta_l=1.3843 e_p=-0.3824 v_cmd=-0.2324 u_fb=-0.3498 phase_ms=0.3843
+ts=8:50:042 idx=37585 src=cascade e_v=-0.4824 u_raw=-0.3498 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:042 idx=37586 src=sewmac x=1.1362 eta=1.6125
+ts=8:50:042 idx=37587 src=tick phase=0.3843 x=1.1362 eta=1.6125
+ts=8:50:141 idx=37588 src=sewmac phase=0.3877
+ts=8:50:141 idx=37589 src=scurve x=1.1362 t=1.3000/2.9125 eta=1.6125
+ts=8:50:141 idx=37591 src=stepgen cmd=1.3359 fb=1.3326 phase_ms=0.3877
+ts=8:50:141 idx=37592 src=cascade xr=1.0044 theta_l=1.3877 e_p=-0.3832 v_cmd=-0.2332 u_fb=-0.3500 phase_ms=0.3877
+ts=8:50:141 idx=37593 src=cascade e_v=-0.4832 u_raw=-0.3500 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:141 idx=37594 src=sewmac x=1.1395 eta=1.6025
+ts=8:50:141 idx=37595 src=tick phase=0.3877 x=1.1395 eta=1.6025
+ts=8:50:240 idx=37596 src=sewmac phase=0.3910
+ts=8:50:240 idx=37597 src=scurve x=1.1395 t=1.3100/2.9125 eta=1.6025
+ts=8:50:240 idx=37599 src=stepgen cmd=1.3392 fb=1.3359 phase_ms=0.3910
+ts=8:50:240 idx=37600 src=cascade xr=1.0069 theta_l=1.3910 e_p=-0.3841 v_cmd=-0.2341 u_fb=-0.3501 phase_ms=0.3910
+ts=8:50:240 idx=37601 src=cascade e_v=-0.4841 u_raw=-0.3501 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:240 idx=37602 src=sewmac x=1.1429 eta=1.5925
+ts=8:50:240 idx=37603 src=tick phase=0.3910 x=1.1429 eta=1.5925
+ts=8:50:339 idx=37604 src=sewmac phase=0.3943
+ts=8:50:339 idx=37605 src=scurve x=1.1429 t=1.3200/2.9125 eta=1.5925
+ts=8:50:339 idx=37607 src=stepgen cmd=1.3425 fb=1.3392 phase_ms=0.3943
+ts=8:50:339 idx=37608 src=cascade xr=1.0094 theta_l=1.3943 e_p=-0.3849 v_cmd=-0.2349 u_fb=-0.3503 phase_ms=0.3943
+ts=8:50:339 idx=37609 src=cascade e_v=-0.4849 u_raw=-0.3503 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:339 idx=37610 src=sewmac x=1.1462 eta=1.5825
+ts=8:50:339 idx=37611 src=tick phase=0.3943 x=1.1462 eta=1.5825
+ts=8:50:438 idx=37612 src=sewmac phase=0.3977
+ts=8:50:438 idx=37613 src=scurve x=1.1462 t=1.3300/2.9125 eta=1.5825
+ts=8:50:438 idx=37615 src=stepgen cmd=1.3459 fb=1.3425 phase_ms=0.3977
+ts=8:50:438 idx=37616 src=cascade xr=1.0119 theta_l=1.3977 e_p=-0.3857 v_cmd=-0.2357 u_fb=-0.3505 phase_ms=0.3977
+ts=8:50:438 idx=37617 src=cascade e_v=-0.4857 u_raw=-0.3505 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:438 idx=37618 src=sewmac x=1.1495 eta=1.5725
+ts=8:50:438 idx=37619 src=tick phase=0.3977 x=1.1495 eta=1.5725
+ts=8:50:539 idx=37620 src=sewmac phase=0.4010
+ts=8:50:539 idx=37621 src=scurve x=1.1495 t=1.3400/2.9125 eta=1.5725
+ts=8:50:539 idx=37623 src=stepgen cmd=1.3492 fb=1.3459 phase_ms=0.4010
+ts=8:50:539 idx=37624 src=cascade xr=1.0144 theta_l=1.4010 e_p=-0.3866 v_cmd=-0.2366 u_fb=-0.3506 phase_ms=0.4010
+ts=8:50:539 idx=37625 src=cascade e_v=-0.4866 u_raw=-0.3506 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:539 idx=37626 src=sewmac x=1.1529 eta=1.5625
+ts=8:50:539 idx=37627 src=tick phase=0.4010 x=1.1529 eta=1.5625
+ts=8:50:638 idx=37628 src=sewmac phase=0.4043
+ts=8:50:638 idx=37629 src=scurve x=1.1529 t=1.3500/2.9125 eta=1.5625
+ts=8:50:638 idx=37631 src=stepgen cmd=1.3525 fb=1.3492 phase_ms=0.4043
+ts=8:50:638 idx=37632 src=cascade xr=1.0169 theta_l=1.4043 e_p=-0.3874 v_cmd=-0.2374 u_fb=-0.3508 phase_ms=0.4043
+ts=8:50:638 idx=37633 src=cascade e_v=-0.4874 u_raw=-0.3508 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:638 idx=37634 src=sewmac x=1.1562 eta=1.5525
+ts=8:50:638 idx=37635 src=tick phase=0.4043 x=1.1562 eta=1.5525
+ts=8:50:738 idx=37636 src=sewmac phase=0.4077
+ts=8:50:738 idx=37637 src=scurve x=1.1562 t=1.3600/2.9125 eta=1.5525
+ts=8:50:738 idx=37639 src=stepgen cmd=1.3558 fb=1.3525 phase_ms=0.4077
+ts=8:50:738 idx=37640 src=cascade xr=1.0194 theta_l=1.4077 e_p=-0.3882 v_cmd=-0.2382 u_fb=-0.3510 phase_ms=0.4077
+ts=8:50:738 idx=37641 src=cascade e_v=-0.4882 u_raw=-0.3510 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:738 idx=37642 src=sewmac x=1.1595 eta=1.5425
+ts=8:50:738 idx=37643 src=tick phase=0.4077 x=1.1595 eta=1.5425
+ts=8:50:837 idx=37644 src=sewmac phase=0.4110
+ts=8:50:837 idx=37645 src=scurve x=1.1595 t=1.3700/2.9125 eta=1.5425
+ts=8:50:837 idx=37647 src=stepgen cmd=1.3592 fb=1.3558 phase_ms=0.4110
+ts=8:50:837 idx=37648 src=cascade xr=1.0219 theta_l=1.4110 e_p=-0.3891 v_cmd=-0.2391 u_fb=-0.3511 phase_ms=0.4110
+ts=8:50:837 idx=37649 src=cascade e_v=-0.4891 u_raw=-0.3511 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:837 idx=37650 src=sewmac x=1.1629 eta=1.5325
+ts=8:50:837 idx=37651 src=tick phase=0.4110 x=1.1629 eta=1.5325
+ts=8:50:936 idx=37652 src=sewmac phase=0.4143
+ts=8:50:936 idx=37653 src=scurve x=1.1629 t=1.3800/2.9125 eta=1.5325
+ts=8:50:936 idx=37655 src=stepgen cmd=1.3625 fb=1.3592 phase_ms=0.4143
+ts=8:50:936 idx=37656 src=cascade xr=1.0244 theta_l=1.4143 e_p=-0.3899 v_cmd=-0.2399 u_fb=-0.3513 phase_ms=0.4143
+ts=8:50:936 idx=37657 src=cascade e_v=-0.4899 u_raw=-0.3513 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:50:936 idx=37658 src=sewmac x=1.1662 eta=1.5225
+ts=8:50:936 idx=37659 src=tick phase=0.4143 x=1.1662 eta=1.5225
+ts=8:51:036 idx=37660 src=sewmac phase=0.4177
+ts=8:51:036 idx=37661 src=scurve x=1.1662 t=1.3900/2.9125 eta=1.5225
+ts=8:51:036 idx=37663 src=stepgen cmd=1.3658 fb=1.3625 phase_ms=0.4177
+ts=8:51:036 idx=37664 src=cascade xr=1.0269 theta_l=1.4177 e_p=-0.3907 v_cmd=-0.2407 u_fb=-0.3515 phase_ms=0.4177
+ts=8:51:036 idx=37665 src=cascade e_v=-0.4907 u_raw=-0.3515 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:036 idx=37666 src=sewmac x=1.1695 eta=1.5125
+ts=8:51:036 idx=37667 src=tick phase=0.4177 x=1.1695 eta=1.5125
+ts=8:51:135 idx=37668 src=sewmac phase=0.4210
+ts=8:51:135 idx=37669 src=scurve x=1.1695 t=1.4000/2.9125 eta=1.5125
+ts=8:51:135 idx=37671 src=stepgen cmd=1.3691 fb=1.3658 phase_ms=0.4210
+ts=8:51:135 idx=37672 src=cascade xr=1.0294 theta_l=1.4210 e_p=-0.3916 v_cmd=-0.2416 u_fb=-0.3516 phase_ms=0.4210
+ts=8:51:135 idx=37673 src=cascade e_v=-0.4916 u_raw=-0.3516 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:135 idx=37674 src=sewmac x=1.1729 eta=1.5025
+ts=8:51:135 idx=37675 src=tick phase=0.4210 x=1.1729 eta=1.5025
+ts=8:51:234 idx=37676 src=sewmac phase=0.4243
+ts=8:51:234 idx=37677 src=scurve x=1.1729 t=1.4100/2.9125 eta=1.5025
+ts=8:51:234 idx=37679 src=stepgen cmd=1.3725 fb=1.3691 phase_ms=0.4243
+ts=8:51:234 idx=37680 src=cascade xr=1.0319 theta_l=1.4243 e_p=-0.3924 v_cmd=-0.2424 u_fb=-0.3518 phase_ms=0.4243
+ts=8:51:234 idx=37681 src=cascade e_v=-0.4924 u_raw=-0.3518 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:234 idx=37682 src=sewmac x=1.1762 eta=1.4925
+ts=8:51:234 idx=37683 src=tick phase=0.4243 x=1.1762 eta=1.4925
+ts=8:51:333 idx=37684 src=sewmac phase=0.4277
+ts=8:51:333 idx=37685 src=scurve x=1.1762 t=1.4200/2.9125 eta=1.4925
+ts=8:51:333 idx=37687 src=stepgen cmd=1.3758 fb=1.3725 phase_ms=0.4277
+ts=8:51:333 idx=37688 src=cascade xr=1.0344 theta_l=1.4277 e_p=-0.3932 v_cmd=-0.2432 u_fb=-0.3520 phase_ms=0.4277
+ts=8:51:333 idx=37689 src=cascade e_v=-0.4932 u_raw=-0.3520 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:333 idx=37690 src=sewmac x=1.1795 eta=1.4825
+ts=8:51:333 idx=37691 src=tick phase=0.4277 x=1.1795 eta=1.4825
+ts=8:51:433 idx=37692 src=sewmac phase=0.4310
+ts=8:51:433 idx=37693 src=scurve x=1.1795 t=1.4300/2.9125 eta=1.4825
+ts=8:51:433 idx=37695 src=stepgen cmd=1.3791 fb=1.3758 phase_ms=0.4310
+ts=8:51:433 idx=37696 src=cascade xr=1.0369 theta_l=1.4310 e_p=-0.3941 v_cmd=-0.2441 u_fb=-0.3521 phase_ms=0.4310
+ts=8:51:433 idx=37697 src=cascade e_v=-0.4941 u_raw=-0.3521 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:433 idx=37698 src=sewmac x=1.1829 eta=1.4725
+ts=8:51:433 idx=37699 src=tick phase=0.4310 x=1.1829 eta=1.4725
+ts=8:51:533 idx=37700 src=sewmac phase=0.4343
+ts=8:51:533 idx=37701 src=scurve x=1.1829 t=1.4400/2.9125 eta=1.4725
+ts=8:51:533 idx=37703 src=stepgen cmd=1.3824 fb=1.3791 phase_ms=0.4343
+ts=8:51:533 idx=37704 src=cascade xr=1.0394 theta_l=1.4343 e_p=-0.3949 v_cmd=-0.2449 u_fb=-0.3523 phase_ms=0.4343
+ts=8:51:533 idx=37705 src=cascade e_v=-0.4949 u_raw=-0.3523 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:533 idx=37706 src=sewmac x=1.1862 eta=1.4625
+ts=8:51:533 idx=37707 src=tick phase=0.4343 x=1.1862 eta=1.4625
+ts=8:51:632 idx=37708 src=sewmac phase=0.4377
+ts=8:51:632 idx=37709 src=scurve x=1.1862 t=1.4500/2.9125 eta=1.4625
+ts=8:51:632 idx=37711 src=stepgen cmd=1.3858 fb=1.3824 phase_ms=0.4377
+ts=8:51:632 idx=37712 src=cascade xr=1.0419 theta_l=1.4377 e_p=-0.3957 v_cmd=-0.2457 u_fb=-0.3525 phase_ms=0.4377
+ts=8:51:632 idx=37713 src=cascade e_v=-0.4957 u_raw=-0.3525 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:632 idx=37714 src=sewmac x=1.1895 eta=1.4525
+ts=8:51:632 idx=37715 src=tick phase=0.4377 x=1.1895 eta=1.4525
+ts=8:51:731 idx=37716 src=sewmac phase=0.4410
+ts=8:51:731 idx=37717 src=scurve x=1.1895 t=1.4600/2.9125 eta=1.4525
+ts=8:51:731 idx=37719 src=stepgen cmd=1.3891 fb=1.3858 phase_ms=0.4410
+ts=8:51:731 idx=37720 src=cascade xr=1.0444 theta_l=1.4410 e_p=-0.3966 v_cmd=-0.2466 u_fb=-0.3526 phase_ms=0.4410
+ts=8:51:731 idx=37721 src=cascade e_v=-0.4966 u_raw=-0.3526 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:731 idx=37722 src=sewmac x=1.1929 eta=1.4425
+ts=8:51:731 idx=37723 src=tick phase=0.4410 x=1.1929 eta=1.4425
+ts=8:51:831 idx=37724 src=sewmac phase=0.4443
+ts=8:51:831 idx=37725 src=scurve x=1.1929 t=1.4700/2.9125 eta=1.4425
+ts=8:51:831 idx=37727 src=stepgen cmd=1.3924 fb=1.3891 phase_ms=0.4443
+ts=8:51:831 idx=37728 src=cascade xr=1.0469 theta_l=1.4443 e_p=-0.3974 v_cmd=-0.2474 u_fb=-0.3528 phase_ms=0.4443
+ts=8:51:831 idx=37729 src=cascade e_v=-0.4974 u_raw=-0.3528 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:831 idx=37730 src=sewmac x=1.1962 eta=1.4325
+ts=8:51:831 idx=37731 src=tick phase=0.4443 x=1.1962 eta=1.4325
+ts=8:51:930 idx=37732 src=sewmac phase=0.4477
+ts=8:51:930 idx=37733 src=scurve x=1.1962 t=1.4800/2.9125 eta=1.4325
+ts=8:51:930 idx=37735 src=stepgen cmd=1.3957 fb=1.3924 phase_ms=0.4477
+ts=8:51:930 idx=37736 src=cascade xr=1.0494 theta_l=1.4477 e_p=-0.3982 v_cmd=-0.2482 u_fb=-0.3530 phase_ms=0.4477
+ts=8:51:930 idx=37737 src=cascade e_v=-0.4982 u_raw=-0.3530 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:51:930 idx=37738 src=sewmac x=1.1995 eta=1.4225
+ts=8:51:930 idx=37739 src=tick phase=0.4477 x=1.1995 eta=1.4225
+ts=8:52:029 idx=37740 src=sewmac phase=0.4510
+ts=8:52:029 idx=37741 src=scurve x=1.1995 t=1.4900/2.9125 eta=1.4225
+ts=8:52:029 idx=37743 src=stepgen cmd=1.3991 fb=1.3957 phase_ms=0.4510
+ts=8:52:029 idx=37744 src=cascade xr=1.0519 theta_l=1.4510 e_p=-0.3991 v_cmd=-0.2491 u_fb=-0.3531 phase_ms=0.4510
+ts=8:52:029 idx=37745 src=cascade e_v=-0.4991 u_raw=-0.3531 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:029 idx=37746 src=sewmac x=1.2029 eta=1.4125
+ts=8:52:029 idx=37747 src=tick phase=0.4510 x=1.2029 eta=1.4125
+ts=8:52:129 idx=37748 src=sewmac phase=0.4543
+ts=8:52:129 idx=37749 src=scurve x=1.2029 t=1.5000/2.9125 eta=1.4125
+ts=8:52:129 idx=37751 src=stepgen cmd=1.4024 fb=1.3991 phase_ms=0.4543
+ts=8:52:129 idx=37752 src=cascade xr=1.0544 theta_l=1.4543 e_p=-0.3999 v_cmd=-0.2499 u_fb=-0.3533 phase_ms=0.4543
+ts=8:52:129 idx=37753 src=cascade e_v=-0.4999 u_raw=-0.3533 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:129 idx=37754 src=sewmac x=1.2062 eta=1.4025
+ts=8:52:129 idx=37755 src=tick phase=0.4543 x=1.2062 eta=1.4025
+ts=8:52:227 idx=37756 src=sewmac phase=0.4577
+ts=8:52:227 idx=37757 src=scurve x=1.2062 t=1.5100/2.9125 eta=1.4025
+ts=8:52:227 idx=37759 src=stepgen cmd=1.4057 fb=1.4024 phase_ms=0.4577
+ts=8:52:227 idx=37760 src=cascade xr=1.0569 theta_l=1.4577 e_p=-0.4007 v_cmd=-0.2507 u_fb=-0.3535 phase_ms=0.4577
+ts=8:52:227 idx=37761 src=cascade e_v=-0.5007 u_raw=-0.3535 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:227 idx=37762 src=sewmac x=1.2095 eta=1.3925
+ts=8:52:227 idx=37763 src=tick phase=0.4577 x=1.2095 eta=1.3925
+ts=8:52:327 idx=37764 src=sewmac phase=0.4610
+ts=8:52:327 idx=37765 src=scurve x=1.2095 t=1.5200/2.9125 eta=1.3925
+ts=8:52:327 idx=37767 src=stepgen cmd=1.4090 fb=1.4057 phase_ms=0.4610
+ts=8:52:327 idx=37768 src=cascade xr=1.0594 theta_l=1.4610 e_p=-0.4016 v_cmd=-0.2516 u_fb=-0.3536 phase_ms=0.4610
+ts=8:52:327 idx=37769 src=cascade e_v=-0.5016 u_raw=-0.3536 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:327 idx=37770 src=sewmac x=1.2129 eta=1.3825
+ts=8:52:327 idx=37771 src=tick phase=0.4610 x=1.2129 eta=1.3825
+ts=8:52:427 idx=37772 src=sewmac phase=0.4643
+ts=8:52:427 idx=37773 src=scurve x=1.2129 t=1.5300/2.9125 eta=1.3825
+ts=8:52:427 idx=37775 src=stepgen cmd=1.4124 fb=1.4090 phase_ms=0.4643
+ts=8:52:427 idx=37776 src=cascade xr=1.0619 theta_l=1.4643 e_p=-0.4024 v_cmd=-0.2524 u_fb=-0.3538 phase_ms=0.4643
+ts=8:52:427 idx=37777 src=cascade e_v=-0.5024 u_raw=-0.3538 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:427 idx=37778 src=sewmac x=1.2162 eta=1.3725
+ts=8:52:427 idx=37779 src=tick phase=0.4643 x=1.2162 eta=1.3725
+ts=8:52:526 idx=37780 src=sewmac phase=0.4677
+ts=8:52:526 idx=37781 src=scurve x=1.2162 t=1.5400/2.9125 eta=1.3725
+ts=8:52:526 idx=37783 src=stepgen cmd=1.4157 fb=1.4124 phase_ms=0.4677
+ts=8:52:526 idx=37784 src=cascade xr=1.0644 theta_l=1.4677 e_p=-0.4032 v_cmd=-0.2532 u_fb=-0.3540 phase_ms=0.4677
+ts=8:52:526 idx=37785 src=cascade e_v=-0.5032 u_raw=-0.3540 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:526 idx=37786 src=sewmac x=1.2195 eta=1.3625
+ts=8:52:526 idx=37787 src=tick phase=0.4677 x=1.2195 eta=1.3625
+ts=8:52:626 idx=37788 src=sewmac phase=0.4710
+ts=8:52:626 idx=37789 src=scurve x=1.2195 t=1.5500/2.9125 eta=1.3625
+ts=8:52:626 idx=37791 src=stepgen cmd=1.4190 fb=1.4157 phase_ms=0.4710
+ts=8:52:626 idx=37792 src=cascade xr=1.0669 theta_l=1.4710 e_p=-0.4041 v_cmd=-0.2541 u_fb=-0.3541 phase_ms=0.4710
+ts=8:52:626 idx=37793 src=cascade e_v=-0.5041 u_raw=-0.3541 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:626 idx=37794 src=sewmac x=1.2229 eta=1.3525
+ts=8:52:626 idx=37795 src=tick phase=0.4710 x=1.2229 eta=1.3525
+ts=8:52:725 idx=37796 src=sewmac phase=0.4743
+ts=8:52:725 idx=37797 src=scurve x=1.2229 t=1.5600/2.9125 eta=1.3525
+ts=8:52:725 idx=37799 src=stepgen cmd=1.4223 fb=1.4190 phase_ms=0.4743
+ts=8:52:725 idx=37800 src=cascade xr=1.0694 theta_l=1.4743 e_p=-0.4049 v_cmd=-0.2549 u_fb=-0.3543 phase_ms=0.4743
+ts=8:52:725 idx=37801 src=cascade e_v=-0.5049 u_raw=-0.3543 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:725 idx=37802 src=sewmac x=1.2262 eta=1.3425
+ts=8:52:725 idx=37803 src=tick phase=0.4743 x=1.2262 eta=1.3425
+ts=8:52:825 idx=37804 src=sewmac phase=0.4777
+ts=8:52:825 idx=37805 src=scurve x=1.2262 t=1.5700/2.9125 eta=1.3425
+ts=8:52:825 idx=37807 src=stepgen cmd=1.4257 fb=1.4223 phase_ms=0.4777
+ts=8:52:825 idx=37808 src=cascade xr=1.0719 theta_l=1.4777 e_p=-0.4057 v_cmd=-0.2557 u_fb=-0.3545 phase_ms=0.4777
+ts=8:52:825 idx=37809 src=cascade e_v=-0.5057 u_raw=-0.3545 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:825 idx=37810 src=sewmac x=1.2295 eta=1.3325
+ts=8:52:825 idx=37811 src=tick phase=0.4777 x=1.2295 eta=1.3325
+ts=8:52:923 idx=37812 src=sewmac phase=0.4810
+ts=8:52:923 idx=37813 src=scurve x=1.2295 t=1.5800/2.9125 eta=1.3325
+ts=8:52:923 idx=37815 src=stepgen cmd=1.4290 fb=1.4257 phase_ms=0.4810
+ts=8:52:923 idx=37816 src=cascade xr=1.0744 theta_l=1.4810 e_p=-0.4066 v_cmd=-0.2566 u_fb=-0.3546 phase_ms=0.4810
+ts=8:52:923 idx=37817 src=cascade e_v=-0.5066 u_raw=-0.3546 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:52:923 idx=37818 src=sewmac x=1.2329 eta=1.3225
+ts=8:52:923 idx=37819 src=tick phase=0.4810 x=1.2329 eta=1.3225
+ts=8:53:023 idx=37820 src=sewmac phase=0.4843
+ts=8:53:023 idx=37821 src=scurve x=1.2329 t=1.5900/2.9125 eta=1.3225
+ts=8:53:023 idx=37823 src=stepgen cmd=1.4323 fb=1.4290 phase_ms=0.4843
+ts=8:53:023 idx=37824 src=cascade xr=1.0769 theta_l=1.4843 e_p=-0.4074 v_cmd=-0.2574 u_fb=-0.3548 phase_ms=0.4843
+ts=8:53:023 idx=37825 src=cascade e_v=-0.5074 u_raw=-0.3548 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:023 idx=37826 src=sewmac x=1.2362 eta=1.3125
+ts=8:53:023 idx=37827 src=tick phase=0.4843 x=1.2362 eta=1.3125
+ts=8:53:122 idx=37828 src=sewmac phase=0.4877
+ts=8:53:122 idx=37829 src=scurve x=1.2362 t=1.6000/2.9125 eta=1.3125
+ts=8:53:122 idx=37831 src=stepgen cmd=1.4356 fb=1.4323 phase_ms=0.4877
+ts=8:53:122 idx=37832 src=cascade xr=1.0794 theta_l=1.4877 e_p=-0.4082 v_cmd=-0.2582 u_fb=-0.3550 phase_ms=0.4877
+ts=8:53:122 idx=37833 src=cascade e_v=-0.5082 u_raw=-0.3550 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:122 idx=37834 src=sewmac x=1.2395 eta=1.3025
+ts=8:53:122 idx=37835 src=tick phase=0.4877 x=1.2395 eta=1.3025
+ts=8:53:223 idx=37836 src=sewmac phase=0.4910
+ts=8:53:223 idx=37837 src=scurve x=1.2395 t=1.6100/2.9125 eta=1.3025
+ts=8:53:223 idx=37839 src=stepgen cmd=1.4390 fb=1.4356 phase_ms=0.4910
+ts=8:53:223 idx=37840 src=cascade xr=1.0819 theta_l=1.4910 e_p=-0.4091 v_cmd=-0.2591 u_fb=-0.3551 phase_ms=0.4910
+ts=8:53:223 idx=37841 src=cascade e_v=-0.5091 u_raw=-0.3551 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:223 idx=37842 src=sewmac x=1.2429 eta=1.2925
+ts=8:53:223 idx=37843 src=tick phase=0.4910 x=1.2429 eta=1.2925
+ts=8:53:322 idx=37844 src=sewmac phase=0.4943
+ts=8:53:322 idx=37845 src=scurve x=1.2429 t=1.6200/2.9125 eta=1.2925
+ts=8:53:322 idx=37847 src=stepgen cmd=1.4423 fb=1.4390 phase_ms=0.4943
+ts=8:53:322 idx=37848 src=cascade xr=1.0844 theta_l=1.4943 e_p=-0.4099 v_cmd=-0.2599 u_fb=-0.3553 phase_ms=0.4943
+ts=8:53:322 idx=37849 src=cascade e_v=-0.5099 u_raw=-0.3553 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:322 idx=37850 src=sewmac x=1.2462 eta=1.2825
+ts=8:53:322 idx=37851 src=tick phase=0.4943 x=1.2462 eta=1.2825
+ts=8:53:422 idx=37852 src=sewmac phase=0.4977
+ts=8:53:422 idx=37853 src=scurve x=1.2462 t=1.6300/2.9125 eta=1.2825
+ts=8:53:422 idx=37855 src=stepgen cmd=1.4456 fb=1.4423 phase_ms=0.4977
+ts=8:53:422 idx=37856 src=cascade xr=1.0869 theta_l=1.4977 e_p=-0.4107 v_cmd=-0.2607 u_fb=-0.3555 phase_ms=0.4977
+ts=8:53:422 idx=37857 src=cascade e_v=-0.5107 u_raw=-0.3555 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:422 idx=37858 src=sewmac x=1.2495 eta=1.2725
+ts=8:53:422 idx=37859 src=tick phase=0.4977 x=1.2495 eta=1.2725
+ts=8:53:521 idx=37860 src=sewmac phase=0.5010
+ts=8:53:521 idx=37861 src=scurve x=1.2495 t=1.6400/2.9125 eta=1.2725
+ts=8:53:521 idx=37862 src=scurve tgt_x=1.3485 t=0.0000/1.2046 eta=1.2046
+ts=8:53:521 idx=37863 src=stepgen cmd=1.4489 fb=1.4456 phase_ms=0.5010
+ts=8:53:521 idx=37864 src=cascade xr=1.0894 theta_l=1.5010 e_p=-0.4116 v_cmd=-0.2616 u_fb=-0.3556 phase_ms=0.5010
+ts=8:53:521 idx=37865 src=cascade e_v=-0.5116 u_raw=-0.3556 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:521 idx=37866 src=sewmac x=1.2529 tgt_x=1.3485 eta=1.1946
+ts=8:53:521 idx=37867 src=tick phase=0.5010 x=1.2529 tgt_x=1.3485 eta=1.1946
+ts=8:53:621 idx=37868 src=sewmac phase=0.5043
+ts=8:53:621 idx=37869 src=scurve x=1.2529 t=0.0100/1.2046 eta=1.1946
+ts=8:53:621 idx=37871 src=stepgen cmd=1.4523 fb=1.4489 phase_ms=0.5043
+ts=8:53:621 idx=37872 src=cascade xr=1.0919 theta_l=1.5043 e_p=-0.4124 v_cmd=-0.2624 u_fb=-0.3558 phase_ms=0.5043
+ts=8:53:621 idx=37873 src=cascade e_v=-0.5124 u_raw=-0.3558 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:621 idx=37874 src=sewmac x=1.2562 eta=1.1846
+ts=8:53:621 idx=37875 src=tick phase=0.5043 x=1.2562 eta=1.1846
+ts=8:53:720 idx=37876 src=sewmac phase=0.5077
+ts=8:53:720 idx=37877 src=scurve x=1.2562 t=0.0200/1.2046 eta=1.1846
+ts=8:53:720 idx=37879 src=stepgen cmd=1.4556 fb=1.4523 phase_ms=0.5077
+ts=8:53:720 idx=37880 src=cascade xr=1.0944 theta_l=1.5077 e_p=-0.4132 v_cmd=-0.2632 u_fb=-0.3560 phase_ms=0.5077
+ts=8:53:720 idx=37881 src=cascade e_v=-0.5132 u_raw=-0.3560 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:720 idx=37882 src=sewmac x=1.2595 eta=1.1746
+ts=8:53:720 idx=37883 src=tick phase=0.5077 x=1.2595 eta=1.1746
+ts=8:53:820 idx=37884 src=sewmac phase=0.5110
+ts=8:53:820 idx=37885 src=scurve x=1.2595 t=0.0300/1.2046 eta=1.1746
+ts=8:53:820 idx=37887 src=stepgen cmd=1.4589 fb=1.4556 phase_ms=0.5110
+ts=8:53:820 idx=37888 src=cascade xr=1.0969 theta_l=1.5110 e_p=-0.4141 v_cmd=-0.2641 u_fb=-0.3561 phase_ms=0.5110
+ts=8:53:820 idx=37889 src=cascade e_v=-0.5141 u_raw=-0.3561 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:820 idx=37890 src=sewmac x=1.2629 eta=1.1646
+ts=8:53:820 idx=37891 src=tick phase=0.5110 x=1.2629 eta=1.1646
+ts=8:53:920 idx=37892 src=sewmac phase=0.5143
+ts=8:53:920 idx=37893 src=scurve x=1.2629 t=0.0400/1.2046 eta=1.1646
+ts=8:53:920 idx=37895 src=stepgen cmd=1.4622 fb=1.4589 phase_ms=0.5143
+ts=8:53:920 idx=37896 src=cascade xr=1.0994 theta_l=1.5143 e_p=-0.4149 v_cmd=-0.2649 u_fb=-0.3563 phase_ms=0.5143
+ts=8:53:920 idx=37897 src=cascade e_v=-0.5149 u_raw=-0.3563 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:53:920 idx=37898 src=sewmac x=1.2662 eta=1.1546
+ts=8:53:920 idx=37899 src=tick phase=0.5143 x=1.2662 eta=1.1546
+ts=8:54:020 idx=37900 src=sewmac phase=0.5177
+ts=8:54:020 idx=37901 src=scurve x=1.2662 t=0.0500/1.2046 eta=1.1546
+ts=8:54:020 idx=37903 src=stepgen cmd=1.4656 fb=1.4622 phase_ms=0.5177
+ts=8:54:020 idx=37904 src=cascade xr=1.1019 theta_l=1.5177 e_p=-0.4157 v_cmd=-0.2657 u_fb=-0.3565 phase_ms=0.5177
+ts=8:54:020 idx=37905 src=cascade e_v=-0.5157 u_raw=-0.3565 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:020 idx=37906 src=sewmac x=1.2695 eta=1.1446
+ts=8:54:020 idx=37907 src=tick phase=0.5177 x=1.2695 eta=1.1446
+ts=8:54:119 idx=37908 src=sewmac phase=0.5210
+ts=8:54:119 idx=37909 src=move_up stage=fine reason=near_target
+ts=8:54:119 idx=37910 src=scurve x=1.2695 t=0.0600/1.2046 eta=1.1446
+ts=8:54:119 idx=37911 src=scurve t=0.0000/1.3745 eta=1.3745
+ts=8:54:119 idx=37912 src=stepgen cmd=1.4689 fb=1.4656 v_fb_mot=0.2793 v_fb_ms=0.2100 phase_ms=0.5210
+ts=8:54:119 idx=37913 src=cascade xr=1.1044 vr=0.2000 ar=-5.0000 theta_l=1.5210 e_p=-0.4166 v_cmd=-0.3166 v_meas=0.2100 u_fb=-0.3986 phase_ms=0.5210
+ts=8:54:119 idx=37914 src=cascade e_v=-0.5266 u_raw=-0.3986 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:119 idx=37915 src=sewmac x=1.2729 v=0.2100 eta=1.3645 mu=fine
+ts=8:54:119 idx=37916 src=tick phase=0.5210 x=1.2729 v=0.2100 eta=1.3645
+ts=8:54:219 idx=37917 src=sewmac phase=0.5243
+ts=8:54:219 idx=37918 src=scurve x=1.2729 v=0.2100 t=0.0100/1.3745 eta=1.3645
+ts=8:54:219 idx=37920 src=stepgen cmd=1.4715 fb=1.4689 v_fb_mot=0.2687 v_fb_ms=0.2020 phase_ms=0.5243
+ts=8:54:219 idx=37921 src=cascade xr=1.1064 ar=0.0000 theta_l=1.5243 e_p=-0.4179 v_cmd=-0.3179 v_meas=0.2020 u_fb=-0.3273 phase_ms=0.5243
+ts=8:54:219 idx=37922 src=cascade e_v=-0.5199 u_raw=-0.3273 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:219 idx=37923 src=sewmac x=1.2762 v=0.2020 eta=1.3545
+ts=8:54:219 idx=37924 src=tick phase=0.5243 x=1.2762 v=0.2020 eta=1.3545
+ts=8:54:319 idx=37925 src=sewmac phase=0.5270
+ts=8:54:319 idx=37926 src=scurve x=1.2762 v=0.2020 t=0.0200/1.3745 eta=1.3545
+ts=8:54:319 idx=37928 src=stepgen cmd=1.4742 fb=1.4715 v_fb_mot=0.2665 v_fb_ms=0.2004 phase_ms=0.5270
+ts=8:54:319 idx=37929 src=cascade xr=1.1084 theta_l=1.5275 e_p=-0.4190 v_cmd=-0.3190 v_meas=0.2004 u_fb=-0.3520 phase_ms=0.5270
+ts=8:54:319 idx=37930 src=cascade e_v=-0.5194 u_raw=-0.3520 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:319 idx=37931 src=sewmac x=1.2789 v=0.2004 eta=1.3445
+ts=8:54:319 idx=37932 src=tick phase=0.5270 x=1.2789 v=0.2004 eta=1.3445
+ts=8:54:418 idx=37933 src=sewmac phase=0.5297
+ts=8:54:418 idx=37934 src=scurve x=1.2789 v=0.2004 t=0.0300/1.3745 eta=1.3445
+ts=8:54:418 idx=37936 src=stepgen cmd=1.4769 fb=1.4742 v_fb_mot=0.2661 v_fb_ms=0.2001 phase_ms=0.5297
+ts=8:54:418 idx=37937 src=cascade xr=1.1104 theta_l=1.5304 e_p=-0.4200 v_cmd=-0.3200 v_meas=0.2001 u_fb=-0.3566 phase_ms=0.5297
+ts=8:54:418 idx=37938 src=cascade e_v=-0.5201 u_raw=-0.3566 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:418 idx=37939 src=sewmac x=1.2815 v=0.2001 eta=1.3345
+ts=8:54:418 idx=37940 src=tick phase=0.5297 x=1.2815 v=0.2001 eta=1.3345
+ts=8:54:517 idx=37941 src=sewmac phase=0.5323
+ts=8:54:517 idx=37942 src=scurve x=1.2815 v=0.2001 t=0.0400/1.3745 eta=1.3345
+ts=8:54:517 idx=37944 src=stepgen cmd=1.4795 fb=1.4769 v_fb_mot=0.2660 v_fb_ms=0.2000 phase_ms=0.5323
+ts=8:54:517 idx=37945 src=cascade xr=1.1124 theta_l=1.5333 e_p=-0.4208 v_cmd=-0.3208 v_meas=0.2000 u_fb=-0.3573 phase_ms=0.5323
+ts=8:54:517 idx=37946 src=cascade e_v=-0.5209 u_raw=-0.3573 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:517 idx=37947 src=sewmac x=1.2842 v=0.2000 eta=1.3245
+ts=8:54:517 idx=37948 src=tick phase=0.5323 x=1.2842 v=0.2000 eta=1.3245
+ts=8:54:617 idx=37949 src=sewmac phase=0.5350
+ts=8:54:617 idx=37950 src=scurve x=1.2842 v=0.2000 t=0.0500/1.3745 eta=1.3245
+ts=8:54:617 idx=37952 src=stepgen cmd=1.4822 fb=1.4795 phase_ms=0.5350
+ts=8:54:617 idx=37953 src=cascade xr=1.1144 theta_l=1.5360 e_p=-0.4216 v_cmd=-0.3216 u_fb=-0.3572 phase_ms=0.5350
+ts=8:54:617 idx=37954 src=cascade e_v=-0.5216 u_raw=-0.3572 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:617 idx=37955 src=sewmac x=1.2869 eta=1.3145
+ts=8:54:617 idx=37956 src=tick phase=0.5350 x=1.2869 eta=1.3145
+ts=8:54:715 idx=37957 src=sewmac phase=0.5377
+ts=8:54:715 idx=37958 src=scurve x=1.2869 t=0.0600/1.3745 eta=1.3145
+ts=8:54:715 idx=37960 src=stepgen cmd=1.4848 fb=1.4822 phase_ms=0.5377
+ts=8:54:715 idx=37961 src=cascade xr=1.1164 theta_l=1.5387 e_p=-0.4223 v_cmd=-0.3223 u_fb=-0.3571 phase_ms=0.5377
+ts=8:54:715 idx=37962 src=cascade e_v=-0.5223 u_raw=-0.3571 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:715 idx=37963 src=sewmac x=1.2895 eta=1.3045
+ts=8:54:715 idx=37964 src=tick phase=0.5377 x=1.2895 eta=1.3045
+ts=8:54:815 idx=37965 src=sewmac phase=0.5403
+ts=8:54:815 idx=37966 src=scurve x=1.2895 t=0.0700/1.3745 eta=1.3045
+ts=8:54:815 idx=37968 src=stepgen cmd=1.4875 fb=1.4848 phase_ms=0.5403
+ts=8:54:815 idx=37969 src=cascade xr=1.1184 theta_l=1.5413 e_p=-0.4229 v_cmd=-0.3229 u_fb=-0.3570 phase_ms=0.5403
+ts=8:54:815 idx=37970 src=cascade e_v=-0.5229 u_raw=-0.3570 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:815 idx=37971 src=sewmac x=1.2922 eta=1.2945
+ts=8:54:815 idx=37972 src=tick phase=0.5403 x=1.2922 eta=1.2945
+ts=8:54:915 idx=37973 src=sewmac phase=0.5430
+ts=8:54:915 idx=37974 src=scurve x=1.2922 t=0.0800/1.3745 eta=1.2945
+ts=8:54:915 idx=37976 src=stepgen cmd=1.4902 fb=1.4875 phase_ms=0.5430
+ts=8:54:915 idx=37977 src=cascade xr=1.1204 theta_l=1.5439 e_p=-0.4235 v_cmd=-0.3235 phase_ms=0.5430
+ts=8:54:915 idx=37978 src=cascade e_v=-0.5235 u_raw=-0.3570 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:54:915 idx=37979 src=sewmac x=1.2949 eta=1.2845
+ts=8:54:915 idx=37980 src=tick phase=0.5430 x=1.2949 eta=1.2845
+ts=8:55:015 idx=37981 src=sewmac phase=0.5457
+ts=8:55:015 idx=37982 src=scurve x=1.2949 t=0.0900/1.3745 eta=1.2845
+ts=8:55:015 idx=37984 src=stepgen cmd=1.4928 fb=1.4902 phase_ms=0.5457
+ts=8:55:015 idx=37985 src=cascade xr=1.1224 theta_l=1.5464 e_p=-0.4240 v_cmd=-0.3240 u_fb=-0.3571 phase_ms=0.5457
+ts=8:55:015 idx=37986 src=cascade e_v=-0.5240 u_raw=-0.3571 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:015 idx=37987 src=sewmac x=1.2975 eta=1.2745
+ts=8:55:015 idx=37988 src=tick phase=0.5457 x=1.2975 eta=1.2745
+ts=8:55:114 idx=37989 src=sewmac phase=0.5483
+ts=8:55:114 idx=37990 src=scurve x=1.2975 t=0.1000/1.3745 eta=1.2745
+ts=8:55:114 idx=37992 src=stepgen cmd=1.4955 fb=1.4928 phase_ms=0.5483
+ts=8:55:114 idx=37993 src=cascade xr=1.1244 theta_l=1.5490 e_p=-0.4246 v_cmd=-0.3246 phase_ms=0.5483
+ts=8:55:114 idx=37994 src=cascade e_v=-0.5246 u_raw=-0.3571 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:114 idx=37995 src=sewmac x=1.3002 eta=1.2645
+ts=8:55:114 idx=37996 src=tick phase=0.5483 x=1.3002 eta=1.2645
+ts=8:55:214 idx=37997 src=sewmac phase=0.5510
+ts=8:55:214 idx=37998 src=scurve x=1.3002 t=0.1100/1.3745 eta=1.2645
+ts=8:55:214 idx=38000 src=stepgen cmd=1.4981 fb=1.4955 phase_ms=0.5510
+ts=8:55:214 idx=38001 src=cascade xr=1.1264 theta_l=1.5516 e_p=-0.4251 v_cmd=-0.3251 u_fb=-0.3572 phase_ms=0.5510
+ts=8:55:214 idx=38002 src=cascade e_v=-0.5251 u_raw=-0.3572 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:214 idx=38003 src=sewmac x=1.3029 eta=1.2545
+ts=8:55:214 idx=38004 src=tick phase=0.5510 x=1.3029 eta=1.2545
+ts=8:55:314 idx=38005 src=sewmac phase=0.5537
+ts=8:55:314 idx=38006 src=scurve x=1.3029 t=0.1200/1.3745 eta=1.2545
+ts=8:55:314 idx=38008 src=stepgen cmd=1.5008 fb=1.4981 phase_ms=0.5537
+ts=8:55:314 idx=38009 src=cascade xr=1.1284 theta_l=1.5541 e_p=-0.4257 v_cmd=-0.3257 u_fb=-0.3574 phase_ms=0.5537
+ts=8:55:314 idx=38010 src=cascade e_v=-0.5257 u_raw=-0.3574 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:314 idx=38011 src=sewmac x=1.3055 eta=1.2445
+ts=8:55:314 idx=38012 src=tick phase=0.5537 x=1.3055 eta=1.2445
+ts=8:55:414 idx=38013 src=sewmac phase=0.5563
+ts=8:55:414 idx=38014 src=scurve x=1.3055 t=0.1300/1.3745 eta=1.2445
+ts=8:55:414 idx=38016 src=stepgen cmd=1.5035 fb=1.5008 phase_ms=0.5563
+ts=8:55:414 idx=38017 src=cascade xr=1.1304 theta_l=1.5567 e_p=-0.4263 v_cmd=-0.3263 u_fb=-0.3575 phase_ms=0.5563
+ts=8:55:414 idx=38018 src=cascade e_v=-0.5263 u_raw=-0.3575 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:414 idx=38019 src=sewmac x=1.3082 eta=1.2345
+ts=8:55:414 idx=38020 src=tick phase=0.5563 x=1.3082 eta=1.2345
+ts=8:55:514 idx=38021 src=sewmac phase=0.5590
+ts=8:55:514 idx=38022 src=scurve x=1.3082 t=0.1400/1.3745 eta=1.2345
+ts=8:55:514 idx=38024 src=stepgen cmd=1.5061 fb=1.5035 phase_ms=0.5590
+ts=8:55:514 idx=38025 src=cascade xr=1.1324 theta_l=1.5593 e_p=-0.4268 v_cmd=-0.3268 u_fb=-0.3577 phase_ms=0.5590
+ts=8:55:514 idx=38026 src=cascade e_v=-0.5268 u_raw=-0.3577 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:514 idx=38027 src=sewmac x=1.3109 eta=1.2245
+ts=8:55:514 idx=38028 src=tick phase=0.5590 x=1.3109 eta=1.2245
+ts=8:55:614 idx=38029 src=sewmac phase=0.5617
+ts=8:55:614 idx=38030 src=scurve x=1.3109 t=0.1500/1.3745 eta=1.2245
+ts=8:55:614 idx=38032 src=stepgen cmd=1.5088 fb=1.5061 phase_ms=0.5617
+ts=8:55:614 idx=38033 src=cascade xr=1.1344 theta_l=1.5619 e_p=-0.4274 v_cmd=-0.3274 u_fb=-0.3579 phase_ms=0.5617
+ts=8:55:614 idx=38034 src=cascade e_v=-0.5274 u_raw=-0.3579 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:614 idx=38035 src=sewmac x=1.3135 eta=1.2145
+ts=8:55:614 idx=38036 src=tick phase=0.5617 x=1.3135 eta=1.2145
+ts=8:55:711 idx=38037 src=sewmac phase=0.5643
+ts=8:55:711 idx=38038 src=scurve x=1.3135 t=0.1600/1.3745 eta=1.2145
+ts=8:55:711 idx=38040 src=stepgen cmd=1.5114 fb=1.5088 phase_ms=0.5643
+ts=8:55:711 idx=38041 src=cascade xr=1.1364 theta_l=1.5645 e_p=-0.4280 v_cmd=-0.3280 u_fb=-0.3580 phase_ms=0.5643
+ts=8:55:711 idx=38042 src=cascade e_v=-0.5280 u_raw=-0.3580 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:711 idx=38043 src=sewmac x=1.3162 eta=1.2045
+ts=8:55:711 idx=38044 src=tick phase=0.5643 x=1.3162 eta=1.2045
+ts=8:55:811 idx=38045 src=sewmac phase=0.5670
+ts=8:55:811 idx=38046 src=scurve x=1.3162 t=0.1700/1.3745 eta=1.2045
+ts=8:55:811 idx=38048 src=stepgen cmd=1.5141 fb=1.5114 phase_ms=0.5670
+ts=8:55:811 idx=38049 src=cascade xr=1.1384 theta_l=1.5671 e_p=-0.4287 v_cmd=-0.3287 u_fb=-0.3582 phase_ms=0.5670
+ts=8:55:811 idx=38050 src=cascade e_v=-0.5287 u_raw=-0.3582 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:811 idx=38051 src=sewmac x=1.3189 eta=1.1945
+ts=8:55:811 idx=38052 src=tick phase=0.5670 x=1.3189 eta=1.1945
+ts=8:55:910 idx=38053 src=sewmac phase=0.5697
+ts=8:55:910 idx=38054 src=scurve x=1.3189 t=0.1800/1.3745 eta=1.1945
+ts=8:55:910 idx=38056 src=stepgen cmd=1.5168 fb=1.5141 phase_ms=0.5697
+ts=8:55:910 idx=38057 src=cascade xr=1.1404 theta_l=1.5697 e_p=-0.4293 v_cmd=-0.3293 u_fb=-0.3584 phase_ms=0.5697
+ts=8:55:910 idx=38058 src=cascade e_v=-0.5293 u_raw=-0.3584 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:55:910 idx=38059 src=sewmac x=1.3215 eta=1.1845
+ts=8:55:910 idx=38060 src=tick phase=0.5697 x=1.3215 eta=1.1845
+ts=8:56:010 idx=38061 src=sewmac phase=0.5723
+ts=8:56:010 idx=38062 src=scurve x=1.3215 t=0.1900/1.3745 eta=1.1845
+ts=8:56:010 idx=38064 src=stepgen cmd=1.5194 fb=1.5168 phase_ms=0.5723
+ts=8:56:010 idx=38065 src=cascade xr=1.1424 theta_l=1.5724 e_p=-0.4299 v_cmd=-0.3299 u_fb=-0.3585 phase_ms=0.5723
+ts=8:56:010 idx=38066 src=cascade e_v=-0.5299 u_raw=-0.3585 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:010 idx=38067 src=sewmac x=1.3242 eta=1.1745
+ts=8:56:010 idx=38068 src=tick phase=0.5723 x=1.3242 eta=1.1745
+ts=8:56:110 idx=38069 src=sewmac phase=0.5750
+ts=8:56:110 idx=38070 src=scurve x=1.3242 t=0.2000/1.3745 eta=1.1745
+ts=8:56:110 idx=38072 src=stepgen cmd=1.5221 fb=1.5194 phase_ms=0.5750
+ts=8:56:110 idx=38073 src=cascade xr=1.1444 theta_l=1.5750 e_p=-0.4306 v_cmd=-0.3306 u_fb=-0.3587 phase_ms=0.5750
+ts=8:56:110 idx=38074 src=cascade e_v=-0.5306 u_raw=-0.3587 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:110 idx=38075 src=sewmac x=1.3269 eta=1.1645
+ts=8:56:110 idx=38076 src=tick phase=0.5750 x=1.3269 eta=1.1645
+ts=8:56:209 idx=38077 src=sewmac phase=0.5777
+ts=8:56:209 idx=38078 src=scurve x=1.3269 t=0.2100/1.3745 eta=1.1645
+ts=8:56:209 idx=38080 src=stepgen cmd=1.5247 fb=1.5221 phase_ms=0.5777
+ts=8:56:209 idx=38081 src=cascade xr=1.1464 theta_l=1.5776 e_p=-0.4312 v_cmd=-0.3312 u_fb=-0.3589 phase_ms=0.5777
+ts=8:56:209 idx=38082 src=cascade e_v=-0.5312 u_raw=-0.3589 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:209 idx=38083 src=sewmac x=1.3295 eta=1.1545
+ts=8:56:209 idx=38084 src=tick phase=0.5777 x=1.3295 eta=1.1545
+ts=8:56:309 idx=38085 src=sewmac phase=0.5803
+ts=8:56:309 idx=38086 src=scurve x=1.3295 t=0.2200/1.3745 eta=1.1545
+ts=8:56:309 idx=38088 src=stepgen cmd=1.5274 fb=1.5247 phase_ms=0.5803
+ts=8:56:309 idx=38089 src=cascade xr=1.1484 theta_l=1.5803 e_p=-0.4319 v_cmd=-0.3319 u_fb=-0.3590 phase_ms=0.5803
+ts=8:56:309 idx=38090 src=cascade e_v=-0.5319 u_raw=-0.3590 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:309 idx=38091 src=sewmac x=1.3322 eta=1.1445
+ts=8:56:309 idx=38092 src=tick phase=0.5803 x=1.3322 eta=1.1445
+ts=8:56:409 idx=38093 src=sewmac phase=0.5830
+ts=8:56:409 idx=38094 src=scurve x=1.3322 t=0.2300/1.3745 eta=1.1445
+ts=8:56:409 idx=38096 src=stepgen cmd=1.5301 fb=1.5274 phase_ms=0.5830
+ts=8:56:409 idx=38097 src=cascade xr=1.1504 theta_l=1.5830 e_p=-0.4325 v_cmd=-0.3325 u_fb=-0.3592 phase_ms=0.5830
+ts=8:56:409 idx=38098 src=cascade e_v=-0.5325 u_raw=-0.3592 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:409 idx=38099 src=sewmac x=1.3349 eta=1.1345
+ts=8:56:409 idx=38100 src=tick phase=0.5830 x=1.3349 eta=1.1345
+ts=8:56:509 idx=38101 src=sewmac phase=0.5857
+ts=8:56:509 idx=38102 src=scurve x=1.3349 t=0.2400/1.3745 eta=1.1345
+ts=8:56:509 idx=38104 src=stepgen cmd=1.5327 fb=1.5301 phase_ms=0.5857
+ts=8:56:509 idx=38105 src=cascade xr=1.1524 theta_l=1.5856 e_p=-0.4332 v_cmd=-0.3332 u_fb=-0.3593 phase_ms=0.5857
+ts=8:56:509 idx=38106 src=cascade e_v=-0.5332 u_raw=-0.3593 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:509 idx=38107 src=sewmac x=1.3375 eta=1.1245
+ts=8:56:509 idx=38108 src=tick phase=0.5857 x=1.3375 eta=1.1245
+ts=8:56:608 idx=38109 src=sewmac phase=0.5883
+ts=8:56:608 idx=38110 src=scurve x=1.3375 t=0.2500/1.3745 eta=1.1245
+ts=8:56:608 idx=38112 src=stepgen cmd=1.5354 fb=1.5327 phase_ms=0.5883
+ts=8:56:608 idx=38113 src=cascade xr=1.1544 theta_l=1.5883 e_p=-0.4339 v_cmd=-0.3339 u_fb=-0.3594 phase_ms=0.5883
+ts=8:56:608 idx=38114 src=cascade e_v=-0.5339 u_raw=-0.3594 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:608 idx=38115 src=sewmac x=1.3402 eta=1.1145
+ts=8:56:608 idx=38116 src=tick phase=0.5883 x=1.3402 eta=1.1145
+ts=8:56:708 idx=38117 src=sewmac phase=0.5910
+ts=8:56:708 idx=38118 src=scurve x=1.3402 t=0.2600/1.3745 eta=1.1145
+ts=8:56:708 idx=38120 src=stepgen cmd=1.5380 fb=1.5354 phase_ms=0.5910
+ts=8:56:708 idx=38121 src=cascade xr=1.1564 theta_l=1.5910 e_p=-0.4345 v_cmd=-0.3345 u_fb=-0.3596 phase_ms=0.5910
+ts=8:56:708 idx=38122 src=cascade e_v=-0.5345 u_raw=-0.3596 u_sat=-0.2500 cap=0.2500 deadband=no sat=yes
+ts=8:56:708 idx=38123 src=sewmac x=1.3429 eta=1.1045
+ts=8:56:708 idx=38124 src=tick phase=0.5910 x=1.3429 eta=1.1045
+ts=8:56:807 idx=38125 src=sewmac phase=0.5937
+ts=8:56:807 idx=38126 src=scurve x=1.3429 t=0.2700/1.3745 eta=1.1045
+ts=8:56:807 idx=38128 src=move_up stage=fast reason=captured
+ts=8:56:807 idx=38129 src=scurve mode=SC_MODE_VELOCITY tgt_x=0.0000 t=0.0000/0.1000 eta=0.1000
+ts=8:56:807 idx=38130 src=stepgen cmd=1.5407 fb=1.5380 v_fb_mot=0.3369 v_fb_ms=0.2533 phase_ms=0.5937
+ts=8:56:807 idx=38131 src=cascade xr=1.1584 vr=0.1960 ar=-0.4000 theta_l=1.5936 e_p=-0.4352 v_cmd=-0.3392 v_meas=0.2533 u_fb=-0.6006 phase_ms=0.5937
+ts=8:56:807 idx=38132 src=cascade e_v=-0.5926 u_raw=-0.6006 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:56:807 idx=38133 src=sewmac mode=SEWMAC_STATE_IDLE x=1.3455 v=0.2533 eta=0.0900 mu=-
+ts=8:56:807 idx=38136 src=tick phase=0.5937 x=1.3455 v=0.2533 eta=0.0900
+ts=8:56:907 idx=38137 src=sewmac phase=0.5963
+ts=8:56:907 idx=38138 src=scurve x=1.3455 v=0.2533 a=-0.8000 t=0.0100/0.1000 eta=0.0900
+ts=8:56:907 idx=38140 src=stepgen cmd=1.5432 fb=1.5407 v_fb_mot=0.3511 v_fb_ms=0.2640 phase_ms=0.5963
+ts=8:56:907 idx=38141 src=cascade xr=1.1603 vr=0.1840 ar=-1.2000 theta_l=1.5963 e_p=-0.4360 v_cmd=-0.3520 v_meas=0.2640 u_fb=-0.2169 phase_ms=0.5963
+ts=8:56:907 idx=38142 src=cascade e_v=-0.6160 u_raw=-0.2169 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:56:907 idx=38143 src=sewmac x=1.3482 v=0.2640 eta=0.0800
+ts=8:56:907 idx=38146 src=tick phase=0.5963 x=1.3482 v=0.2640 eta=0.0800
+ts=8:57:006 idx=38147 src=sewmac phase=0.5988
+ts=8:57:006 idx=38148 src=scurve x=1.3482 v=0.2640 a=-1.6000 t=0.0200/0.1000 eta=0.0800
+ts=8:57:006 idx=38150 src=stepgen cmd=1.5455 fb=1.5432 v_fb_mot=0.3362 v_fb_ms=0.2528 phase_ms=0.5988
+ts=8:57:006 idx=38151 src=cascade xr=1.1621 vr=0.1640 ar=-2.0000 theta_l=1.5989 e_p=-0.4369 v_cmd=-0.3729 v_meas=0.2528 u_fb=-0.1638 phase_ms=0.5988
+ts=8:57:006 idx=38152 src=cascade e_v=-0.6257 u_raw=-0.1638 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:006 idx=38153 src=sewmac x=1.3507 v=0.2528 eta=0.0700
+ts=8:57:006 idx=38156 src=tick phase=0.5988 x=1.3507 v=0.2528 eta=0.0700 warn=oscillation
+ts=8:57:106 idx=38157 src=sewmac phase=0.6012
+ts=8:57:106 idx=38158 src=scurve x=1.3507 v=0.2528 a=-2.4000 t=0.0300/0.1000 eta=0.0700
+ts=8:57:106 idx=38160 src=stepgen cmd=1.5476 fb=1.5455 v_fb_mot=0.3155 v_fb_ms=0.2372 phase_ms=0.6012
+ts=8:57:106 idx=38161 src=cascade xr=1.1636 vr=0.1360 ar=-2.8000 theta_l=1.6015 e_p=-0.4379 v_cmd=-0.4019 v_meas=0.2372 u_fb=-0.1816 phase_ms=0.6012
+ts=8:57:106 idx=38162 src=cascade e_v=-0.6391 u_raw=-0.1816 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:106 idx=38163 src=sewmac x=1.3530 v=0.2372 eta=0.0600
+ts=8:57:106 idx=38166 src=tick phase=0.6012 x=1.3530 v=0.2372 eta=0.0600 warn=
+ts=8:57:205 idx=38167 src=sewmac phase=0.6032
+ts=8:57:205 idx=38168 src=scurve x=1.3530 v=0.2372 a=-3.2000 t=0.0400/0.1000 eta=0.0600
+ts=8:57:205 idx=38170 src=stepgen cmd=1.5491 fb=1.5476 v_fb_mot=0.2759 v_fb_ms=0.2074 phase_ms=0.6032
+ts=8:57:205 idx=38171 src=cascade xr=1.1648 vr=0.1000 ar=-3.6000 theta_l=1.6038 e_p=-0.4391 v_cmd=-0.4391 v_meas=0.2074 u_fb=-0.1589 phase_ms=0.6032
+ts=8:57:205 idx=38172 src=cascade e_v=-0.6465 u_raw=-0.1589 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:205 idx=38173 src=sewmac x=1.3550 v=0.2074 eta=0.0500
+ts=8:57:205 idx=38176 src=tick phase=0.6032 x=1.3550 v=0.2074 eta=0.0500
+ts=8:57:305 idx=38177 src=sewmac phase=0.6047
+ts=8:57:305 idx=38178 src=scurve x=1.3550 v=0.2074 a=-4.0000 t=0.0500/0.1000 eta=0.0500
+ts=8:57:305 idx=38180 src=stepgen cmd=1.5502 fb=1.5491 v_fb_mot=0.2148 v_fb_ms=0.1615 phase_ms=0.6047
+ts=8:57:305 idx=38181 src=cascade xr=1.1656 vr=0.0640 theta_l=1.6059 e_p=-0.4403 v_cmd=-0.4763 v_meas=0.1615 u_fb=-0.0927 phase_ms=0.6047
+ts=8:57:305 idx=38182 src=cascade e_v=-0.6378 u_raw=-0.0927 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:305 idx=38183 src=sewmac x=1.3565 v=0.1615 eta=0.0400
+ts=8:57:305 idx=38186 src=tick phase=0.6047 x=1.3565 v=0.1615 eta=0.0400
+ts=8:57:405 idx=38187 src=sewmac phase=0.6057
+ts=8:57:405 idx=38188 src=scurve x=1.3565 v=0.1615 a=-3.2000 t=0.0600/0.1000 eta=0.0400
+ts=8:57:405 idx=38190 src=stepgen cmd=1.5509 fb=1.5502 v_fb_mot=0.1494 v_fb_ms=0.1123 phase_ms=0.6057
+ts=8:57:405 idx=38191 src=cascade xr=1.1661 vr=0.0360 ar=-2.8000 theta_l=1.6076 e_p=-0.4415 v_cmd=-0.5055 v_meas=0.1123 u_fb=-0.0436 phase_ms=0.6057
+ts=8:57:405 idx=38192 src=cascade e_v=-0.6178 u_raw=-0.0436 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:405 idx=38193 src=sewmac x=1.3575 v=0.1123 eta=0.0300
+ts=8:57:405 idx=38196 src=tick phase=0.6057 x=1.3575 v=0.1123 eta=0.0300
+ts=8:57:505 idx=38197 src=sewmac phase=0.6063
+ts=8:57:505 idx=38198 src=scurve x=1.3575 v=0.1123 a=-2.4000 t=0.0700/0.1000 eta=0.0300
+ts=8:57:505 idx=38200 src=stepgen cmd=1.5512 fb=1.5509 v_fb_mot=0.1008 v_fb_ms=0.0758 phase_ms=0.6063
+ts=8:57:505 idx=38201 src=cascade xr=1.1663 vr=0.0160 ar=-2.0000 theta_l=1.6089 e_p=-0.4425 v_cmd=-0.5265 v_meas=0.0758 u_fb=-0.0586 phase_ms=0.6063
+ts=8:57:505 idx=38202 src=cascade e_v=-0.6023 u_raw=-0.0586 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:505 idx=38203 src=sewmac x=1.3582 v=0.0758 eta=0.0200
+ts=8:57:505 idx=38206 src=tick phase=0.6063 x=1.3582 v=0.0758 eta=0.0200
+ts=8:57:604 idx=38207 src=sewmac phase=0.6067
+ts=8:57:604 idx=38208 src=scurve x=1.3582 v=0.0758 a=-1.6000 t=0.0800/0.1000 eta=0.0200
+ts=8:57:604 idx=38210 src=stepgen cmd=1.5513 fb=1.5512 v_fb_mot=0.0556 v_fb_ms=0.0418 phase_ms=0.6067
+ts=8:57:604 idx=38211 src=cascade xr=1.1664 vr=0.0040 ar=-1.2000 theta_l=1.6097 e_p=-0.4433 v_cmd=-0.5393 v_meas=0.0418 u_fb=-0.0315 phase_ms=0.6067
+ts=8:57:604 idx=38212 src=cascade e_v=-0.5811 u_raw=-0.0315 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:604 idx=38213 src=sewmac x=1.3585 v=0.0418 eta=0.0100
+ts=8:57:604 idx=38216 src=tick phase=0.6067 x=1.3585 v=0.0418 eta=0.0100
+ts=8:57:704 idx=38217 src=sewmac phase=0.6068
+ts=8:57:704 idx=38218 src=scurve x=1.3585 v=0.0418 a=-0.8000 t=0.0900/0.1000 eta=0.0100
+ts=8:57:704 idx=38220 src=stepgen fb=1.5513 v_fb_mot=0.0289 v_fb_ms=0.0217 phase_ms=0.6068
+ts=8:57:704 idx=38221 src=cascade vr=0.0000 ar=-0.4000 theta_l=1.6102 e_p=-0.4438 v_cmd=-0.5438 v_meas=0.0217 u_fb=-0.0506 phase_ms=0.6068
+ts=8:57:704 idx=38222 src=cascade e_v=-0.5655 u_raw=-0.0506 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:704 idx=38223 src=sewmac x=1.3587 v=0.0217 eta=0.0000
+ts=8:57:704 idx=38226 src=tick phase=0.6068 x=1.3587 v=0.0217 eta=0.0000
+ts=8:57:803 idx=38228 src=scurve x=1.3587 v=0.0217 a=0.0000 t=0.1000/0.1000 eta=0.0000
+ts=8:57:803 idx=38230 src=stepgen v_fb_mot=0.0058 v_fb_ms=0.0043
+ts=8:57:803 idx=38231 src=cascade ar=0.0000 theta_l=1.6104 e_p=-0.4440 v_cmd=-0.5440 v_meas=0.0043 u_fb=-0.0410
+ts=8:57:803 idx=38232 src=cascade e_v=-0.5483 u_raw=-0.0410 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:803 idx=38233 src=sewmac v=0.0043
+ts=8:57:803 idx=38236 src=tick v=0.0043
+ts=8:57:902 idx=38238 src=scurve v=0.0043
+ts=8:57:902 idx=38240 src=stepgen v_fb_mot=0.0012 v_fb_ms=0.0009
+ts=8:57:902 idx=38241 src=cascade e_p=-0.4439 v_cmd=-0.5439 v_meas=0.0009 u_fb=-0.0949
+ts=8:57:902 idx=38242 src=cascade e_v=-0.5448 u_raw=-0.0949 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:57:902 idx=38243 src=sewmac v=0.0009
+ts=8:57:902 idx=38246 src=tick v=0.0009
+ts=8:58:001 idx=38248 src=scurve v=0.0009
+ts=8:58:001 idx=38250 src=stepgen v_fb_mot=0.0002 v_fb_ms=0.0002
+ts=8:58:001 idx=38251 src=cascade theta_l=1.6102 e_p=-0.4437 v_cmd=-0.5437 v_meas=0.0002 u_fb=-0.1052
+ts=8:58:001 idx=38252 src=cascade e_v=-0.5439 u_raw=-0.1052 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:001 idx=38253 src=sewmac v=0.0002
+ts=8:58:001 idx=38256 src=tick v=0.0002
+ts=8:58:100 idx=38258 src=scurve v=0.0002
+ts=8:58:100 idx=38260 src=stepgen v_fb_mot=0.0000 v_fb_ms=0.0000
+ts=8:58:100 idx=38261 src=cascade theta_l=1.6098 e_p=-0.4434 v_cmd=-0.5434 v_meas=0.0000 u_fb=-0.1069
+ts=8:58:100 idx=38262 src=cascade e_v=-0.5435 u_raw=-0.1069 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:100 idx=38263 src=sewmac v=0.0000
+ts=8:58:100 idx=38266 src=tick v=0.0000
+ts=8:58:200 idx=38268 src=scurve v=0.0000
+ts=8:58:200 idx=38271 src=cascade theta_l=1.6095 e_p=-0.4430 v_cmd=-0.5430 u_fb=-0.1070
+ts=8:58:200 idx=38272 src=cascade e_v=-0.5431 u_raw=-0.1070 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:299 idx=38281 src=cascade theta_l=1.6091 e_p=-0.4427 v_cmd=-0.5427 u_fb=-0.1069
+ts=8:58:299 idx=38282 src=cascade e_v=-0.5427 u_raw=-0.1069 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:399 idx=38291 src=cascade theta_l=1.6087 e_p=-0.4423 v_cmd=-0.5423
+ts=8:58:399 idx=38292 src=cascade e_v=-0.5423 u_raw=-0.1069 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:399 idx=38296 src=tick table_homed=true
+ts=8:58:498 idx=38301 src=cascade theta_l=1.6083 e_p=-0.4419 v_cmd=-0.5419
+ts=8:58:498 idx=38302 src=cascade e_v=-0.5419 u_raw=-0.1069 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:598 idx=38308 src=cascade theta_l=1.6080 e_p=-0.4416 v_cmd=-0.5416 u_fb=-0.1070
+ts=8:58:598 idx=38309 src=cascade e_v=-0.5416 u_raw=-0.1070 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:697 idx=38317 src=cascade theta_l=1.6077 e_p=-0.4413 v_cmd=-0.5413 u_fb=-0.1071
+ts=8:58:697 idx=38318 src=cascade e_v=-0.5413 u_raw=-0.1071 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:797 idx=38324 src=cascade theta_l=1.6075 e_p=-0.4410 v_cmd=-0.5410 u_fb=-0.1072
+ts=8:58:797 idx=38325 src=cascade e_v=-0.5410 u_raw=-0.1072 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:897 idx=38331 src=cascade theta_l=1.6073 e_p=-0.4408 v_cmd=-0.5408 u_fb=-0.1073
+ts=8:58:897 idx=38332 src=cascade e_v=-0.5408 u_raw=-0.1073 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:58:996 idx=38338 src=cascade theta_l=1.6071 e_p=-0.4407 v_cmd=-0.5407 u_fb=-0.1075
+ts=8:58:996 idx=38339 src=cascade e_v=-0.5407 u_raw=-0.1075 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:59:096 idx=38345 src=cascade theta_l=1.6070 e_p=-0.4405 v_cmd=-0.5405 u_fb=-0.1076
+ts=8:59:096 idx=38346 src=cascade e_v=-0.5405 u_raw=-0.1076 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:59:195 idx=38352 src=cascade theta_l=1.6069 e_p=-0.4404 v_cmd=-0.5404 u_fb=-0.1077
+ts=8:59:195 idx=38353 src=cascade e_v=-0.5404 u_raw=-0.1077 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:59:295 idx=38359 src=cascade theta_l=1.6068 u_fb=-0.1078
+ts=8:59:295 idx=38360 src=cascade e_v=-0.5404 u_raw=-0.1078 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:59:395 idx=38366 src=cascade e_p=-0.4403 v_cmd=-0.5403 u_fb=-0.1079
+ts=8:59:395 idx=38367 src=cascade e_v=-0.5403 u_raw=-0.1079 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:59:494 idx=38373 src=cascade theta_l=1.6067
+ts=8:59:494 idx=38374 src=cascade e_v=-0.5403 u_raw=-0.1079 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:59:594 idx=38380 src=cascade u_fb=-0.1080
+ts=8:59:594 idx=38381 src=cascade e_v=-0.5403 u_raw=-0.1080 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=8:59:793 idx=38394 src=cascade u_fb=-0.1081
+ts=8:59:793 idx=38395 src=cascade e_v=-0.5403 u_raw=-0.1081 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=9:00:191 idx=38422 src=cascade theta_l=1.6068
+ts=9:00:191 idx=38423 src=cascade e_v=-0.5403 u_raw=-0.1081 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
+ts=9:00:390 idx=38436 src=cascade e_p=-0.4404 v_cmd=-0.5404
+ts=9:00:390 idx=38437 src=cascade e_v=-0.5404 u_raw=-0.1081 u_sat=-0.0000 cap=0.0000 deadband=no sat=yes
