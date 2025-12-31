@@ -126,12 +126,12 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
 
 
 int main() {
-    const size_t n {2 * 5}; // Number of iterations
-    const size_t number_trajectories {4 * 64 * 1024};
+    const size_t n {4 * 5}; // Number of iterations
+    const size_t number_trajectories {32 * 1024};
 
     std::cout << "Ruckig size: " << sizeof(Ruckig<3>) << " Byte" << std::endl;
     std::cout << "Trajectory<3> size: " << sizeof(Trajectory<3>) << " Byte" << std::endl;
 
-    const size_t DOFs {3};
+    const size_t DOFs {7};
     benchmark<DOFs, RuckigThrow<DOFs>>(n, number_trajectories);
 }
