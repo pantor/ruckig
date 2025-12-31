@@ -171,31 +171,9 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
     polynom_acc1[3] = h0_acc1/(jMax_jMax*jMax_jMax);
 
 
-    // Limits
-    // const double t_min_pd = std::abs(pd / vMax) - 1e-12;
-    // t_min_none = std::max(t_min_none, (t_min_pd - (af - a0)/jMax)/2);
-
-    // Budan's theorem
-    // std::array<double, 4> polynom_none_min = polynom_none;
-    // polynom_none_min[0] += 4 * t_min_none;
-    // polynom_none_min[1] += (3 * polynom_none[0] + 6 * t_min_none) * t_min_none;
-    // polynom_none_min[2] += (2 * polynom_none[1] + (3 * polynom_none[0] + 4 * t_min_none) * t_min_none) * t_min_none;
-    // polynom_none_min[3] += (polynom_none[2] + (polynom_none[1] + (polynom_none[0] + t_min_none) * t_min_none) * t_min_none) * t_min_none;
-
-    std::array<double, 4> polynom_acc0_min = polynom_acc0;
-    polynom_acc0_min[0] += 4 * t_min_acc0;
-    polynom_acc0_min[1] += (3 * polynom_acc0[0] + 6 * t_min_acc0) * t_min_acc0;
-    polynom_acc0_min[2] += (2 * polynom_acc0[1] + (3 * polynom_acc0[0] + 4 * t_min_acc0) * t_min_acc0) * t_min_acc0;
-    polynom_acc0_min[3] += (polynom_acc0[2] + (polynom_acc0[1] + (polynom_acc0[0] + t_min_acc0) * t_min_acc0) * t_min_acc0) * t_min_acc0;
-
-    // const bool polynom_none_has_solution = (polynom_none_min[0] < 0.0) || (polynom_none_min[1] < 0.0) || (polynom_none_min[2] < 0.0) || (polynom_none_min[3] <= 0.0);
-    const bool polynom_acc0_has_solution = (polynom_acc0_min[0] < 0.0) || (polynom_acc0_min[1] < 0.0) || (polynom_acc0_min[2] < 0.0) || (polynom_acc0_min[3] <= 0.0);
-    const bool polynom_acc1_has_solution = (polynom_acc1[0] < 0.0) || (polynom_acc1[1] < 0.0) || (polynom_acc1[2] < 0.0) || (polynom_acc1[3] <= 0.0);
-
     auto roots_none = roots::solve_quart_monic(polynom_none);
-    auto roots_acc0 = polynom_acc0_has_solution ? roots::solve_quart_monic(polynom_acc0) : roots::PositiveSet<double, 4>{};
-    auto roots_acc1 = polynom_acc1_has_solution ? roots::solve_quart_monic(polynom_acc1) : roots::PositiveSet<double, 4>{};
-
+    auto roots_acc0 = roots::solve_quart_monic(polynom_acc0);
+    auto roots_acc1 = roots::solve_quart_monic(polynom_acc1);
 
     for (double t: roots_none) {
         if (t < t_min_none || t > t_max_none) {
