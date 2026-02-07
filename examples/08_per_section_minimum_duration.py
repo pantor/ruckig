@@ -51,7 +51,7 @@ if __name__ == '__main__':
         if not first_output:
             first_output = copy(out)
 
-    print(f'Calculation duration: {first_output.calculation_duration:0.1f} [µs]')
+    print(f'Calculation duration: {first_output.calculation_duration:0.1f} [μs]')
     print(f'Trajectory duration: {first_output.trajectory.duration:0.4f} [s]')
 
     # Plot the trajectory

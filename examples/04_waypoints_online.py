@@ -30,7 +30,7 @@ if __name__ == '__main__':
     inp.max_acceleration = [3, 2, 2]
     inp.max_jerk = [6, 10, 20]
 
-    inp.interrupt_calculation_duration = 500  # [µs]
+    inp.interrupt_calculation_duration = 500  # [μs]
 
     print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
         if out.new_calculation:
             print('Updated the trajectory:')
-            print(f'  Calculation duration: {out.calculation_duration:0.1f} [µs]')
+            print(f'  Calculation duration: {out.calculation_duration:0.1f} [μs]')
             print(f'  Trajectory duration: {out.trajectory.duration:0.4f} [s]')
 
         print('\t'.join([f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))

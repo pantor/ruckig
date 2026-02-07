@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
         out.pass_to_input(inp)
 
-        print('\t'.join([f'{p:0.3f}' for p in target_state.position] + [f'{p:0.3f}' for p in out.new_position]) + f' in {out.calculation_duration:0.2f} [µs]')
+        print('\t'.join([f'{p:0.3f}' for p in target_state.position] + [f'{p:0.3f}' for p in out.new_position]) + f' in {out.calculation_duration:0.2f} [μs]')
 
         target_list.append([target_state.position, target_state.velocity, target_state.acceleration])
         follow_list.append([out.new_position, out.new_velocity, out.new_acceleration])
