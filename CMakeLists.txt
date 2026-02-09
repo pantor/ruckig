@@ -118,10 +118,17 @@ if(BUILD_PYTHON_MODULE)
     target_compile_definitions(python_ruckig PUBLIC WITH_CLOUD_CLIENT)
   endif()
 
+  # Find the correct dist-packages path for the current system
+  execute_process(
+    COMMAND "${Python_EXECUTABLE}" -c "import sysconfig; print(sysconfig.get_path('platlib', scheme='deb_system'))"
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    OUTPUT_VARIABLE PYTHON3_SITE_PACKAGES_PATH
+  )
+
   set_target_properties(python_ruckig PROPERTIES OUTPUT_NAME ruckig)
   set_target_properties(python_ruckig PROPERTIES ARCHIVE_OUTPUT_NAME python_ruckig)
 
-  install(TARGETS python_ruckig LIBRARY DESTINATION .)
+  install(TARGETS python_ruckig LIBRARY DESTINATION "${PYTHON3_SITE_PACKAGES_PATH}")
 endif()
 
 
