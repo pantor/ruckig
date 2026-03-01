@@ -369,10 +369,16 @@ Ruckig is used by over hundred research labs, companies, and open-source project
 - [MoveIt 2](https://moveit.ros.org) for trajectory generation.
 - [CoppeliaSim](https://www.coppeliarobotics.com/) starting from version 4.3.
 - [Fuzzy Logic Robotics](https://flr.io)
-- [Gestalt Robotics](https://www.gestalt-robotics.com)
-- [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Structered Text (ST - IEC61131-3) for usage on PLCs.
+- [LinuxCNC](https://linuxcnc.org)
 - [Scanlab](https://www.scanlab.de/de) for controlling lasers.
+- [Ocado](https://ocadointelligentautomation.com)
+- [Sunday Robotics](https://www.sunday.ai)
+- [Arburg](https://www.arburg.com)
+- [Gestalt Robotics](https://www.gestalt-robotics.com)
+- [AgiBot Genie Sim](https://github.com/AgibotTech/genie_sim)
+- [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Structered Text (ST - IEC61131-3) for usage on PLCs.
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
+- [TidyBot++](https://github.com/jimmyyhwu/tidybot2)
 - [Wiredworks](https://wiredworks.com) made a simple Kivy [GUI application](https://github.com/wiredworks/ruckig-showcase)
 - and many others!
 
