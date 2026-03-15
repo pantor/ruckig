@@ -1,8 +1,8 @@
 // This example shows the usage of intermediate waypoints. It will only work with Ruckig Pro or enabled cloud API.
 
-#include <iostream>
-
 #include <ruckig/ruckig.hpp>
+
+#include "plotter.hpp"
 
 
 using namespace ruckig;
@@ -12,8 +12,8 @@ int main() {
     const size_t DOFs = 3;
     const size_t max_number_of_waypoints = 10;  // for memory allocation
 
-    // Create instances: the Ruckig OTG as well as input and output parameters
-    Ruckig<DOFs> otg(control_cycle, max_number_of_waypoints);
+    // Create instances: the Ruckig trajectory generator as well as input and output parameters
+    Ruckig<DOFs> ruckig(control_cycle, max_number_of_waypoints);
     InputParameter<DOFs> input;
     OutputParameter<DOFs> output(max_number_of_waypoints);
 
@@ -41,14 +41,14 @@ int main() {
 
     std::cout << "t | position" << std::endl;
     double calculation_duration = 0.0;
-    while (otg.update(input, output) == Result::Working) {
+    while (ruckig.update(input, output) == Result::Working) {
         if (output.new_calculation) {
             std::cout << "Updated the trajectory:" << std::endl;
             std::cout << "  Reached target position in " << output.trajectory.get_duration() << " [s]." << std::endl;
             std::cout << "  Calculation in " << output.calculation_duration << " [µs]." << std::endl;
         }
 
-        std::cout << output.time << " | " << join(output.new_position) << std::endl;
+        std::cout << output.time << " | " << pretty_print(output.new_position) << std::endl;
 
         output.pass_to_input(input);
     }

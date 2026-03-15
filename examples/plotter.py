@@ -6,14 +6,25 @@ import numpy as np
 
 class Plotter:
     @staticmethod
-    def plot_trajectory(filename, otg, inp, out_list, show=False, plot_acceleration=True, plot_jerk=True, time_offsets=None, title=None):
-        taxis = np.array(list(map(lambda x: x.time, out_list)))
+    def plot_trajectory(
+        filename,
+        ruckig,
+        inp,
+        out_list,
+        show=False,
+        plot_acceleration=True,
+        plot_jerk=True,
+        time_offsets=None,
+        title=None,
+        times=None,
+    ):
+        taxis = np.array(times if times else [x.time for x in out_list])
         if time_offsets:
             taxis += np.array(time_offsets)
         qaxis = np.array(list(map(lambda x: x.new_position, out_list)))
         dqaxis = np.array(list(map(lambda x: x.new_velocity, out_list)))
         ddqaxis = np.array(list(map(lambda x: x.new_acceleration, out_list)))
-        dddqaxis = np.diff(ddqaxis, axis=0, prepend=ddqaxis[0, 0]) / otg.delta_time
+        dddqaxis = np.diff(ddqaxis, axis=0, prepend=ddqaxis[0, 0]) / ruckig.delta_time
         dddqaxis[0, :] = 0.0
         dddqaxis[-1, :] = 0.0
 

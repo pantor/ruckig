@@ -1,7 +1,8 @@
 #include <deque>
-#include <iostream>
 
 #include <ruckig/ruckig.hpp>
+
+#include "plotter.hpp"
 
 
 template<class T, size_t DOFs>
@@ -45,8 +46,8 @@ public:
 using namespace ruckig;
 
 int main() {
-    // Create instances: the Ruckig OTG as well as input and output parameters
-    Ruckig<DynamicDOFs, MinimalDynamicDofsVector> otg(3, 0.01);  // control cycle
+    // Create instances: the Ruckig trajectory generator as well as input and output parameters
+    Ruckig<DynamicDOFs, MinimalDynamicDofsVector> ruckig(3, 0.01);  // control cycle
     InputParameter<DynamicDOFs, MinimalDynamicDofsVector> input(3);
     OutputParameter<DynamicDOFs, MinimalDynamicDofsVector> output(3);
 
@@ -65,8 +66,8 @@ int main() {
 
     // Generate the trajectory within the control loop
     std::cout << "t | position" << std::endl;
-    while (otg.update(input, output) == Result::Working) {
-        std::cout << output.time << " | " << join(output.new_position) << std::endl;
+    while (ruckig.update(input, output) == Result::Working) {
+        std::cout << output.time << " | " << pretty_print(output.new_position) << std::endl;
 
         output.pass_to_input(input);
     }

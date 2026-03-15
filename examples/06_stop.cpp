@@ -1,13 +1,13 @@
-#include <iostream>
-
 #include <ruckig/ruckig.hpp>
+
+#include "plotter.hpp"
 
 
 using namespace ruckig;
 
 int main() {
-    // Create instances: the ruckig otg as well as input and output parameters
-    Ruckig<3> otg(0.01);
+    // Create instances: the Ruckig trajectory generator as well as input and output parameters
+    Ruckig<3> ruckig(0.01);
     InputParameter<3> input;
     OutputParameter<3> output;
 
@@ -27,8 +27,8 @@ int main() {
     // Generate the trajectory within the control loop
     std::cout << "t | position" << std::endl;
     bool on_stop_trajectory = false;
-    while (otg.update(input, output) == Result::Working) {
-        std::cout << output.time << " | " << join(output.new_position) << std::endl;
+    while (ruckig.update(input, output) == Result::Working) {
+        std::cout << output.time << " | " << pretty_print(output.new_position) << std::endl;
 
         // Activate stop trajectory after 1s
         if (output.time >= 1.0 && !on_stop_trajectory) {

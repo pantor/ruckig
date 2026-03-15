@@ -1,4 +1,5 @@
-# This example shows the usage of intermediate waypoints. It will only work with Ruckig Pro or enabled cloud API (e.g. default when installed by pip / PyPI).
+# This example shows the usage of intermediate waypoints.
+# It will only work with Ruckig Pro or enabled cloud API (e.g. default when installed by pip / PyPI).
 
 from copy import copy
 

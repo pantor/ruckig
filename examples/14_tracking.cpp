@@ -1,9 +1,10 @@
 // Only with Ruckig Pro
 
 #include <cmath>
-#include <iostream>
 
 #include <ruckig/trackig.hpp>
+
+#include "plotter.hpp"
 
 
 using namespace ruckig;
@@ -36,8 +37,8 @@ TargetState<1> model_sinus(double t, double ramp_vel=0.4) {
 
 
 int main() {
-    // Create instances: the Trackig OTG as well as input and output parameters
-    Trackig<1> otg(0.01);  // control cycle
+    // Create instances: the Trackig trajectory generator as well as input and output parameters
+    Trackig<1> trackig(0.01);  // control cycle
     InputParameter<1> input;
     OutputParameter<1> output;
 
@@ -54,14 +55,15 @@ int main() {
     input.min_position = {-2.5};
     input.max_position = {2.5};
 
-    otg.reactiveness = 1.0; // default value, should be in [0, 1]
+    trackig.mode = TrackigMode::Optimized; // Optimized or Fast
+    trackig.reactiveness = 1.0; // default value, should be in [0, 1]
 
     // Generate the trajectory following the target state
     std::cout << "target | follow" << std::endl;
     for (size_t t = 0; t < 500; t += 1) {
-        const TargetState<1> target_state = model_ramp(otg.delta_time * t);
-        const Result res = otg.update(target_state, input, output);
-        std::cout << join(target_state.position) << " " << join(output.new_position) << std::endl;
+        const TargetState<1> target_state = model_ramp(trackig.delta_time * t);
+        const Result res = trackig.update(target_state, input, output);
+        std::cout << pretty_print(target_state.position) << " | " << pretty_print(output.new_position) << std::endl;
 
         output.pass_to_input(input);
     }

@@ -2,7 +2,7 @@
 
 from math import sin, cos
 
-from ruckig import Trackig, TargetState, InputParameter, OutputParameter
+from ruckig import Trackig, TrackigMode, TargetState, InputParameter, OutputParameter
 
 
 # Create the target state signal
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # Create instances: the Trackig OTG as well as input and output parameters
     inp = InputParameter(1)
     out = OutputParameter(inp.degrees_of_freedom)
-    otg = Trackig(inp.degrees_of_freedom, 0.01)
+    trackig = Trackig(inp.degrees_of_freedom, 0.01)
 
     # Set input parameters
     inp.current_position = [0.0]
@@ -50,21 +50,25 @@ if __name__ == '__main__':
     inp.min_position = [-2.5]
     inp.max_position = [2.5]
 
-    # otg.reactiveness = 1.0 # default value, should be in [0, 1]
+    trackig.mode = TrackigMode.Optimized  # Optimized or Fast
+    trackig.reactiveness = 1.0  # default value, should be in [0, 1]
 
     print('target | follow')
 
     # Generate the trajectory following the target state
     steps, target_list, follow_list = [], [], []
     for t in range(500):
-        target_state = model_ramp(otg.delta_time * t)
+        target_state = model_ramp(trackig.delta_time * t)
 
         steps.append(t)
-        res = otg.update(target_state, inp, out)
+        res = trackig.update(target_state, inp, out)
 
         out.pass_to_input(inp)
 
-        print('\t'.join([f'{p:0.3f}' for p in target_state.position] + [f'{p:0.3f}' for p in out.new_position]) + f' in {out.calculation_duration:0.2f} [µs]')
+        print(
+            '\t'.join([f'{p:0.3f}' for p in target_state.position] + [f'{p:0.3f}' for p in out.new_position]),
+            f'in {out.calculation_duration:0.2f} [µs]',
+        )
 
         target_list.append([target_state.position, target_state.velocity, target_state.acceleration])
         follow_list.append([out.new_position, out.new_velocity, out.new_acceleration])
@@ -87,4 +91,4 @@ if __name__ == '__main__':
     # plt.grid(True)
     # plt.legend()
 
-    # plt.savefig(project_path / 'examples' / '13_trajectory.pdf')
+    # plt.savefig(project_path / 'examples' / '14_trajectory.pdf')

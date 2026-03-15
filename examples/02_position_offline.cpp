@@ -1,6 +1,6 @@
-#include <iostream>
-
 #include <ruckig/ruckig.hpp>
+
+#include "plotter.hpp"
 
 
 using namespace ruckig;
@@ -25,11 +25,11 @@ int main() {
     input.min_acceleration = {-2.0, -2.0, -2.0};
 
     // We don't need to pass the control rate (cycle time) when using only offline features
-    Ruckig<3> otg;
+    Ruckig<3> ruckig;
     Trajectory<3> trajectory;
 
     // Calculate the trajectory in an offline manner (outside of the control loop)
-    Result result = otg.calculate(input, trajectory);
+    Result result = ruckig.calculate(input, trajectory);
     if (result == Result::ErrorInvalidInput) {
         std::cout << "Invalid input!" << std::endl;
         return -1;
@@ -44,7 +44,7 @@ int main() {
     std::array<double, 3> new_position, new_velocity, new_acceleration;
     trajectory.at_time(new_time, new_position, new_velocity, new_acceleration);
 
-    std::cout << "Position at time " << new_time << " [s]: " << join(new_position) << std::endl;
+    std::cout << "Position at time " << new_time << " [s]: " << pretty_print(new_position) << std::endl;
 
     // Get some info about the position extrema of the trajectory
     std::array<Bound, 3> position_extrema = trajectory.get_position_extrema();

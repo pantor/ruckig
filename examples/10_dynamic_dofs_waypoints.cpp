@@ -1,8 +1,8 @@
 // This example shows the usage of intermediate waypoints. It will only work with Ruckig Pro or enabled cloud API.
 
-#include <iostream>
-
 #include <ruckig/ruckig.hpp>
+
+#include "plotter.hpp"
 
 
 using namespace ruckig;
@@ -12,8 +12,8 @@ int main() {
     size_t DOFs = 3;
     size_t max_number_of_waypoints = 10;  // for memory allocation
 
-    // Create instances: the Ruckig OTG as well as input and output parameters
-    Ruckig<DynamicDOFs> otg(DOFs, control_cycle, max_number_of_waypoints);
+    // Create instances: the Ruckig trajectory generator as well as input and output parameters
+    Ruckig<DynamicDOFs> ruckig(DOFs, control_cycle, max_number_of_waypoints);
     InputParameter<DynamicDOFs> input(DOFs);
     OutputParameter<DynamicDOFs> output(DOFs, max_number_of_waypoints);
 
@@ -39,8 +39,8 @@ int main() {
 
     std::cout << "t | position" << std::endl;
     double calculation_duration = 0.0;
-    while (otg.update(input, output) == Result::Working) {
-        std::cout << output.time << " | " << join(output.new_position) << std::endl;
+    while (ruckig.update(input, output) == Result::Working) {
+        std::cout << output.time << " | " << pretty_print(output.new_position) << std::endl;
 
         output.pass_to_input(input);
 

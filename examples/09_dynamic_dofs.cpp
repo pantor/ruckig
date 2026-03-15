@@ -1,15 +1,15 @@
-#include <iostream>
-
 #include <ruckig/ruckig.hpp>
+
+#include "plotter.hpp"
 
 
 using namespace ruckig;
 
 int main() {
-    // Create instances: the Ruckig OTG as well as input and output parameters
+    // Create instances: the Ruckig trajectory generator as well as input and output parameters
     size_t degrees_of_freedom = 3;
 
-    Ruckig<DynamicDOFs> otg(degrees_of_freedom, 0.01);
+    Ruckig<DynamicDOFs> ruckig(degrees_of_freedom, 0.01);
     InputParameter<DynamicDOFs> input(degrees_of_freedom);
     OutputParameter<DynamicDOFs> output(degrees_of_freedom);
 
@@ -28,8 +28,8 @@ int main() {
 
     // Generate the trajectory within the control loop
     std::cout << "t | position" << std::endl;
-    while (otg.update(input, output) == Result::Working) {
-        std::cout << output.time << " | " << join(output.new_position) << std::endl;
+    while (ruckig.update(input, output) == Result::Working) {
+        std::cout << output.time << " | " << pretty_print(output.new_position) << std::endl;
 
         output.pass_to_input(input);
     }
