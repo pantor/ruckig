@@ -111,7 +111,7 @@ if(BUILD_PYTHON_MODULE)
     OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE nanobind_ROOT)
   find_package(nanobind CONFIG REQUIRED)
 
-  nanobind_add_module(python_ruckig NB_STATIC src/python/python.cpp)
+  nanobind_add_module(python_ruckig NB_STATIC src/wrapper/python.cpp)
   target_compile_features(python_ruckig PUBLIC cxx_std_17)
   target_link_libraries(python_ruckig PUBLIC ruckig)
   if(BUILD_CLOUD_CLIENT)
