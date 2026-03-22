@@ -6,8 +6,8 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 if __name__ == '__main__':
-    # Create instances: the Ruckig OTG as well as input and output parameters
-    otg = Ruckig(3, 0.01)  # DoFs, control cycle
+    # Create instances: Ruckig as well as input and output parameters
+    ruckig = Ruckig(3, 0.01)  # DoFs, control cycle
     inp = InputParameter(3)
     out = OutputParameter(3)
 
@@ -30,29 +30,29 @@ if __name__ == '__main__':
     phase = 'start'
     speed_change_duration = 1.0  # [s]
 
-    print('\t'.join(['t', 't_traj'] + [str(i) for i in range(otg.degrees_of_freedom)]))
+    print('\t'.join(['t', 't_traj'] + [str(i) for i in range(ruckig.degrees_of_freedom)]))
 
     # Generate the trajectory within the control loop
     first_output, times, out_list = None, [], []
     res = Result.Working
     while res == Result.Working or res == Result.Paused:
-        res = otg.update(inp, out)
+        res = ruckig.update(inp, out)
 
         if out.time > 1.8 and phase == 'start':
             phase = 'brake'
         if res == Result.Paused and phase == 'brake':
             phase = 'accel'
-        if phase == 'accel' and otg.speed >= 1.0:
+        if phase == 'accel' and ruckig.speed >= 1.0:
             phase = 'end'
 
         if phase == 'brake':
-            otg.speed = max(otg.speed - otg.delta_time / speed_change_duration, 0.0)
+            ruckig.speed = max(ruckig.speed - ruckig.delta_time / speed_change_duration, 0.0)
         if phase == 'accel':
-            otg.speed = min(otg.speed + otg.delta_time / speed_change_duration, 1.0)
+            ruckig.speed = min(ruckig.speed + ruckig.delta_time / speed_change_duration, 1.0)
 
         # The out.time parameter denotes the time on the trajectory,
         # which is not the same as the time in the control loop as soon as the speed is not 1.0.
-        time = (times[-1] if times else 0.0) + otg.delta_time
+        time = (times[-1] if times else 0.0) + ruckig.delta_time
 
         print('\t'.join([f'{time:0.3f}', f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
         times.append(time)
@@ -71,4 +71,4 @@ if __name__ == '__main__':
     # from plotter import Plotter
 
     # project_path = Path(__file__).parent.parent.absolute()
-    # Plotter.plot_trajectory(project_path / 'examples' / '16_trajectory.pdf', otg, inp, out_list, plot_jerk=False, times=times)
+    # Plotter.plot_trajectory(project_path / 'examples' / '16_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False, times=times)

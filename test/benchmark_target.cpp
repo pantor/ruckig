@@ -10,17 +10,17 @@ using namespace ruckig;
 
 
 template<size_t DOFs, class OTGType>
-double check_update(OTGType& otg, InputParameter<DOFs>& input) {
+double check_update(OTGType& ruckig, InputParameter<DOFs>& input) {
     OutputParameter<DOFs> output;
-    const auto result = otg.update(input, output);
+    const auto result = ruckig.update(input, output);
     return output.calculation_duration;
 }
 
 template<size_t DOFs, class OTGType>
-double check_calculation(OTGType& otg, InputParameter<DOFs>& input) {
+double check_calculation(OTGType& ruckig, InputParameter<DOFs>& input) {
     Trajectory<DOFs> trajectory;
     const auto start = std::chrono::steady_clock::now();
-    const auto result = otg.calculate(input, trajectory);
+    const auto result = ruckig.calculate(input, trajectory);
     const auto stop = std::chrono::steady_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count() / 1000.0;
 }
@@ -40,7 +40,7 @@ std::tuple<double, double> analyze(const std::vector<double>& v) {
 
 template<size_t DOFs, class OTGType>
 void benchmark(size_t n, double number_trajectories, bool verbose = true) {
-    OTGType otg {0.005};
+    OTGType ruckig {0.005};
 
     std::normal_distribution<double> position_dist {0.0, 4.0};
     std::normal_distribution<double> dynamic_dist {0.0, 0.8};
@@ -61,7 +61,7 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
     // l.fill(input.max_velocity, input.target_velocity);
     // l.fill(input.max_acceleration, input.target_acceleration);
     // l.fill(input.max_jerk);
-    // check_calculation(otg, input);
+    // check_calculation(ruckig, input);
 
     for (size_t j = 0; j < n; ++j) {
         double average_ = 0.0;
@@ -90,12 +90,12 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
             // input.max_jerk[0] = 0.0;
 
             if constexpr (std::is_same<OTGType, RuckigThrow<DOFs>>::value) {
-                if (!otg.template validate_input<false>(input)) {
+                if (!ruckig.template validate_input<false>(input)) {
                     continue;
                 }
             }
 
-            const double time = check_calculation(otg, input);
+            const double time = check_calculation(ruckig, input);
             average_ = average_ + (time - average_) / n;
             worst_ = std::max(worst_, time);
             ++n;
@@ -115,13 +115,13 @@ void benchmark(size_t n, double number_trajectories, bool verbose = true) {
 
     if (verbose) {
         std::cout << "---" << std::endl;
-        std::cout << "Benchmark for " << otg.degrees_of_freedom << " DoFs on " << number_trajectories << " trajectories" << std::endl;
+        std::cout << "Benchmark for " << ruckig.degrees_of_freedom << " DoFs on " << number_trajectories << " trajectories" << std::endl;
         std::cout << "Average Calculation Duration " << average_mean << " pm " << average_std << " [µs]" << std::endl;
         std::cout << "Worst Calculation Duration " << worst_mean << " pm " << worst_std << " [µs]" << std::endl;
         std::cout << "End-to-end Calculation Duration " << global_mean << " pm " << global_std << " [µs]" << std::endl;
     }
 
-    // std::cout << otg.degrees_of_freedom << "\t" << average_mean << "\t" << average_std << "\t" << worst_mean << "\t" << worst_std << std::endl;
+    // std::cout << ruckig.degrees_of_freedom << "\t" << average_mean << "\t" << average_std << "\t" << worst_mean << "\t" << worst_std << std::endl;
 }
 
 

@@ -4,7 +4,7 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 if __name__ == '__main__':
-    otg = Ruckig(3, 0.01)
+    ruckig = Ruckig(3, 0.01)
     inp = InputParameter(3)
     out = OutputParameter(3)
 
@@ -24,13 +24,13 @@ if __name__ == '__main__':
     # Set minimum duration (equals the trajectory duration when target velocity and acceleration are zero)
     inp.minimum_duration = 5.0
 
-    print('\t'.join(['t'] + [str(i) for i in range(otg.degrees_of_freedom)]))
+    print('\t'.join(['t'] + [str(i) for i in range(ruckig.degrees_of_freedom)]))
 
     # Generate the trajectory within the control loop
     first_output, out_list = None, []
     res = Result.Working
     while res == Result.Working:
-        res = otg.update(inp, out)
+        res = ruckig.update(inp, out)
 
         print('\t'.join([f'{out.time:0.3f}'] + [f'{p:0.3f}' for p in out.new_position]))
         out_list.append(copy(out))
@@ -48,4 +48,4 @@ if __name__ == '__main__':
     # from plotter import Plotter
 
     # project_path = Path(__file__).parent.parent.absolute()
-    # Plotter.plot_trajectory(project_path / 'examples' / '07_trajectory.pdf', otg, inp, out_list, plot_jerk=False)
+    # Plotter.plot_trajectory(project_path / 'examples' / '07_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False)

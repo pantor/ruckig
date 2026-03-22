@@ -20,7 +20,7 @@ def model_half_sinus(t, ramp_vel=1.2):
 
 
 if __name__ == '__main__':
-    # Create instances: the Trackig OTG as well as input and output parameters
+    # Create instances: Trackig as well as input and output parameters
     inp = InputParameter(1)
     trackig = Trackig(inp.degrees_of_freedom, 0.01)
 

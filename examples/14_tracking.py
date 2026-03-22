@@ -32,7 +32,7 @@ def model_sinus(t, ramp_vel=0.4):
 
 
 if __name__ == '__main__':
-    # Create instances: the Trackig OTG as well as input and output parameters
+    # Create instances: Trackig as well as input and output parameters
     inp = InputParameter(1)
     out = OutputParameter(inp.degrees_of_freedom)
     trackig = Trackig(inp.degrees_of_freedom, 0.01)

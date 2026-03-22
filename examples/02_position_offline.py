@@ -2,8 +2,8 @@ from ruckig import InputParameter, Ruckig, Trajectory, Result
 
 
 if __name__ == '__main__':
+    #  Create input parameters
     inp = InputParameter(3)
-
     inp.current_position = [0.0, 0.0, 0.5]
     inp.current_velocity = [0.0, -2.2, -0.5]
     inp.current_acceleration = [0.0, 2.5, -0.5]
@@ -21,11 +21,11 @@ if __name__ == '__main__':
     inp.min_acceleration = [-2.0, -1.0, -2.0]
 
     # We don't need to pass the control rate (cycle time) when using only offline features
-    otg = Ruckig(3)
+    ruckig = Ruckig(3)
     trajectory = Trajectory(3)
 
     # Calculate the trajectory in an offline manner
-    result = otg.calculate(inp, trajectory)
+    result = ruckig.calculate(inp, trajectory)
     if result == Result.ErrorInvalidInput:
         raise Exception('Invalid input!')
 

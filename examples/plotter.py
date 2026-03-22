@@ -59,30 +59,30 @@ class Plotter:
 
             # Plot limit lines
             if inp.min_position and inp.min_position[dof] > 1.4 * global_min:
-                plt.axhline(y=inp.min_position[dof], color='grey', linestyle='--', linewidth=1.1)
+                plt.axhline(y=inp.min_position[dof], color='tab:blue', linestyle='--', linewidth=1.1)
 
             if inp.max_position and inp.max_position[dof] < 1.4 * global_max:
-                plt.axhline(y=inp.max_position[dof], color='grey', linestyle='--', linewidth=1.1)
+                plt.axhline(y=inp.max_position[dof], color='tab:blue', linestyle='--', linewidth=1.1)
 
             if inp.max_velocity[dof] < 1.4 * global_max:
-                plt.axhline(y=inp.max_velocity[dof], color='orange', linestyle='--', linewidth=1.1)
+                plt.axhline(y=inp.max_velocity[dof], color='tab:orange', linestyle='--', linewidth=1.1)
 
             min_velocity = inp.min_velocity[dof] if inp.min_velocity else -inp.max_velocity[dof]
             if min_velocity > 1.4 * global_min:
-                plt.axhline(y=min_velocity, color='orange', linestyle='--', linewidth=1.1)
+                plt.axhline(y=min_velocity, color='tab:orange', linestyle='--', linewidth=1.1)
 
             if plot_acceleration and inp.max_acceleration[dof] < 1.4 * global_max:
-                plt.axhline(y=inp.max_acceleration[dof], color='g', linestyle='--', linewidth=1.1)
+                plt.axhline(y=inp.max_acceleration[dof], color='tab:green', linestyle='--', linewidth=1.1)
 
             min_acceleration = inp.min_acceleration[dof] if inp.min_acceleration else -inp.max_acceleration[dof]
             if plot_acceleration and min_acceleration > 1.4 * global_min:
-                plt.axhline(y=min_acceleration, color='g', linestyle='--', linewidth=1.1)
+                plt.axhline(y=min_acceleration, color='tab:green', linestyle='--', linewidth=1.1)
 
             if plot_jerk and inp.max_jerk[dof] < 1.4 * global_max:
-                plt.axhline(y=inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
+                plt.axhline(y=inp.max_jerk[dof], color='tab:red', linestyle='--', linewidth=1.1)
 
             if plot_jerk and -inp.max_jerk[dof] > 1.4 * global_min:
-                plt.axhline(y=-inp.max_jerk[dof], color='red', linestyle='--', linewidth=1.1)
+                plt.axhline(y=-inp.max_jerk[dof], color='tab:red', linestyle='--', linewidth=1.1)
 
             plt.legend()
             plt.grid(True)
