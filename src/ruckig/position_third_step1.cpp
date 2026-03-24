@@ -442,7 +442,7 @@ void PositionThirdOrderStep1::time_none_two_step(ProfileIter& profile, double vM
     }
 }
 
-bool PositionThirdOrderStep1::time_all_single_step(Profile* profile, double vMax, double vMin, double aMax, double aMin, double jMax) const {
+bool PositionThirdOrderStep1::time_all_single_step(Profile* profile, double vMax, double vMin, double aMax, double aMin, double) const {
     if (std::abs(af - a0) > DBL_EPSILON) {
         return false;
     }

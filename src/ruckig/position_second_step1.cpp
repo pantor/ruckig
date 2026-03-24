@@ -62,7 +62,7 @@ void PositionSecondOrderStep1::time_none(ProfileIter& profile, double vMax, doub
     }
 }
 
-bool PositionSecondOrderStep1::time_all_single_step(Profile* profile, double vMax, double vMin, double aMax, double aMin) const {
+bool PositionSecondOrderStep1::time_all_single_step(Profile* profile, double vMax, double vMin, double, double) const {
     if (std::abs(vf - v0) > DBL_EPSILON) {
         return false;
     }

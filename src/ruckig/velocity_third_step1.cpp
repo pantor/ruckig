@@ -62,7 +62,7 @@ void VelocityThirdOrderStep1::time_none(ProfileIter& profile, double aMax, doubl
     }
 }
 
-bool VelocityThirdOrderStep1::time_all_single_step(Profile* profile, double aMax, double aMin, double jMax) const {
+bool VelocityThirdOrderStep1::time_all_single_step(Profile* profile, double aMax, double aMin, double) const {
     if (std::abs(af - a0) > DBL_EPSILON) {
         return false;
     }
