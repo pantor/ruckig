@@ -1,6 +1,6 @@
 [package]
 name = "ruckig"
-version = "0.15.5"
+version = "0.17.3"
 edition = "2021"
 build = "src/wrapper/rust_build.rs"
 

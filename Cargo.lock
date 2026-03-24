@@ -180,7 +180,7 @@ dependencies = [
 
 [[package]]
 name = "ruckig"
-version = "0.15.5"
+version = "0.17.3"
 dependencies = [
  "cxx",
  "cxx-build",
