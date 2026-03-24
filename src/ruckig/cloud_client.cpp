@@ -1,5 +1,3 @@
-#include <format>
-
 #include <httplib/httplib.h>
 
 #include <ruckig/calculator_cloud.hpp>
@@ -23,7 +21,7 @@ nlohmann::json CloudClient::post(const nlohmann::json& params, bool throw_error)
     }
     if (res->status != 200) {
         if (throw_error) {
-            throw RuckigError(std::format("could not reach cloud API server, error code: {} {}", res->status, res->body));
+            throw RuckigError("could not reach cloud API server, error code: " + std::to_string(res->status) + " " + res->body);
         }
 
         std::cout << "[ruckig] could not reach cloud API server, error code: " << res->status << " " << res->body << std::endl;
