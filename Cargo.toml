@@ -1,0 +1,28 @@
+[package]
+name = "ruckig"
+version = "0.15.5"
+edition = "2021"
+build = "src/wrapper/rust_build.rs"
+
+[lib]
+name = "ruckig"
+crate-type = ["rlib"]
+path = "src/wrapper/rust.rs"
+
+[[example]]
+name = "01_position"
+path = "examples/01_position.rs"
+
+[[example]]
+name = "02_position_offline"
+path = "examples/02_position_offline.rs"
+
+[[example]]
+name = "05_velocity"
+path = "examples/05_velocity.rs"
+
+[dependencies]
+cxx = "1.0"
+
+[build-dependencies]
+cxx-build = "1.0"
