@@ -6,8 +6,7 @@ on:
     types: [released]
 
 jobs:
-  build-wheels:
-    # if: ${{ false }}
+  build-python-wheels:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -25,7 +24,7 @@ jobs:
         path: ./wheelhouse/*.whl
 
 
-  make-source-dist:
+  make-python-source-dist:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,9 +38,8 @@ jobs:
         path: dist/*.tar.gz
 
 
-  upload:
-    # if: ${{ false }}
-    needs: [build-wheels, make-source-dist]
+  upload-pypi:
+    needs: [build-python-wheels, make-python-source-dist]
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -54,3 +52,17 @@ jobs:
 
     - name: Upload to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+
+
+  upload-cargo:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Upload to Cargo
+      run: cargo publish
+      env:
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_TOKEN }}
