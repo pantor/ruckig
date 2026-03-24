@@ -14,7 +14,7 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Programming Language :: C++",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 
 [project.urls]
 Homepage = "https://ruckig.com"
