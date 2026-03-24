@@ -1,6 +1,14 @@
 [package]
 name = "ruckig"
 version = "0.17.3"
+readme = "README.md"
+description = "Instantaneous Motion Generation for Robots and Machines."
+keywords = ["robotics", "trajectory-generation", "real-time", "jerk-constrained", "time-optimal"]
+categories = ["science", "science::robotics"]
+homepage = "https://ruckig.com"
+repository = "https://github.com/pantor/ruckig"
+documentation = "https://docs.ruckig.com"
+license = "MIT"
 edition = "2021"
 build = "src/wrapper/rust_build.rs"
 
