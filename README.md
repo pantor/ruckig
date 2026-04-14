@@ -144,11 +144,11 @@ Vector max_velocity;
 Vector max_acceleration;
 Vector max_jerk; // Initialized to infinity
 
+Vector max_position; // Initialized to infinity (only in Pro Version)
+Vector min_position; // Initialized to -infinity (only in Pro Version)
+
 std::optional<Vector> min_velocity; // If not given, the negative maximum velocity will be used.
 std::optional<Vector> min_acceleration; // If not given, the negative maximum acceleration will be used.
-
-std::optional<Vector> min_position; // (only in Pro Version)
-std::optional<Vector> max_position; // (only in Pro Version)
 
 std::array<bool, DOFs> enabled; // Initialized to true
 std::optional<double> minimum_duration;

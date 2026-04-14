@@ -49,6 +49,8 @@ class InputParameter {
             target_acceleration[dof] = 0.0;
             max_acceleration[dof] = std::numeric_limits<double>::infinity();
             max_jerk[dof] = std::numeric_limits<double>::infinity();
+            max_position[dof] = std::numeric_limits<double>::infinity();
+            min_position[dof] = -std::numeric_limits<double>::infinity();
             enabled[dof] = true;
         }
     }
@@ -63,6 +65,8 @@ class InputParameter {
         max_velocity.resize(dofs);
         max_acceleration.resize(dofs);
         max_jerk.resize(dofs);
+        max_position.resize(dofs);
+        min_position.resize(dofs);
         enabled.resize(dofs);
     }
 
@@ -87,6 +91,11 @@ public:
 
     //! Kinematic constraints
     Vector<double> max_velocity, max_acceleration, max_jerk;
+
+    //! Positional constraints (only in Ruckig Pro)
+    Vector<double> max_position, min_position;
+
+    //! Minimum velocity / acceleration limit. If none is given, the negative maximum limit is used.
     std::optional<Vector<double>> min_velocity, min_acceleration;
 
     //! Intermediate waypoints (only in Ruckig Pro)
@@ -96,9 +105,6 @@ public:
     std::optional<std::vector<Vector<double>>> per_section_max_velocity, per_section_max_acceleration, per_section_max_jerk;
     std::optional<std::vector<Vector<double>>> per_section_min_velocity, per_section_min_acceleration;
     std::optional<std::vector<Vector<double>>> per_section_max_position, per_section_min_position;
-
-    //! Positional constraints (only in Ruckig Pro)
-    std::optional<Vector<double>> max_position, min_position;
 
     //! Is the DoF considered for calculation?
     Vector<bool> enabled;
@@ -416,6 +422,8 @@ public:
         ss << "inp.max_velocity = [" << join(max_velocity, true) << "]\n";
         ss << "inp.max_acceleration = [" << join(max_acceleration, true) << "]\n";
         ss << "inp.max_jerk = [" << join(max_jerk, true) << "]\n";
+        ss << "inp.max_position = [" << join(max_position, true) << "]\n";
+        ss << "inp.min_position = [" << join(min_position, true) << "]\n";
         if (min_velocity) {
             ss << "inp.min_velocity = [" << join(min_velocity.value(), true) << "]\n";
         }
@@ -432,12 +440,6 @@ public:
                 ss << "    [" << join(p, true) << "],\n";
             }
             ss << "]\n";
-        }
-        if (min_position) {
-            ss << "inp.min_position = [" << join(min_position.value(), true) << "]\n";
-        }
-        if (max_position) {
-            ss << "inp.max_position = [" << join(max_position.value(), true) << "]\n";
         }
         return ss.str();
     }

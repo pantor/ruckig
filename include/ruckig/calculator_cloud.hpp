@@ -96,6 +96,8 @@ public:
         vector_to_json<Vector<double>>(params["max_velocity"], input.max_velocity);
         vector_to_json<Vector<double>>(params["max_acceleration"], input.max_acceleration);
         vector_to_json<Vector<double>>(params["max_jerk"], input.max_jerk);
+        vector_to_json<Vector<double>>(params["max_position"], input.max_position);
+        vector_to_json<Vector<double>>(params["min_position"], input.min_position);
         if (input.min_velocity) {
             vector_to_json<Vector<double>>(params["min_velocity"], input.min_velocity.value());
         }
@@ -119,12 +121,6 @@ public:
         }
         if (input.per_section_min_acceleration) {
             double_vector_to_json<Vector<double>>(params["per_section_min_acceleration"], input.per_section_min_acceleration.value());
-        }
-        if (input.max_position) {
-            vector_to_json<Vector<double>>(params["max_position"], input.max_position.value());
-        }
-        if (input.min_position) {
-            vector_to_json<Vector<double>>(params["min_position"], input.min_position.value());
         }
         vector_to_json<Vector<bool>>(params["enabled"], input.enabled);
         params["control_interface"] = input.control_interface;
