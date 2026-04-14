@@ -68,7 +68,11 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_prop_ro("duration", &Trajectory<DynamicDOFs>::get_duration)
         .def_prop_ro("intermediate_durations", &Trajectory<DynamicDOFs>::get_intermediate_durations)
         .def_prop_ro("independent_min_durations", &Trajectory<DynamicDOFs>::get_independent_min_durations)
-        .def_prop_ro("position_extrema", &Trajectory<DynamicDOFs>::get_position_extrema)
+        .def_prop_ro("position_extrema", [](const Trajectory<DynamicDOFs>& traj) {
+            std::vector<Bound> extrema(traj.degrees_of_freedom);
+            traj.get_position_extrema(extrema);
+            return extrema;
+        })
         .def("at_time", [](const Trajectory<DynamicDOFs>& traj, double time, bool return_section=false) {
             std::vector<double> new_position(traj.degrees_of_freedom), new_velocity(traj.degrees_of_freedom), new_acceleration(traj.degrees_of_freedom), new_jerk(traj.degrees_of_freedom);
             size_t new_section;

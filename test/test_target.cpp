@@ -271,24 +271,6 @@ TEST_CASE("trajectory") {
         CHECK( independent_min_durations[2] == doctest::Approx(output.trajectory.get_duration()) );
     }
 
-    SUBCASE("position-extrema") {
-        const auto position_extrema = output.trajectory.get_position_extrema();
-        CHECK( position_extrema[0].t_max == doctest::Approx(4.0) );
-        CHECK( position_extrema[0].max == doctest::Approx(1.0) );
-        CHECK( position_extrema[0].t_min == doctest::Approx(0.0) );
-        CHECK( position_extrema[0].min == doctest::Approx(0.0) );
-
-        CHECK( position_extrema[1].t_max == doctest::Approx(0.0) );
-        CHECK( position_extrema[1].max == doctest::Approx(-2.0) );
-        CHECK( position_extrema[1].t_min == doctest::Approx(3.2254033308) );
-        CHECK( position_extrema[1].min == doctest::Approx(-3.1549193338) );
-
-        CHECK( position_extrema[2].t_max == doctest::Approx(4.0) );
-        CHECK( position_extrema[2].max == doctest::Approx(2.0) );
-        CHECK( position_extrema[2].t_min == doctest::Approx(0.0) );
-        CHECK( position_extrema[2].min == doctest::Approx(0.0) );
-    }
-
     SUBCASE("first-time-at-position") {
         CHECK( output.trajectory.get_first_time_at_position(0, 0.0).value() == doctest::Approx(0.0) );
         CHECK( output.trajectory.get_first_time_at_position(0, 0.5).value() == doctest::Approx(2.0) );

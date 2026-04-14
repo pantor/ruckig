@@ -230,7 +230,7 @@ double duration; // Duration of the trajectory
 std::array<double, DOFs> independent_min_durations; // Time-optimal profile for each independent DoF
 
 <...> at_time(double time); // Get the kinematic state of the trajectory at a given time
-<...> get_position_extrema(); // Returns information about the position extrema and their times
+void get_position_extrema(Vector<Bound>& position_extrema); // Passes information about the position extrema and their times
 ```
 Again, we refer to the [API documentation](https://docs.ruckig.com) for the exact signatures.
 
