@@ -35,7 +35,6 @@ class Trajectory {
     Container<double> cumulative_times;
 
     Vector<double> independent_min_durations;
-    Vector<Bound> position_extrema;
 
     size_t continue_calculation_counter {0};
 
@@ -156,7 +155,6 @@ public:
 
         profiles[0].resize(dofs);
         independent_min_durations.resize(dofs);
-        position_extrema.resize(dofs);
     }
 
 #if defined WITH_CLOUD_CLIENT
@@ -170,7 +168,6 @@ public:
         resize(max_number_of_waypoints);
 
         independent_min_durations.resize(dofs);
-        position_extrema.resize(dofs);
     }
 #endif
 
