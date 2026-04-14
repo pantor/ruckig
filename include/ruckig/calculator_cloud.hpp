@@ -150,7 +150,7 @@ public:
         traj.cumulative_times = result["cumulative_times"].template get<std::vector<double>>();
 
         if (!result["message"].empty()) {
-            std::cout << "[ruckig] " << result["message"] << std::endl;
+            std::cout << "[ruckig] " << result["message"].template get<std::string>() << std::endl;
         }
 
         if (result["result"] == "Result.Error") {

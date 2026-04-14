@@ -17,7 +17,7 @@ nlohmann::json CloudClient::post(const nlohmann::json& params, bool throw_error)
         }
 
         std::cout << "[ruckig] could not reach cloud API server" << std::endl;
-        return Result::Error;
+        return {};
     }
     if (res->status != 200) {
         if (throw_error) {
@@ -25,7 +25,7 @@ nlohmann::json CloudClient::post(const nlohmann::json& params, bool throw_error)
         }
 
         std::cout << "[ruckig] could not reach cloud API server, error code: " << res->status << " " << res->body << std::endl;
-        return Result::Error;
+        return {};
     }
 
     return nlohmann::json::parse(res->body);
