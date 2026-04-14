@@ -39,6 +39,10 @@ mod ffi {
         fn input_get_max_acceleration(input: &InputParameter) -> &CxxVector<f64>;
         unsafe fn input_set_max_jerk(input: Pin<&mut InputParameter>, data: *const f64, len: usize);
         fn input_get_max_jerk(input: &InputParameter) -> &CxxVector<f64>;
+        unsafe fn input_set_max_position(input: Pin<&mut InputParameter>, data: *const f64, len: usize);
+        fn input_get_max_position(input: &InputParameter) -> &CxxVector<f64>;
+        unsafe fn input_set_min_position(input: Pin<&mut InputParameter>, data: *const f64, len: usize);
+        fn input_get_min_position(input: &InputParameter) -> &CxxVector<f64>;
         unsafe fn input_set_intermediate_positions(input: Pin<&mut InputParameter>, data: *const f64, dofs: usize, count: usize);
         fn input_clear_intermediate_positions(input: Pin<&mut InputParameter>);
         unsafe fn input_get_intermediate_positions(input: &InputParameter, buf: *mut f64, capacity: usize) -> usize;
@@ -175,6 +179,8 @@ pub struct InputParameter {
     pub max_velocity: Vec<f64>,
     pub max_acceleration: Vec<f64>,
     pub max_jerk: Vec<f64>,
+    pub max_position: Vec<f64>,
+    pub min_position: Vec<f64>,
     pub intermediate_positions: Vec<Vec<f64>>,
     inner: UniquePtr<ffi::InputParameter>,
 }
@@ -192,8 +198,10 @@ impl InputParameter {
             target_velocity: vec![0.0; dofs],
             target_acceleration: vec![0.0; dofs],
             max_velocity: vec![0.0; dofs],
-            max_acceleration: vec![0.0; dofs],
-            max_jerk: vec![0.0; dofs],
+            max_acceleration: vec![f64::INFINITY; dofs],
+            max_jerk: vec![f64::INFINITY; dofs],
+            max_position: vec![f64::INFINITY; dofs],
+            min_position: vec![f64::NEG_INFINITY; dofs],
             intermediate_positions: Vec::new(),
             inner: ffi::input_new(dofs),
         }
@@ -212,6 +220,8 @@ impl InputParameter {
         self.max_velocity         = ffi::input_get_max_velocity(&self.inner).iter().cloned().collect();
         self.max_acceleration     = ffi::input_get_max_acceleration(&self.inner).iter().cloned().collect();
         self.max_jerk             = ffi::input_get_max_jerk(&self.inner).iter().cloned().collect();
+        self.max_position         = ffi::input_get_max_position(&self.inner).iter().cloned().collect();
+        self.min_position         = ffi::input_get_min_position(&self.inner).iter().cloned().collect();
 
         let cap = self.degrees_of_freedom * 256;
         let mut flat = vec![0.0f64; cap];
@@ -237,6 +247,8 @@ impl InputParameter {
             ffi::input_set_max_velocity(self.inner.pin_mut(),         self.max_velocity.as_ptr(),         self.max_velocity.len());
             ffi::input_set_max_acceleration(self.inner.pin_mut(),     self.max_acceleration.as_ptr(),     self.max_acceleration.len());
             ffi::input_set_max_jerk(self.inner.pin_mut(),             self.max_jerk.as_ptr(),             self.max_jerk.len());
+            ffi::input_set_max_position(self.inner.pin_mut(),         self.max_position.as_ptr(),         self.max_position.len());
+            ffi::input_set_min_position(self.inner.pin_mut(),         self.min_position.as_ptr(),         self.min_position.len());
         }
 
         if self.intermediate_positions.is_empty() {

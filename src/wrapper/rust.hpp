@@ -51,6 +51,10 @@ void input_set_max_acceleration(InputParameter& input, const double* data, size_
 const std::vector<double>& input_get_max_acceleration(const InputParameter& input) { return input.max_acceleration; }
 void input_set_max_jerk(InputParameter& input, const double* data, size_t len) { input.max_jerk = to_vec(data, len); }
 const std::vector<double>& input_get_max_jerk(const InputParameter& input) { return input.max_jerk; }
+void input_set_max_position(InputParameter& input, const double* data, size_t len) { input.max_position = to_vec(data, len); }
+const std::vector<double>& input_get_max_position(const InputParameter& input) { return input.max_position; }
+void input_set_min_position(InputParameter& input, const double* data, size_t len) { input.min_position = to_vec(data, len); }
+const std::vector<double>& input_get_min_position(const InputParameter& input) { return input.min_position; }
 void input_set_intermediate_positions(InputParameter& input, const double* data, size_t dofs, size_t count) {
     input.intermediate_positions.resize(count);
     for (size_t r = 0; r < count; ++r) {
