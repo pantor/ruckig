@@ -377,6 +377,7 @@ Ruckig is used by over hundred research labs, companies, and open-source project
 - [Gestalt Robotics](https://www.gestalt-robotics.com)
 - [AgiBot Genie Sim](https://github.com/AgibotTech/genie_sim)
 - [Struckig](https://github.com/stefanbesler/struckig), a port of Ruckig to Structered Text (ST - IEC61131-3) for usage on PLCs.
+- [Ruckig-Scl](https://github.com/core-engineering/ruckig-scl), a port of Ruckig to SCL (ST - IEC61131-3) for Siemens PLCs
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
 - [TidyBot++](https://github.com/jimmyyhwu/tidybot2)
 - [Wiredworks](https://wiredworks.com) made a simple Kivy [GUI application](https://github.com/wiredworks/ruckig-showcase)
