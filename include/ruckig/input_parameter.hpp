@@ -43,10 +43,13 @@ class InputParameter {
 
     void initialize() {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            current_position[dof] = 0.0;
             current_velocity[dof] = 0.0;
             current_acceleration[dof] = 0.0;
+            target_position[dof] = 0.0;
             target_velocity[dof] = 0.0;
             target_acceleration[dof] = 0.0;
+            max_velocity[dof] = std::numeric_limits<double>::infinity();
             max_acceleration[dof] = std::numeric_limits<double>::infinity();
             max_jerk[dof] = std::numeric_limits<double>::infinity();
             max_position[dof] = std::numeric_limits<double>::infinity();
