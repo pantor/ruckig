@@ -28,7 +28,8 @@ requires = ["scikit-build-core", "nanobind"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-cmake.targets = ["python_ruckig"]
+minimum-version = "0.10"
+build.targets = ["python_ruckig"]
 sdist.exclude = [".github"]
 
 [tool.scikit-build.cmake.define]
