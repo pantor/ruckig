@@ -18,8 +18,8 @@ class VelocityThirdOrderStep1 {
     double vd;
 
     // Max 3 valid profiles
-    using ProfileIter = std::array<Profile, 3>::iterator;
-    std::array<Profile, 3> valid_profiles;
+    using ProfileIter = std::array<Profile, 4>::iterator;
+    std::array<Profile, 4> valid_profiles;
 
     void time_acc0(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const;
     void time_none(ProfileIter& profile, double aMax, double aMin, double jMax, bool return_after_found) const;
@@ -28,6 +28,9 @@ class VelocityThirdOrderStep1 {
     bool time_all_single_step(Profile* profile, double aMax, double aMin, double jMax) const;
 
     inline void add_profile(ProfileIter& profile) const {
+        if (profile + 1 == valid_profiles.cend()) {
+            return;
+        }
         const auto prev_profile = profile;
         ++profile;
         profile->set_boundary(*prev_profile);

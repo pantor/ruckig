@@ -1043,6 +1043,47 @@ TEST_CASE("position-second-random-3") {
     }
 }
 
+TEST_CASE("issue-255-stack-smashing") {
+    // https://github.com/pantor/ruckig/issues/255
+    Ruckig<1> otg {0.001};
+    InputParameter<1> input;
+    input.current_position = {1.1032599505208334};
+    input.current_velocity = {0.36337812500000005};
+    input.current_acceleration = {0.8525};
+    input.target_position = {2.9033375720687795};
+    input.target_velocity = {0.3477303818980908};
+    input.target_acceleration = {-0.833942902};
+    input.max_velocity = {1.0};
+    input.max_acceleration = {1.0};
+    input.max_jerk = {1.0};
+
+    Trajectory<1> trajectory;
+    CHECK( otg.calculate(input, trajectory) == Result::Working );
+
+    // The variant that used to smash the stack: one ULP down on p0.
+    input.current_position = {1.103259950520833};
+    CHECK( otg.calculate(input, trajectory) == Result::Working );
+}
+
+TEST_CASE("issue-216-short-trajectory-out-of-range") {
+    // https://github.com/pantor/ruckig/issues/216
+    Ruckig<1> otg {0.001};
+    InputParameter<1> input;
+    input.current_position = {0.0};
+    input.current_velocity = {0.0};
+    input.current_acceleration = {0.0};
+    input.target_position = {1e-6};
+    input.target_velocity = {0.0};
+    input.target_acceleration = {0.0};
+    input.max_velocity = {1.0};
+    input.max_acceleration = {1.0};
+    input.max_jerk = {1.0};
+
+    Trajectory<1> trajectory;
+    CHECK( otg.calculate(input, trajectory) == Result::Working );
+}
+
+
 
 int main(int argc, char** argv) {
     doctest::Context context;

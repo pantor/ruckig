@@ -21,6 +21,23 @@ class Block {
         valid_profile_counter -= 1;
     }
 
+    template<size_t N>
+    inline static void remove_duplicate_profiles(std::array<Profile, N>& valid_profiles, size_t& valid_profile_counter) {
+        constexpr double rel_tolerance {256 * std::numeric_limits<double>::epsilon()};
+
+        for (size_t i = 0; i + 1 < valid_profile_counter; ++i) {
+            const double duration = valid_profiles[i].t_sum.back();
+            const double tolerance = rel_tolerance * std::max(1.0, std::abs(duration));
+            for (size_t j = i + 1; j < valid_profile_counter; ) {
+                if (std::abs(valid_profiles[j].t_sum.back() - duration) <= tolerance) {
+                    remove_profile<N>(valid_profiles, valid_profile_counter, j);
+                } else {
+                    ++j;
+                }
+            }
+        }
+    }
+
 public:
     struct Interval {
         double left, right; // [s]
@@ -63,16 +80,13 @@ public:
         //     std::cout << valid_profiles[i].t_sum.back() << " " << valid_profiles[i].to_string() << std::endl;
         // }
 
+        remove_duplicate_profiles<N>(valid_profiles, valid_profile_counter);
+
         if (valid_profile_counter == 1) {
             block.set_min_profile(valid_profiles[0]);
             return true;
 
         } else if (valid_profile_counter == 2) {
-            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 8 * std::numeric_limits<double>::epsilon()) {
-                block.set_min_profile(valid_profiles[0]);
-                return true;
-            }
-
             if constexpr (numerical_robust) {
                 const size_t idx_min = (valid_profiles[0].t_sum.back() < valid_profiles[1].t_sum.back()) ? 0 : 1;
                 const size_t idx_else_1 = (idx_min + 1) % 2;
@@ -80,19 +94,6 @@ public:
                 block.set_min_profile(valid_profiles[idx_min]);
                 block.a = Interval(valid_profiles[idx_min], valid_profiles[idx_else_1]);
                 return true;
-            }
-
-        // Only happens due to numerical issues
-        } else if (valid_profile_counter == 4) {
-            // Find "identical" profiles
-            if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[1].t_sum.back()) < 32 * std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[1].direction) {
-                remove_profile<N>(valid_profiles, valid_profile_counter, 1);
-            } else if (std::abs(valid_profiles[2].t_sum.back() - valid_profiles[3].t_sum.back()) < 256 * std::numeric_limits<double>::epsilon() && valid_profiles[2].direction != valid_profiles[3].direction) {
-                remove_profile<N>(valid_profiles, valid_profile_counter, 3);
-            } else if (std::abs(valid_profiles[0].t_sum.back() - valid_profiles[3].t_sum.back()) < 256 * std::numeric_limits<double>::epsilon() && valid_profiles[0].direction != valid_profiles[3].direction) {
-                remove_profile<N>(valid_profiles, valid_profile_counter, 3);
-            } else {
-                return false;
             }
 
         } else if (valid_profile_counter % 2 == 0) {
