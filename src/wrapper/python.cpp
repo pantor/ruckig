@@ -58,22 +58,22 @@ limited by velocity, acceleration, and jerk constraints.";
         .def_ro("t_max", &Bound::t_max)
         .def("__repr__", [](const Bound& ext) {  return "[" + std::to_string(ext.min) + ", " + std::to_string(ext.max) + "]"; });
 
-    nb::class_<Trajectory<DynamicDOFs>>(m, "Trajectory")
+    nb::class_<Trajectory>(m, "Trajectory")
         .def(nb::init<size_t>(), "dofs"_a)
 #if defined WITH_CLOUD_CLIENT
         .def(nb::init<size_t, size_t>(), "dofs"_a, "max_number_of_waypoints"_a)
 #endif
-        .def_ro("degrees_of_freedom", &Trajectory<DynamicDOFs>::degrees_of_freedom)
-        .def_prop_ro("profiles", &Trajectory<DynamicDOFs>::get_profiles)
-        .def_prop_ro("duration", &Trajectory<DynamicDOFs>::get_duration)
-        .def_prop_ro("intermediate_durations", &Trajectory<DynamicDOFs>::get_intermediate_durations)
-        .def_prop_ro("independent_min_durations", &Trajectory<DynamicDOFs>::get_independent_min_durations)
-        .def_prop_ro("position_extrema", [](const Trajectory<DynamicDOFs>& traj) {
+        .def_ro("degrees_of_freedom", &Trajectory::degrees_of_freedom)
+        .def_prop_ro("profiles", &Trajectory::get_profiles)
+        .def_prop_ro("duration", &Trajectory::get_duration)
+        .def_prop_ro("intermediate_durations", &Trajectory::get_intermediate_durations)
+        .def_prop_ro("independent_min_durations", &Trajectory::get_independent_min_durations)
+        .def_prop_ro("position_extrema", [](const Trajectory& traj) {
             std::vector<Bound> extrema(traj.degrees_of_freedom);
             traj.get_position_extrema(extrema);
             return extrema;
         })
-        .def("at_time", [](const Trajectory<DynamicDOFs>& traj, double time, bool return_section=false) {
+        .def("at_time", [](const Trajectory& traj, double time, bool return_section=false) {
             std::vector<double> new_position(traj.degrees_of_freedom), new_velocity(traj.degrees_of_freedom), new_acceleration(traj.degrees_of_freedom), new_jerk(traj.degrees_of_freedom);
             size_t new_section;
             traj.at_time(time, new_position, new_velocity, new_acceleration, new_jerk, new_section);
@@ -82,86 +82,86 @@ limited by velocity, acceleration, and jerk constraints.";
             }
             return nb::make_tuple(new_position, new_velocity, new_acceleration);
         }, "time"_a, "return_section"_a=false)
-        .def("get_first_time_at_position", &Trajectory<DynamicDOFs>::get_first_time_at_position, "dof"_a, "position"_a, "time_after"_a=0.0);
+        .def("get_first_time_at_position", &Trajectory::get_first_time_at_position, "dof"_a, "position"_a, "time_after"_a=0.0);
 
-    nb::class_<InputParameter<DynamicDOFs>>(m, "InputParameter")
+    nb::class_<InputParameter>(m, "InputParameter")
         .def(nb::init<size_t>(), "dofs"_a)
 #if defined WITH_CLOUD_CLIENT
         .def(nb::init<size_t, size_t>(), "dofs"_a, "max_number_of_waypoints"_a)
 #endif
-        .def_ro("degrees_of_freedom", &InputParameter<DynamicDOFs>::degrees_of_freedom)
-        .def_rw("current_position", &InputParameter<DynamicDOFs>::current_position)
-        .def_rw("current_velocity", &InputParameter<DynamicDOFs>::current_velocity)
-        .def_rw("current_acceleration", &InputParameter<DynamicDOFs>::current_acceleration)
-        .def_rw("target_position", &InputParameter<DynamicDOFs>::target_position)
-        .def_rw("target_velocity", &InputParameter<DynamicDOFs>::target_velocity)
-        .def_rw("target_acceleration", &InputParameter<DynamicDOFs>::target_acceleration)
-        .def_rw("max_velocity", &InputParameter<DynamicDOFs>::max_velocity)
-        .def_rw("max_acceleration", &InputParameter<DynamicDOFs>::max_acceleration)
-        .def_rw("max_jerk", &InputParameter<DynamicDOFs>::max_jerk)
-        .def_rw("max_position", &InputParameter<DynamicDOFs>::max_position)
-        .def_rw("min_position", &InputParameter<DynamicDOFs>::min_position)
-        .def_rw("min_velocity", &InputParameter<DynamicDOFs>::min_velocity, nb::arg().none())
-        .def_rw("min_acceleration", &InputParameter<DynamicDOFs>::min_acceleration, nb::arg().none())
-        .def_rw("intermediate_positions", &InputParameter<DynamicDOFs>::intermediate_positions)
-        .def_rw("per_section_max_velocity", &InputParameter<DynamicDOFs>::per_section_max_velocity, nb::arg().none())
-        .def_rw("per_section_max_acceleration", &InputParameter<DynamicDOFs>::per_section_max_acceleration, nb::arg().none())
-        .def_rw("per_section_max_jerk", &InputParameter<DynamicDOFs>::per_section_max_jerk, nb::arg().none())
-        .def_rw("per_section_min_velocity", &InputParameter<DynamicDOFs>::per_section_min_velocity, nb::arg().none())
-        .def_rw("per_section_min_acceleration", &InputParameter<DynamicDOFs>::per_section_min_acceleration, nb::arg().none())
-        .def_rw("per_section_max_position", &InputParameter<DynamicDOFs>::per_section_max_position, nb::arg().none())
-        .def_rw("per_section_min_position", &InputParameter<DynamicDOFs>::per_section_min_position, nb::arg().none())
-        .def_rw("enabled", &InputParameter<DynamicDOFs>::enabled)
-        .def_rw("control_interface", &InputParameter<DynamicDOFs>::control_interface)
-        .def_rw("synchronization", &InputParameter<DynamicDOFs>::synchronization)
-        .def_rw("duration_discretization", &InputParameter<DynamicDOFs>::duration_discretization)
-        .def_rw("per_dof_control_interface", &InputParameter<DynamicDOFs>::per_dof_control_interface, nb::arg().none())
-        .def_rw("per_dof_synchronization", &InputParameter<DynamicDOFs>::per_dof_synchronization, nb::arg().none())
-        .def_rw("minimum_duration", &InputParameter<DynamicDOFs>::minimum_duration, nb::arg().none())
-        .def_rw("per_section_minimum_duration", &InputParameter<DynamicDOFs>::per_section_minimum_duration, nb::arg().none())
-        .def_rw("interrupt_calculation_duration", &InputParameter<DynamicDOFs>::interrupt_calculation_duration, nb::arg().none())
-        .def("validate", &InputParameter<DynamicDOFs>::validate<true>, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
+        .def_ro("degrees_of_freedom", &InputParameter::degrees_of_freedom)
+        .def_rw("current_position", &InputParameter::current_position)
+        .def_rw("current_velocity", &InputParameter::current_velocity)
+        .def_rw("current_acceleration", &InputParameter::current_acceleration)
+        .def_rw("target_position", &InputParameter::target_position)
+        .def_rw("target_velocity", &InputParameter::target_velocity)
+        .def_rw("target_acceleration", &InputParameter::target_acceleration)
+        .def_rw("max_velocity", &InputParameter::max_velocity)
+        .def_rw("max_acceleration", &InputParameter::max_acceleration)
+        .def_rw("max_jerk", &InputParameter::max_jerk)
+        .def_rw("max_position", &InputParameter::max_position)
+        .def_rw("min_position", &InputParameter::min_position)
+        .def_rw("min_velocity", &InputParameter::min_velocity, nb::arg().none())
+        .def_rw("min_acceleration", &InputParameter::min_acceleration, nb::arg().none())
+        .def_rw("intermediate_positions", &InputParameter::intermediate_positions)
+        .def_rw("per_section_max_velocity", &InputParameter::per_section_max_velocity, nb::arg().none())
+        .def_rw("per_section_max_acceleration", &InputParameter::per_section_max_acceleration, nb::arg().none())
+        .def_rw("per_section_max_jerk", &InputParameter::per_section_max_jerk, nb::arg().none())
+        .def_rw("per_section_min_velocity", &InputParameter::per_section_min_velocity, nb::arg().none())
+        .def_rw("per_section_min_acceleration", &InputParameter::per_section_min_acceleration, nb::arg().none())
+        .def_rw("per_section_max_position", &InputParameter::per_section_max_position, nb::arg().none())
+        .def_rw("per_section_min_position", &InputParameter::per_section_min_position, nb::arg().none())
+        .def_rw("enabled", &InputParameter::enabled)
+        .def_rw("control_interface", &InputParameter::control_interface)
+        .def_rw("synchronization", &InputParameter::synchronization)
+        .def_rw("duration_discretization", &InputParameter::duration_discretization)
+        .def_rw("per_dof_control_interface", &InputParameter::per_dof_control_interface, nb::arg().none())
+        .def_rw("per_dof_synchronization", &InputParameter::per_dof_synchronization, nb::arg().none())
+        .def_rw("minimum_duration", &InputParameter::minimum_duration, nb::arg().none())
+        .def_rw("per_section_minimum_duration", &InputParameter::per_section_minimum_duration, nb::arg().none())
+        .def_rw("interrupt_calculation_duration", &InputParameter::interrupt_calculation_duration, nb::arg().none())
+        .def("validate", &InputParameter::validate<true>, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
         .def(nb::self != nb::self)
-        .def("__repr__", &InputParameter<DynamicDOFs>::to_string);
+        .def("__repr__", &InputParameter::to_string);
 
-    nb::class_<OutputParameter<DynamicDOFs>>(m, "OutputParameter")
+    nb::class_<OutputParameter>(m, "OutputParameter")
         .def(nb::init<size_t>(), "dofs"_a)
 #if defined WITH_CLOUD_CLIENT
         .def(nb::init<size_t, size_t>(), "dofs"_a, "max_number_of_waypoints"_a)
 #endif
-        .def_ro("degrees_of_freedom", &OutputParameter<DynamicDOFs>::degrees_of_freedom)
-        .def_ro("new_position", &OutputParameter<DynamicDOFs>::new_position)
-        .def_ro("new_velocity", &OutputParameter<DynamicDOFs>::new_velocity)
-        .def_ro("new_acceleration", &OutputParameter<DynamicDOFs>::new_acceleration)
-        .def_ro("new_jerk", &OutputParameter<DynamicDOFs>::new_jerk)
-        .def_ro("new_section", &OutputParameter<DynamicDOFs>::new_section)
-        .def_ro("did_section_change", &OutputParameter<DynamicDOFs>::did_section_change)
-        .def_ro("trajectory", &OutputParameter<DynamicDOFs>::trajectory)
-        .def_rw("time", &OutputParameter<DynamicDOFs>::time)
-        .def_ro("new_calculation", &OutputParameter<DynamicDOFs>::new_calculation)
-        .def_ro("was_calculation_interrupted", &OutputParameter<DynamicDOFs>::was_calculation_interrupted)
-        .def_ro("calculation_duration", &OutputParameter<DynamicDOFs>::calculation_duration)
-        .def("pass_to_input", &OutputParameter<DynamicDOFs>::pass_to_input, "input"_a)
-        .def("__repr__", &OutputParameter<DynamicDOFs>::to_string)
-        .def("__copy__",  [](const OutputParameter<DynamicDOFs> &self) {
-            return OutputParameter<DynamicDOFs>(self);
+        .def_ro("degrees_of_freedom", &OutputParameter::degrees_of_freedom)
+        .def_ro("new_position", &OutputParameter::new_position)
+        .def_ro("new_velocity", &OutputParameter::new_velocity)
+        .def_ro("new_acceleration", &OutputParameter::new_acceleration)
+        .def_ro("new_jerk", &OutputParameter::new_jerk)
+        .def_ro("new_section", &OutputParameter::new_section)
+        .def_ro("did_section_change", &OutputParameter::did_section_change)
+        .def_ro("trajectory", &OutputParameter::trajectory)
+        .def_rw("time", &OutputParameter::time)
+        .def_ro("new_calculation", &OutputParameter::new_calculation)
+        .def_ro("was_calculation_interrupted", &OutputParameter::was_calculation_interrupted)
+        .def_ro("calculation_duration", &OutputParameter::calculation_duration)
+        .def("pass_to_input", &OutputParameter::pass_to_input, "input"_a)
+        .def("__repr__", &OutputParameter::to_string)
+        .def("__copy__",  [](const OutputParameter &self) {
+            return OutputParameter(self);
         });
 
-    nb::class_<RuckigThrow<DynamicDOFs>>(m, "Ruckig")
+    nb::class_<RuckigThrow>(m, "Ruckig")
         .def(nb::init<size_t>(), "dofs"_a)
         .def(nb::init<size_t, double>(), "dofs"_a, "delta_time"_a)
 #if defined WITH_CLOUD_CLIENT
         .def(nb::init<size_t, double, size_t>(), "dofs"_a, "delta_time"_a, "max_number_of_waypoints"_a=0)
-        .def("filter_intermediate_positions", &RuckigThrow<DynamicDOFs>::filter_intermediate_positions, "input"_a, "threshold_distance"_a)
+        .def("filter_intermediate_positions", &RuckigThrow::filter_intermediate_positions, "input"_a, "threshold_distance"_a)
 #endif
-        .def_ro("max_number_of_waypoints", &RuckigThrow<DynamicDOFs>::max_number_of_waypoints)
-        .def_ro("degrees_of_freedom", &RuckigThrow<DynamicDOFs>::degrees_of_freedom)
-        .def_rw("delta_time", &RuckigThrow<DynamicDOFs>::delta_time)
-        .def("reset", &RuckigThrow<DynamicDOFs>::reset)
-        .def("validate_input", &RuckigThrow<DynamicDOFs>::validate_input<true>, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
-        .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a)
-        .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, Trajectory<DynamicDOFs>&, bool&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
-        .def("update", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<DynamicDOFs>&, OutputParameter<DynamicDOFs>&)>(&RuckigThrow<DynamicDOFs>::update), "input"_a, "output"_a);
+        .def_ro("max_number_of_waypoints", &RuckigThrow::max_number_of_waypoints)
+        .def_ro("degrees_of_freedom", &RuckigThrow::degrees_of_freedom)
+        .def_rw("delta_time", &RuckigThrow::delta_time)
+        .def("reset", &RuckigThrow::reset)
+        .def("validate_input", &RuckigThrow::validate_input<true>, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
+        .def("calculate", static_cast<Result (RuckigThrow::*)(const InputParameter&, Trajectory&)>(&RuckigThrow::calculate), "input"_a, "trajectory"_a)
+        .def("calculate", static_cast<Result (RuckigThrow::*)(const InputParameter&, Trajectory&, bool&)>(&RuckigThrow::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
+        .def("update", static_cast<Result (RuckigThrow::*)(const InputParameter&, OutputParameter&)>(&RuckigThrow::update), "input"_a, "output"_a);
 
     nb::class_<BrakeProfile>(m, "BrakeProfile")
         .def_ro("duration", &BrakeProfile::duration)

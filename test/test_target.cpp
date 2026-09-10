@@ -154,9 +154,9 @@ bool array_eq(const T& first, const T& second) {
 
 
 TEST_CASE("trajectory") {
-    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
-    InputParameter<DynamicDOFs> input {3};
-    OutputParameter<DynamicDOFs> output {3};
+    RuckigThrow ruckig {3, 0.005};
+    InputParameter input {3};
+    OutputParameter output {3};
 
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0};
@@ -168,7 +168,7 @@ TEST_CASE("trajectory") {
     input.max_acceleration = {1.0, 1.0, 1.0};
     input.max_jerk = {1.0, 1.0, 1.0};
 
-    Trajectory<DynamicDOFs> traj {3};
+    Trajectory traj {3};
     auto result = ruckig.calculate(input, traj);
 
     CHECK( result == Result::Working );
@@ -299,8 +299,8 @@ TEST_CASE("trajectory") {
 }
 
 TEST_CASE("input-validation") {
-    RuckigThrow<DynamicDOFs> ruckig {2};
-    InputParameter<DynamicDOFs> input {2};
+    RuckigThrow ruckig {2};
+    InputParameter input {2};
 
     const double nan = std::nan("");
 
@@ -385,9 +385,9 @@ TEST_CASE("input-validation") {
 }
 
 TEST_CASE("enabled") {
-    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
-    InputParameter<DynamicDOFs> input {3};
-    OutputParameter<DynamicDOFs> output {3};
+    RuckigThrow ruckig {3, 0.005};
+    InputParameter input {3};
+    OutputParameter output {3};
 
     input.enabled = {true, false, false};
     input.current_position = {0.0, -2.0, 0.0};
@@ -565,9 +565,9 @@ TEST_CASE("phase-synchronization") {
 }
 
 TEST_CASE("zero-limits") {
-    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
-    InputParameter<DynamicDOFs> input {3};
-    OutputParameter<DynamicDOFs> output {3};
+    RuckigThrow ruckig {3, 0.005};
+    InputParameter input {3};
+    OutputParameter output {3};
 
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.2, 0.0, 0.0};

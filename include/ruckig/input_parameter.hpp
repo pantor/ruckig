@@ -33,7 +33,7 @@ enum class DurationDiscretization {
 
 
 //! Input of the Ruckig algorithm
-template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
+template<size_t DOFs = 0, template<class, size_t> class CustomVector = StandardVector>
 class InputParameter {
     template<class T> using Vector = CustomVector<T, DOFs>;
 

@@ -10,9 +10,9 @@ int main() {
     const double control_cycle = 0.01;
 
     // Create instances: the Ruckig trajectory generator as well as input and output parameters
-    Ruckig<DynamicDOFs> ruckig(degrees_of_freedom, control_cycle);
-    InputParameter<DynamicDOFs> input(degrees_of_freedom);
-    OutputParameter<DynamicDOFs> output(degrees_of_freedom);
+    Ruckig ruckig(degrees_of_freedom, control_cycle);
+    InputParameter input(degrees_of_freedom);
+    OutputParameter output(degrees_of_freedom);
 
     // Set input parameters
     input.current_position = {0.0, 0.0, 0.5};

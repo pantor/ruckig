@@ -13,9 +13,9 @@ int main() {
     const size_t max_number_of_waypoints = 10;  // for memory allocation
 
     // Create instances: the Ruckig trajectory generator as well as input and output parameters
-    Ruckig<DynamicDOFs> ruckig(degrees_of_freedom, control_cycle, max_number_of_waypoints);
-    InputParameter<DynamicDOFs> input(degrees_of_freedom);
-    OutputParameter<DynamicDOFs> output(degrees_of_freedom, max_number_of_waypoints);
+    Ruckig ruckig(degrees_of_freedom, control_cycle, max_number_of_waypoints);
+    InputParameter input(degrees_of_freedom);
+    OutputParameter output(degrees_of_freedom, max_number_of_waypoints);
 
     // Set input parameters
     input.current_position = {0.2, 0.0, -0.3};

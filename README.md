@@ -65,13 +65,13 @@ Ruckig provides three main interface classes: the *Ruckig*, the *InputParameter*
 First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle (e.g. in seconds) in the constructor.
 
 ```.cpp
-Ruckig<DynamicDOFs> ruckig {6, 0.001}; // Degrees of freedom; control cycle in [s]
+Ruckig ruckig {6, 0.001}; // Degrees of freedom; control cycle in [s]
 ```
 
 The input type has 3 blocks of data: the *current* state, the *target* state and the corresponding kinematic *limits*.
 
 ```.cpp
-InputParameter<DynamicDOFs> input {6}; // Number DoFs
+InputParameter input {6}; // Degrees of freedom
 input.current_position = {0.2, ...};
 input.current_velocity = {0.1, ...};
 input.current_acceleration = {0.1, ...};
@@ -82,7 +82,7 @@ input.max_velocity = {0.4, ...};
 input.max_acceleration = {1.0, ...};
 input.max_jerk = {4.0, ...};
 
-OutputParameter<DynamicDOFs> output {6}; // Number DoFs
+OutputParameter output {6}; // Degrees of freedom
 ```
 
 If you only want to have an acceleration-constrained trajectory, you can also omit the `max_jerk` as well as the `current` and `target_acceleration` value. Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
@@ -103,9 +103,9 @@ Within the control loop, you need to update the *current state* of the input par
 
 The Ruckig Community Version includes built-in support for intermediate waypoints, using our cloud API for remote calculation. Of course, the Ruckig Pro version is fully local. To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
 ```.cpp
-Ruckig<DynamicDOFs> ruckig {6, 0.001, 8};
-InputParameter<DynamicDOFs> input {6, 8};
-OutputParameter<DynamicDOFs> output {6, 8};
+Ruckig ruckig {6, 0.001, 8};
+InputParameter input {6, 8};
+OutputParameter output {6, 8};
 ```
 The `InputParameter` class takes the number of waypoints as an optional input, however usually you will fill in the values (and therefore reserve its memory) yourself. Then you're ready to set intermediate waypoints by
 ```.cpp
@@ -257,7 +257,7 @@ When following an arbitrary signal with position, velocity, acceleration, and je
 
 To use the tracking interface, construct
 ```.cpp
-Trackig<DynamicDOFs> trackig {1, 0.01};  // control cycle
+Trackig trackig {1, 0.01};  // control cycle
 ```
 and set the current state as well as the kinematic constraints via
 ```.cpp
@@ -291,7 +291,7 @@ The current test suite validates over 5.000.000.000 random trajectories as well 
 
 The Ruckig Pro version has additional tools to increase the numerical range and improve reliability. For example, the `position_scale` and `time_scale` parameter of the `Calculator` class change the internal representation of the input parameters.
 ```.cpp
-Ruckig<DynamicDOFs> ruckig {1};  // Works also for Trackig
+Ruckig ruckig {1};  // Works also for Trackig
 
 ruckig.calculator.position_scale = 1e2;  // Scales all positions in the input parameters
 ruckig.calculator.time_scale = 1e3;  // Scale all times in the input parameters

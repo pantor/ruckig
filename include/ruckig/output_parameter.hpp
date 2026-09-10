@@ -11,7 +11,7 @@
 namespace ruckig {
 
 //! Output of the Ruckig algorithm
-template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
+template<size_t DOFs = 0, template<class, size_t> class CustomVector = StandardVector>
 class OutputParameter {
     template<class T> using Vector = CustomVector<T, DOFs>;
 

@@ -9,7 +9,7 @@ int main() {
     const size_t degrees_of_freedom = 3;
 
     // Create input parameters
-    InputParameter<DynamicDOFs> input(degrees_of_freedom);
+    InputParameter input(degrees_of_freedom);
     input.current_position = {0.0, 0.0, 0.5};
     input.current_velocity = {0.0, -2.2, -0.5};
     input.current_acceleration = {0.0, 2.5, -0.5};
@@ -27,8 +27,8 @@ int main() {
     input.min_acceleration = {-2.0, -2.0, -2.0};
 
     // We don't need to pass the control rate (cycle time) when using only offline features
-    Ruckig<DynamicDOFs> ruckig(degrees_of_freedom);
-    Trajectory<DynamicDOFs> trajectory(degrees_of_freedom);
+    Ruckig ruckig(degrees_of_freedom);
+    Trajectory trajectory(degrees_of_freedom);
 
     // Calculate the trajectory in an offline manner (outside of the control loop)
     Result result = ruckig.calculate(input, trajectory);
