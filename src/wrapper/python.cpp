@@ -20,7 +20,7 @@ NB_MODULE(ruckig, m) {
     m.doc() = "Instantaneous Motion Generation for Robots and Machines. Real-time and time-optimal trajectory calculation \
 given a target waypoint with position, velocity, and acceleration, starting from any initial state \
 limited by velocity, acceleration, and jerk constraints.";
-    m.attr("__version__")  = "0.19.4";
+    m.attr("__version__")  = "0.19.6";
 
     nb::enum_<ControlInterface>(m, "ControlInterface")
         .value("Position", ControlInterface::Position)

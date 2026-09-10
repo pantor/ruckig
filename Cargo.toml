@@ -1,6 +1,6 @@
 [package]
 name = "ruckig"
-version = "0.19.4"
+version = "0.19.6"
 readme = "README.md"
 description = "Instantaneous Motion Generation for Robots and Machines."
 keywords = ["robotics", "trajectory", "real-time", "jerk-constrained", "time-optimal"]
