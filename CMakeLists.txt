@@ -130,7 +130,7 @@ if(BUILD_PYTHON_MODULE)
   )
 
   install(TARGETS python_ruckig LIBRARY DESTINATION .)
-  install(FILES ruckig.pyi DESTINATION .)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ruckig.pyi DESTINATION .)
 endif()
 
 

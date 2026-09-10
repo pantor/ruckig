@@ -29,7 +29,7 @@ build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
 minimum-version = "0.10"
-build.targets = ["python_ruckig"]
+build.targets = ["python_ruckig", "python_ruckig_stub"]
 sdist.exclude = [".github"]
 
 [tool.scikit-build.cmake.define]
