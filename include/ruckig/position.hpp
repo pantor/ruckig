@@ -22,9 +22,9 @@ class PositionThirdOrderStep1 {
     double af_af, af_p3, af_p4;
     double jMax_jMax;
 
-    // Max 5 valid profiles + 1 spare for numerical issues
-    using ProfileIter = std::array<Profile, 6>::iterator;
+    // Max 5 valid profiles + 1 for probing
     std::array<Profile, 6> valid_profiles;
+    using ProfileIter = decltype(valid_profiles)::iterator;
 
     void time_all_vel(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const;
     void time_acc0_acc1(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, double jMax, bool return_after_found) const;
@@ -100,9 +100,9 @@ class PositionSecondOrderStep1 {
     // Pre-calculated expressions
     double pd;
 
-    // Max 3 valid profiles
-    using ProfileIter = std::array<Profile, 3>::iterator;
-    std::array<Profile, 3> valid_profiles;
+    // Max 3 valid profiles + 1 for probing
+    std::array<Profile, 4> valid_profiles;
+    using ProfileIter = decltype(valid_profiles)::iterator;
 
     void time_acc0(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, bool return_after_found) const;
     void time_none(ProfileIter& profile, double vMax, double vMin, double aMax, double aMin, bool return_after_found) const;
