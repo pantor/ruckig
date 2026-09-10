@@ -82,7 +82,7 @@ input.max_velocity = {0.4, ...};
 input.max_acceleration = {1.0, ...};
 input.max_jerk = {4.0, ...};
 
-OutputParameter<6> output; // Number DoFs
+OutputParameter<DynamicDOFs> output {6}; // Number DoFs
 ```
 
 If you only want to have an acceleration-constrained trajectory, you can also omit the `max_jerk` as well as the `current` and `target_acceleration` value. Given all input and output resources, we can iterate over the trajectory at each discrete time step. For most applications, this loop must run within a real-time thread and controls the actual hardware.
