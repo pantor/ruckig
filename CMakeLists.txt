@@ -121,7 +121,16 @@ if(BUILD_PYTHON_MODULE)
   set_target_properties(python_ruckig PROPERTIES OUTPUT_NAME ruckig)
   set_target_properties(python_ruckig PROPERTIES ARCHIVE_OUTPUT_NAME python_ruckig)
 
+  nanobind_add_stub(
+    python_ruckig_stub
+    MODULE ruckig
+    OUTPUT ruckig.pyi
+    PYTHON_PATH $<TARGET_FILE_DIR:python_ruckig>
+    DEPENDS python_ruckig
+  )
+
   install(TARGETS python_ruckig LIBRARY DESTINATION .)
+  install(FILES ruckig.pyi DESTINATION .)
 endif()
 
 
