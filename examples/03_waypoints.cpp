@@ -9,12 +9,13 @@ using namespace ruckig;
 
 int main() {
     const double control_cycle = 0.01;
+    const size_t degrees_of_freedom = 3;
     const size_t max_number_of_waypoints = 10;  // for memory allocation
 
     // Create instances: the Ruckig trajectory generator as well as input and output parameters
-    Ruckig<DynamicDOFs> ruckig(3, control_cycle, max_number_of_waypoints);
-    InputParameter<DynamicDOFs> input(3);
-    OutputParameter<DynamicDOFs> output(3, max_number_of_waypoints);
+    Ruckig<DynamicDOFs> ruckig(degrees_of_freedom, control_cycle, max_number_of_waypoints);
+    InputParameter<DynamicDOFs> input(degrees_of_freedom);
+    OutputParameter<DynamicDOFs> output(degrees_of_freedom, max_number_of_waypoints);
 
     // Set input parameters
     input.current_position = {0.2, 0.0, -0.3};

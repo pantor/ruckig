@@ -4,9 +4,12 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 if __name__ == '__main__':
-    ruckig = Ruckig(3, 0.01)
-    inp = InputParameter(3)
-    out = OutputParameter(3)
+    degrees_of_freedom = 3
+    control_cycle = 0.01
+
+    ruckig = Ruckig(degrees_of_freedom, control_cycle)
+    inp = InputParameter(degrees_of_freedom)
+    out = OutputParameter(degrees_of_freedom)
 
     # Set input parameters
     inp.current_position = [0.0, 0.0, 0.5]
@@ -47,5 +50,5 @@ if __name__ == '__main__':
     # from pathlib import Path
     # from plotter import Plotter
 
-    # project_path = Path(__file__).parent.parent.absolute()
-    # Plotter.plot_trajectory(project_path / 'examples' / '07_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False)
+    # examples_path = Path(__file__).parent.absolute()
+    # Plotter.plot_trajectory(examples_path / '07_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False)

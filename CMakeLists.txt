@@ -88,7 +88,7 @@ endif()
 
 
 if(BUILD_EXAMPLES)
-  set(EXAMPLES_LIST 01_position 02_position_offline 05_velocity 06_stop 07_minimum_duration 12_custom_vector_type 13_custom_vector_type_dynamic_dofs)
+  set(EXAMPLES_LIST 01_position 02_position_offline 05_velocity 06_stop 07_minimum_duration 12_custom_vector_type)
   if(TARGET Eigen3::Eigen)
     list(APPEND EXAMPLES_LIST 11_eigen_vector_type)
   endif()

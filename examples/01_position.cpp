@@ -6,10 +6,13 @@
 using namespace ruckig;
 
 int main() {
+    const size_t degrees_of_freedom = 3;
+    const double control_cycle = 0.01;
+
     // Create instances: the Ruckig trajectory generator as well as input and output parameters
-    Ruckig<DynamicDOFs> ruckig(3, 0.01);  // degrees of freedom, control cycle
-    InputParameter<DynamicDOFs> input(3);
-    OutputParameter<DynamicDOFs> output(3);
+    Ruckig<DynamicDOFs> ruckig(degrees_of_freedom, control_cycle);
+    InputParameter<DynamicDOFs> input(degrees_of_freedom);
+    OutputParameter<DynamicDOFs> output(degrees_of_freedom);
 
     // Set input parameters
     input.current_position = {0.0, 0.0, 0.5};
@@ -32,5 +35,5 @@ int main() {
         output.pass_to_input(input);
     }
 
-    std::cout << "Trajectory duration: " << output.trajectory.get_duration() << " [s]." << std::endl;
+    std::cout << "Trajectory duration: " << output.trajectory.get_duration() << " [s]" << std::endl;
 }

@@ -2,8 +2,10 @@ from ruckig import InputParameter, Ruckig, Trajectory, Result
 
 
 if __name__ == '__main__':
+    degrees_of_freedom = 3
+
     #  Create input parameters
-    inp = InputParameter(3)
+    inp = InputParameter(degrees_of_freedom)
     inp.current_position = [0.0, 0.0, 0.5]
     inp.current_velocity = [0.0, -2.2, -0.5]
     inp.current_acceleration = [0.0, 2.5, -0.5]
@@ -21,8 +23,8 @@ if __name__ == '__main__':
     inp.min_acceleration = [-2.0, -1.0, -2.0]
 
     # We don't need to pass the control rate (cycle time) when using only offline features
-    ruckig = Ruckig(3)
-    trajectory = Trajectory(3)
+    ruckig = Ruckig(degrees_of_freedom)
+    trajectory = Trajectory(degrees_of_freedom)
 
     # Calculate the trajectory in an offline manner
     result = ruckig.calculate(inp, trajectory)
@@ -40,3 +42,10 @@ if __name__ == '__main__':
 
     # Get some info about the position extrema of the trajectory
     print(f'Position extremas are {trajectory.position_extrema}')
+
+    # Plot the trajectory
+    # from pathlib import Path
+    # from plotter import Plotter
+
+    # examples_path = Path(__file__).parent.absolute()
+    # Plotter.plot_trajectory(examples_path / '02_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False)

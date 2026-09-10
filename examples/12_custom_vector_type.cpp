@@ -1,16 +1,19 @@
+#include <deque>
+
 #include <ruckig/ruckig.hpp>
 
 #include "plotter.hpp"
 
 
 template<class T, size_t DOFs>
-class MinimalVector {
-    T data[DOFs];
+class MinimalDofsVector {
+    std::deque<T> data;
 
 public:
-    MinimalVector() { }
-    MinimalVector(std::initializer_list<T> a) {
-        std::copy_n(a.begin(), DOFs, std::begin(data));
+    MinimalDofsVector() { }
+    MinimalDofsVector(std::initializer_list<T> a) {
+        data.resize(a.size());
+        std::copy_n(a.begin(), a.size(), std::begin(data));
     }
 
     T operator[](size_t i) const {
@@ -22,11 +25,15 @@ public:
     }
 
     size_t size() const {
-        return DOFs;
+        return data.size();
     }
 
-    bool operator==(const MinimalVector<T, DOFs>& rhs) const {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
+    void resize(size_t size) {
+        data.resize(size);
+    }
+
+    bool operator==(const MinimalDofsVector<T, DOFs>& rhs) const {
+        for (size_t dof = 0; dof < data.size(); ++dof) {
             if (data[dof] != rhs[dof]) {
                 return false;
             }
@@ -40,9 +47,9 @@ using namespace ruckig;
 
 int main() {
     // Create instances: the Ruckig trajectory generator as well as input and output parameters
-    Ruckig<3, MinimalVector> ruckig(0.01);  // control cycle
-    InputParameter<3, MinimalVector> input;
-    OutputParameter<3, MinimalVector> output;
+    Ruckig<DynamicDOFs, MinimalDofsVector> ruckig(3, 0.01);  // control cycle
+    InputParameter<DynamicDOFs, MinimalDofsVector> input(3);
+    OutputParameter<DynamicDOFs, MinimalDofsVector> output(3);
 
     // Set input parameters
     input.current_position = {0.0, 0.0, 0.5};

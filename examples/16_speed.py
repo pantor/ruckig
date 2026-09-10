@@ -6,10 +6,13 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 if __name__ == '__main__':
+    degrees_of_freedom = 3
+    control_cycle = 0.01
+
     # Create instances: Ruckig as well as input and output parameters
-    ruckig = Ruckig(3, 0.01)  # DoFs, control cycle
-    inp = InputParameter(3)
-    out = OutputParameter(3)
+    ruckig = Ruckig(degrees_of_freedom, control_cycle)
+    inp = InputParameter(degrees_of_freedom)
+    out = OutputParameter(degrees_of_freedom)
 
     # Set input parameters
     inp.current_position = [0.0, 0.0, 0.5]
@@ -35,7 +38,7 @@ if __name__ == '__main__':
     # Generate the trajectory within the control loop
     first_output, times, out_list = None, [], []
     res = Result.Working
-    while res == Result.Working or res == Result.Paused:
+    while res in {Result.Working, Result.Paused}:
         res = ruckig.update(inp, out)
 
         if out.time > 1.8 and phase == 'start':
@@ -70,5 +73,5 @@ if __name__ == '__main__':
     # from pathlib import Path
     # from plotter import Plotter
 
-    # project_path = Path(__file__).parent.parent.absolute()
-    # Plotter.plot_trajectory(project_path / 'examples' / '16_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False, times=times)
+    # examples_path = Path(__file__).parent.absolute()
+    # Plotter.plot_trajectory(examples_path / '16_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False, times=times)

@@ -7,10 +7,14 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 
 if __name__ == '__main__':
+    degrees_of_freedom = 3
+    control_cycle = 0.01
+    max_number_of_waypoints = 10
+
     # Create instances: Ruckig as well as input and output parameters
-    ruckig = Ruckig(3, 0.01, 10)  # DoFs, control cycle rate, maximum number of intermediate waypoints for memory allocation
-    inp = InputParameter(3)  # DoFs
-    out = OutputParameter(3, 10)  # DoFs, maximum number of intermediate waypoints for memory allocation
+    ruckig = Ruckig(degrees_of_freedom, control_cycle, max_number_of_waypoints)
+    inp = InputParameter(degrees_of_freedom)
+    out = OutputParameter(degrees_of_freedom, max_number_of_waypoints)
 
     inp.current_position = [0.8, 0, 0.5]
     inp.current_velocity = [0, 0, 0]
@@ -59,5 +63,5 @@ if __name__ == '__main__':
     # from pathlib import Path
     # from plotter import Plotter
 
-    # project_path = Path(__file__).parent.parent.absolute()
-    # Plotter.plot_trajectory(project_path / 'examples' / '08_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False)
+    # examples_path = Path(__file__).parent.absolute()
+    # Plotter.plot_trajectory(examples_path / '08_trajectory.pdf', ruckig, inp, out_list, plot_jerk=False)
