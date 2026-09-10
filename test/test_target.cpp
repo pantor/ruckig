@@ -26,39 +26,6 @@ std::uniform_real_distribution<double> min_limit_dist {-16.0, -0.08};
 
 
 template<class T, size_t DOFs>
-class MinimalVector {
-    T data[DOFs];
-
-public:
-    MinimalVector() {}
-    MinimalVector(std::initializer_list<T> a) {
-        std::copy_n(a.begin(), DOFs, std::begin(data));
-    }
-
-    T operator[](size_t i) const {
-        return data[i];
-    }
-
-    T& operator[](size_t i) {
-        return data[i];
-    }
-
-    size_t size() const {
-        return DOFs;
-    }
-
-    bool operator==(const MinimalVector<T, DOFs>& rhs) const {
-        for (size_t dof = 0; dof < DOFs; ++dof) {
-            if (data[dof] != rhs[dof]) {
-                return false;
-            }
-        }
-        return true;
-    }
-};
-
-
-template<class T, size_t DOFs>
 class MinimalRuntimeVector {
     std::deque<T> data;
 
@@ -187,9 +154,9 @@ bool array_eq(const T& first, const T& second) {
 
 
 TEST_CASE("trajectory") {
-    RuckigThrow<3> ruckig {0.005};
-    InputParameter<3> input;
-    OutputParameter<3> output;
+    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
+    InputParameter<DynamicDOFs> input {3};
+    OutputParameter<DynamicDOFs> output {3};
 
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.0, 0.0, 0.0};
@@ -201,7 +168,7 @@ TEST_CASE("trajectory") {
     input.max_acceleration = {1.0, 1.0, 1.0};
     input.max_jerk = {1.0, 1.0, 1.0};
 
-    Trajectory<3> traj;
+    Trajectory<DynamicDOFs> traj {3};
     auto result = ruckig.calculate(input, traj);
 
     CHECK( result == Result::Working );
@@ -213,7 +180,7 @@ TEST_CASE("trajectory") {
     CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
 
     SUBCASE("at-time") {
-        std::array<double, 3> new_position, new_velocity, new_acceleration, new_jerk;
+        std::vector<double> new_position(3), new_velocity(3), new_acceleration(3), new_jerk(3);
         output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
         CHECK( array_eq(new_position, input.current_position) );
         CHECK( array_eq(new_velocity, input.current_velocity) );
@@ -332,8 +299,8 @@ TEST_CASE("trajectory") {
 }
 
 TEST_CASE("input-validation") {
-    RuckigThrow<2> ruckig;
-    InputParameter<2> input;
+    RuckigThrow<DynamicDOFs> ruckig {2};
+    InputParameter<DynamicDOFs> input {2};
 
     const double nan = std::nan("");
 
@@ -418,9 +385,9 @@ TEST_CASE("input-validation") {
 }
 
 TEST_CASE("enabled") {
-    RuckigThrow<3> ruckig {0.005};
-    InputParameter<3> input;
-    OutputParameter<3> output;
+    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
+    InputParameter<DynamicDOFs> input {3};
+    OutputParameter<DynamicDOFs> output {3};
 
     input.enabled = {true, false, false};
     input.current_position = {0.0, -2.0, 0.0};
@@ -435,7 +402,7 @@ TEST_CASE("enabled") {
     CHECK( result == Result::Working );
     CHECK( output.trajectory.get_duration() == doctest::Approx(3.1748021039) );
 
-    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    std::vector<double> new_position(3), new_velocity(3), new_acceleration(3);
     output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
     array_eq(new_position, input.current_position);
     array_eq(new_velocity, input.current_velocity);
@@ -597,37 +564,10 @@ TEST_CASE("phase-synchronization") {
     CHECK( result == Result::Working );
 }
 
-TEST_CASE("dynamic-dofs") {
+TEST_CASE("zero-limits") {
     RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
     InputParameter<DynamicDOFs> input {3};
     OutputParameter<DynamicDOFs> output {3};
-
-    input.current_position = {0.0, -2.0, 0.0};
-    input.current_velocity = {0.0, 0.0, 0.0};
-    input.current_acceleration = {0.0, 0.0, 0.0};
-    input.target_position = {1.0, -3.0, 2.0};
-    input.target_velocity = {0.0, 0.3, 0.0};
-    input.target_acceleration = {0.0, 0.0, 0.0};
-    input.max_velocity = {1.0, 1.0, 1.0};
-    input.max_acceleration = {1.0, 1.0, 1.0};
-    input.max_jerk = {1.0, 1.0, 1.0};
-
-    auto result = ruckig.update(input, output);
-
-    CHECK( result == Result::Working );
-    CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
-
-    std::vector<double> new_position(3), new_velocity(3), new_acceleration(3);
-    output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
-    CHECK( array_eq(new_position, input.current_position) );
-    CHECK( array_eq(new_velocity, input.current_velocity) );
-    CHECK( array_eq(new_acceleration, input.current_acceleration) );
-}
-
-TEST_CASE("zero-limits") {
-    RuckigThrow<3> ruckig {0.005};
-    InputParameter<3> input;
-    OutputParameter<3> output;
 
     input.current_position = {0.0, -2.0, 0.0};
     input.current_velocity = {0.2, 0.0, 0.0};
@@ -695,33 +635,6 @@ TEST_CASE("zero-limits") {
 }
 
 TEST_CASE("custom-vector-type") {
-    SUBCASE("DOFs compile-time") {
-        RuckigThrow<3, MinimalVector> ruckig {0.005};
-        InputParameter<3, MinimalVector> input;
-        OutputParameter<3, MinimalVector> output;
-
-        input.current_position = {0.0, -2.0, 0.0};
-        input.current_velocity = {0.0, 0.0, 0.0};
-        input.current_acceleration = {0.0, 0.0, 0.0};
-        input.target_position = {1.0, -3.0, 2.0};
-        input.target_velocity = {0.0, 0.3, 0.0};
-        input.target_acceleration = {0.0, 0.0, 0.0};
-        input.max_velocity = {1.0, 1.0, 1.0};
-        input.max_acceleration = {1.0, 1.0, 1.0};
-        input.max_jerk = {1.0, 1.0, 1.0};
-
-        auto result = ruckig.update(input, output);
-
-        CHECK( result == Result::Working );
-        CHECK( output.trajectory.get_duration() == doctest::Approx(4.0) );
-
-        MinimalVector<double, 3> new_position, new_velocity, new_acceleration;
-        output.trajectory.at_time(0.0, new_position, new_velocity, new_acceleration);
-        CHECK( new_position[0] == doctest::Approx(input.current_position[0]) );
-        CHECK( new_position[1] == doctest::Approx(input.current_position[1]) );
-        CHECK( new_position[2] == doctest::Approx(input.current_position[2]) );
-    }
-
     SUBCASE("DOFs run-time") {
         RuckigThrow<DynamicDOFs, MinimalRuntimeVector> ruckig {3, 0.005};
         InputParameter<DynamicDOFs, MinimalRuntimeVector> input {3};
