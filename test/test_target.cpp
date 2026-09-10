@@ -154,7 +154,7 @@ bool array_eq(const T& first, const T& second) {
 
 
 TEST_CASE("trajectory") {
-    RuckigThrow ruckig {3, 0.005};
+    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
     InputParameter input {3};
     OutputParameter output {3};
 
@@ -299,7 +299,7 @@ TEST_CASE("trajectory") {
 }
 
 TEST_CASE("input-validation") {
-    RuckigThrow ruckig {2};
+    RuckigThrow<DynamicDOFs> ruckig {2};
     InputParameter input {2};
 
     const double nan = std::nan("");
@@ -385,7 +385,7 @@ TEST_CASE("input-validation") {
 }
 
 TEST_CASE("enabled") {
-    RuckigThrow ruckig {3, 0.005};
+    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
     InputParameter input {3};
     OutputParameter output {3};
 
@@ -565,7 +565,7 @@ TEST_CASE("phase-synchronization") {
 }
 
 TEST_CASE("zero-limits") {
-    RuckigThrow ruckig {3, 0.005};
+    RuckigThrow<DynamicDOFs> ruckig {3, 0.005};
     InputParameter input {3};
     OutputParameter output {3};
 

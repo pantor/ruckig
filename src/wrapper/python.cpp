@@ -147,21 +147,21 @@ limited by velocity, acceleration, and jerk constraints.";
             return OutputParameter<>(self);
         });
 
-    nb::class_<RuckigThrow<>>(m, "Ruckig")
+    nb::class_<RuckigThrow<DynamicDOFs>>(m, "Ruckig")
         .def(nb::init<size_t>(), "dofs"_a)
         .def(nb::init<size_t, double>(), "dofs"_a, "delta_time"_a)
 #if defined WITH_CLOUD_CLIENT
         .def(nb::init<size_t, double, size_t>(), "dofs"_a, "delta_time"_a, "max_number_of_waypoints"_a=0)
-        .def("filter_intermediate_positions", &RuckigThrow<>::filter_intermediate_positions, "input"_a, "threshold_distance"_a)
+        .def("filter_intermediate_positions", &RuckigThrow<DynamicDOFs>::filter_intermediate_positions, "input"_a, "threshold_distance"_a)
 #endif
-        .def_ro("max_number_of_waypoints", &RuckigThrow<>::max_number_of_waypoints)
-        .def_ro("degrees_of_freedom", &RuckigThrow<>::degrees_of_freedom)
-        .def_rw("delta_time", &RuckigThrow<>::delta_time)
-        .def("reset", &RuckigThrow<>::reset)
-        .def("validate_input", &RuckigThrow<>::validate_input<true>, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
-        .def("calculate", static_cast<Result (RuckigThrow<>::*)(const InputParameter<>&, Trajectory<>&)>(&RuckigThrow<>::calculate), "input"_a, "trajectory"_a)
-        .def("calculate", static_cast<Result (RuckigThrow<>::*)(const InputParameter<>&, Trajectory<>&, bool&)>(&RuckigThrow<>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
-        .def("update", static_cast<Result (RuckigThrow<>::*)(const InputParameter<>&, OutputParameter<>&)>(&RuckigThrow<>::update), "input"_a, "output"_a);
+        .def_ro("max_number_of_waypoints", &RuckigThrow<DynamicDOFs>::max_number_of_waypoints)
+        .def_ro("degrees_of_freedom", &RuckigThrow<DynamicDOFs>::degrees_of_freedom)
+        .def_rw("delta_time", &RuckigThrow<DynamicDOFs>::delta_time)
+        .def("reset", &RuckigThrow<DynamicDOFs>::reset)
+        .def("validate_input", &RuckigThrow<DynamicDOFs>::validate_input<true>, "input"_a, "check_current_state_within_limits"_a=false, "check_target_state_within_limits"_a=true)
+        .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<>&, Trajectory<>&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a)
+        .def("calculate", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<>&, Trajectory<>&, bool&)>(&RuckigThrow<DynamicDOFs>::calculate), "input"_a, "trajectory"_a, "was_interrupted"_a)
+        .def("update", static_cast<Result (RuckigThrow<DynamicDOFs>::*)(const InputParameter<>&, OutputParameter<>&)>(&RuckigThrow<DynamicDOFs>::update), "input"_a, "output"_a);
 
     nb::class_<BrakeProfile>(m, "BrakeProfile")
         .def_ro("duration", &BrakeProfile::duration)

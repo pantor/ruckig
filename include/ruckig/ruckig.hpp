@@ -254,7 +254,7 @@ public:
 };
 
 
-template<size_t DOFs = 0, template<class, size_t> class CustomVector = StandardVector>
+template<size_t DOFs, template<class, size_t> class CustomVector = StandardVector>
 using RuckigThrow = Ruckig<DOFs, CustomVector, true>;
 
 
