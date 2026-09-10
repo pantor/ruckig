@@ -7,9 +7,9 @@ using namespace ruckig;
 
 int main() {
     // Create instances: the Ruckig trajectory generator as well as input and output parameters
-    Ruckig<3> ruckig(0.01);  // control cycle
-    InputParameter<3> input;
-    OutputParameter<3> output;
+    Ruckig<DynamicDOFs> ruckig(3, 0.01);  // degrees of freedom, control cycle
+    InputParameter<DynamicDOFs> input(3);
+    OutputParameter<DynamicDOFs> output(3);
 
     // Set input parameters
     input.current_position = {0.0, 0.0, 0.5};

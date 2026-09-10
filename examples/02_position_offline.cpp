@@ -7,7 +7,7 @@ using namespace ruckig;
 
 int main() {
     // Create input parameters
-    InputParameter<3> input;
+    InputParameter<DynamicDOFs> input(3);
     input.current_position = {0.0, 0.0, 0.5};
     input.current_velocity = {0.0, -2.2, -0.5};
     input.current_acceleration = {0.0, 2.5, -0.5};
@@ -25,8 +25,8 @@ int main() {
     input.min_acceleration = {-2.0, -2.0, -2.0};
 
     // We don't need to pass the control rate (cycle time) when using only offline features
-    Ruckig<3> ruckig;
-    Trajectory<3> trajectory;
+    Ruckig<DynamicDOFs> ruckig(3);
+    Trajectory<DynamicDOFs> trajectory(3);
 
     // Calculate the trajectory in an offline manner (outside of the control loop)
     Result result = ruckig.calculate(input, trajectory);
@@ -41,13 +41,13 @@ int main() {
     double new_time = 1.0;
 
     // Then, we can calculate the kinematic state at a given time
-    std::array<double, 3> new_position, new_velocity, new_acceleration;
+    std::vector<double> new_position(3), new_velocity(3), new_acceleration(3);
     trajectory.at_time(new_time, new_position, new_velocity, new_acceleration);
 
     std::cout << "Position at time " << new_time << " [s]: " << pretty_print(new_position) << std::endl;
 
     // Get some info about the position extrema of the trajectory
-    std::array<Bound, 3> position_extrema;
+    std::vector<Bound> position_extrema(3);
     trajectory.get_position_extrema(position_extrema);
     std::cout << "Position extremas for DoF 3 are " << position_extrema[2].min << " (min) to " << position_extrema[2].max << " (max)" << std::endl;
 }

@@ -65,13 +65,13 @@ Ruckig provides three main interface classes: the *Ruckig*, the *InputParameter*
 First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle (e.g. in seconds) in the constructor.
 
 ```.cpp
-Ruckig<6> ruckig {0.001}; // Number DoFs; control cycle in [s]
+Ruckig<DynamicDOFs> ruckig {6, 0.001}; // Degrees of freedom; control cycle in [s]
 ```
 
 The input type has 3 blocks of data: the *current* state, the *target* state and the corresponding kinematic *limits*.
 
 ```.cpp
-InputParameter<6> input; // Number DoFs
+InputParameter<DynamicDOFs> input {6}; // Number DoFs
 input.current_position = {0.2, ...};
 input.current_velocity = {0.1, ...};
 input.current_acceleration = {0.1, ...};
@@ -103,9 +103,9 @@ Within the control loop, you need to update the *current state* of the input par
 
 The Ruckig Community Version includes built-in support for intermediate waypoints, using our cloud API for remote calculation. Of course, the Ruckig Pro version is fully local. To allocate the necessary memory for a variable number of waypoints beforehand, we need to pass the maximum number of waypoints to Ruckig via
 ```.cpp
-Ruckig<6> ruckig {0.001, 8};
-InputParameter<6> input {8};
-OutputParameter<6> output {8};
+Ruckig<DynamicDOFs> ruckig {6, 0.001, 8};
+InputParameter<DynamicDOFs> input {6, 8};
+OutputParameter<DynamicDOFs> output {6, 8};
 ```
 The `InputParameter` class takes the number of waypoints as an optional input, however usually you will fill in the values (and therefore reserve its memory) yourself. Then you're ready to set intermediate waypoints by
 ```.cpp
@@ -128,7 +128,7 @@ to filter waypoints according to a (high) threshold distance. Setting *interrupt
 To go into more detail, the *InputParameter* type has following members:
 
 ```.cpp
-using Vector = std::array<double, DOFs>; // or std::vector for dynamic DoFs
+using Vector = std::vector<double>;
 
 Vector current_position;
 Vector current_velocity; // Initialized to zero
@@ -257,7 +257,7 @@ When following an arbitrary signal with position, velocity, acceleration, and je
 
 To use the tracking interface, construct
 ```.cpp
-Trackig<1> trackig {0.01};  // control cycle
+Trackig<DynamicDOFs> trackig {1, 0.01};  // control cycle
 ```
 and set the current state as well as the kinematic constraints via
 ```.cpp
@@ -285,26 +285,13 @@ smooth_trajectory = trackig.calculate_trajectory(target_states, input);
 method with the trajectory given as a `std::vector` of target states. The Tracking interface is available in the Ruckig Pro version.
 
 
-### Dynamic Number of Degrees of Freedom
-
-So far, we have told Ruckig the number of DoFs as a template parameter. If you don't know the number of DoFs at compile-time, you can set the template parameter to `ruckig::DynamicDOFs` and pass the DoFs to the constructor:
-
-```.cpp
-Ruckig<DynamicDOFs> ruckig {6, 0.001};
-InputParameter<DynamicDOFs> input {6};
-OutputParameter<DynamicDOFs> output {6};
-```
-
-This switches the default Vector from the `std::array` to the dynamic `std::vector` type. However, we recommend to keep the template parameter when possible: First, it has a performance benefit of a few percent. Second, it is convenient for real-time programming due to its easier handling of memory allocations. When using dynamic degrees of freedom, make sure to allocate the memory of all vectors beforehand.
-
-
 ## Tests and Numerical Stability
 
 The current test suite validates over 5.000.000.000 random trajectories as well as many additional edge cases. The numerical exactness is tested for the final position and final velocity to be within `1e-8`, for the final acceleration to be within `1e-10`, and for the velocity, acceleration and jerk limit to be within a numerical error of `1e-12`. These are absolute values - we suggest to scale your input so that these correspond to your required precision of the system. For example, for most real-world systems we suggest to use input values in `[m]` (instead of e.g. `[mm]`), as `1e-8m` is sufficiently precise for practical trajectory generation. Furthermore, all kinematic limits should be below `1e9`. The maximal supported trajectory duration is `7e3`. Note that Ruckig will also output values outside of this range, there is however no guarantee for correctness.
 
 The Ruckig Pro version has additional tools to increase the numerical range and improve reliability. For example, the `position_scale` and `time_scale` parameter of the `Calculator` class change the internal representation of the input parameters.
 ```.cpp
-Ruckig<1> ruckig;  // Works also for Trackig
+Ruckig<DynamicDOFs> ruckig {1};  // Works also for Trackig
 
 ruckig.calculator.position_scale = 1e2;  // Scales all positions in the input parameters
 ruckig.calculator.time_scale = 1e3;  // Scale all times in the input parameters

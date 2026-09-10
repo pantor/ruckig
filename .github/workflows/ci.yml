@@ -35,7 +35,6 @@ jobs:
         ./example-05_velocity > "$HIDDEN"
         ./example-06_stop > "$HIDDEN"
         ./example-07_minimum_duration > "$HIDDEN"
-        ./example-09_dynamic_dofs > "$HIDDEN"
 
     - name: Test
       if: matrix.os == 'ubuntu-latest'
