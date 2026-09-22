@@ -39,8 +39,9 @@ CMAKE_POSITION_INDEPENDENT_CODE = "ON"
 
 
 [tool.ruff]
-line-length = 145
-lint.select = ["A", "COM", "E", "F", "G", "N", "PIE", "PTH", "PYI", "RSE", "RET", "SIM", "TCH", "W", "Q"]
+line-length = 140
+lint.ignore = ["magic-value-comparison", "ambiguous-unicode-character-string", "ambiguous-unicode-character-comment"]
+lint.select = ["A", "B", "COM", "DJ", "E", "F", "FAST", "G", "N", "PIE", "PL", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "TCH", "TID", "W", "Q"]
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "single"
