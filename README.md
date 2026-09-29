@@ -53,19 +53,18 @@ When using CMake, the Python module can be built using the `BUILD_PYTHON_MODULE`
 
 ## Tutorial
 
-Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a [collection of examples](https://docs.ruckig.com/pages.html) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. We also added plots of the resulting trajectories for all examples. Let's get started!
+Furthermore, we will explain the basics to get started with online generated trajectories within your application. There is also a [collection of examples](https://docs.ruckig.com/examples.html) that guide you through the most important features of Ruckig. A time-optimal trajectory for a single degree of freedom is shown in the figure below. The [online S-curve calculator](https://ruckig.com/s-curve-trajectory.html) computes and plots a trajectory live in your browser, for any start and target state.
 
-![Trajectory Profile](https://github.com/pantor/ruckig/raw/main/doc/example_profile.png?raw=true)
-
+![S-curve Trajectory Profile](https://github.com/pantor/ruckig/raw/main/doc/example_profile.png?raw=true)
 
 ### Waypoint-based Trajectory Generation
 
 Ruckig provides three main interface classes: the *Ruckig*, the *InputParameter*, and the *OutputParameter* class.
 
-First, you'll need to create a Ruckig instance with the number of DoFs as a template parameter, and the control cycle (e.g. in seconds) in the constructor.
+First, you'll need to create a Ruckig instance with the number of DoFs and the control cycle in the constructor. Ruckig itself is unitless - we recommend e.g. meters or radians for position and seconds for time.
 
 ```.cpp
-Ruckig ruckig {6, 0.001}; // Degrees of freedom; control cycle in [s]
+Ruckig ruckig {6, 0.001}; // Degrees of freedom; control cycle
 ```
 
 The input type has 3 blocks of data: the *current* state, the *target* state and the corresponding kinematic *limits*.
@@ -257,7 +256,7 @@ When following an arbitrary signal with position, velocity, acceleration, and je
 
 To use the tracking interface, construct
 ```.cpp
-Trackig trackig {1, 0.01};  // control cycle
+Trackig trackig {1, 0.01};  // Degrees of freedom; control cycle
 ```
 and set the current state as well as the kinematic constraints via
 ```.cpp
