@@ -175,8 +175,17 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
     auto roots_acc0 = roots::solve_quart_monic(polynom_acc0);
     auto roots_acc1 = roots::solve_quart_monic(polynom_acc1);
 
+    // Allow rounding at a time boundary before Newton refinement and the
+    // full profile check. Keep multi-profile enumeration strict: additional
+    // degenerate candidates can invalidate Block's interval construction.
+    const auto within_time_range = [return_after_found](double t, double lo, double hi) {
+        const double tolerance = return_after_found ? 16 * DBL_EPSILON *
+            std::max({std::abs(t), std::abs(lo), std::abs(hi)}) : 0.0;
+        return t >= lo - tolerance && t <= hi + tolerance;
+    };
+
     for (double t: roots_none) {
-        if (t < t_min_none || t > t_max_none) {
+        if (!within_time_range(t, t_min_none, t_max_none)) {
             continue;
         }
 
@@ -207,7 +216,7 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
     }
 
     for (double t: roots_acc0) {
-        if (t < t_min_acc0 || t > t_max_acc0) {
+        if (!within_time_range(t, t_min_acc0, t_max_acc0)) {
             continue;
         }
 
@@ -237,7 +246,7 @@ void PositionThirdOrderStep1::time_all_none_acc0_acc1(ProfileIter& profile, doub
     }
 
     for (double t: roots_acc1) {
-        if (t < t_min_acc1 || t > t_max_acc1) {
+        if (!within_time_range(t, t_min_acc1, t_max_acc1)) {
             continue;
         }
 

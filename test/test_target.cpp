@@ -957,6 +957,58 @@ TEST_CASE("position-second-random-3") {
 }
 
 
+TEST_CASE("position-step1-root-at-time-boundary") {
+    // The acceleration plateau vanishes at distance 2*a_max^3/j_max^2.
+    for (double p0: {0.0, -4.6837533851373792e-17}) {
+        CAPTURE(p0);
+        Ruckig<1> ruckig {0.02};
+        InputParameter<1> input;
+        input.current_position = {p0};
+        input.current_velocity = {0.0};
+        input.current_acceleration = {0.0};
+        input.target_position = {0.16};
+        input.target_velocity = {0.0};
+        input.target_acceleration = {0.0};
+        input.max_velocity = {2.0};
+        input.max_acceleration = {8.0};
+        input.max_jerk = {80.0};
+        Trajectory<1> trajectory;
+        REQUIRE(ruckig.calculate(input, trajectory) == Result::Working);
+        CHECK(trajectory.get_duration() == doctest::Approx(0.4).epsilon(1e-12));
+        double p, v, a;
+        trajectory.at_time(trajectory.get_duration(), p, v, a);
+        CHECK(p == doctest::Approx(0.16).epsilon(1e-12));
+        CHECK(std::abs(v) <= 1e-12);
+        CHECK(std::abs(a) <= 1e-12);
+    }
+}
+
+
+TEST_CASE("position-step1-preserve-nonzero-terminal-profile-enumeration") {
+    // Admitting near-boundary roots unconditionally produces duplicate
+    // same-direction profiles here and breaks Block construction.
+    Ruckig<1> ruckig {0.02};
+    InputParameter<1> input;
+    input.current_position = {0.0};
+    input.current_velocity = {-0.2};
+    input.current_acceleration = {-1.0};
+    input.target_position = {0.077500000000000444};
+    input.target_velocity = {-0.2};
+    input.target_acceleration = {-1.0};
+    input.max_velocity = {2.0};
+    input.max_acceleration = {8.0};
+    input.max_jerk = {80.0};
+    Trajectory<1> trajectory;
+    REQUIRE(ruckig.calculate(input, trajectory) == Result::Working);
+    CHECK(trajectory.get_duration() == doctest::Approx(0.4).epsilon(1e-12));
+    double p, v, a;
+    trajectory.at_time(trajectory.get_duration(), p, v, a);
+    CHECK(p == doctest::Approx(input.target_position[0]).epsilon(1e-12));
+    CHECK(v == doctest::Approx(-0.2).epsilon(1e-12));
+    CHECK(a == doctest::Approx(-1.0).epsilon(1e-12));
+}
+
+
 int main(int argc, char** argv) {
     doctest::Context context;
 
