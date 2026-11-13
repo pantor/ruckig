@@ -318,11 +318,12 @@ A C++17, C++11, and C++03 version of Ruckig is also available - please contact u
 Ruckig is used by over a hundred research labs, companies, and open-source projects worldwide, including:
 - [MoveIt 2](https://moveit.ros.org) for trajectory generation.
 - [CoppeliaSim](https://www.coppeliarobotics.com/) starting from version 4.3.
-- [Fuzzy Logic Robotics](https://flr.io)
+- [i2RT](https://i2rt.com) for their YAM arms popular in robot learning.
 - [LinuxCNC](https://linuxcnc.org)
 - [Scanlab](https://www.scanlab.de/de) for controlling lasers.
 - [Ocado](https://ocadointelligentautomation.com)
 - [Sunday Robotics](https://www.sunday.ai)
+- [Fuzzy Logic Robotics](https://flr.io)
 - [Arburg](https://www.arburg.com)
 - [Gestalt Robotics](https://www.gestalt-robotics.com)
 - [AgiBot Genie Sim](https://github.com/AgibotTech/genie_sim)
