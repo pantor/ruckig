@@ -332,6 +332,7 @@ Ruckig is used by over a hundred research labs, companies, and open-source proje
 - [Frankx](https://github.com/pantor/frankx) for controlling the Franka Emika robot arm.
 - [TidyBot++](https://github.com/jimmyyhwu/tidybot2)
 - [Wiredworks](https://wiredworks.com) made a simple Kivy [GUI application](https://github.com/wiredworks/ruckig-showcase)
+- [RTmotion](https://github.com/open-edge-platform/edge-ai-libraries/tree/main/libraries/edge-control-libraries/plcopen-motion-control) for PLCopen Motion Function Blocks.
 - and many others!
 
 
