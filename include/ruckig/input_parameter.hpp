@@ -41,8 +41,23 @@ class InputParameter {
         return v0 + (a0 * a0) / (2 * j);
     }
 
+    // NaN-aware element-wise equality: treats NaN == NaN as true
+    template<class V>
+    static bool vec_eq(const V& a, const V& b) {
+        for (size_t i = 0; i < a.size(); ++i) {
+            if (a[i] != b[i] && !(std::isnan(a[i]) && std::isnan(b[i]))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     void initialize() {
         for (size_t dof = 0; dof < degrees_of_freedom; ++dof) {
+            // Required fields: left as NaN so validate() rejects them if caller forgets to set them
+            current_position[dof] = std::numeric_limits<double>::quiet_NaN();
+            target_position[dof] = std::numeric_limits<double>::quiet_NaN();
+            max_velocity[dof] = std::numeric_limits<double>::quiet_NaN();
             current_velocity[dof] = 0.0;
             current_acceleration[dof] = 0.0;
             target_velocity[dof] = 0.0;
@@ -366,13 +381,13 @@ public:
 
     bool operator!=(const InputParameter<DOFs, CustomVector>& rhs) const {
         return !(
-            current_position == rhs.current_position
+            vec_eq(current_position, rhs.current_position)
             && current_velocity == rhs.current_velocity
             && current_acceleration == rhs.current_acceleration
-            && target_position == rhs.target_position
+            && vec_eq(target_position, rhs.target_position)
             && target_velocity == rhs.target_velocity
             && target_acceleration == rhs.target_acceleration
-            && max_velocity == rhs.max_velocity
+            && vec_eq(max_velocity, rhs.max_velocity)
             && max_acceleration == rhs.max_acceleration
             && max_jerk == rhs.max_jerk
             && intermediate_positions == rhs.intermediate_positions
