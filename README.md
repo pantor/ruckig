@@ -316,7 +316,7 @@ A C++17, C++11, and C++03 version of Ruckig is also available - please contact u
 ## Used By
 
 Ruckig is used by over a hundred research labs, companies, and open-source projects worldwide, including:
-- [MoveIt 2](https://moveit.ros.org) for trajectory generation.
+- [MoveIt 2](https://moveit.ai) for trajectory generation.
 - [CoppeliaSim](https://www.coppeliarobotics.com/) starting from version 4.3.
 - [i2RT](https://i2rt.com) for their YAM arms popular in robot learning.
 - [LinuxCNC](https://linuxcnc.org)
