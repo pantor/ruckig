@@ -51,6 +51,10 @@ if(BUILD_CLOUD_CLIENT)
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ruckig/third_party>
   )
   target_compile_definitions(ruckig PUBLIC WITH_CLOUD_CLIENT)
+  if(CMAKE_SYSTEM_NAME STREQUAL "QNX")
+    # On QNX the BSD socket API (socket, connect, getaddrinfo, ...) lives in libsocket, not libc.
+    target_link_libraries(ruckig PRIVATE socket)
+  endif()
 endif()
 
 add_library(ruckig::ruckig ALIAS ruckig)
@@ -62,6 +66,11 @@ if(BUILD_TESTS)
   add_library(test-dependencies INTERFACE)
   target_link_libraries(test-dependencies INTERFACE ruckig)
   target_include_directories(test-dependencies INTERFACE third_party)
+  if(CMAKE_SYSTEM_NAME STREQUAL "QNX")
+    # QNX SDP 8.0 pairs GCC with LLVM libc++. doctest only detects libc++ under Clang,
+    # so on QNX it forward-declares std::ostream/std::tuple and clashes with libc++.
+    target_compile_definitions(test-dependencies INTERFACE DOCTEST_CONFIG_USE_STD_HEADERS)
+  endif()
   if(MSVC)
     target_compile_options(test-dependencies INTERFACE /W4)
   else()
